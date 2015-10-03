@@ -8,6 +8,7 @@ public class SelectionManager : NetworkBehaviour {
 
 	public Rect selectionBox;
 	public Vector3 initialClick;
+	public NetworkConnection authorityOwner;
 
 	public bool isSelecting;
 

@@ -6,11 +6,21 @@ public class Spawner : NetworkBehaviour {
 	public GameObject spawnPrefab;
 	public GameObject selectionManagerPrefab;
 	public GameObject splitManagerPrefab;
+	[SerializeField]
+	public NetworkConnection owner;
 
 	public override void OnStartLocalPlayer() {
 		//I kept this part in, because I don't know if this is the function that sets isLocalPlayer to true, 
 		//or this function triggers after isLocalPlayer is set to true.
 		base.OnStartLocalPlayer();
+
+		NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
+		if (this.isServer) {
+			this.owner = identity.connectionToClient;
+		}
+		else {
+			this.owner = identity.connectionToServer;
+		}
 
 		//On initialization, make the client (local client and remote clients) tell the server to call on an [ClientRpc] method.
 		CmdCall();
@@ -54,6 +64,9 @@ public class Spawner : NetworkBehaviour {
 			}
 		}
 
+
+		Debug.Log(this.connectionToServer);
+
 		//Finally, initialize server only stuff or client only stuff.
 		//Also, finally found a use-case for [Server] / [ServerCallback]. Simplifies things a bit.
 		ServerInitialize();
@@ -66,30 +79,32 @@ public class Spawner : NetworkBehaviour {
 		//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
 
 		//Player unit
-		//-------------CHANGED-----------------------
 		GameObject obj = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
+		//NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
+		//if (objIdentity != null) {
+		//	objIdentity.AssignClientAuthority(this.connectionToClient);
+		//}
+		Debug.Log(this.connectionToClient);
 		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
-		if (objIdentity != null) {
-			objIdentity.AssignClientAuthority(this.connectionToClient);
-		}
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
-		//-------------END OF CHANGES MADE------------
 
 		//Player selection manager
 		GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
-		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 		SelectionManager selectionManager = manager.GetComponent<SelectionManager>();
 		if (selectionManager != null) {
 			selectionManager.allObjects.Add(obj);
+			selectionManager.authorityOwner = objIdentity.clientAuthorityOwner;
 		}
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 		//Player split manager
 		manager = MonoBehaviour.Instantiate(this.splitManagerPrefab) as GameObject;
-		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 		SplitManager splitManager = manager.GetComponent<SplitManager>();
 		if (splitManager != null) {
 			splitManager.selectionManager = selectionManager;
+			splitManager.authorityOwner = objIdentity.clientAuthorityOwner;
         }
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 	}
 
 	public void OnDestroy() {
@@ -110,5 +125,24 @@ public class Spawner : NetworkBehaviour {
 				Destroy(panning);
 			}
 		}
+	}
+
+	public void Spawn(GameObject obj) {
+		if (!this.hasAuthority) {
+			return;
+		}
+
+		CmdSpawnObject(obj);
+	}
+
+	[Command]
+	public void CmdSpawnObject(GameObject obj) {
+		RpcSpawnObject(obj);
+	}
+
+	[ClientRpc]
+	public void RpcSpawnObject(GameObject obj) {
+		GameObject newObject = MonoBehaviour.Instantiate(obj) as GameObject;
+		NetworkServer.SpawnWithClientAuthority(newObject, this.connectionToClient);
 	}
 }

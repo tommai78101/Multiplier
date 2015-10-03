@@ -7,20 +7,20 @@ using System.Collections.Generic;
 public struct SplitGroup {
 	public NetworkIdentity owner;
 	public NetworkIdentity split;
-	public NetworkConnection clientAuthorityOwner;
+	public NetworkConnection authorityOwner;
 	public float elapsedTime;
 
 	public SplitGroup(NetworkIdentity owner, NetworkIdentity split, NetworkConnection clientAuthorityOwner) {
 		this.owner = owner;
 		this.split = split;
-		this.clientAuthorityOwner = clientAuthorityOwner;
+		this.authorityOwner = clientAuthorityOwner;
 		this.elapsedTime = 0f;
 
 		if (this.owner.clientAuthorityOwner != null) {
-			this.owner.RemoveClientAuthority(this.clientAuthorityOwner);
+			this.owner.RemoveClientAuthority(this.authorityOwner);
 		}
 		if (this.split.clientAuthorityOwner != null) {
-			this.split.RemoveClientAuthority(this.clientAuthorityOwner);
+			this.split.RemoveClientAuthority(this.authorityOwner);
 		}
 	}
 
@@ -37,6 +37,10 @@ public class SplitManager : NetworkBehaviour {
 	public List<SplitGroup> removeList;
 	[SerializeField]
 	public SelectionManager selectionManager;
+	[SerializeField]
+	public Spawner spawner;
+	[SerializeField]
+	public NetworkConnection authorityOwner;
 
 
 	public void Start() {
@@ -48,7 +52,6 @@ public class SplitManager : NetworkBehaviour {
 			this.splitGroupList = new List<SplitGroup>();
 		}
 		if (this.selectionManager == null) {
-			Debug.LogError("Cannot find Selection Manager. Searching for one.");
 			GameObject[] managers = GameObject.FindGameObjectsWithTag("SelectionManager");
 			foreach (GameObject manager in managers) {
 				SelectionManager select = manager.GetComponent<SelectionManager>();
@@ -60,9 +63,21 @@ public class SplitManager : NetworkBehaviour {
 				Debug.LogError("Cannot find Selection Manager. Aborting");
 			}
 		}
+		if (this.spawner == null) {
+			GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
+			foreach (GameObject obj in spawners) {
+				Spawner spawner = obj.GetComponent<Spawner>();
+				if (spawner.hasAuthority) {
+					this.spawner = spawner;
+				}
+			}
+			if (this.spawner == null) {
+				Debug.LogError("Spawner is never set. Please check.");
+			}
+		}
 	}
 
-	public void Update () {
+	public void Update() {
 		if (!this.hasAuthority) {
 			return;
 		}
@@ -108,60 +123,26 @@ public class SplitManager : NetworkBehaviour {
 
 	private void AddingNewSplitGroup() {
 		foreach (GameObject obj in this.selectionManager.selectedObjects) {
-			NetworkIdentity identity = obj.GetComponent<NetworkIdentity>();
-
-			if (identity.clientAuthorityOwner != null) {
-				Debug.Log("Object identity has client authority owner.");
-			}
-			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (unit.hasAuthority) {
-				Debug.Log("GameUnit however has authority.");
-			}
-
-			//Debug.Log("Calling on CmdSplit()");
-			//CmdSplit(identity);
+			CmdSplit(obj);
 		}
 		return;
 	}
 
 	[Command]
-	public void CmdSplit(NetworkIdentity obj) {
-		Debug.Log("It's being called...");
-
-		//Just double-checking.
-		if (!this.localPlayerAuthority) {
-			return;
-		}
-		RpcSplit(obj.GetComponent<NetworkIdentity>());
+	public void CmdSplit(GameObject obj) {
+		//Place the RPC call here.
+		Debug.Log("CMD split was called. Calling RPC.");
+		GameObject split = MonoBehaviour.Instantiate(obj) as GameObject;
+		NetworkServer.SpawnWithClientAuthority(split, this.connectionToClient);
+		NetworkIdentity identity = split.GetComponent<NetworkIdentity>();
+		//RpcSplit(obj);
 	}
 
 	[ClientRpc]
-	public void RpcSplit(NetworkIdentity owner) {
-		Debug.Log("Calling on RpcSplit()");
-
-		if (!this.localPlayerAuthority) {
-			return;
+	public void RpcSplit(GameObject obj) {
+		Debug.Log("Calling on server spawn.");
+		if (this.isServer) {
+			
 		}
-
-		if (!this.hasAuthority) {
-			Debug.Log("No authority");
-			return;
-		}
-
-		//When spawning non-player objects from non-player objects, the spawned objects must be assigned a client authority owner
-		//through NetworkIdentity. I don't think the order matters here...
-		if (owner.clientAuthorityOwner != null) {
-			GameObject mainObj = owner.gameObject;
-			GameObject splitObj = MonoBehaviour.Instantiate(mainObj) as GameObject;
-			NetworkIdentity splitIdentity = splitObj.GetComponent<NetworkIdentity>();
-			NetworkServer.SpawnWithClientAuthority(splitObj, owner.clientAuthorityOwner);
-			owner.AssignClientAuthority(owner.clientAuthorityOwner);
-			splitIdentity.AssignClientAuthority(owner.clientAuthorityOwner);
-		}
-
-		//if (splitIdentity != null && owner != null) {
-		//	Debug.Log("Adding new split group. Owner: " + owner.ToString() + " Split: " + splitIdentity.ToString());
-		//	this.splitGroupList.Add(new SplitGroup(owner, splitIdentity, owner.clientAuthorityOwner));
-		//}
 	}
 }

@@ -43,7 +43,7 @@ public class GameUnit : NetworkBehaviour {
 
 		//Destroying this client's game object on the server when the client has disconnected. This game object, the object with Quick
 		//script attached.
-        CmdDestroy();
+		CmdDestroy();
 	}
 
 	void CastRay() {
