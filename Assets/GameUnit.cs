@@ -6,6 +6,7 @@ public class GameUnit : NetworkBehaviour {
 	//Properties of a Game Unit
 	[SyncVar]
 	public bool isSelected;
+	public GameObject selectionRing;
 
 	//This variable keeps track of any changes made for the NavMeshAgent's destination Vector3.
 	//Doesn't even need to use [SyncVar]. Nothing is needed for tracking this on the server at all. 
@@ -14,6 +15,8 @@ public class GameUnit : NetworkBehaviour {
 	private Vector3 oldTargetPosition;
 
 	public override void OnStartLocalPlayer() {
+		base.OnStartLocalPlayer();
+
 		//Initialization code for local player (local client on the host, and remote clients).
 		this.oldTargetPosition = Vector3.one * -1f;
 	}
@@ -28,9 +31,14 @@ public class GameUnit : NetworkBehaviour {
 
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
 		if (this.isSelected) {
+			this.selectionRing.SetActive(true);
+
 			if (Input.GetMouseButton(1)) {
 				CastRay();
 			}
+		}
+		else {
+			this.selectionRing.SetActive(false);
 		}
 	}
 
@@ -101,5 +109,12 @@ public class GameUnit : NetworkBehaviour {
 		}
 
 		NetworkServer.Destroy(this.gameObject);
+	}
+
+	public static void Copy(GameUnit original, GameUnit copy) {
+		copy.isSelected = original.isSelected;
+		copy.transform.position = original.transform.position;
+		copy.transform.rotation = original.transform.rotation;
+		copy.transform.localScale = original.transform.localScale;
 	}
 }

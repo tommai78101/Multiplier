@@ -102,7 +102,6 @@ public class Spawner : NetworkBehaviour {
 		SplitManager splitManager = manager.GetComponent<SplitManager>();
 		if (splitManager != null) {
 			splitManager.selectionManager = selectionManager;
-			splitManager.authorityOwner = objIdentity.clientAuthorityOwner;
         }
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 	}

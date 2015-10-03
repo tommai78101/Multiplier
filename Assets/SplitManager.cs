@@ -39,9 +39,7 @@ public class SplitManager : NetworkBehaviour {
 	public SelectionManager selectionManager;
 	[SerializeField]
 	public Spawner spawner;
-	[SerializeField]
-	public NetworkConnection authorityOwner;
-
+	public GameObject gameUnitPrefab;
 
 	public void Start() {
 		if (!this.hasAuthority) {
@@ -132,17 +130,20 @@ public class SplitManager : NetworkBehaviour {
 	public void CmdSplit(GameObject obj) {
 		//Place the RPC call here.
 		Debug.Log("CMD split was called. Calling RPC.");
-		GameObject split = MonoBehaviour.Instantiate(obj) as GameObject;
-		NetworkServer.SpawnWithClientAuthority(split, this.connectionToClient);
-		NetworkIdentity identity = split.GetComponent<NetworkIdentity>();
-		//RpcSplit(obj);
+		GameObject split = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
+		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
+		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
+		RpcSplit(obj, split);
 	}
 
 	[ClientRpc]
-	public void RpcSplit(GameObject obj) {
-		Debug.Log("Calling on server spawn.");
-		if (this.isServer) {
-			
+	public void RpcSplit(GameObject obj, GameObject split) {
+		if (!this.hasAuthority) {
+			return;
 		}
+		GameUnit original = obj.GetComponent<GameUnit>();
+		GameUnit copy = split.GetComponent<GameUnit>();
+		GameUnit.Copy(original, copy);
+		this.selectionManager.allObjects.Add(split);
 	}
 }
