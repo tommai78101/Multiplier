@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Spawner : NetworkBehaviour {
 	public GameObject spawnPrefab;
 	public GameObject selectionManagerPrefab;
+	public GameObject splitManagerPrefab;
 
 	public override void OnStartLocalPlayer() {
 		//I kept this part in, because I don't know if this is the function that sets isLocalPlayer to true, 
@@ -65,8 +66,14 @@ public class Spawner : NetworkBehaviour {
 		//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
 
 		//Player unit
+		//-------------CHANGED-----------------------
 		GameObject obj = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
+		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
+		if (objIdentity != null) {
+			objIdentity.AssignClientAuthority(this.connectionToClient);
+		}
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+		//-------------END OF CHANGES MADE------------
 
 		//Player selection manager
 		GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
@@ -75,6 +82,14 @@ public class Spawner : NetworkBehaviour {
 		if (selectionManager != null) {
 			selectionManager.allObjects.Add(obj);
 		}
+
+		//Player split manager
+		manager = MonoBehaviour.Instantiate(this.splitManagerPrefab) as GameObject;
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
+		SplitManager splitManager = manager.GetComponent<SplitManager>();
+		if (splitManager != null) {
+			splitManager.selectionManager = selectionManager;
+        }
 	}
 
 	public void OnDestroy() {
