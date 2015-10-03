@@ -20,6 +20,8 @@ public class CameraPanning : MonoBehaviour {
 	public float cameraSpeed = 1f;
 	public int zoomLevel = 3;
 
+	//Some fancy way of using the C# setter/getter code design pattern. Note that the actual variables for storing data has FLAG suffixes.
+
 	public bool cameraPanning {
 		set {
 			this.panningEnableFlag = value;
@@ -69,6 +71,8 @@ public class CameraPanning : MonoBehaviour {
 			Vector2 mousePosition = Input.mousePosition;
 
 #if UNITY_EDITOR
+			//This takes into account the game screen resolution in the Unity Editor.
+			//If we are not playing the game in the Unity Editor, the preprocessor would choose the actual monitor screen resolution instead.
 			this.useDebugSceneCameraBorder = true;
 			Vector2 screen = (this.useDebugSceneCameraBorder ? Handles.GetMainGameViewSize() : new Vector2(Screen.currentResolution.width, Screen.currentResolution.height));
 #else

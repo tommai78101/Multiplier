@@ -5,6 +5,8 @@ public class PostRenderer : MonoBehaviour {
 	public Material borderMaterial;
 	public Vector3 initialClick, startingVertex, endingVertex;
 
+	//This script is added to the Main Camera. It is mostly used for post-processing the drawing of a box.
+
 	public void Update() {
 		if (Input.GetMouseButtonDown(0)) {
 			this.initialClick = Input.mousePosition;

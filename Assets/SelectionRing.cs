@@ -12,22 +12,6 @@ public class SelectionRing : NetworkBehaviour {
 			Debug.LogError("Something is wrong.");
 		}
 	}
-	
-	void Update () {
-		if (!this.hasAuthority) {
-			return;
-		}
-
-		//All you do is enable/disable the selection ring when the game unit is selected/unselected.
-		if (this.meshRenderer != null) {
-			if (this.gameUnit.isSelected) {
-				this.meshRenderer.gameObject.SetActive(true);
-			}
-			else {
-				this.meshRenderer.gameObject.SetActive(false);
-			}
-		}
-	}
 
 	public void SetColor(Color color) {
 		this.color = color;

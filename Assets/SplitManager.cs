@@ -41,6 +41,10 @@ public class SplitManager : NetworkBehaviour {
 	public Spawner spawner;
 	public GameObject gameUnitPrefab;
 
+	//Split Manager is designed to streamline the creation of new game units.
+	//To achieve this, there needs to be two different array list that keeps track of all the creations, called Split Groups.
+	//One keeps track of the Split Groups, the other removes them from the tracking list.
+
 	public void Start() {
 		if (!this.hasAuthority) {
 			return;
@@ -80,6 +84,8 @@ public class SplitManager : NetworkBehaviour {
 			return;
 		}
 
+		//When the player starts the action to split a game unit into two, it takes in all the selected game units
+		//one by one, and splits them individually.
 		if (Input.GetKeyDown(KeyCode.S)) {
 			if (this.selectionManager != null) {
 				AddingNewSplitGroup();
@@ -128,8 +134,10 @@ public class SplitManager : NetworkBehaviour {
 
 	[Command]
 	public void CmdSplit(GameObject obj) {
-		//Place the RPC call here.
-		Debug.Log("CMD split was called. Calling RPC.");
+		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
+		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
+		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
+		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
 		GameObject split = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
@@ -138,6 +146,8 @@ public class SplitManager : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcSplit(GameObject obj, GameObject split) {
+		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
+		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
 		if (!this.hasAuthority) {
 			return;
 		}

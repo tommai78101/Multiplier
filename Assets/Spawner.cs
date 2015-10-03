@@ -80,11 +80,6 @@ public class Spawner : NetworkBehaviour {
 
 		//Player unit
 		GameObject obj = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
-		//NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
-		//if (objIdentity != null) {
-		//	objIdentity.AssignClientAuthority(this.connectionToClient);
-		//}
-		Debug.Log(this.connectionToClient);
 		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
 
@@ -116,6 +111,7 @@ public class Spawner : NetworkBehaviour {
 			return;
 		}
 
+		//This is called to destroy the camera panning. When the game ends, the player shouldn't be moving around.
 		GameObject[] cams = GameObject.FindGameObjectsWithTag("MainCamera");
 		foreach (GameObject cam in cams) {
 			CameraPanning panning = cam.GetComponent<CameraPanning>();
@@ -124,24 +120,5 @@ public class Spawner : NetworkBehaviour {
 				Destroy(panning);
 			}
 		}
-	}
-
-	public void Spawn(GameObject obj) {
-		if (!this.hasAuthority) {
-			return;
-		}
-
-		CmdSpawnObject(obj);
-	}
-
-	[Command]
-	public void CmdSpawnObject(GameObject obj) {
-		RpcSpawnObject(obj);
-	}
-
-	[ClientRpc]
-	public void RpcSpawnObject(GameObject obj) {
-		GameObject newObject = MonoBehaviour.Instantiate(obj) as GameObject;
-		NetworkServer.SpawnWithClientAuthority(newObject, this.connectionToClient);
 	}
 }
