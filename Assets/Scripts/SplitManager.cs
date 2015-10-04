@@ -7,21 +7,20 @@ using System.Collections.Generic;
 public struct SplitGroup {
 	public NetworkIdentity owner;
 	public NetworkIdentity split;
-	public NetworkConnection authorityOwner;
+	public GameUnit ownerUnit;
+	public GameUnit splitUnit;
 	public float elapsedTime;
 
-	public SplitGroup(NetworkIdentity owner, NetworkIdentity split, NetworkConnection clientAuthorityOwner) {
-		this.owner = owner;
-		this.split = split;
-		this.authorityOwner = clientAuthorityOwner;
+	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit) {
+		this.ownerUnit = ownerUnit;
+		this.splitUnit = splitUnit;
+		this.owner = ownerUnit.gameObject.GetComponent<NetworkIdentity>();
+		this.split = splitUnit.gameObject.GetComponent<NetworkIdentity>();
 		this.elapsedTime = 0f;
+	}
 
-		if (this.owner.clientAuthorityOwner != null) {
-			this.owner.RemoveClientAuthority(this.authorityOwner);
-		}
-		if (this.split.clientAuthorityOwner != null) {
-			this.split.RemoveClientAuthority(this.authorityOwner);
-		}
+	public void Update() {
+		Debug.Log("Updating... from Split Group ");
 	}
 
 	public override string ToString() {
@@ -59,6 +58,7 @@ public class SplitManager : NetworkBehaviour {
 				SelectionManager select = manager.GetComponent<SelectionManager>();
 				if (select != null && select.hasAuthority) {
 					this.selectionManager = select;
+					break;
 				}
 			}
 			if (this.selectionManager == null) {
@@ -69,8 +69,9 @@ public class SplitManager : NetworkBehaviour {
 			GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
 			foreach (GameObject obj in spawners) {
 				Spawner spawner = obj.GetComponent<Spawner>();
-				if (spawner.hasAuthority) {
+				if (spawner != null && spawner.hasAuthority) {
 					this.spawner = spawner;
+					break;
 				}
 			}
 			if (this.spawner == null) {
@@ -110,6 +111,7 @@ public class SplitManager : NetworkBehaviour {
 				}
 				else {
 					//Some weird C# language design...
+					group.Update();
 					group.elapsedTime += Time.deltaTime / 3f;
 					this.splitGroupList[i] = group;
 				}
@@ -118,7 +120,6 @@ public class SplitManager : NetworkBehaviour {
 
 		if (this.removeList != null && this.removeList.Count > 0) {
 			foreach (SplitGroup group in this.removeList) {
-				Debug.Log("Removing group " + group.ToString());
 				this.splitGroupList.Remove(group);
 			}
 			this.removeList.Clear();
@@ -155,6 +156,7 @@ public class SplitManager : NetworkBehaviour {
 		GameUnit original = obj.GetComponent<GameUnit>();
 		GameUnit copy = split.GetComponent<GameUnit>();
 		GameUnit.Copy(original, copy);
+		this.splitGroupList.Add(new SplitGroup(original, copy));
 		this.selectionManager.allObjects.Add(split);
 	}
 }
