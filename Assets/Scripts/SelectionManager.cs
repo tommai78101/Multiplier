@@ -56,7 +56,7 @@ public class SelectionManager : NetworkBehaviour {
 
 		}
 		else if (Input.GetMouseButtonUp(0)) {
-			this.SelectObjectsInRect();
+			SelectObjectsInRect();
 			this.isSelecting = false;
 			this.initialClick = -Vector3.one;
 		}
@@ -71,7 +71,7 @@ public class SelectionManager : NetworkBehaviour {
 				this.selectionBox.y += this.selectionBox.height;
 				this.selectionBox.height *= -1f;
 			}
-			this.TempSelectObjects();
+			TempSelectObjects();
 		}
 
 		if (this.removeList.Count > 0) {
