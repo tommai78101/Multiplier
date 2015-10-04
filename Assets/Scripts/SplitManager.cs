@@ -139,6 +139,7 @@ public class SplitManager : NetworkBehaviour {
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
 		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
 		GameObject split = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
+		split.transform.position = obj.transform.position;
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
 		RpcSplit(obj, split);
