@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class SelectionManager : NetworkBehaviour {
 	public List<GameObject> selectedObjects;
 	public List<GameObject> allObjects;
+	public List<GameObject> removeList;
 
 	public Rect selectionBox;
 	public Vector3 initialClick;
@@ -72,6 +73,15 @@ public class SelectionManager : NetworkBehaviour {
 			}
 			this.TempSelectObjects();
 		}
+
+		if (this.removeList.Count > 0) {
+			foreach (GameObject obj in this.removeList) {
+				if (this.allObjects.Contains(obj)) {
+					this.allObjects.Remove(obj);
+				}
+			}
+			this.removeList.Clear();
+		}
 	}
 
 	public void InitializeList() {
@@ -84,8 +94,18 @@ public class SelectionManager : NetworkBehaviour {
 		}
 	}
 
+	public void AddToRemoveList(GameObject obj) {
+		if (!this.removeList.Contains(obj)) {
+			this.removeList.Add(obj);
+		}
+	}
+
 	private void TempSelectObjects() {
 		foreach (GameObject obj in this.allObjects) {
+			if (obj == null) {
+				this.removeList.Add(obj);
+				continue;
+			}
 			Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 			projectedPosition.y = Screen.height - projectedPosition.y;
 			GameUnit unit = obj.GetComponent<GameUnit>();

@@ -6,6 +6,7 @@ public class Spawner : NetworkBehaviour {
 	public GameObject spawnPrefab;
 	public GameObject selectionManagerPrefab;
 	public GameObject splitManagerPrefab;
+	public GameObject mergeManagerPrefab;
 	[SerializeField]
 	public NetworkConnection owner;
 
@@ -98,6 +99,14 @@ public class Spawner : NetworkBehaviour {
 		if (splitManager != null) {
 			splitManager.selectionManager = selectionManager;
         }
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
+
+		//Player merge manager
+		manager = MonoBehaviour.Instantiate(this.mergeManagerPrefab) as GameObject;
+		MergeManager mergeManager = manager.GetComponent<MergeManager>();
+		if (mergeManager != null) {
+			mergeManager.selectionManager = selectionManager;
+		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 	}
 
