@@ -56,7 +56,10 @@ public class SelectionManager : NetworkBehaviour {
 
 		}
 		else if (Input.GetMouseButtonUp(0)) {
+			this.selectedObjects.Clear();
+			SelectObjectAtPoint();
 			SelectObjectsInRect();
+			SelectObjects();
 			this.isSelecting = false;
 			this.initialClick = -Vector3.one;
 		}
@@ -71,7 +74,7 @@ public class SelectionManager : NetworkBehaviour {
 				this.selectionBox.y += this.selectionBox.height;
 				this.selectionBox.height *= -1f;
 			}
-			TempSelectObjects();
+			TempRectSelectObjects();
 		}
 
 		if (this.removeList.Count > 0) {
@@ -100,7 +103,7 @@ public class SelectionManager : NetworkBehaviour {
 		}
 	}
 
-	private void TempSelectObjects() {
+	private void TempRectSelectObjects() {
 		foreach (GameObject obj in this.allObjects) {
 			if (obj == null) {
 				//Because merging units will actually destroy units (as a resource), we now added a check to make sure
@@ -120,6 +123,24 @@ public class SelectionManager : NetworkBehaviour {
 		}
 	}
 
+	private void SelectObjects() {
+		foreach (GameObject obj in this.allObjects) {
+			if (obj == null) {
+				this.removeList.Add(obj);
+				continue;
+			}
+			GameUnit unit = obj.GetComponent<GameUnit>();
+			if (unit != null) {
+				if (this.selectedObjects.Contains(obj)) {
+					unit.isSelected = true;
+				}
+				else {
+					unit.isSelected = false;
+				}
+			}
+		}
+	}
+
 	private void SelectObjectsInRect() {
 		foreach (GameObject obj in this.allObjects) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
@@ -128,9 +149,17 @@ public class SelectionManager : NetworkBehaviour {
 					this.selectedObjects.Add(obj);
 				}
 			}
-			else {
-				if (this.selectedObjects.Contains(obj)) {
-					this.selectedObjects.Remove(obj);
+		}
+	}
+
+	private void SelectObjectAtPoint() {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast(ray, out hit)) {
+			GameObject obj = hit.collider.gameObject;
+			if (obj.tag.Equals("Unit")) {
+				if (this.allObjects.Contains(obj) && !this.selectedObjects.Contains(obj)) {
+					this.selectedObjects.Add(obj);
 				}
 			}
 		}
