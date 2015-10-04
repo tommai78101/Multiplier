@@ -106,6 +106,9 @@ public class SelectionManager : NetworkBehaviour {
 		}
 	}
 
+
+	//-----------   Private class methods may all need refactoring   --------------------
+
 	private void TempRectSelectObjects() {
 		foreach (GameObject obj in this.allObjects) {
 			if (obj == null) {
