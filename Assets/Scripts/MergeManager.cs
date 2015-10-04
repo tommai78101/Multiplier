@@ -77,6 +77,8 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	private void AddMergeGroup() {
+		//Since merging units require the selected units count to be a multiple of 2, we need to check to make sure they are a multiple of 2.
+		//Else, ignore the final selected unit.
 		for (int i = 0; (i < this.selectionManager.selectedObjects.Count) && (i + 1 < this.selectionManager.selectedObjects.Count); i += 2) {
 			GameObject ownerObject = this.selectionManager.selectedObjects[i];
 			GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
@@ -87,6 +89,8 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	private void UpdateMergeGroups() {
+		//This follows the same code design pattern used in Split Manager. It's a very stable way of cleaning/updating the lists
+		//this manager manages.
 		if (this.mergeList.Count > 0) {
 			for (int i = 0; i < this.mergeList.Count; i++) {
 				MergeGroup group = this.mergeList[i];

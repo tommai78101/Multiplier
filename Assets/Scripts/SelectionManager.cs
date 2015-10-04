@@ -103,6 +103,8 @@ public class SelectionManager : NetworkBehaviour {
 	private void TempSelectObjects() {
 		foreach (GameObject obj in this.allObjects) {
 			if (obj == null) {
+				//Because merging units will actually destroy units (as a resource), we now added a check to make sure
+				//we don't call on NULL referenced objects, and remove them from the list.
 				this.removeList.Add(obj);
 				continue;
 			}
