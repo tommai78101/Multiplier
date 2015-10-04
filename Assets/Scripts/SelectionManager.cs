@@ -50,13 +50,16 @@ public class SelectionManager : NetworkBehaviour {
 		//This handles all the input actions the player has done to box select in the game.
 		//Currently, it doesn't handle clicking to select.
 		if (Input.GetMouseButtonDown(0)) {
+			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+				ClearSelectObjects();
+			}
 			this.isSelecting = true;
-			this.selectedObjects.Clear();
 			this.initialClick = Input.mousePosition;
-
 		}
 		else if (Input.GetMouseButtonUp(0)) {
-			this.selectedObjects.Clear();
+			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+				ClearSelectObjects();
+			}
 			SelectObjectAtPoint();
 			SelectObjectsInRect();
 			SelectObjects();
@@ -117,9 +120,6 @@ public class SelectionManager : NetworkBehaviour {
 			if (this.selectionBox.Contains(projectedPosition)) {
 				unit.isSelected = true;
 			}
-			else {
-				unit.isSelected = false;
-			}
 		}
 	}
 
@@ -133,9 +133,6 @@ public class SelectionManager : NetworkBehaviour {
 			if (unit != null) {
 				if (this.selectedObjects.Contains(obj)) {
 					unit.isSelected = true;
-				}
-				else {
-					unit.isSelected = false;
 				}
 			}
 		}
@@ -152,13 +149,38 @@ public class SelectionManager : NetworkBehaviour {
 		}
 	}
 
+	private void ClearSelectObjects() {
+		foreach (GameObject obj in this.selectedObjects) {
+			if (obj == null) {
+				continue;
+			}
+			GameUnit unit = obj.GetComponent<GameUnit>();
+			unit.isSelected = false;
+		}
+		this.selectedObjects.Clear();
+	}
+
 	private void SelectObjectAtPoint() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 		if (Physics.Raycast(ray, out hit)) {
 			GameObject obj = hit.collider.gameObject;
 			if (obj.tag.Equals("Unit")) {
-				if (this.allObjects.Contains(obj) && !this.selectedObjects.Contains(obj)) {
+				GameUnit unit = obj.GetComponent<GameUnit>();
+				if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
+					if (this.allObjects.Contains(obj)) {
+						if (!this.selectedObjects.Contains(obj)) {
+							unit.isSelected = true;
+							this.selectedObjects.Add(obj);
+						}
+						else if (this.selectedObjects.Contains(obj)) {
+							unit.isSelected = false;
+							this.selectedObjects.Remove(obj);
+						}
+					}
+				}
+				else {
+					unit.isSelected = true;
 					this.selectedObjects.Add(obj);
 				}
 			}
