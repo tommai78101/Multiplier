@@ -2,30 +2,19 @@
 using System.Collections.Generic;
 
 public class LineOfSight : MonoBehaviour {
-	public bool enemySpotted;
-	public List<GameObject> enemiesInRange;
+	public List<GameUnit> enemiesInRange = new List<GameUnit>();
 
 	public void OnTriggerEnter(Collider other) {
-		//if (other.tag.Equals("Unit")) {
-		//	if (this.enemiesInRange.Count <= 0) {
-		//		this.enemySpotted = true;
-		//	}
-		//	GameUnit otherUnit = other.GetComponent<GameUnit>();
-		//	if (!this.enemiesInRange.Contains(other.gameObject) && !otherUnit.hasAuthority) {
-		//		this.enemiesInRange.Add(other.gameObject);
-		//	}
-		//}
+		GameUnit unit = other.GetComponent<GameUnit>();
+		if (unit != null && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+			this.enemiesInRange.Add(unit);
+		}
 	}
 
 	public void OnTriggerExit(Collider other) {
-		//if (other.tag.Equals("Unit")) {
-		//	GameUnit otherUnit = other.GetComponent<GameUnit>();
-		//	if (this.enemiesInRange.Contains(other.gameObject) && !otherUnit.hasAuthority) {
-		//		this.enemiesInRange.Remove(other.gameObject);
-		//	}
-		//	if (this.enemiesInRange.Count <= 0) {
-		//		this.enemySpotted = false;
-		//	}
-		//}
+		GameUnit unit = other.GetComponent<GameUnit>();
+		if (unit != null && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) {
+			this.enemiesInRange.Remove(unit);
+		}
 	}
 }

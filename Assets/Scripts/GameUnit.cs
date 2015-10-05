@@ -45,6 +45,12 @@ public class GameUnit : NetworkBehaviour {
 			this.selectionRing.SetActive(false);
 		}
 
+		//Non-directed, self-defense
+		if (!this.isDirected) {
+			CheckSurroundings();
+		}
+
+		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null && agent.ReachedDestination()){
 			this.isDirected = false;
@@ -63,7 +69,7 @@ public class GameUnit : NetworkBehaviour {
 		CmdDestroy();
 	}
 
-	void CastRay() {
+	private void CastRay() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit[] hits = Physics.RaycastAll(ray);
 		foreach (RaycastHit hit in hits) {
@@ -75,6 +81,11 @@ public class GameUnit : NetworkBehaviour {
 				break;
 			}
 		}
+	}
+
+	private List<GameUnit> CheckSurroundings() {
+		//List<GameUnit> enemies = new List<GameUnit>();
+		return null;
 	}
 
 	[Command]
