@@ -1,24 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections;
+using System.Collections.Generic;
+using Extension;
 
 public class GameUnit : NetworkBehaviour {
 	//Properties of a Game Unit
 	[SyncVar]
 	public bool isSelected;
+	public bool isDirected;
 	public GameObject selectionRing;
 
 	//This variable keeps track of any changes made for the NavMeshAgent's destination Vector3.
 	//Doesn't even need to use [SyncVar]. Nothing is needed for tracking this on the server at all. 
 	//Just let the clients (local and remote) handle the pathfinding calculations and not pass updated current transform position
 	//through the network. It's not pretty when you do this.
-	private Vector3 oldTargetPosition;
+	public Vector3 oldTargetPosition;
 
 	public override void OnStartLocalPlayer() {
 		base.OnStartLocalPlayer();
 
 		//Initialization code for local player (local client on the host, and remote clients).
-		this.oldTargetPosition = Vector3.one * -1f;
+		this.oldTargetPosition = Vector3.one * -9999f;
+		this.isSelected = false;
+		this.isDirected = false;
 	}
 
 	public void Update() {
@@ -40,6 +44,11 @@ public class GameUnit : NetworkBehaviour {
 		else {
 			this.selectionRing.SetActive(false);
 		}
+
+		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+		if (agent != null && agent.ReachedDestination()){
+			this.isDirected = false;
+		}
 	}
 
 	public void OnPlayerDisconnected(NetworkPlayer player) {
@@ -59,6 +68,8 @@ public class GameUnit : NetworkBehaviour {
 		RaycastHit[] hits = Physics.RaycastAll(ray);
 		foreach (RaycastHit hit in hits) {
 			if (hit.collider.gameObject.tag.Equals("Floor")) {
+				//Confirm that the player has issued an order for the game unit to follow/move to.
+				this.isDirected = true;
 				//Call on the client->server method to start the action.
 				CmdSetTarget(hit.point);
 				break;
