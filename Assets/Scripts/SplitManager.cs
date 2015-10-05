@@ -21,6 +21,15 @@ public struct SplitGroup {
 
 	public void Update() {
 		Debug.Log("Updating... from Split Group ");
+		this.ownerUnit.isSelected = false;
+		this.splitUnit.isSelected = false;
+
+		//Alternately, Stop() the nav mesh agent when the split group is created. Resume() the nav mesh agent when removing the split group.
+		//If that doesn't work, then this is the best solution to "halt" the nav mesh agent.
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.ResetPath();
+		}
 	}
 
 	public override string ToString() {

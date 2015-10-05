@@ -13,8 +13,10 @@ namespace Extension {
 					}
 				}
 				else {
-					if (!agent.hasPath || agent.velocity.sqrMagnitude <= float.Epsilon) {
-						return true;
+					if (agent.remainingDistance <= float.Epsilon) {
+						if (!agent.hasPath || agent.velocity.sqrMagnitude <= float.Epsilon) {
+							return true;
+						}
 					}
 				}
 			}
