@@ -7,7 +7,9 @@ public class GameUnit : NetworkBehaviour {
 	//Properties of a Game Unit
 	[SyncVar]
 	public bool isSelected;
+	[SyncVar]
 	public bool isDirected;
+	public GameUnit targetEnemy;
 	public GameObject selectionRing;
 
 	//This variable keeps track of any changes made for the NavMeshAgent's destination Vector3.
@@ -15,12 +17,15 @@ public class GameUnit : NetworkBehaviour {
 	//Just let the clients (local and remote) handle the pathfinding calculations and not pass updated current transform position
 	//through the network. It's not pretty when you do this.
 	public Vector3 oldTargetPosition;
+	public Vector3 oldEnemyTargetPosition;
 
 	public override void OnStartLocalPlayer() {
 		base.OnStartLocalPlayer();
 
 		//Initialization code for local player (local client on the host, and remote clients).
 		this.oldTargetPosition = Vector3.one * -9999f;
+		this.oldEnemyTargetPosition = Vector3.one * -9999f;
+		this.targetEnemy = null;
 		this.isSelected = false;
 		this.isDirected = false;
 	}
@@ -36,7 +41,6 @@ public class GameUnit : NetworkBehaviour {
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
 		if (this.isSelected) {
 			this.selectionRing.SetActive(true);
-
 			if (Input.GetMouseButton(1)) {
 				CastRay();
 			}
@@ -45,14 +49,30 @@ public class GameUnit : NetworkBehaviour {
 			this.selectionRing.SetActive(false);
 		}
 
+		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+
 		//Non-directed, self-defense
 		if (!this.isDirected) {
-			CheckSurroundings();
+			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
+			if (sight != null) {
+				if (sight.enemiesInRange.Count > 0) {
+					this.targetEnemy = sight.enemiesInRange[0];
+				}
+				else {
+					this.targetEnemy = null;
+				}
+			}
+
+			if (this.targetEnemy == null) {
+				CmdSelfDefense(null, this.oldEnemyTargetPosition, this.oldTargetPosition);
+			}
+			else {
+				CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
+			}
 		}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
-		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-		if (agent != null && agent.ReachedDestination()){
+		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
 		}
 	}
@@ -83,9 +103,41 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-	private List<GameUnit> CheckSurroundings() {
-		//List<GameUnit> enemies = new List<GameUnit>();
-		return null;
+	[Command]
+	public void CmdSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
+		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			if (target == null) {
+				agent.SetDestination(movePosition);
+			}
+			else {
+				if (this.oldEnemyTargetPosition != enemyPosition) {
+					agent.SetDestination(enemyPosition);
+					this.oldEnemyTargetPosition = enemyPosition;
+				}
+			}
+		}
+		RpcSelfDefense(target, enemyPosition, movePosition);
+	}
+
+	[ClientRpc]
+	private void RpcSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
+		if (!this.hasAuthority) {
+			return;
+		}
+
+		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			if (target == null) {
+				agent.SetDestination(movePosition);
+			}
+			else {
+				if (this.oldEnemyTargetPosition != enemyPosition) {
+					agent.SetDestination(enemyPosition);
+					this.oldEnemyTargetPosition = enemyPosition;
+				}
+			}
+		}
 	}
 
 	[Command]

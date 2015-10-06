@@ -4,6 +4,9 @@ using System.Collections.Generic;
 public class LineOfSight : MonoBehaviour {
 	public List<GameUnit> enemiesInRange = new List<GameUnit>();
 
+	//To use OnTrigger...() methods, you need to attach this script with a game object that have a Collider and a RigidBody.
+	//And remember to untick (uncheck) the "Use Gravity" in RigidBody.
+
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		if (unit != null && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
