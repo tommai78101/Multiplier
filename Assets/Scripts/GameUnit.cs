@@ -136,9 +136,9 @@ public class GameUnit : NetworkBehaviour {
 
 	[ClientRpc]
 	private void RpcSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
-		if (!this.hasAuthority) {
-			return;
-		}
+		//if (!this.hasAuthority) {
+		//	return;
+		//}
 
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
