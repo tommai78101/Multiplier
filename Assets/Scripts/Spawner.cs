@@ -65,9 +65,6 @@ public class Spawner : NetworkBehaviour {
 			}
 		}
 
-
-		Debug.Log(this.connectionToServer);
-
 		//Finally, initialize server only stuff or client only stuff.
 		//Also, finally found a use-case for [Server] / [ServerCallback]. Simplifies things a bit.
 		ServerInitialize();

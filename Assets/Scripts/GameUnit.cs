@@ -53,6 +53,7 @@ public class GameUnit : NetworkBehaviour {
 
 		//Non-directed, self-defense
 		if (!this.isDirected) {
+			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
@@ -69,6 +70,19 @@ public class GameUnit : NetworkBehaviour {
 			else {
 				CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
 			}
+
+			////Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
+			//AttackArea area = this.GetComponentInChildren<AttackArea>();
+			//if (area != null) {
+			//	if (area.enemies.Count > 0) {
+			//		if (this.targetEnemy != null && this.targetEnemy.Equals(area.enemies[0])) {
+			//			Debug.Log("Attacking!!");
+			//		}
+			//		else {
+			//			this.targetEnemy = area.enemies[0];
+			//		}
+			//	}
+			//}
 		}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.

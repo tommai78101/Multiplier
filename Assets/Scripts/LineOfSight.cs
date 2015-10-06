@@ -9,14 +9,16 @@ public class LineOfSight : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+		GameUnit myself = this.GetComponentInParent<GameUnit>();
+		if (unit != null && myself != null && (unit != myself) && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
 	}
 
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) {
+		GameUnit myself = this.GetComponentInParent<GameUnit>();
+		if (unit != null && myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Remove(unit);
 		}
 	}
