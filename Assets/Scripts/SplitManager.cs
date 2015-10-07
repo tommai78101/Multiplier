@@ -165,6 +165,10 @@ public class SplitManager : NetworkBehaviour {
 		GameUnit original = obj.GetComponent<GameUnit>();
 		GameUnit copy = split.GetComponent<GameUnit>();
 		GameUnit.Copy(original, copy);
+		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
+		originalAgent.ResetPath();
+		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
+		copyAgent.ResetPath();
 		this.splitGroupList.Add(new SplitGroup(original, copy));
 		this.selectionManager.allObjects.Add(split);
 	}

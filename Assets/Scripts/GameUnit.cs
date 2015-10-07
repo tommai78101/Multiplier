@@ -136,10 +136,6 @@ public class GameUnit : NetworkBehaviour {
 
 	[ClientRpc]
 	private void RpcSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
-		//if (!this.hasAuthority) {
-		//	return;
-		//}
-
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			if (target == null) {
@@ -204,5 +200,7 @@ public class GameUnit : NetworkBehaviour {
 		copy.transform.position = original.transform.position;
 		copy.transform.rotation = original.transform.rotation;
 		copy.transform.localScale = original.transform.localScale;
+		copy.isDirected = original.isDirected = false;
+		copy.oldTargetPosition = original.transform.position;
 	}
 }
