@@ -11,6 +11,26 @@ public class GameUnit : NetworkBehaviour {
 	public bool isDirected;
 	public GameUnit targetEnemy;
 	public GameObject selectionRing;
+	[SyncVar]
+	public int currentHealth;
+	[Range(3, 100)]
+	[SyncVar]
+	public int maxHealth;
+	[Range(0.1f, 100f)]
+	[SyncVar]
+	public float attackCooldown;
+	[SyncVar]
+	public float attackCooldownCounter;
+	[Range(0.1f, 100f)]
+	[SyncVar]
+	public float recoverCooldown;
+	[SyncVar]
+	public float recoverCounter;
+	[SyncVar]
+	public Color initialColor;
+	[SyncVar]
+	public Color takeDamageColor;
+	public List<GameUnit> enemies;
 
 	//This variable keeps track of any changes made for the NavMeshAgent's destination Vector3.
 	//Doesn't even need to use [SyncVar]. Nothing is needed for tracking this on the server at all. 
@@ -28,6 +48,15 @@ public class GameUnit : NetworkBehaviour {
 		this.targetEnemy = null;
 		this.isSelected = false;
 		this.isDirected = false;
+		this.currentHealth = this.maxHealth;
+		this.recoverCounter = this.recoverCooldown = 1f;
+		this.attackCooldownCounter = this.attackCooldown;
+		this.enemies = new List<GameUnit>();
+
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			this.initialColor = renderer.material.color;
+		}
 	}
 
 	public void Update() {
@@ -70,24 +99,50 @@ public class GameUnit : NetworkBehaviour {
 			else {
 				CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
 			}
-
-			////Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
-			//AttackArea area = this.GetComponentInChildren<AttackArea>();
-			//if (area != null) {
-			//	if (area.enemies.Count > 0) {
-			//		if (this.targetEnemy != null && this.targetEnemy.Equals(area.enemies[0])) {
-			//			Debug.Log("Attacking!!");
-			//		}
-			//		else {
-			//			this.targetEnemy = area.enemies[0];
-			//		}
-			//	}
-			//}
 		}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
+		}
+
+		Attack();
+		UpdateStatus();
+	}
+
+	public void Attack() {
+		//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
+		if (this.targetEnemy != null) {
+			if (this.attackCooldownCounter <= 0f) {
+				if (this.enemies.Count > 0) {
+					if (this.targetEnemy.Equals(this.enemies[0])) {
+						CmdAttack(this.targetEnemy.gameObject);
+						this.attackCooldownCounter = this.attackCooldown;
+						Debug.Log("Attack counter is reset. " + this.attackCooldownCounter);
+					}
+					else {
+						this.targetEnemy = this.enemies[0];
+					}
+				}
+				else {
+					this.targetEnemy = null;
+				}
+			}
+		}
+	}
+
+	public void UpdateStatus() {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			Debug.Log("Victim is attacked. Recover counter: " + this.recoverCounter);
+			renderer.material.color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
+		}
+
+		if (this.attackCooldownCounter > 0f) {
+			this.attackCooldownCounter -= Time.deltaTime;
+		}
+		if (this.recoverCounter < 1f) {
+			this.recoverCounter += Time.deltaTime / this.recoverCooldown;
 		}
 	}
 
@@ -114,6 +169,26 @@ public class GameUnit : NetworkBehaviour {
 				CmdSetTarget(hit.point);
 				break;
 			}
+		}
+	}
+
+	public void TakeDamage() {
+		this.currentHealth -= 1;
+		this.recoverCounter = 0f;
+	}
+
+	[Command]
+	public void CmdAttack(GameObject victim) {
+		Debug.Log("Calling on CmdAttack to server.");
+		RpcAttack(victim);
+	}
+
+	[ClientRpc]
+	public void RpcAttack(GameObject victim) {
+		Debug.Log("Calling on RpcAttack to client.");
+		GameUnit victimUnit = victim.GetComponent<GameUnit>();
+		if (victimUnit != null) {
+			victimUnit.TakeDamage();
 		}
 	}
 
