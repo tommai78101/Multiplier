@@ -165,8 +165,8 @@ public class SelectionManager : NetworkBehaviour {
 
 	private void SelectObjectAtPoint() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit hit;
-		if (Physics.Raycast(ray, out hit)) {
+		RaycastHit[] hits = Physics.RaycastAll(ray);
+		foreach (RaycastHit hit in hits) {
 			GameObject obj = hit.collider.gameObject;
 			if (obj.tag.Equals("Unit")) {
 				GameUnit unit = obj.GetComponent<GameUnit>();
