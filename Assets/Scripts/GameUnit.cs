@@ -32,6 +32,8 @@ public class GameUnit : NetworkBehaviour {
 	public Color takeDamageColor;
 	public List<GameUnit> enemies;
 
+	public static bool once = false;
+
 	//This variable keeps track of any changes made for the NavMeshAgent's destination Vector3.
 	//Doesn't even need to use [SyncVar]. Nothing is needed for tracking this on the server at all. 
 	//Just let the clients (local and remote) handle the pathfinding calculations and not pass updated current transform position
@@ -39,23 +41,25 @@ public class GameUnit : NetworkBehaviour {
 	public Vector3 oldTargetPosition;
 	public Vector3 oldEnemyTargetPosition;
 
-	public override void OnStartLocalPlayer() {
-		base.OnStartLocalPlayer();
+	public override void OnStartAuthority() {
+		if (!GameUnit.once) {
+			GameUnit.once = true;
 
-		//Initialization code for local player (local client on the host, and remote clients).
-		this.oldTargetPosition = Vector3.one * -9999f;
-		this.oldEnemyTargetPosition = Vector3.one * -9999f;
-		this.targetEnemy = null;
-		this.isSelected = false;
-		this.isDirected = false;
-		this.currentHealth = this.maxHealth;
-		this.recoverCounter = this.recoverCooldown = 1f;
-		this.attackCooldownCounter = this.attackCooldown;
-		this.enemies = new List<GameUnit>();
+			//Initialization code for local player (local client on the host, and remote clients).
+			this.oldTargetPosition = Vector3.one * -9999f;
+			this.oldEnemyTargetPosition = Vector3.one * -9999f;
+			this.targetEnemy = null;
+			this.isSelected = false;
+			this.isDirected = false;
+			this.currentHealth = this.maxHealth;
+			this.recoverCounter = this.recoverCooldown = 1f;
+			this.attackCooldownCounter = this.attackCooldown;
+			this.enemies = new List<GameUnit>();
 
-		Renderer renderer = this.GetComponent<Renderer>();
-		if (renderer != null) {
-			this.initialColor = renderer.material.color;
+			Renderer renderer = this.GetComponent<Renderer>();
+			if (renderer != null) {
+				this.initialColor = renderer.material.color;
+			}
 		}
 	}
 
@@ -134,7 +138,6 @@ public class GameUnit : NetworkBehaviour {
 	public void UpdateStatus() {
 		Renderer renderer = this.GetComponent<Renderer>();
 		if (renderer != null) {
-			Debug.Log("Victim is attacked. Recover counter: " + this.recoverCounter);
 			renderer.material.color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
 		}
 
@@ -143,6 +146,23 @@ public class GameUnit : NetworkBehaviour {
 		}
 		if (this.recoverCounter < 1f) {
 			this.recoverCounter += Time.deltaTime / this.recoverCooldown;
+		}
+		//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
+		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, renderer.material.color);
+	}
+
+	[Command]
+	public void CmdUpdateStatus(float attackCounter, float recoverCounter, Color color) {
+		this.attackCooldownCounter = attackCounter;
+		this.recoverCounter = recoverCounter;
+		RpcUpdateStatus(color);
+	}
+
+	[ClientRpc]
+	public void RpcUpdateStatus(Color color) {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			renderer.material.color = color;
 		}
 	}
 
