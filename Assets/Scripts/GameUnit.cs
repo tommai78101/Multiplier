@@ -194,13 +194,4 @@ public class GameUnit : NetworkBehaviour {
 
 		NetworkServer.Destroy(this.gameObject);
 	}
-
-	public static void Copy(GameUnit original, GameUnit copy) {
-		copy.isSelected = original.isSelected;
-		copy.transform.position = original.transform.position;
-		copy.transform.rotation = original.transform.rotation;
-		copy.transform.localScale = original.transform.localScale;
-		copy.isDirected = original.isDirected = false;
-		copy.oldTargetPosition = original.transform.position;
-	}
 }

@@ -5,18 +5,33 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public struct SplitGroup {
-	public NetworkIdentity owner;
-	public NetworkIdentity split;
 	public GameUnit ownerUnit;
 	public GameUnit splitUnit;
 	public float elapsedTime;
+	public Vector3 rotationVector;
+	public Vector3 origin;
 
 	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit) {
 		this.ownerUnit = ownerUnit;
 		this.splitUnit = splitUnit;
-		this.owner = ownerUnit.gameObject.GetComponent<NetworkIdentity>();
-		this.split = splitUnit.gameObject.GetComponent<NetworkIdentity>();
 		this.elapsedTime = 0f;
+		this.origin = ownerUnit.gameObject.transform.position;
+
+		//TODO: Add a radius where the unit will always go towards.
+		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
+		float angle = UnityEngine.Random.Range(-180f, 180f);
+		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
+
+		//Alternately, Stop() the nav mesh agent when the split group is created. Resume() the nav mesh agent when removing the split group.
+		//If that doesn't work, then this is the best solution to "halt" the nav mesh agent.
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+		}
+		agent = this.splitUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+		}
 	}
 
 	public void Update() {
@@ -24,16 +39,24 @@ public struct SplitGroup {
 		this.ownerUnit.isSelected = false;
 		this.splitUnit.isSelected = false;
 
-		//Alternately, Stop() the nav mesh agent when the split group is created. Resume() the nav mesh agent when removing the split group.
-		//If that doesn't work, then this is the best solution to "halt" the nav mesh agent.
+		Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
+		this.ownerUnit.gameObject.transform.position = pos;
+		pos = Vector3.Lerp(this.origin, this.origin - this.rotationVector, this.elapsedTime);
+		this.splitUnit.gameObject.transform.position = pos;
+	}
+
+	public void Stop() {
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.ResetPath();
+			agent.Resume();
 		}
-	}
 
-	public override string ToString() {
-		return "Group something.";
+		agent = this.splitUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.ResetPath();
+			agent.Resume();
+		}
 	}
 };
 
@@ -110,11 +133,12 @@ public class SplitManager : NetworkBehaviour {
 				Debug.Log("Updating split group...." + i);
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime > 1f) {
-					if (!this.selectionManager.allObjects.Contains(group.split.gameObject)) {
-						this.selectionManager.allObjects.Add(group.split.gameObject);
+					group.Stop();
+					if (!this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
+						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
 					}
-					if (!this.selectionManager.allObjects.Contains(group.owner.gameObject)) {
-						this.selectionManager.allObjects.Add(group.owner.gameObject);
+					if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
+						this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
 					}
 					this.removeList.Add(group);
 				}
@@ -159,17 +183,26 @@ public class SplitManager : NetworkBehaviour {
 	public void RpcSplit(GameObject obj, GameObject split) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
-		if (!this.hasAuthority) {
-			return;
-		}
+		//if (!this.hasAuthority) {
+		//	return;
+		//}
 		GameUnit original = obj.GetComponent<GameUnit>();
 		GameUnit copy = split.GetComponent<GameUnit>();
-		GameUnit.Copy(original, copy);
+		Copy(original, copy);
 		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
 		originalAgent.ResetPath();
 		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
 		copyAgent.ResetPath();
 		this.splitGroupList.Add(new SplitGroup(original, copy));
 		this.selectionManager.allObjects.Add(split);
+	}
+
+	private void Copy(GameUnit original, GameUnit copy) {
+		copy.isSelected = original.isSelected;
+		copy.transform.position = original.transform.position;
+		copy.transform.rotation = original.transform.rotation;
+		copy.transform.localScale = original.transform.localScale;
+		copy.oldTargetPosition = original.oldTargetPosition;
+		copy.isDirected = original.isDirected = false;
 	}
 }
