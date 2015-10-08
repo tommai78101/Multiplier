@@ -12,6 +12,7 @@ public class SelectionManager : NetworkBehaviour {
 	public NetworkConnection authorityOwner;
 
 	public bool isSelecting;
+	public bool isBoxSelecting;
 
 	void Start() {
 		//If you need to use a different design instead of checking for hasAuthority, then it means
@@ -64,10 +65,14 @@ public class SelectionManager : NetworkBehaviour {
 			SelectObjectsInRect();
 			SelectObjects();
 			this.isSelecting = false;
+			this.isBoxSelecting = false;
 			this.initialClick = -Vector3.one;
 		}
 
 		if (this.isSelecting && Input.GetMouseButton(0)) {
+			if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
+				this.isBoxSelecting = true;
+			}
 			this.selectionBox.Set(this.initialClick.x, Screen.height - this.initialClick.y, Input.mousePosition.x - this.initialClick.x, (Screen.height - Input.mousePosition.y) - (Screen.height - this.initialClick.y));
 			if (this.selectionBox.width < 0) {
 				this.selectionBox.x += this.selectionBox.width;
@@ -144,9 +149,25 @@ public class SelectionManager : NetworkBehaviour {
 	private void SelectObjectsInRect() {
 		foreach (GameObject obj in this.allObjects) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (unit.isSelected) {
-				if (!this.selectedObjects.Contains(obj)) {
-					this.selectedObjects.Add(obj);
+			if (this.isBoxSelecting) {
+				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+				projectedPosition.y = Screen.height - projectedPosition.y;
+				if (this.selectionBox.Contains(projectedPosition)) {
+					if (this.selectedObjects.Contains(obj)) {
+						unit.isSelected = false;
+						this.selectedObjects.Remove(obj);
+					}
+					else {
+						unit.isSelected = true;
+						this.selectedObjects.Add(obj);
+					}
+				}
+			}
+			else {
+				if (unit.isSelected) {
+					if (!this.selectedObjects.Contains(obj)) {
+						this.selectedObjects.Add(obj);
+					}
 				}
 			}
 		}
