@@ -11,7 +11,7 @@ public struct SplitGroup {
 	public Vector3 rotationVector;
 	public Vector3 origin;
 
-	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit) {
+	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit, float angle) {
 		this.ownerUnit = ownerUnit;
 		this.splitUnit = splitUnit;
 		this.elapsedTime = 0f;
@@ -19,19 +19,7 @@ public struct SplitGroup {
 
 		//TODO: Add a radius where the unit will always go towards.
 		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
-		float angle = UnityEngine.Random.Range(-180f, 180f);
 		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
-
-		//Alternately, Stop() the nav mesh agent when the split group is created. Resume() the nav mesh agent when removing the split group.
-		//If that doesn't work, then this is the best solution to "halt" the nav mesh agent.
-		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Stop();
-		}
-		agent = this.splitUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Stop();
-		}
 	}
 
 	public void Update() {
@@ -39,6 +27,10 @@ public struct SplitGroup {
 		this.ownerUnit.isSelected = false;
 		this.splitUnit.isSelected = false;
 
+		//Known Bug: When splitting, the local client will have smooth transitions, but the remote clients will see stuttering animations caused by
+		//constant updates to the NavMeshAgent.
+		//If it's a bug that I couldn't fix, then make it a feature!
+		//Making splitting animations an obvious cue for the players to see.
 		Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
 		this.ownerUnit.gameObject.transform.position = pos;
 		pos = Vector3.Lerp(this.origin, this.origin - this.rotationVector, this.elapsedTime);
@@ -49,13 +41,11 @@ public struct SplitGroup {
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.ResetPath();
-			agent.Resume();
 		}
 
 		agent = this.splitUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.ResetPath();
-			agent.Resume();
 		}
 	}
 };
@@ -127,7 +117,7 @@ public class SplitManager : NetworkBehaviour {
 		UpdateSplitGroup();
 	}
 
-	private void UpdateSplitGroup() {
+	public void UpdateSplitGroup() {
 		if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 			for (int i = 0; i < this.splitGroupList.Count; i++) {
 				Debug.Log("Updating split group...." + i);
@@ -160,14 +150,15 @@ public class SplitManager : NetworkBehaviour {
 	}
 
 	private void AddingNewSplitGroup() {
+		float angle = UnityEngine.Random.Range(-180f, 180f);
 		foreach (GameObject obj in this.selectionManager.selectedObjects) {
-			CmdSplit(obj);
+			CmdSplit(obj, angle);
 		}
 		return;
 	}
 
 	[Command]
-	public void CmdSplit(GameObject obj) {
+	public void CmdSplit(GameObject obj, float angle) {
 		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
@@ -176,16 +167,13 @@ public class SplitManager : NetworkBehaviour {
 		split.transform.position = obj.transform.position;
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
-		RpcSplit(obj, split);
+		RpcSplit(obj, split, angle);
 	}
 
 	[ClientRpc]
-	public void RpcSplit(GameObject obj, GameObject split) {
+	public void RpcSplit(GameObject obj, GameObject split, float angle) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
-		//if (!this.hasAuthority) {
-		//	return;
-		//}
 		GameUnit original = obj.GetComponent<GameUnit>();
 		GameUnit copy = split.GetComponent<GameUnit>();
 		Copy(original, copy);
@@ -193,7 +181,7 @@ public class SplitManager : NetworkBehaviour {
 		originalAgent.ResetPath();
 		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
 		copyAgent.ResetPath();
-		this.splitGroupList.Add(new SplitGroup(original, copy));
+		this.splitGroupList.Add(new SplitGroup(original, copy, angle));
 		this.selectionManager.allObjects.Add(split);
 	}
 
