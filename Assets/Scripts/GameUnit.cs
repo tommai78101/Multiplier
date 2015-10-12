@@ -41,9 +41,13 @@ public class GameUnit : NetworkBehaviour {
 	public Vector3 oldTargetPosition;
 	public Vector3 oldEnemyTargetPosition;
 
-	public override void OnStartAuthority() {
-		if (!GameUnit.once) {
-			GameUnit.once = true;
+	public override void OnStartClient() {
+		base.OnStartAuthority();
+
+		Debug.LogWarning("Starting client");
+
+		//if (!GameUnit.once) {
+		//	GameUnit.once = true;
 
 			//Initialization code for local player (local client on the host, and remote clients).
 			this.oldTargetPosition = Vector3.one * -9999f;
@@ -60,7 +64,17 @@ public class GameUnit : NetworkBehaviour {
 			if (renderer != null) {
 				this.initialColor = renderer.material.color;
 			}
-		}
+		//}
+	}
+
+	public override void OnStartLocalPlayer() {
+		base.OnStartLocalPlayer();
+		Debug.LogWarning("Starting local player");
+	}
+
+	public override void OnStartAuthority() {
+		base.OnStartClient();
+		Debug.LogWarning("Starting authority");
 	}
 
 	public void Update() {
@@ -85,12 +99,17 @@ public class GameUnit : NetworkBehaviour {
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 
 		//Non-directed, self-defense
-		if (!this.isDirected) {
+		if (!this.isDirected || agent.remainingDistance < 2f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
-					this.targetEnemy = sight.enemiesInRange[0];
+					if (sight.enemiesInRange[0] != null) {
+						this.targetEnemy = sight.enemiesInRange[0];
+					}
+					else {
+						sight.enemiesInRange.RemoveAt(0);
+					}
 				}
 				else {
 					this.targetEnemy = null;
@@ -103,15 +122,17 @@ public class GameUnit : NetworkBehaviour {
 			else {
 				CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
 			}
+			Attack();
 		}
+
+		UpdateStatus();
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
 		}
 
-		Attack();
-		UpdateStatus();
+		
 	}
 
 	public void Attack() {
@@ -195,6 +216,10 @@ public class GameUnit : NetworkBehaviour {
 	public void TakeDamage() {
 		this.currentHealth -= 1;
 		this.recoverCounter = 0f;
+
+		if (this.currentHealth <= 0) {
+			CmdUnitDestroy();
+		}
 	}
 
 	[Command]
@@ -289,4 +314,21 @@ public class GameUnit : NetworkBehaviour {
 
 		NetworkServer.Destroy(this.gameObject);
 	}
+
+	[Command]
+	public void CmdUnitDestroy() {
+		RpcUnitDestroy(this.gameObject);
+		NetworkServer.Destroy(this.gameObject);
+	}
+
+	[ClientRpc]
+	public void RpcUnitDestroy(GameObject obj) {
+		GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
+		foreach (GameObject selectObj in selects) {
+			SelectionManager select = selectObj.GetComponent<SelectionManager>();
+			if (select != null) {
+				select.AddToRemoveList(obj);
+			}
+		}
+    }
 }
