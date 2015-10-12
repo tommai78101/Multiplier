@@ -5,26 +5,53 @@ using System.Collections.Generic;
 
 [Serializable]
 public struct MergeGroup {
-	public NetworkIdentity owner;
-	public NetworkIdentity merging;
 	public GameUnit ownerUnit;
 	public GameUnit mergingUnit;
-	public GameObject ownerObject;
-	public GameObject mergingObject;
+	public Vector3 origin;
+	public Vector3 ownerPosition;
+	public Vector3 mergingPosition;
+	public Vector3 ownerScale;
+	public Vector3 mergingScale;
 	public float elaspedTime;
 
 	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit) {
-		this.owner = ownerUnit.gameObject.GetComponent<NetworkIdentity>();
-		this.merging = mergingUnit.gameObject.GetComponent<NetworkIdentity>();
-		this.ownerObject = ownerUnit.gameObject;
-		this.mergingObject = mergingUnit.gameObject;
 		this.ownerUnit = ownerUnit;
 		this.mergingUnit = mergingUnit;
 		this.elaspedTime = 0f;
+
+		this.ownerPosition = ownerUnit.gameObject.transform.position;
+		this.mergingPosition = mergingUnit.gameObject.transform.position;
+        this.origin = Vector3.Lerp(this.ownerPosition, this.mergingPosition, 0.5f);
+		this.ownerScale = ownerUnit.gameObject.transform.localScale;
+		this.mergingScale = mergingUnit.gameObject.transform.localScale;
 	}
 
-	public void Update() {
-		Debug.Log("Merging group : TODO");
+	public void Update(float scaling) {
+		this.ownerUnit.isSelected = false;
+		this.mergingUnit.isSelected = false;
+
+		//Merging animation. Most likely another known bug that I cannot fix.
+		this.ownerUnit.gameObject.transform.position = Vector3.Lerp(this.ownerPosition, this.origin, this.elaspedTime);
+		this.mergingUnit.gameObject.transform.position = Vector3.Lerp(this.mergingPosition, this.origin, this.elaspedTime);
+
+		//Scaling animation. Same persistent bug? It might be another mysterious bug.
+		Vector3 scale = Vector3.Lerp(this.ownerScale, this.ownerScale * scaling, this.elaspedTime);
+		scale.y = this.ownerScale.y;
+		this.ownerUnit.gameObject.transform.localScale = scale;
+		scale = Vector3.Lerp(this.mergingScale, this.mergingScale * scaling, this.elaspedTime);
+		scale.y = this.mergingScale.y;
+		this.mergingUnit.gameObject.transform.localScale = scale;
+	}
+
+	public void Stop() {
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.ResetPath();
+		}
+		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.ResetPath();
+		}
 	}
 };
 
@@ -36,6 +63,7 @@ public class MergeManager : NetworkBehaviour {
 	[SerializeField]
 	public SelectionManager selectionManager;
 
+	[Range(0.1f, 100f)]
 	public float scalingValue = 2f;
 
 
@@ -79,12 +107,13 @@ public class MergeManager : NetworkBehaviour {
 	private void AddMergeGroup() {
 		//Since merging units require the selected units count to be a multiple of 2, we need to check to make sure they are a multiple of 2.
 		//Else, ignore the final selected unit.
+		//Going to change this into network code, to sync up merging.
 		for (int i = 0; (i < this.selectionManager.selectedObjects.Count) && (i + 1 < this.selectionManager.selectedObjects.Count); i += 2) {
 			GameObject ownerObject = this.selectionManager.selectedObjects[i];
-			GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
+			//GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 			GameObject mergerObject = this.selectionManager.selectedObjects[i + 1];
-			GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-			this.mergeList.Add(new MergeGroup(ownerUnit, mergerUnit));
+			//GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
+			CmdAddMerge(ownerObject, mergerObject);
 		}
 	}
 
@@ -96,12 +125,13 @@ public class MergeManager : NetworkBehaviour {
 				MergeGroup group = this.mergeList[i];
 				if (group.elaspedTime > 1f) {
 					if (!this.removeList.Contains(group)) {
+						group.Stop();
 						FinishMergeGroup(group);
 						this.removeList.Add(group);
 					}
 				}
 				else {
-					group.Update();
+					group.Update(this.scalingValue);
 					group.elaspedTime += Time.deltaTime / 3f;
 					this.mergeList[i] = group;
 				}
@@ -119,19 +149,47 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	private void FinishMergeGroup(MergeGroup group) {
-		CmdMerge(group.ownerObject, group.mergingObject);
+		CmdEndMerge(group.ownerUnit.gameObject, group.mergingUnit.gameObject);
 	}
 
 	[Command]
-	public void CmdMerge(GameObject ownerObject, GameObject mergingObject) {
-		NetworkServer.Destroy(mergingObject);
-		RpcMerge(ownerObject, mergingObject);
+	public void CmdEndMerge(GameObject ownerObject, GameObject mergingObject) {
+		if (mergingObject != null) {
+			NetworkServer.Destroy(mergingObject);
+		}
+		RpcEndMerge(ownerObject);
 	}
 
 	[ClientRpc]
-	public void RpcMerge(GameObject ownerObject, GameObject mergingObject) {
-		Vector3 scale = ownerObject.transform.localScale;
-		scale *= this.scalingValue;
-		ownerObject.transform.localScale = scale;
+	public void RpcEndMerge(GameObject ownerObject) {
+		NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
+		agent.Resume();
+		agent.ResetPath();
+	}
+
+	[Command]
+	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject) {
+		//NetworkServer.Destroy(mergingUnit.gameObject);
+		RpcAddMerge(ownerObject, mergingObject);
+	}
+
+	[ClientRpc]
+	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject) {
+		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
+		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
+		NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
+		ownerAgent.Stop();
+		NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
+		mergingAgent.Stop();
+		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit);
+
+		//this.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit));
+		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
+		foreach (GameObject manager in managers) {
+			MergeManager mergeManager = manager.GetComponent<MergeManager>();
+			if (mergeManager != null) {
+				mergeManager.mergeList.Add(group);
+			}
+		}
 	}
 }

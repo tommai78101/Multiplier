@@ -181,6 +181,7 @@ public class SplitManager : NetworkBehaviour {
 		originalAgent.ResetPath();
 		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
 		copyAgent.ResetPath();
+
 		this.splitGroupList.Add(new SplitGroup(original, copy, angle));
 		this.selectionManager.allObjects.Add(split);
 	}
