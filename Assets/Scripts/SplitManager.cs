@@ -43,8 +43,16 @@ public struct SplitGroup {
 		//If it's a bug that I couldn't fix, then make it a feature!
 		//Making splitting animations an obvious cue for the players to see.
 		Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
+		if (this.ownerUnit == null || this.ownerUnit.gameObject == null) {
+			this.elapsedTime = 1f;
+			return;
+		}
 		this.ownerUnit.gameObject.transform.position = pos;
 		pos = Vector3.Lerp(this.origin, this.origin - this.rotationVector, this.elapsedTime);
+		if (this.splitUnit == null || this.splitUnit.gameObject == null) {
+			this.elapsedTime = 1f;
+			return;
+		}
 		this.splitUnit.gameObject.transform.position = pos;
 	}
 
@@ -162,6 +170,10 @@ public class SplitManager : NetworkBehaviour {
 
 	private void AddingNewSplitGroup() {
 		foreach (GameObject obj in this.selectionManager.selectedObjects) {
+			if (obj == null) {
+				this.selectionManager.removeList.Add(obj);
+				continue;
+			}
 			GameUnit objUnit = obj.GetComponent<GameUnit>();
 			if (objUnit.level == 1) {
 				CmdSplit(obj);

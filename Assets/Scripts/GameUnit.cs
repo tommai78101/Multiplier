@@ -19,12 +19,12 @@ public class GameUnit : NetworkBehaviour {
 	[Range(1f, 100f)]
 	[SyncVar]
 	public float attackPower;
-	[Range(0.1f, 100f)]
+	[Range(0.1f, 10f)]
 	[SyncVar]
 	public float attackCooldown;
 	[SyncVar]
 	public float attackCooldownCounter;
-	[Range(0.1f, 100f)]
+	[Range(0.001f, 10f)]
 	[SyncVar]
 	public float recoverCooldown;
 	[SyncVar]
@@ -63,6 +63,9 @@ public class GameUnit : NetworkBehaviour {
 		this.currentHealth = this.maxHealth;
 		this.recoverCounter = this.recoverCooldown = 1f;
 		this.attackCooldownCounter = this.attackCooldown;
+		if (this.attackPower <= 1f) {
+			this.attackPower = 1f;
+		}
 		this.enemies = new List<GameUnit>();
 		this.level = 1;
 
@@ -105,9 +108,9 @@ public class GameUnit : NetworkBehaviour {
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 
 		//Non-directed, self-defense
+		LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 		if (!this.isDirected || agent.remainingDistance < 0.5f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
-			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
 					if (sight.enemiesInRange[0] != null) {
@@ -120,25 +123,36 @@ public class GameUnit : NetworkBehaviour {
 				else {
 					this.targetEnemy = null;
 				}
-			}
 
-			if (this.targetEnemy == null) {
-				CmdSelfDefense(null, this.oldEnemyTargetPosition, this.oldTargetPosition);
-			}
-			else {
-				CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
+				if (this.targetEnemy != null) {
+					CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
+				}
 			}
 			Attack();
 		}
-
 		UpdateStatus();
+
+		//There needs to be a check that constantly checks for enemies nearby.
+		if (this.targetEnemy == null) {
+			Debug.Log("Target enemy is null. Checking for nearby enemies.");
+			foreach (GameUnit unit in sight.enemiesInRange) {
+				if (unit == null) {
+					sight.removeList.Add(unit);
+				}
+				else {
+					Debug.Log("Found a new enemy, setting it as target enemy.");
+					this.targetEnemy = unit;
+					break;
+				}
+			}
+		}
+
+		Debug.Log(this.ToString() + " : Is target enemy null? " + (this.targetEnemy == null ? " Yes" : " No"));
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
 		}
-
-
 	}
 
 	public void Attack() {
@@ -175,13 +189,14 @@ public class GameUnit : NetworkBehaviour {
 			this.recoverCounter += Time.deltaTime / this.recoverCooldown;
 		}
 		//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
-		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, renderer.material.color);
+		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, renderer.material.color);
 	}
 
 	[Command]
-	public void CmdUpdateStatus(float attackCounter, float recoverCounter, Color color) {
+	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, Color color) {
 		this.attackCooldownCounter = attackCounter;
 		this.recoverCounter = recoverCounter;
+		this.currentHealth = currentHealth;
 		RpcUpdateStatus(color);
 	}
 
@@ -220,12 +235,16 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	public void TakeDamage(GameUnit attacker) {
-		this.currentHealth -= Mathf.FloorToInt(attacker.attackPower);
+		CmdHealth(this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
 		this.recoverCounter = 0f;
-
 		if (this.currentHealth <= 0) {
 			CmdUnitDestroy();
 		}
+	}
+
+	[Command]
+	public void CmdHealth(int newHealth) {
+		this.currentHealth = newHealth;
 	}
 
 	[Command]
@@ -237,6 +256,9 @@ public class GameUnit : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcAttack(GameObject victim) {
 		Debug.Log("Calling on RpcAttack to client.");
+		if (victim == null) {
+			return;
+		}
 		GameUnit victimUnit = victim.GetComponent<GameUnit>();
 		if (victimUnit != null) {
 			victimUnit.TakeDamage(this);
