@@ -24,6 +24,17 @@ public struct MergeGroup {
         this.origin = Vector3.Lerp(this.ownerPosition, this.mergingPosition, 0.5f);
 		this.ownerScale = ownerUnit.gameObject.transform.localScale;
 		this.mergingScale = mergingUnit.gameObject.transform.localScale;
+
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+			agent.ResetPath();
+		}
+		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+			agent.ResetPath();
+		}
 	}
 
 	public void Update(float scaling) {
@@ -46,11 +57,11 @@ public struct MergeGroup {
 	public void Stop() {
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			agent.ResetPath();
+			agent.Resume();
 		}
 		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			agent.ResetPath();
+			agent.Resume();
 		}
 	}
 };

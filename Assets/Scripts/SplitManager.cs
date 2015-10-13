@@ -20,6 +20,18 @@ public struct SplitGroup {
 		//TODO: Add a radius where the unit will always go towards.
 		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
 		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+
+		if (agent != null) {
+			agent.ResetPath();
+			agent.Stop();
+		}
+
+		agent = this.splitUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.ResetPath();
+			agent.Stop();
+		}
 	}
 
 	public void Update() {
@@ -40,12 +52,12 @@ public struct SplitGroup {
 	public void Stop() {
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			agent.ResetPath();
+			agent.Resume();
 		}
 
 		agent = this.splitUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			agent.ResetPath();
+			agent.Resume();
 		}
 	}
 };
