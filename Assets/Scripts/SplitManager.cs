@@ -162,7 +162,10 @@ public class SplitManager : NetworkBehaviour {
 
 	private void AddingNewSplitGroup() {
 		foreach (GameObject obj in this.selectionManager.selectedObjects) {
-			CmdSplit(obj);
+			GameUnit objUnit = obj.GetComponent<GameUnit>();
+			if (objUnit.level == 1) {
+				CmdSplit(obj);
+			}
 		}
 		return;
 	}
