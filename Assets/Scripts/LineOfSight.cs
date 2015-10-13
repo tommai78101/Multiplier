@@ -37,18 +37,19 @@ public class LineOfSight : MonoBehaviour {
 		}
 	}
 
-	public void FixedUpdate() {
-		Collider[] objs = Physics.OverlapSphere(this.transform.position, this.radius);
-		foreach (Collider col in objs) {
-			GameUnit unit = col.gameObject.GetComponentInParent<GameUnit>();
-			if (unit != null && !unit.Equals(this.parent) && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
-				this.enemiesInRange.Add(unit);
-			}
+	public void OnTriggerStay(Collider other) {
+		GameUnit unit = other.GetComponentInParent<GameUnit>();
+		if (unit != null && !unit.hasAuthority && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
+			this.enemiesInRange.Add(unit);
 		}
+	}
 
-		foreach (GameUnit unit in this.enemiesInRange) {
-			if (unit == null) {
-				this.removeList.Add(unit);
+	public void FixedUpdate() {
+		if (this.enemiesInRange.Count > 0) {
+			foreach (GameUnit unit in this.enemiesInRange) {
+				if (unit == null) {
+					this.removeList.Add(unit);
+				}
 			}
 		}
 
@@ -60,5 +61,18 @@ public class LineOfSight : MonoBehaviour {
 			}
 			this.removeList.Clear();
 		}
+	}
+
+	public bool Recheck() {
+		bool result = false;
+		Collider[] objs = Physics.OverlapSphere(this.transform.position, this.radius / 2f);
+		foreach (Collider col in objs) {
+			GameUnit unit = col.gameObject.GetComponentInParent<GameUnit>();
+			if (unit != null && !unit.Equals(this.parent) && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+				this.enemiesInRange.Add(unit);
+				result = true;
+			}
+		}
+		return result;
 	}
 }

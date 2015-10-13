@@ -78,6 +78,7 @@ public class Spawner : NetworkBehaviour {
 
 		//Player unit
 		GameObject obj = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
+		obj.transform.position = this.transform.position;
 		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
 

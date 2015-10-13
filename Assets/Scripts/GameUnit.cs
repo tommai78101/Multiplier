@@ -35,7 +35,6 @@ public class GameUnit : NetworkBehaviour {
 	public Color initialColor;
 	[SyncVar]
 	public Color takeDamageColor;
-	public List<GameUnit> enemies;
 
 	public static bool once = false;
 
@@ -66,7 +65,6 @@ public class GameUnit : NetworkBehaviour {
 		if (this.attackPower <= 1f) {
 			this.attackPower = 1f;
 		}
-		this.enemies = new List<GameUnit>();
 		this.level = 1;
 
 		Renderer renderer = this.GetComponent<Renderer>();
@@ -113,42 +111,35 @@ public class GameUnit : NetworkBehaviour {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
-					if (sight.enemiesInRange[0] != null) {
-						this.targetEnemy = sight.enemiesInRange[0];
-					}
-					else {
-						sight.enemiesInRange.RemoveAt(0);
-					}
+					this.targetEnemy = sight.enemiesInRange[0];
 				}
 				else {
 					this.targetEnemy = null;
 				}
-
-				if (this.targetEnemy != null) {
-					CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
-				}
 			}
-			Attack();
 		}
-		UpdateStatus();
+
+		Attack();
+
+		if (this.targetEnemy != null) {
+			CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
+		}
 
 		//There needs to be a check that constantly checks for enemies nearby.
 		if (this.targetEnemy == null) {
-			Debug.Log("Target enemy is null. Checking for nearby enemies.");
+			if (sight.enemiesInRange.Count <= 0) {
+				Debug.LogError("Are there any enemies? " + (sight.Recheck() ? " Yes" : " No"));
+			}
 			foreach (GameUnit unit in sight.enemiesInRange) {
-				if (unit == null) {
-					sight.removeList.Add(unit);
-				}
-				else {
-					Debug.Log("Found a new enemy, setting it as target enemy.");
+				if (unit != null) {
 					this.targetEnemy = unit;
 					break;
 				}
 			}
 		}
 
-		Debug.Log(this.ToString() + " : Is target enemy null? " + (this.targetEnemy == null ? " Yes" : " No"));
 
+		UpdateStatus();
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
@@ -157,21 +148,19 @@ public class GameUnit : NetworkBehaviour {
 
 	public void Attack() {
 		//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
-		if (this.targetEnemy != null) {
-			if (this.attackCooldownCounter <= 0f) {
-				if (this.enemies.Count > 0) {
-					if (this.targetEnemy.Equals(this.enemies[0])) {
-						CmdAttack(this.targetEnemy.gameObject);
-						this.attackCooldownCounter = this.attackCooldown;
-						Debug.Log("Attack counter is reset. " + this.attackCooldownCounter);
-					}
-					else {
-						this.targetEnemy = this.enemies[0];
-					}
+		AttackArea area = this.GetComponentInChildren<AttackArea>();
+		if (area != null) {
+			if (this.targetEnemy != null && area.enemiesInAttackRange.Contains(this.targetEnemy)) {
+				if (this.attackCooldownCounter <= 0f) {
+					CmdAttack(this.targetEnemy.gameObject);
+					this.attackCooldownCounter = this.attackCooldown;
 				}
-				else {
-					this.targetEnemy = null;
-				}
+			}
+			else if (area.enemiesInAttackRange.Count > 0) {
+				this.targetEnemy = area.enemiesInAttackRange[0];
+			}
+			else {
+				this.targetEnemy = null;
 			}
 		}
 	}

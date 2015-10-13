@@ -85,6 +85,18 @@ public class SelectionManager : NetworkBehaviour {
 			TempRectSelectObjects();
 		}
 
+		foreach (GameObject obj in this.allObjects) {
+			if (obj == null && !this.removeList.Contains(obj)) {
+				this.removeList.Add(obj);
+			}
+		}
+
+		for (int i = 0; i < this.selectedObjects.Count; i++) {
+			if (this.selectedObjects[i] == null) {
+				this.selectedObjects.RemoveAt(i);
+			}
+		}
+
 		if (this.removeList.Count > 0) {
 			foreach (GameObject obj in this.removeList) {
 				if (this.allObjects.Contains(obj)) {

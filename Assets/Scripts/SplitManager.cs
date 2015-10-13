@@ -57,14 +57,19 @@ public struct SplitGroup {
 	}
 
 	public void Stop() {
-		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Resume();
+		NavMeshAgent agent = null;
+		if (this.ownerUnit != null) {
+			agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+			if (agent != null) {
+				agent.Resume();
+			}
 		}
 
-		agent = this.splitUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Resume();
+		if (this.splitUnit != null) {
+			agent = this.splitUnit.GetComponent<NavMeshAgent>();
+			if (agent != null) {
+				agent.Resume();
+			}
 		}
 	}
 };
@@ -143,7 +148,7 @@ public class SplitManager : NetworkBehaviour {
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime > 1f) {
 					group.Stop();
-					if (!this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
+					if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
 						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
 					}
 					if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
@@ -209,6 +214,15 @@ public class SplitManager : NetworkBehaviour {
 		copyAgent.ResetPath();
 
 		this.splitGroupList.Add(new SplitGroup(original, copy, angle));
+		if (this.selectionManager == null) {
+			GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
+			foreach (GameObject select in objs) {
+				SelectionManager manager = select.GetComponent<SelectionManager>();
+				if (manager.hasAuthority) {
+					this.selectionManager = manager;
+				}
+			}
+		}
 		this.selectionManager.allObjects.Add(split);
 	}
 
