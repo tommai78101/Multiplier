@@ -153,7 +153,7 @@ public class MergeManager : NetworkBehaviour {
 				}
 				mergerObject = this.selectionManager.selectedObjects[j];
 				GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-				if (ownerUnit.level == mergerUnit.level && ownerUnit.level == 1 && mergerUnit.level == 1) {
+				if (ownerUnit.level == mergerUnit.level) {
 					used.Add(this.selectionManager.selectedObjects[i]);
 					used.Add(this.selectionManager.selectedObjects[j]);
 					CmdAddMerge(ownerObject, mergerObject);
