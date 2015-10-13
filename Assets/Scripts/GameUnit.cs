@@ -16,6 +16,9 @@ public class GameUnit : NetworkBehaviour {
 	[Range(3, 100)]
 	[SyncVar]
 	public int maxHealth;
+	[Range(1f, 100f)]
+	[SyncVar]
+	public float attackPower;
 	[Range(0.1f, 100f)]
 	[SyncVar]
 	public float attackCooldown;
@@ -26,6 +29,8 @@ public class GameUnit : NetworkBehaviour {
 	public float recoverCooldown;
 	[SyncVar]
 	public float recoverCounter;
+	[SyncVar]
+	public int level;
 	[SyncVar]
 	public Color initialColor;
 	[SyncVar]
@@ -49,21 +54,22 @@ public class GameUnit : NetworkBehaviour {
 		//if (!GameUnit.once) {
 		//	GameUnit.once = true;
 
-			//Initialization code for local player (local client on the host, and remote clients).
-			this.oldTargetPosition = Vector3.one * -9999f;
-			this.oldEnemyTargetPosition = Vector3.one * -9999f;
-			this.targetEnemy = null;
-			this.isSelected = false;
-			this.isDirected = false;
-			this.currentHealth = this.maxHealth;
-			this.recoverCounter = this.recoverCooldown = 1f;
-			this.attackCooldownCounter = this.attackCooldown;
-			this.enemies = new List<GameUnit>();
+		//Initialization code for local player (local client on the host, and remote clients).
+		this.oldTargetPosition = Vector3.one * -9999f;
+		this.oldEnemyTargetPosition = Vector3.one * -9999f;
+		this.targetEnemy = null;
+		this.isSelected = false;
+		this.isDirected = false;
+		this.currentHealth = this.maxHealth;
+		this.recoverCounter = this.recoverCooldown = 1f;
+		this.attackCooldownCounter = this.attackCooldown;
+		this.enemies = new List<GameUnit>();
+		this.level = 1;
 
-			Renderer renderer = this.GetComponent<Renderer>();
-			if (renderer != null) {
-				this.initialColor = renderer.material.color;
-			}
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			this.initialColor = renderer.material.color;
+		}
 		//}
 	}
 
@@ -99,7 +105,7 @@ public class GameUnit : NetworkBehaviour {
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 
 		//Non-directed, self-defense
-		if (!this.isDirected || agent.remainingDistance < 2f) {
+		if (!this.isDirected || agent.remainingDistance < 0.5f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 			if (sight != null) {
@@ -132,7 +138,7 @@ public class GameUnit : NetworkBehaviour {
 			this.isDirected = false;
 		}
 
-		
+
 	}
 
 	public void Attack() {
@@ -213,8 +219,8 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-	public void TakeDamage() {
-		this.currentHealth -= 1;
+	public void TakeDamage(GameUnit attacker) {
+		this.currentHealth -= Mathf.FloorToInt(attacker.attackPower);
 		this.recoverCounter = 0f;
 
 		if (this.currentHealth <= 0) {
@@ -233,7 +239,7 @@ public class GameUnit : NetworkBehaviour {
 		Debug.Log("Calling on RpcAttack to client.");
 		GameUnit victimUnit = victim.GetComponent<GameUnit>();
 		if (victimUnit != null) {
-			victimUnit.TakeDamage();
+			victimUnit.TakeDamage(this);
 		}
 	}
 
@@ -330,5 +336,5 @@ public class GameUnit : NetworkBehaviour {
 				select.AddToRemoveList(obj);
 			}
 		}
-    }
+	}
 }

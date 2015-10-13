@@ -13,17 +13,21 @@ public struct MergeGroup {
 	public Vector3 ownerScale;
 	public Vector3 mergingScale;
 	public float elaspedTime;
+	public float mergeSpeedFactor;
 
 	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit) {
 		this.ownerUnit = ownerUnit;
 		this.mergingUnit = mergingUnit;
+		this.ownerUnit.level++;
+		this.mergingUnit.level++;
 		this.elaspedTime = 0f;
 
 		this.ownerPosition = ownerUnit.gameObject.transform.position;
 		this.mergingPosition = mergingUnit.gameObject.transform.position;
-        this.origin = Vector3.Lerp(this.ownerPosition, this.mergingPosition, 0.5f);
+		this.origin = Vector3.Lerp(this.ownerPosition, this.mergingPosition, 0.5f);
 		this.ownerScale = ownerUnit.gameObject.transform.localScale;
 		this.mergingScale = mergingUnit.gameObject.transform.localScale;
+		this.mergeSpeedFactor = 3f;
 
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
@@ -35,6 +39,10 @@ public struct MergeGroup {
 			agent.Stop();
 			agent.ResetPath();
 		}
+	}
+
+	public void SetMergeSpeed(float value) {
+		this.mergeSpeedFactor = value;
 	}
 
 	public void Update(float scaling) {
@@ -76,6 +84,16 @@ public class MergeManager : NetworkBehaviour {
 
 	[Range(0.1f, 100f)]
 	public float scalingValue = 2f;
+	[Range(0.00001f, 10f)]
+	public float healthFactor = 2f;
+	[Range(0.00001f, 10f)]
+	public float speedFactor = 1f;
+	[Range(0.00001f, 10f)]
+	public float attackFactor = 2f;
+	[Range(0.00001f, 10f)]
+	public float attackCooldownFactor = 1f;
+	[Range(1f, 10f)]
+	public float mergeSpeedFactor = 3f;
 
 
 	void Start() {
@@ -112,19 +130,36 @@ public class MergeManager : NetworkBehaviour {
 		if (Input.GetKeyDown(KeyCode.D)) {
 			AddMergeGroup();
 		}
-		UpdateMergeGroups();
+		if (this.mergeList.Count > 0 || this.removeList.Count > 0) {
+			UpdateMergeGroups();
+		}
 	}
 
 	private void AddMergeGroup() {
 		//Since merging units require the selected units count to be a multiple of 2, we need to check to make sure they are a multiple of 2.
 		//Else, ignore the final selected unit.
 		//Going to change this into network code, to sync up merging.
-		for (int i = 0; (i < this.selectionManager.selectedObjects.Count) && (i + 1 < this.selectionManager.selectedObjects.Count); i += 2) {
-			GameObject ownerObject = this.selectionManager.selectedObjects[i];
-			//GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
-			GameObject mergerObject = this.selectionManager.selectedObjects[i + 1];
-			//GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-			CmdAddMerge(ownerObject, mergerObject);
+		GameObject ownerObject = null, mergerObject = null;
+		List<GameObject> used = new List<GameObject>();
+		for (int i = 0; (i < this.selectionManager.selectedObjects.Count - 1); i++) {
+			if (used.Contains(this.selectionManager.selectedObjects[i])) {
+				continue;
+			}
+			ownerObject = this.selectionManager.selectedObjects[i];
+			GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
+			for (int j = i + 1; j < this.selectionManager.selectedObjects.Count; j++) {
+				if (used.Contains(this.selectionManager.selectedObjects[j])) {
+					continue;
+				}
+				mergerObject = this.selectionManager.selectedObjects[j];
+				GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
+				if (ownerUnit.level == mergerUnit.level && ownerUnit.level == 1 && mergerUnit.level == 1) {
+					used.Add(this.selectionManager.selectedObjects[i]);
+					used.Add(this.selectionManager.selectedObjects[j]);
+					CmdAddMerge(ownerObject, mergerObject);
+					break;
+				}
+			}
 		}
 	}
 
@@ -135,15 +170,15 @@ public class MergeManager : NetworkBehaviour {
 			for (int i = 0; i < this.mergeList.Count; i++) {
 				MergeGroup group = this.mergeList[i];
 				if (group.elaspedTime > 1f) {
+					group.Stop();
 					if (!this.removeList.Contains(group)) {
-						group.Stop();
 						FinishMergeGroup(group);
 						this.removeList.Add(group);
 					}
 				}
 				else {
 					group.Update(this.scalingValue);
-					group.elaspedTime += Time.deltaTime / 3f;
+					group.elaspedTime += Time.deltaTime / group.mergeSpeedFactor;
 					this.mergeList[i] = group;
 				}
 			}
@@ -161,6 +196,18 @@ public class MergeManager : NetworkBehaviour {
 
 	private void FinishMergeGroup(MergeGroup group) {
 		CmdEndMerge(group.ownerUnit.gameObject, group.mergingUnit.gameObject);
+	}
+
+	private void UpdateGroup(MergeGroup group) {
+		group.ownerUnit.attackCooldown *= this.attackCooldownFactor;
+		group.ownerUnit.maxHealth = Mathf.FloorToInt((float)group.ownerUnit.maxHealth * this.healthFactor);
+		group.ownerUnit.currentHealth = Mathf.FloorToInt((float)group.ownerUnit.currentHealth * this.healthFactor);
+		group.ownerUnit.attackPower *= this.attackFactor;
+
+		NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.speed *= this.speedFactor;
+		}
 	}
 
 	[Command]
@@ -193,6 +240,7 @@ public class MergeManager : NetworkBehaviour {
 		NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 		mergingAgent.Stop();
 		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit);
+		group.SetMergeSpeed(this.mergeSpeedFactor);
 
 		//this.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit));
 		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");

@@ -20,8 +20,8 @@ public struct SplitGroup {
 		//TODO: Add a radius where the unit will always go towards.
 		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
 		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
-		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.ResetPath();
 			agent.Stop();
@@ -35,7 +35,6 @@ public struct SplitGroup {
 	}
 
 	public void Update() {
-		Debug.Log("Updating... from Split Group ");
 		this.ownerUnit.isSelected = false;
 		this.splitUnit.isSelected = false;
 
@@ -162,15 +161,14 @@ public class SplitManager : NetworkBehaviour {
 	}
 
 	private void AddingNewSplitGroup() {
-		float angle = UnityEngine.Random.Range(-180f, 180f);
 		foreach (GameObject obj in this.selectionManager.selectedObjects) {
-			CmdSplit(obj, angle);
+			CmdSplit(obj);
 		}
 		return;
 	}
 
 	[Command]
-	public void CmdSplit(GameObject obj, float angle) {
+	public void CmdSplit(GameObject obj) {
 		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
@@ -179,6 +177,7 @@ public class SplitManager : NetworkBehaviour {
 		split.transform.position = obj.transform.position;
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
+		float angle = UnityEngine.Random.Range(-180f, 180f);
 		RpcSplit(obj, split, angle);
 	}
 
@@ -205,5 +204,6 @@ public class SplitManager : NetworkBehaviour {
 		copy.transform.localScale = original.transform.localScale;
 		copy.oldTargetPosition = original.oldTargetPosition;
 		copy.isDirected = original.isDirected = false;
+		copy.level = original.level;
 	}
 }
