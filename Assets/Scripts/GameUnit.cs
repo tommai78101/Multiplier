@@ -112,7 +112,7 @@ public class GameUnit : NetworkBehaviour {
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
 					this.targetEnemy = sight.enemiesInRange[0];
-					CmdSetTargetEnemy(this);
+					CmdSetTargetEnemy(this.gameObject);
 				}
 				else {
 					this.targetEnemy = null;
@@ -183,13 +183,13 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdSetTargetEnemy(GameUnit unit) {
+	public void CmdSetTargetEnemy(GameObject obj) {
 		Debug.Log("This command is working.");
-		RpcSetTargetEnemy(unit);
+		RpcSetTargetEnemy(obj);
 	}
 
 	[ClientRpc]
-	public void RpcSetTargetEnemy(GameUnit unit) {
+	public void RpcSetTargetEnemy(GameObject obj) {
 		Debug.Log("This rpc is working.");
 		LineOfSight enemySight = this.targetEnemy.GetComponentInChildren<LineOfSight>();
 		if (enemySight != null) {
