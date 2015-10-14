@@ -107,11 +107,12 @@ public class GameUnit : NetworkBehaviour {
 
 		//Non-directed, self-defense
 		LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
+		AttackArea area = this.GetComponentInChildren<AttackArea>();
 		if (!this.isDirected || agent.remainingDistance < 0.5f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			if (sight != null) {
-				if (sight.enemiesInRange.Count > 0) {
-					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject);
+				if (sight.enemiesInRange.Count > 0 || area.enemiesInAttackRange.Count > 0) {
+					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
 				}
 				else {
 					this.targetEnemy = null;
@@ -121,6 +122,10 @@ public class GameUnit : NetworkBehaviour {
 
 		Attack();
 		UpdateStatus();
+
+		if (this.targetEnemy == null) {
+			Debug.LogError("Enemy is missing.");
+		}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
@@ -143,10 +148,13 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	public void Attack() {
-		//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
+		if (this.targetEnemy == null) {
+			return;
+		}
+			//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
 		AttackArea area = this.GetComponentInChildren<AttackArea>();
 		if (area != null) {
-			if (this.targetEnemy != null && area.enemiesInAttackRange.Contains(this.targetEnemy)) {
+			if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 				if (this.attackCooldownCounter <= 0f) {
 					CmdAttack(this.targetEnemy.gameObject);
 					this.attackCooldownCounter = this.attackCooldown;
@@ -178,21 +186,27 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy) {
+	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
 		Debug.Log("This command is working.");
-		RpcSetTargetEnemy(obj, enemy);
+		RpcSetTargetEnemy(obj, enemy, attackee);
 	}
 
 	[ClientRpc]
-	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy) {
+	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
 		Debug.Log("This rpc is working.");
-		if (obj != null && enemy != null) {
+		if (obj != null) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			unit.targetEnemy = enemy.GetComponent<GameUnit>();
-			MoveToTarget();
-		}
-		else {
-			this.targetEnemy = null;
+			if (unit != null) {
+				if (enemy != null) {
+					unit.targetEnemy = enemy.GetComponent<GameUnit>();
+				}
+				else if (attackee != null) {
+					unit.targetEnemy = attackee.GetComponent<GameUnit>();
+				}
+				else {
+					unit.targetEnemy = null;
+				}
+			}
 		}
 	}
 
