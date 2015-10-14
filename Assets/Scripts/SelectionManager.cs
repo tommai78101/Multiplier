@@ -169,24 +169,26 @@ public class SelectionManager : NetworkBehaviour {
 	private void SelectObjectsInRect() {
 		foreach (GameObject obj in this.allObjects) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (this.isBoxSelecting) {
-				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-				projectedPosition.y = Screen.height - projectedPosition.y;
-				if (this.selectionBox.Contains(projectedPosition)) {
-					if (this.selectedObjects.Contains(obj)) {
-						unit.isSelected = false;
-						this.selectedObjects.Remove(obj);
-					}
-					else {
-						unit.isSelected = true;
-						this.selectedObjects.Add(obj);
+			if (unit != null) {
+				if (this.isBoxSelecting) {
+					Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+					projectedPosition.y = Screen.height - projectedPosition.y;
+					if (this.selectionBox.Contains(projectedPosition)) {
+						if (this.selectedObjects.Contains(obj)) {
+							unit.isSelected = false;
+							this.selectedObjects.Remove(obj);
+						}
+						else {
+							unit.isSelected = true;
+							this.selectedObjects.Add(obj);
+						}
 					}
 				}
-			}
-			else {
-				if (unit.isSelected) {
-					if (!this.selectedObjects.Contains(obj)) {
-						this.selectedObjects.Add(obj);
+				else {
+					if (unit.isSelected) {
+						if (!this.selectedObjects.Contains(obj)) {
+							this.selectedObjects.Add(obj);
+						}
 					}
 				}
 			}
