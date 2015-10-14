@@ -144,7 +144,6 @@ public class SplitManager : NetworkBehaviour {
 	public void UpdateSplitGroup() {
 		if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 			for (int i = 0; i < this.splitGroupList.Count; i++) {
-				Debug.Log("Updating split group...." + i);
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime > 1f) {
 					group.Stop();
