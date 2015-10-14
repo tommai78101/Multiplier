@@ -56,6 +56,9 @@ public class AttackArea : MonoBehaviour {
 				}
 			}
 			this.removeList.Clear();
+		}
+
+		if (this.exitedList.Count > 0) {
 			this.exitedList.Clear();
 		}
 	}

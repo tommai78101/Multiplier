@@ -67,6 +67,9 @@ public class LineOfSight : MonoBehaviour {
 				}
 			}
 			this.removeList.Clear();
+		}
+
+		if (this.exitedList.Count > 0) {
 			this.exitedList.Clear();
 		}
 	}
