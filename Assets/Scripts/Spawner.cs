@@ -67,11 +67,19 @@ public class Spawner : NetworkBehaviour {
 
 		//Finally, initialize server only stuff or client only stuff.
 		//Also, finally found a use-case for [Server] / [ServerCallback]. Simplifies things a bit.
-		ServerInitialize();
+
+		GameObject cam = null;
+		foreach (GameObject camObj in cameraObjects) {
+			if (camObj.Equals(Camera.main)) {
+				cam = camObj;
+				break;
+			}
+		}
+		ServerInitialize(cam);
 	}
 
 	[ServerCallback]
-	public void ServerInitialize() {
+	public void ServerInitialize(GameObject cam) {
 		//Server code
 		//This is run for spawning new non-player objects. Since it is a server calling to all clients (local and remote), it needs to pass in a
 		//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
@@ -81,6 +89,13 @@ public class Spawner : NetworkBehaviour {
 		obj.transform.position = this.transform.position;
 		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+
+		//Setting up the camera
+		if (cam != null) {
+			Vector3 pos = obj.transform.position;
+			pos.y = cam.transform.position.y;
+			cam.transform.position = pos;
+		}
 
 		//Player selection manager
 		GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
@@ -96,7 +111,7 @@ public class Spawner : NetworkBehaviour {
 		SplitManager splitManager = manager.GetComponent<SplitManager>();
 		if (splitManager != null) {
 			splitManager.selectionManager = selectionManager;
-        }
+		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 		//Player merge manager
