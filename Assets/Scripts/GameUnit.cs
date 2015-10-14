@@ -262,6 +262,8 @@ public class GameUnit : NetworkBehaviour {
 			if (hit.collider.gameObject.tag.Equals("Floor")) {
 				//Confirm that the player has issued an order for the game unit to follow/move to.
 				this.isDirected = true;
+				//Setting a new target just in case. (Hacky)
+				this.oldTargetPosition = hit.point;
 				//Call on the client->server method to start the action.
 				CmdSetTarget(hit.point);
 				break;
