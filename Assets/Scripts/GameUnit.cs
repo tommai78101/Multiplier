@@ -119,30 +119,45 @@ public class GameUnit : NetworkBehaviour {
 			}
 		}
 
+		MoveToTarget();
 		Attack();
 
-		if (this.targetEnemy != null) {
-			CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
-		}
-		else {
-			CmdSelfDefense(null, Vector3.zero, this.oldTargetPosition);
-		}
+		//if (this.targetEnemy != null) {
+		//	CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
+		//}
+		//else {
+		//	CmdSelfDefense(null, Vector3.zero, this.oldTargetPosition);
+		//}
 
 		//There needs to be a check that constantly checks for enemies nearby.
-		if (this.targetEnemy == null) {
-			foreach (GameUnit unit in sight.enemiesInRange) {
-				if (unit != null) {
-					this.targetEnemy = unit;
-					break;
-				}
-			}
-		}
+		//if (this.targetEnemy == null) {
+		//	foreach (GameUnit unit in sight.enemiesInRange) {
+		//		if (unit != null) {
+		//			this.targetEnemy = unit;
+		//			break;
+		//		}
+		//	}
+		//}
 
 
 		UpdateStatus();
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
+		}
+	}
+
+	public void MoveToTarget() {
+		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			if (this.targetEnemy != null) {
+				agent.stoppingDistance = 0.5f;
+				agent.SetDestination(this.targetEnemy.transform.position);
+			}
+			else {
+				agent.stoppingDistance = 0f;
+				agent.SetDestination(this.oldTargetPosition);
+			}
 		}
 	}
 
