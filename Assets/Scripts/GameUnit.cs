@@ -142,7 +142,7 @@ public class GameUnit : NetworkBehaviour {
 	public void MoveToTarget() {
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			if (this.targetEnemy != null) {
+			if (this.targetEnemy != null && this.targetEnemy.CheckIfVisible()) {
 				agent.stoppingDistance = 0.5f;
 				agent.SetDestination(this.targetEnemy.transform.position);
 			}

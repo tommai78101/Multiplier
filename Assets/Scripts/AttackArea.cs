@@ -16,21 +16,21 @@ public class AttackArea : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
 			this.enemiesInAttackRange.Add(unit);
 		}
 	}
 
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+		if ((unit != null && !unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) || (!unit.CheckIfVisible() && this.enemiesInAttackRange.Contains(unit))) {
 			this.enemiesInAttackRange.Remove(unit);
 		}
 	}
 
 	public void OnTriggerStay(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
 			this.enemiesInAttackRange.Add(unit);
 		}
 	}

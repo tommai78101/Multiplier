@@ -24,7 +24,7 @@ public class LineOfSight : MonoBehaviour {
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
-		if (unit != null && myself != null && (unit != myself) && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+		if (unit != null && myself != null && (unit != myself) && unit.CheckIfVisible() && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
 	}
@@ -32,14 +32,14 @@ public class LineOfSight : MonoBehaviour {
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
-		if (unit != null && myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) {
+		if ((unit != null && myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
 			this.enemiesInRange.Remove(unit);
 		}
 	}
 
 	public void OnTriggerStay(Collider other) {
 		GameUnit unit = other.GetComponentInParent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
+		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
 	}
