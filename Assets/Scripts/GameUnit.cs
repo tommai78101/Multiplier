@@ -146,9 +146,17 @@ public class GameUnit : NetworkBehaviour {
 
 	//Tells the unit to at least move to an enemy opponent. 
 	public void MoveToTarget() {
+		LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
+		AttackArea area = this.GetComponentInChildren<AttackArea>();
+		bool checkEnemyNearby = false;
+		if (sight != null && area != null) {
+			if (sight.enemiesInRange.Count > 0 || area.enemiesInAttackRange.Count > 0) {
+				checkEnemyNearby = true;
+			}
+		}
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			if (this.targetEnemy != null && this.targetEnemy.CheckIfVisible()) {
+			if (this.targetEnemy != null && this.targetEnemy.CheckIfVisible() && checkEnemyNearby) {
 				agent.stoppingDistance = 0.5f;
 				agent.SetDestination(this.targetEnemy.transform.position);
 			}
