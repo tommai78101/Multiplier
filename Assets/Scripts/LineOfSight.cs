@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 
 public class LineOfSight : MonoBehaviour {
-	public List<GameUnit> enemiesInRange = new List<GameUnit>();
-	public List<GameUnit> removeList = new List<GameUnit>();
+	public List<GameUnit> enemiesInRange;
+	public List<GameUnit> removeList;
+    public List<GameUnit> exitedList;
 	public float radius;
 	public GameUnit parent;
 
 	public void Start() {
+		this.enemiesInRange = new List<GameUnit>();
+		this.removeList = new List<GameUnit>();
+		this.exitedList = new List<GameUnit>();
 		SphereCollider collider = this.GetComponent<SphereCollider>();
 		if (collider != null) {
 			this.radius = collider.radius;
@@ -35,16 +39,17 @@ public class LineOfSight : MonoBehaviour {
 		if (unit != null) {
 			if ((myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
 				this.enemiesInRange.Remove(unit);
+				this.exitedList.Add(unit);
 			}
 		}
 	}
 
-	//public void OnTriggerStay(Collider other) {
-	//	GameUnit unit = other.GetComponentInParent<GameUnit>();
-	//	if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
-	//		this.enemiesInRange.Add(unit);
-	//	}
-	//}
+	public void OnTriggerStay(Collider other) {
+		GameUnit unit = other.GetComponentInParent<GameUnit>();
+		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit) && !this.exitedList.Contains(unit)) {
+			this.enemiesInRange.Add(unit);
+		}
+	}
 
 	public void FixedUpdate() {
 		if (this.enemiesInRange.Count > 0) {
@@ -62,6 +67,7 @@ public class LineOfSight : MonoBehaviour {
 				}
 			}
 			this.removeList.Clear();
+			this.exitedList.Clear();
 		}
 	}
 
