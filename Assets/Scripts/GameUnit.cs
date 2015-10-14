@@ -19,7 +19,7 @@ public class GameUnit : NetworkBehaviour {
 	[Range(1f, 100f)]
 	[SyncVar]
 	public float attackPower;
-	[Range(0.1f, 10f)]
+	[Range(0f, 10f)]
 	[SyncVar]
 	public float attackCooldown;
 	[SyncVar]
@@ -127,10 +127,6 @@ public class GameUnit : NetworkBehaviour {
 					CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 				}
 			}
-		}
-
-		if (this.isDirected) {
-			this.targetEnemy = null;
 		}
 
 		//Start attacking.
@@ -369,6 +365,7 @@ public class GameUnit : NetworkBehaviour {
 				//Confirm that the player has issued an order for the game unit to follow/move to.
 				//Syncing the isDirected flag.
 				unit.isDirected = true;
+				unit.targetEnemy = null;
 			}
 		}
 	}
