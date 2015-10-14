@@ -112,15 +112,7 @@ public class GameUnit : NetworkBehaviour {
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
 					this.targetEnemy = sight.enemiesInRange[0];
-					LineOfSight enemySight = this.targetEnemy.GetComponentInChildren<LineOfSight>();
-					if (enemySight != null) {
-						if (enemySight.enemiesInRange.Count > 0) {
-							this.targetEnemy.targetEnemy = enemySight.enemiesInRange[0];
-						}
-						else {
-							this.targetEnemy.targetEnemy = null;
-						}
-					}
+					CmdSetTargetEnemy(this);
 				}
 				else {
 					this.targetEnemy = null;
@@ -188,6 +180,26 @@ public class GameUnit : NetworkBehaviour {
 		}
 		//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
 		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, renderer.material.color);
+	}
+
+	[Command]
+	public void CmdSetTargetEnemy(GameUnit unit) {
+		Debug.Log("This command is working.");
+		RpcSetTargetEnemy(unit);
+	}
+
+	[ClientRpc]
+	public void RpcSetTargetEnemy(GameUnit unit) {
+		Debug.Log("This rpc is working.");
+		LineOfSight enemySight = this.targetEnemy.GetComponentInChildren<LineOfSight>();
+		if (enemySight != null) {
+			if (enemySight.enemiesInRange.Count > 0) {
+				this.targetEnemy.targetEnemy = enemySight.enemiesInRange[0];
+			}
+			else {
+				this.targetEnemy.targetEnemy = null;
+			}
+		}
 	}
 
 	[Command]
