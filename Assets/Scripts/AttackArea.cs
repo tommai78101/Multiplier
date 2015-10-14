@@ -30,12 +30,12 @@ public class AttackArea : MonoBehaviour {
 		}
 	}
 
-	public void OnTriggerStay(Collider other) {
-		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
-			this.enemiesInAttackRange.Add(unit);
-		}
-	}
+	//public void OnTriggerStay(Collider other) {
+	//	GameUnit unit = other.GetComponent<GameUnit>();
+	//	if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+	//		this.enemiesInAttackRange.Add(unit);
+	//	}
+	//}
 
 	public void Update() {
 		if (this.enemiesInAttackRange.Count > 0) {

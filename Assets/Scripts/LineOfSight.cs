@@ -39,12 +39,12 @@ public class LineOfSight : MonoBehaviour {
 		}
 	}
 
-	public void OnTriggerStay(Collider other) {
-		GameUnit unit = other.GetComponentInParent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
-			this.enemiesInRange.Add(unit);
-		}
-	}
+	//public void OnTriggerStay(Collider other) {
+	//	GameUnit unit = other.GetComponentInParent<GameUnit>();
+	//	if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit)) {
+	//		this.enemiesInRange.Add(unit);
+	//	}
+	//}
 
 	public void FixedUpdate() {
 		if (this.enemiesInRange.Count > 0) {
