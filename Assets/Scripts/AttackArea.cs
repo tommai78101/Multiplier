@@ -9,7 +9,7 @@ public class AttackArea : MonoBehaviour {
 	public GameUnit parent;
 
 	public void Start() {
-        this.enemiesInAttackRange = new List<GameUnit>();
+		this.enemiesInAttackRange = new List<GameUnit>();
 		this.removeList = new List<GameUnit>();
 		this.parent = this.GetComponentInParent<GameUnit>();
 	}
@@ -23,8 +23,10 @@ public class AttackArea : MonoBehaviour {
 
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if ((unit != null && !unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) || (!unit.CheckIfVisible() && this.enemiesInAttackRange.Contains(unit))) {
-			this.enemiesInAttackRange.Remove(unit);
+		if (unit != null) {
+			if ((!unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) || (!unit.CheckIfVisible() && this.enemiesInAttackRange.Contains(unit))) {
+				this.enemiesInAttackRange.Remove(unit);
+			}
 		}
 	}
 
@@ -46,8 +48,9 @@ public class AttackArea : MonoBehaviour {
 
 		if (this.removeList.Count > 0) {
 			foreach (GameUnit unit in this.removeList) {
-				if (this.enemiesInAttackRange.Contains(unit))
-				this.enemiesInAttackRange.Remove(unit);
+				if (this.enemiesInAttackRange.Contains(unit)) {
+					this.enemiesInAttackRange.Remove(unit);
+				}
 			}
 			this.removeList.Clear();
 		}
