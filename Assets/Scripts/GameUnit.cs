@@ -119,7 +119,7 @@ public class GameUnit : NetworkBehaviour {
 			}
 		}
 
-		MoveToTarget();
+		//MoveToTarget();
 		Attack();
 
 		//if (this.targetEnemy != null) {
@@ -208,6 +208,7 @@ public class GameUnit : NetworkBehaviour {
 		if (obj != null && enemy != null) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
 			unit.targetEnemy = enemy.GetComponent<GameUnit>();
+			MoveToTarget();
 		}
 		else {
 			this.targetEnemy = null;
