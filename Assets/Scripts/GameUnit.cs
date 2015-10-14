@@ -311,13 +311,11 @@ public class GameUnit : NetworkBehaviour {
 
 	[Command]
 	public void CmdAttack(GameObject victim) {
-		Debug.Log("Calling on CmdAttack to server.");
 		RpcAttack(victim);
 	}
 
 	[ClientRpc]
 	public void RpcAttack(GameObject victim) {
-		Debug.Log("Calling on RpcAttack to client.");
 		if (victim == null) {
 			return;
 		}
