@@ -125,7 +125,7 @@ public class GameUnit : NetworkBehaviour {
 			CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
 		}
 		else {
-			CmdSelfDefense(null, this.targetEnemy.transform.position, this.oldTargetPosition);
+			CmdSelfDefense(null, Vector3.zero, this.oldTargetPosition);
 		}
 
 		//There needs to be a check that constantly checks for enemies nearby.
