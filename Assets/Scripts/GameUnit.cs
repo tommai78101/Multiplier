@@ -226,16 +226,16 @@ public class GameUnit : NetworkBehaviour {
 				else {
 					if (enemy != null) {
 						unit.targetEnemy = enemy.GetComponent<GameUnit>();
+						MoveToTarget(obj);
 					}
 					else if (attackee != null) {
 						unit.targetEnemy = attackee.GetComponent<GameUnit>();
+						MoveToTarget(obj);
 					}
 					else {
 						unit.targetEnemy = null;
 					}
 				}
-
-				MoveToTarget(obj);
 			}
 			
 		}
@@ -418,8 +418,10 @@ public class GameUnit : NetworkBehaviour {
 				foreach (GameObject unitObj in select.allObjects) {
 					GameUnit someUnit = unitObj.GetComponent<GameUnit>();
 					if (someUnit != null) {
-						if (unit != null && someUnit.targetEnemy.Equals(unit)) {
-							someUnit.targetEnemy = null;
+						if (unit != null && someUnit.targetEnemy != null) {
+							if (someUnit.targetEnemy.Equals(unit)) {
+								someUnit.targetEnemy = null;
+							}
 						}
 						else if (unit == null) {
 							someUnit.targetEnemy = null;
