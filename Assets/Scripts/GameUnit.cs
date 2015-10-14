@@ -112,6 +112,12 @@ public class GameUnit : NetworkBehaviour {
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
 					this.targetEnemy = sight.enemiesInRange[0];
+					LineOfSight enemySight = this.targetEnemy.GetComponentInChildren<LineOfSight>();
+					if (enemySight != null) {
+						if (enemySight.enemiesInRange.Count > 0) {
+							Debug.LogError("Enemy unit can also see me.");
+						}
+					}
 				}
 				else {
 					this.targetEnemy = null;
