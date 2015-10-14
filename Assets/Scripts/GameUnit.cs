@@ -343,6 +343,10 @@ public class GameUnit : NetworkBehaviour {
 	//Both can work.
 	[ClientRpc]
 	public void RpcSetTarget(Vector3 target) {
+		if (!this.hasAuthority) {
+			return;
+		}
+
 		//Server tells all clients to run the following codes.
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
