@@ -67,19 +67,11 @@ public class Spawner : NetworkBehaviour {
 
 		//Finally, initialize server only stuff or client only stuff.
 		//Also, finally found a use-case for [Server] / [ServerCallback]. Simplifies things a bit.
-
-		GameObject mainCam = null;
-		foreach (GameObject camObj in cameraObjects) {
-			if (camObj.Equals(Camera.main)) {
-				mainCam = camObj;
-				break;
-			}
-		}
-		ServerInitialize(mainCam);
+		ServerInitialize();
 	}
 
 	[ServerCallback]
-	public void ServerInitialize(GameObject cam) {
+	public void ServerInitialize() {
 		//Server code
 		//This is run for spawning new non-player objects. Since it is a server calling to all clients (local and remote), it needs to pass in a
 		//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
@@ -89,13 +81,6 @@ public class Spawner : NetworkBehaviour {
 		obj.transform.position = this.transform.position;
 		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
-
-		//Setting up the camera
-		if (cam != null) {
-			Vector3 pos = obj.transform.position;
-			pos.y = cam.transform.position.y;
-			cam.transform.position = pos;
-		}
 
 		//Player selection manager
 		GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
@@ -121,6 +106,15 @@ public class Spawner : NetworkBehaviour {
 			mergeManager.selectionManager = selectionManager;
 		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
+
+		RpcCameraSetup(obj);
+	}
+
+	[ClientRpc]
+	public void RpcCameraSetup(GameObject obj) {
+		Vector3 pos = obj.transform.position;
+		pos.y = Camera.main.transform.position.y;
+        Camera.main.transform.position = pos;
 	}
 
 	public void OnDestroy() {
