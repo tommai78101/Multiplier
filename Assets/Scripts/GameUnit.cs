@@ -50,9 +50,6 @@ public class GameUnit : NetworkBehaviour {
 
 		Debug.LogWarning("Starting client");
 
-		//if (!GameUnit.once) {
-		//	GameUnit.once = true;
-
 		//Initialization code for local player (local client on the host, and remote clients).
 		this.oldTargetPosition = Vector3.one * -9999f;
 		this.oldEnemyTargetPosition = Vector3.one * -9999f;
@@ -71,14 +68,16 @@ public class GameUnit : NetworkBehaviour {
 		if (renderer != null) {
 			this.initialColor = renderer.material.color;
 		}
-		//}
 	}
 
+
+	//This is for testing if anything inside is triggered. Turns out it depends on whether the game is a server or a client.
 	public override void OnStartLocalPlayer() {
 		base.OnStartLocalPlayer();
 		Debug.LogWarning("Starting local player");
 	}
 
+	//This is for testing if anything inside is triggered. Turns out it depends on whether the game is a server or a client.
 	public override void OnStartAuthority() {
 		base.OnStartClient();
 		Debug.LogWarning("Starting authority");
@@ -103,6 +102,7 @@ public class GameUnit : NetworkBehaviour {
 			this.selectionRing.SetActive(false);
 		}
 
+		//Obtaining the nav mesh agent here for future uses.
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 
 		//Non-directed, self-defense
@@ -111,6 +111,8 @@ public class GameUnit : NetworkBehaviour {
 		if (!this.isDirected || agent.remainingDistance < 0.5f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			if (sight != null && area != null) {
+				//There are 4 cases when detecting an enemy in both areas, line of sight and attack range. I had to consider each of the cases 
+				//in order to ease the Console error gods...
 				if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count > 0) {
 					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
 				}
@@ -125,13 +127,14 @@ public class GameUnit : NetworkBehaviour {
 				}
 			}
 		}
+		else if (this.isDirected) {
+			this.targetEnemy = null;
+		}
 
+		//Start attacking.
 		Attack();
+		//Straightforward here...
 		UpdateStatus();
-
-		//if (this.targetEnemy == null) {
-		//	Debug.LogError("Enemy is missing.");
-		//}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
@@ -139,6 +142,7 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
+	//Tells the unit to at least move to an enemy opponent. 
 	public void MoveToTarget() {
 		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 		if (agent != null) {
