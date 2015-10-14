@@ -127,7 +127,8 @@ public class GameUnit : NetworkBehaviour {
 				}
 			}
 		}
-		else if (this.isDirected) {
+
+		if (this.isDirected) {
 			this.targetEnemy = null;
 		}
 
@@ -260,10 +261,6 @@ public class GameUnit : NetworkBehaviour {
 		RaycastHit[] hits = Physics.RaycastAll(ray);
 		foreach (RaycastHit hit in hits) {
 			if (hit.collider.gameObject.tag.Equals("Floor")) {
-				//Confirm that the player has issued an order for the game unit to follow/move to.
-				this.isDirected = true;
-				//Setting a new target just in case. (Hacky)
-				this.oldTargetPosition = hit.point;
 				//Call on the client->server method to start the action.
 				CmdSetTarget(hit.point);
 				break;
@@ -352,6 +349,9 @@ public class GameUnit : NetworkBehaviour {
 				//Making sure that we actually track the new NavMeshAgent destination. If it's different, it may cause
 				//desync among local and remote clients. That's a hunch though, so don't take my word for word on this.
 				this.oldTargetPosition = target;
+				//Confirm that the player has issued an order for the game unit to follow/move to.
+				//Syncing the isDirected flag.
+				this.isDirected = true;
 			}
 		}
 	}
