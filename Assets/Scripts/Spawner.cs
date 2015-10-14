@@ -68,14 +68,14 @@ public class Spawner : NetworkBehaviour {
 		//Finally, initialize server only stuff or client only stuff.
 		//Also, finally found a use-case for [Server] / [ServerCallback]. Simplifies things a bit.
 
-		GameObject cam = null;
+		GameObject mainCam = null;
 		foreach (GameObject camObj in cameraObjects) {
 			if (camObj.Equals(Camera.main)) {
-				cam = camObj;
+				mainCam = camObj;
 				break;
 			}
 		}
-		ServerInitialize(cam);
+		ServerInitialize(mainCam);
 	}
 
 	[ServerCallback]
