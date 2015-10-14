@@ -32,8 +32,10 @@ public class LineOfSight : MonoBehaviour {
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
-		if ((unit != null && myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
-			this.enemiesInRange.Remove(unit);
+		if (unit != null) {
+			if ((myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
+				this.enemiesInRange.Remove(unit);
+			}
 		}
 	}
 
