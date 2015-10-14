@@ -209,9 +209,11 @@ public class GameUnit : NetworkBehaviour {
 			if (unit != null) {
 				if (enemy != null) {
 					unit.targetEnemy = enemy.GetComponent<GameUnit>();
+					MoveToTarget();
 				}
 				else if (attackee != null) {
 					unit.targetEnemy = attackee.GetComponent<GameUnit>();
+					MoveToTarget();
 				}
 				else {
 					unit.targetEnemy = null;
