@@ -284,7 +284,7 @@ public class GameUnit : NetworkBehaviour {
 		if (!this.hasAuthority) {
 			return;
 		}
-		CmdHealth(this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
+		CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
 		this.recoverCounter = 0f;
 		if (this.currentHealth <= 0) {
 			CmdUnitDestroy(this.gameObject);
@@ -323,8 +323,16 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdHealth(int newHealth) {
-		this.currentHealth = newHealth;
+	public void CmdHealth(GameObject victim, int newHealth) {
+		GameUnit victimUnit = victim.GetComponent<GameUnit>();
+		victimUnit.currentHealth = newHealth;
+		RpcHealth(victim, newHealth);
+	}
+
+	[ClientRpc]
+	public void RpcHealth(GameObject victim, int newHealth) {
+		GameUnit victimUnit = victim.GetComponent<GameUnit>();
+		victimUnit.currentHealth = newHealth;
 	}
 
 	[Command]
