@@ -157,7 +157,7 @@ public class GameUnit : NetworkBehaviour {
 		if (this.targetEnemy == null) {
 			return;
 		}
-			//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
+		//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
 		AttackArea area = this.GetComponentInChildren<AttackArea>();
 		if (area != null) {
 			if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
@@ -394,11 +394,13 @@ public class GameUnit : NetworkBehaviour {
 			if (select != null && select.hasAuthority) {
 				foreach (GameObject unitObj in select.allObjects) {
 					GameUnit someUnit = unitObj.GetComponent<GameUnit>();
-					if (someUnit != null && unit != null && someUnit.targetEnemy.Equals(unit)) {
-						someUnit.targetEnemy = null;
-					}
-					else if (unit == null) {
-						someUnit.targetEnemy = null;
+					if (someUnit != null) {
+						if (unit != null && someUnit.targetEnemy.Equals(unit)) {
+							someUnit.targetEnemy = null;
+						}
+						else if (unit == null) {
+							someUnit.targetEnemy = null;
+						}
 					}
 				}
 				select.AddToRemoveList(obj);
