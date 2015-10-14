@@ -124,6 +124,7 @@ public class GameUnit : NetworkBehaviour {
 				}
 				else {
 					this.targetEnemy = null;
+					CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 				}
 			}
 		}
@@ -154,7 +155,7 @@ public class GameUnit : NetworkBehaviour {
 			else {
 				agent.stoppingDistance = 0f;
 				//if (!this.isDirected) {
-					agent.SetDestination(this.oldTargetPosition);
+				agent.SetDestination(this.oldTargetPosition);
 				//}
 			}
 		}
@@ -211,6 +212,11 @@ public class GameUnit : NetworkBehaviour {
 	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
 		if (obj != null) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
+			if (obj.Equals(enemy) && obj.Equals(attackee)) {
+				unit.targetEnemy = null;
+				MoveToTarget();
+				return;
+			}
 			if (unit != null) {
 				if (enemy != null) {
 					unit.targetEnemy = enemy.GetComponent<GameUnit>();
