@@ -145,7 +145,7 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	//Tells the unit to at least move to an enemy opponent. 
-	public void MoveToTarget(GameObject obj, GameObject target) {
+	public void MoveToTarget(GameObject obj) {
 		//LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
 		//AttackArea area = this.GetComponentInChildren<AttackArea>();
 		//bool checkEnemyNearby = false;
@@ -159,7 +159,7 @@ public class GameUnit : NetworkBehaviour {
 		if (agent != null && unit != null) {
 			if (unit.targetEnemy != null && unit.targetEnemy.CheckIfVisible()) {  //&& checkEnemyNearby
 				agent.stoppingDistance = 0.5f;
-				agent.SetDestination(target.transform.position);
+				agent.SetDestination(unit.targetEnemy.transform.position);
 			}
 			else {
 				agent.stoppingDistance = 0f;
@@ -234,8 +234,10 @@ public class GameUnit : NetworkBehaviour {
 						unit.targetEnemy = null;
 					}
 				}
+
+				MoveToTarget(obj);
 			}
-			MoveToTarget(obj, unit.targetEnemy.gameObject);
+			
 		}
 	}
 
