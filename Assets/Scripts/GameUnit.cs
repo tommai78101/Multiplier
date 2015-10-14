@@ -110,9 +110,15 @@ public class GameUnit : NetworkBehaviour {
 		AttackArea area = this.GetComponentInChildren<AttackArea>();
 		if (!this.isDirected || agent.remainingDistance < 0.5f) {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
-			if (sight != null) {
-				if (sight.enemiesInRange.Count > 0 || area.enemiesInAttackRange.Count > 0) {
+			if (sight != null && area != null) {
+				if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count > 0) {
 					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
+				}
+				else if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count <= 0) {
+					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, sight.enemiesInRange[0].gameObject);
+				}
+				else if (sight.enemiesInRange.Count <= 0 && area.enemiesInAttackRange.Count > 0) {
+					CmdSetTargetEnemy(this.gameObject, area.enemiesInAttackRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
 				}
 				else {
 					this.targetEnemy = null;
