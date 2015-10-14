@@ -266,6 +266,9 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	public void TakeDamage(GameUnit attacker) {
+		if (!this.hasAuthority) {
+			return;
+		}
 		CmdHealth(this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
 		this.recoverCounter = 0f;
 		if (this.currentHealth <= 0) {
