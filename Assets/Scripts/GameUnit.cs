@@ -119,28 +119,9 @@ public class GameUnit : NetworkBehaviour {
 			}
 		}
 
-		//MoveToTarget();
 		Attack();
-
-		//if (this.targetEnemy != null) {
-		//	CmdSelfDefense(this.targetEnemy.gameObject, this.targetEnemy.transform.position, this.oldTargetPosition);
-		//}
-		//else {
-		//	CmdSelfDefense(null, Vector3.zero, this.oldTargetPosition);
-		//}
-
-		//There needs to be a check that constantly checks for enemies nearby.
-		//if (this.targetEnemy == null) {
-		//	foreach (GameUnit unit in sight.enemiesInRange) {
-		//		if (unit != null) {
-		//			this.targetEnemy = unit;
-		//			break;
-		//		}
-		//	}
-		//}
-
-
 		UpdateStatus();
+
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
@@ -285,39 +266,6 @@ public class GameUnit : NetworkBehaviour {
 		GameUnit victimUnit = victim.GetComponent<GameUnit>();
 		if (victimUnit != null) {
 			victimUnit.TakeDamage(this);
-		}
-	}
-
-	[Command]
-	public void CmdSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
-		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			if (target == null) {
-				agent.SetDestination(movePosition);
-			}
-			else {
-				if (this.oldEnemyTargetPosition != enemyPosition) {
-					agent.SetDestination(enemyPosition);
-					this.oldEnemyTargetPosition = enemyPosition;
-				}
-			}
-		}
-		RpcSelfDefense(target, enemyPosition, movePosition);
-	}
-
-	[ClientRpc]
-	private void RpcSelfDefense(GameObject target, Vector3 enemyPosition, Vector3 movePosition) {
-		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			if (target == null) {
-				agent.SetDestination(movePosition);
-			}
-			else {
-				if (this.oldEnemyTargetPosition != enemyPosition) {
-					agent.SetDestination(enemyPosition);
-					this.oldEnemyTargetPosition = enemyPosition;
-				}
-			}
 		}
 	}
 
