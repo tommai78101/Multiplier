@@ -123,9 +123,9 @@ public class GameUnit : NetworkBehaviour {
 		Attack();
 		UpdateStatus();
 
-		if (this.targetEnemy == null) {
-			Debug.LogError("Enemy is missing.");
-		}
+		//if (this.targetEnemy == null) {
+		//	Debug.LogError("Enemy is missing.");
+		//}
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
