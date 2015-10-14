@@ -292,6 +292,20 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
+	public void EnableVisibility() {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			renderer.enabled = true;
+		}
+	}
+
+	public void DisableVisibility() {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			renderer.enabled = false;
+		}
+	}
+
 	[Command]
 	public void CmdHealth(int newHealth) {
 		this.currentHealth = newHealth;
@@ -368,17 +382,26 @@ public class GameUnit : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcUnitDestroy(GameObject obj) {
-		//GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
-		//foreach (GameObject selectObj in selects) {
-		//	SelectionManager select = selectObj.GetComponent<SelectionManager>();
-		//	if (select != null) {
-		//		select.AddToRemoveList(obj);
-		//	}
-		//}
 
 		GameUnit unit = obj.GetComponent<GameUnit>();
 		if (unit != null) {
-			unit.ToggleVisibility();
+			unit.DisableVisibility();
+		}
+
+
+		GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
+		foreach (GameObject selectObj in selects) {
+			SelectionManager select = selectObj.GetComponent<SelectionManager>();
+			if (select != null && select.hasAuthority) {
+				foreach (GameObject unitObj in select.allObjects) {
+					GameUnit someUnit = unitObj.GetComponent<GameUnit>();
+					if (someUnit.targetEnemy.Equals(unit)) {
+						someUnit.targetEnemy = null;
+					}
+				}
+				select.AddToRemoveList(obj);
+				break;
+			}
 		}
 	}
 }

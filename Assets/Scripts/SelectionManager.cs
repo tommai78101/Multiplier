@@ -103,6 +103,9 @@ public class SelectionManager : NetworkBehaviour {
 					this.allObjects.Remove(obj);
 				}
 			}
+			foreach (GameObject obj in this.removeList) {
+				CmdDestroy(obj);
+			}
 			this.removeList.Clear();
 		}
 	}
@@ -121,6 +124,11 @@ public class SelectionManager : NetworkBehaviour {
 		if (!this.removeList.Contains(obj)) {
 			this.removeList.Add(obj);
 		}
+	}
+
+	[Command]
+	public void CmdDestroy(GameObject obj) {
+		NetworkServer.Destroy(obj);
 	}
 
 
