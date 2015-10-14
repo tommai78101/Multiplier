@@ -394,7 +394,10 @@ public class GameUnit : NetworkBehaviour {
 			if (select != null && select.hasAuthority) {
 				foreach (GameObject unitObj in select.allObjects) {
 					GameUnit someUnit = unitObj.GetComponent<GameUnit>();
-					if (someUnit.targetEnemy.Equals(unit)) {
+					if (someUnit != null && unit != null && someUnit.targetEnemy.Equals(unit)) {
+						someUnit.targetEnemy = null;
+					}
+					else if (unit == null) {
 						someUnit.targetEnemy = null;
 					}
 				}
