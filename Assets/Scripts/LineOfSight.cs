@@ -31,6 +31,9 @@ public class LineOfSight : MonoBehaviour {
 		if (unit != null && myself != null && (unit != myself) && unit.CheckIfVisible() && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
+		if (this.exitedList.Count > 0) {
+			this.exitedList.Clear();
+		}
 	}
 
 	public void OnTriggerExit(Collider other) {
@@ -67,10 +70,6 @@ public class LineOfSight : MonoBehaviour {
 				}
 			}
 			this.removeList.Clear();
-		}
-
-		if (this.exitedList.Count > 0) {
-			this.exitedList.Clear();
 		}
 	}
 

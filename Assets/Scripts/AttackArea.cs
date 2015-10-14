@@ -21,6 +21,9 @@ public class AttackArea : MonoBehaviour {
 		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
 			this.enemiesInAttackRange.Add(unit);
 		}
+		if (this.exitedList.Count > 0) {
+			this.exitedList.Clear();
+		}
 	}
 
 	public void OnTriggerExit(Collider other) {
@@ -56,10 +59,6 @@ public class AttackArea : MonoBehaviour {
 				}
 			}
 			this.removeList.Clear();
-		}
-
-		if (this.exitedList.Count > 0) {
-			this.exitedList.Clear();
 		}
 	}
 }
