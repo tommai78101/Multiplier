@@ -264,7 +264,7 @@ public class GameUnit : NetworkBehaviour {
 		foreach (RaycastHit hit in hits) {
 			if (hit.collider.gameObject.tag.Equals("Floor")) {
 				//Call on the client->server method to start the action.
-				CmdSetTarget(hit.point);
+				CmdSetTarget(this.gameObject, hit.point);
 				break;
 			}
 		}
@@ -334,30 +334,27 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdSetTarget(Vector3 target) {
+	public void CmdSetTarget(GameObject obj, Vector3 target) {
 		//Command call to tell the server to run the following code.
-		RpcSetTarget(target);
+		RpcSetTarget(obj, target);
 	}
 
 	//My guess is that this should be a [ClientCallback] instead of [ClientRpc]
 	//Both can work.
 	[ClientRpc]
-	public void RpcSetTarget(Vector3 target) {
-		if (!this.hasAuthority) {
-			return;
-		}
-
+	public void RpcSetTarget(GameObject obj, Vector3 target) {
 		//Server tells all clients to run the following codes.
-		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+		GameUnit unit = obj.GetComponent<GameUnit>();
+		NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			if (this.oldTargetPosition != target) {
+			if (unit.oldTargetPosition != target) {
 				agent.SetDestination(target);
 				//Making sure that we actually track the new NavMeshAgent destination. If it's different, it may cause
 				//desync among local and remote clients. That's a hunch though, so don't take my word for word on this.
-				this.oldTargetPosition = target;
+				unit.oldTargetPosition = target;
 				//Confirm that the player has issued an order for the game unit to follow/move to.
 				//Syncing the isDirected flag.
-				this.isDirected = true;
+				unit.isDirected = true;
 			}
 		}
 	}
