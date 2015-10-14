@@ -111,8 +111,7 @@ public class GameUnit : NetworkBehaviour {
 			//Line of Sight. Detects if there are nearby enemy game units, and if so, follow them to engage in battle.
 			if (sight != null) {
 				if (sight.enemiesInRange.Count > 0) {
-					this.targetEnemy = sight.enemiesInRange[0];
-					CmdSetTargetEnemy(this.gameObject);
+					CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject);
 				}
 				else {
 					this.targetEnemy = null;
@@ -183,22 +182,20 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdSetTargetEnemy(GameObject obj) {
+	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy) {
 		Debug.Log("This command is working.");
-		RpcSetTargetEnemy(obj);
+		RpcSetTargetEnemy(obj, enemy);
 	}
 
 	[ClientRpc]
-	public void RpcSetTargetEnemy(GameObject obj) {
+	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy) {
 		Debug.Log("This rpc is working.");
-		LineOfSight enemySight = this.targetEnemy.GetComponentInChildren<LineOfSight>();
-		if (enemySight != null) {
-			if (enemySight.enemiesInRange.Count > 0) {
-				this.targetEnemy.targetEnemy = enemySight.enemiesInRange[0];
-			}
-			else {
-				this.targetEnemy.targetEnemy = null;
-			}
+		if (obj != null && enemy != null) {
+			GameUnit unit = obj.GetComponent<GameUnit>();
+			unit.targetEnemy = enemy.GetComponent<GameUnit>();
+		}
+		else {
+			this.targetEnemy = null;
 		}
 	}
 
