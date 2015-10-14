@@ -169,9 +169,6 @@ public class GameUnit : NetworkBehaviour {
 			else if (area.enemiesInAttackRange.Count > 0) {
 				this.targetEnemy = area.enemiesInAttackRange[0];
 			}
-			else {
-				this.targetEnemy = null;
-			}
 		}
 	}
 
