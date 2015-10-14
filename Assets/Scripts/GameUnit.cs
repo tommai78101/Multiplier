@@ -149,13 +149,13 @@ public class GameUnit : NetworkBehaviour {
 		if (agent != null) {
 			if (this.targetEnemy != null && this.targetEnemy.CheckIfVisible()) {
 				agent.stoppingDistance = 0.5f;
-				agent.ResetPath();
 				agent.SetDestination(this.targetEnemy.transform.position);
 			}
 			else {
 				agent.stoppingDistance = 0f;
-				agent.ResetPath();
-				agent.SetDestination(this.oldTargetPosition);
+				if (!this.isDirected) {
+					agent.SetDestination(this.oldTargetPosition);
+				}
 			}
 		}
 	}
