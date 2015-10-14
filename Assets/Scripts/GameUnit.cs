@@ -145,26 +145,25 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	//Tells the unit to at least move to an enemy opponent. 
-	public void MoveToTarget() {
-		LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
-		AttackArea area = this.GetComponentInChildren<AttackArea>();
-		bool checkEnemyNearby = false;
-		if (sight != null && area != null) {
-			if (sight.enemiesInRange.Count > 0 || area.enemiesInAttackRange.Count > 0) {
-				checkEnemyNearby = true;
-			}
-		}
-		NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			if (this.targetEnemy != null && this.targetEnemy.CheckIfVisible() && checkEnemyNearby) {
+	public void MoveToTarget(GameObject obj, GameObject target) {
+		//LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
+		//AttackArea area = this.GetComponentInChildren<AttackArea>();
+		//bool checkEnemyNearby = false;
+		//if (sight != null && area != null) {
+		//	if (sight.enemiesInRange.Count > 0 || area.enemiesInAttackRange.Count > 0) {
+		//		checkEnemyNearby = true;
+		//	}
+		//}
+		NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
+		GameUnit unit = obj.GetComponent<GameUnit>();
+		if (agent != null && unit != null) {
+			if (unit.targetEnemy != null && unit.targetEnemy.CheckIfVisible()) {  //&& checkEnemyNearby
 				agent.stoppingDistance = 0.5f;
-				agent.SetDestination(this.targetEnemy.transform.position);
+				agent.SetDestination(target.transform.position);
 			}
 			else {
 				agent.stoppingDistance = 0f;
-				//if (!this.isDirected) {
-				agent.SetDestination(this.oldTargetPosition);
-				//}
+				agent.SetDestination(unit.oldTargetPosition);
 			}
 		}
 	}
@@ -220,24 +219,23 @@ public class GameUnit : NetworkBehaviour {
 	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
 		if (obj != null) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (obj.Equals(enemy) && obj.Equals(attackee)) {
-				unit.targetEnemy = null;
-				MoveToTarget();
-				return;
-			}
 			if (unit != null) {
-				if (enemy != null) {
-					unit.targetEnemy = enemy.GetComponent<GameUnit>();
-					MoveToTarget();
-				}
-				else if (attackee != null) {
-					unit.targetEnemy = attackee.GetComponent<GameUnit>();
-					MoveToTarget();
-				}
-				else {
+				if (enemy != null && attackee != null && obj.Equals(enemy) && obj.Equals(attackee)) {
 					unit.targetEnemy = null;
 				}
+				else {
+					if (enemy != null) {
+						unit.targetEnemy = enemy.GetComponent<GameUnit>();
+					}
+					else if (attackee != null) {
+						unit.targetEnemy = attackee.GetComponent<GameUnit>();
+					}
+					else {
+						unit.targetEnemy = null;
+					}
+				}
 			}
+			MoveToTarget(obj, unit.targetEnemy.gameObject);
 		}
 	}
 
