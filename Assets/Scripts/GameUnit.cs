@@ -187,8 +187,15 @@ public class GameUnit : NetworkBehaviour {
 		if (this.recoverCounter < 1f) {
 			this.recoverCounter += Time.deltaTime / this.recoverCooldown;
 		}
+		bool targetEnemyIsGone = false;
+		if (this.targetEnemy != null) {
+			if (!this.targetEnemy.CheckIfVisible()) {
+				targetEnemyIsGone = true;
+			}
+		}
+
 		//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
-		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, renderer.material.color);
+		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, targetEnemyIsGone, renderer.material.color);
 	}
 
 	[Command]
@@ -217,18 +224,21 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, Color color) {
+	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, bool targetEnemyIsGone, Color color) {
 		this.attackCooldownCounter = attackCounter;
 		this.recoverCounter = recoverCounter;
 		this.currentHealth = currentHealth;
-		RpcUpdateStatus(color);
+		RpcUpdateStatus(targetEnemyIsGone, color);
 	}
 
 	[ClientRpc]
-	public void RpcUpdateStatus(Color color) {
+	public void RpcUpdateStatus(bool targetEnemyIsGone, Color color) {
 		Renderer renderer = this.GetComponent<Renderer>();
 		if (renderer != null) {
 			renderer.material.color = color;
+		}
+		if (targetEnemyIsGone) {
+			this.targetEnemy = null;
 		}
 	}
 
@@ -262,7 +272,24 @@ public class GameUnit : NetworkBehaviour {
 		CmdHealth(this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
 		this.recoverCounter = 0f;
 		if (this.currentHealth <= 0) {
-			CmdUnitDestroy();
+			CmdUnitDestroy(this.gameObject);
+		}
+	}
+
+	public bool CheckIfVisible() {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			return renderer.enabled;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void ToggleVisibility() {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			renderer.enabled = !renderer.enabled;
 		}
 	}
 
@@ -335,19 +362,24 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdUnitDestroy() {
+	public void CmdUnitDestroy(GameObject obj) {
 		RpcUnitDestroy(this.gameObject);
-		NetworkServer.Destroy(this.gameObject);
+		//NetworkServer.Destroy(this.gameObject);
 	}
 
 	[ClientRpc]
 	public void RpcUnitDestroy(GameObject obj) {
-		GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
-		foreach (GameObject selectObj in selects) {
-			SelectionManager select = selectObj.GetComponent<SelectionManager>();
-			if (select != null) {
-				select.AddToRemoveList(obj);
-			}
+		//GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
+		//foreach (GameObject selectObj in selects) {
+		//	SelectionManager select = selectObj.GetComponent<SelectionManager>();
+		//	if (select != null) {
+		//		select.AddToRemoveList(obj);
+		//	}
+		//}
+
+		GameUnit unit = obj.GetComponent<GameUnit>();
+		if (unit != null) {
+			unit.ToggleVisibility();
 		}
 	}
 }
