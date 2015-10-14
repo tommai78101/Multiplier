@@ -197,13 +197,11 @@ public class GameUnit : NetworkBehaviour {
 
 	[Command]
 	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
-		Debug.Log("This command is working.");
 		RpcSetTargetEnemy(obj, enemy, attackee);
 	}
 
 	[ClientRpc]
 	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
-		Debug.Log("This rpc is working.");
 		if (obj != null) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
 			if (unit != null) {
