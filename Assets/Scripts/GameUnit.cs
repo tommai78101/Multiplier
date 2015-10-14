@@ -139,9 +139,6 @@ public class GameUnit : NetworkBehaviour {
 
 		//There needs to be a check that constantly checks for enemies nearby.
 		if (this.targetEnemy == null) {
-			if (sight.enemiesInRange.Count <= 0) {
-				Debug.LogError("Are there any enemies? " + (sight.Recheck() ? " Yes" : " No"));
-			}
 			foreach (GameUnit unit in sight.enemiesInRange) {
 				if (unit != null) {
 					this.targetEnemy = unit;
