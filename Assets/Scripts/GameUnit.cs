@@ -153,9 +153,9 @@ public class GameUnit : NetworkBehaviour {
 			}
 			else {
 				agent.stoppingDistance = 0f;
-				if (!this.isDirected) {
+				//if (!this.isDirected) {
 					agent.SetDestination(this.oldTargetPosition);
-				}
+				//}
 			}
 		}
 	}
