@@ -112,6 +112,10 @@ public class Spawner : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcCameraSetup(GameObject obj) {
+		if (!this.isLocalPlayer) {
+			return;
+		}
+
 		Vector3 pos = obj.transform.position;
 		pos.y = Camera.main.transform.position.y;
         Camera.main.transform.position = pos;
