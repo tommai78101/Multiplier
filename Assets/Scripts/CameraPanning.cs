@@ -57,7 +57,7 @@ public class CameraPanning : MonoBehaviour {
 
 	public void Start() {
 		this.mouseInFocusFlag = true;
-		this.cameraZoomingFlag = true;
+		this.cameraZoomingFlag = true; 
 	}
 
 	public void OnApplicationFocus(bool focus) {
