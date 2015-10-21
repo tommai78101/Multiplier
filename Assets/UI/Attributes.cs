@@ -21,7 +21,7 @@ public class Attributes : MonoBehaviour {
 	public float inputLag;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ ])");
-	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/" };
+	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 	public void Start() {
 		if (this.panelPrefab == null) {
@@ -56,14 +56,11 @@ public class Attributes : MonoBehaviour {
 
 	public void Update() {
 		if (!this.equationInputField.text.Equals("") && Input.GetKey(KeyCode.Return) && this.inputLag < 0.01f) {
-			Debug.Log("Pressed enter.");
 			InputText inputText = this.equationInputField.GetComponentInChildren<InputText>();
 			if (inputText != null) {
 				this.equationInputField.text = inputText.inputText.text;
-				Debug.Log("Setting the equation.");
 				try {
 					ProcessEquation(inputText.inputText.text);
-					Debug.Log("Done calculating");
 				}
 				catch (Exception e) {
 					Debug.LogError(e.Message.ToString());
@@ -71,7 +68,7 @@ public class Attributes : MonoBehaviour {
 				this.inputLag = 1.0f;
 			}
 			else {
-				Debug.Log("This is null.");
+				Debug.LogError("This is null.");
 			}
 		}
 
@@ -85,7 +82,6 @@ public class Attributes : MonoBehaviour {
 
 		Queue<string> queue = new Queue<string>();
 		Stack<string> stack = new Stack<string>();
-		Debug.Log("Start calculating");
 
 		for (int i = 0; i < result.Count; i++) {
 			string element = result[i];
@@ -135,7 +131,6 @@ public class Attributes : MonoBehaviour {
 			}
 		}
 
-		Debug.Log("Second half");
 		while (stack.Count > 0) {
 			string operand = stack.Pop();
 			if (operand.Equals("(") || operand.Equals(")")) {
@@ -144,7 +139,6 @@ public class Attributes : MonoBehaviour {
 			queue.Enqueue(operand);
 		}
 
-		Debug.Log("Third half");
 		Stack<string> expressionStack = new Stack<string>();
 		while (queue.Count > 0) {
 			string token = queue.Dequeue();
@@ -173,6 +167,11 @@ public class Attributes : MonoBehaviour {
 						answer = float.Parse(leftOperand);
 						answer /= float.Parse(rightOperand);
 					}
+					else if (token.Equals("^")) {
+						float baseValue = float.Parse(leftOperand);
+						float exponent = float.Parse(rightOperand);
+						answer = Mathf.Pow(baseValue, exponent);
+					}
 				}
 				else if (tokenClass == TokenClass.Negative) {
 					string operand = expressionStack.Pop();
@@ -181,8 +180,6 @@ public class Attributes : MonoBehaviour {
 				expressionStack.Push(answer.ToString());
 			}
 		}
-
-		Debug.Log("Fourth half");
 
 		if (expressionStack.Count != 1) {
 			throw new ArgumentException("Invalid equation.");
