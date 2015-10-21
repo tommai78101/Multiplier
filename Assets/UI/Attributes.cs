@@ -15,12 +15,17 @@ public enum Associativity {
 	Left, Right
 };
 
+public enum AttributeProperty {
+	Health, Attack, Speed, Merge, Split
+};
+
 public class Attributes : MonoBehaviour {
 	public GameObject panelPrefab;
 	public InputField equationInputField;
+	public ToggleGroup toggleGroup;
 	public float inputLag;
 
-	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ ])");
+	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 	public void Start() {
@@ -30,6 +35,10 @@ public class Attributes : MonoBehaviour {
 		}
 		if (this.equationInputField == null) {
 			Debug.LogError("Input field has not been set.");
+			return;
+		}
+		if (this.toggleGroup == null) {
+			Debug.LogError("Toggle group has not been set.");
 			return;
 		}
 		this.inputLag = 0f;
@@ -59,7 +68,16 @@ public class Attributes : MonoBehaviour {
 			InputText inputText = this.equationInputField.GetComponentInChildren<InputText>();
 			if (inputText != null) {
 				this.equationInputField.text = inputText.inputText.text;
+				Debug.Log("Hitting this 1");
+				var toggles = this.toggleGroup.ActiveToggles();
+                foreach (Toggle toggle in toggles) {
+					Debug.Log(toggle.name);
+					if (toggle.isOn) {
+						Debug.Log(toggle.name + " A OK");
+					}
+				}
 				try {
+					Debug.Log("Hitting this 2");
 					ProcessEquation(inputText.inputText.text);
 				}
 				catch (Exception e) {
@@ -79,7 +97,6 @@ public class Attributes : MonoBehaviour {
 
 	public void ProcessEquation(string equation) {
 		List<string> result = this.regex.Split(equation).Select(t => t.Trim()).Where(t => t != "").ToList();
-
 		Queue<string> queue = new Queue<string>();
 		Stack<string> stack = new Stack<string>();
 
