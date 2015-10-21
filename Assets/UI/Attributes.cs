@@ -16,7 +16,7 @@ public enum Associativity {
 };
 
 public enum AttributeProperty {
-	Health, Attack, Speed, Merge, Split
+	Health, Attack, Speed, Merge, Split, Invalid
 };
 
 public class Attributes : MonoBehaviour {
@@ -24,6 +24,7 @@ public class Attributes : MonoBehaviour {
 	public InputField equationInputField;
 	public ToggleGroup toggleGroup;
 	public float inputLag;
+	public bool debugFlag;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
@@ -60,7 +61,7 @@ public class Attributes : MonoBehaviour {
 			if (number != null) {
 				number.numberText.text = (1234.001f).ToString();
 			}
-		} 
+		}
 	}
 
 	public void Update() {
@@ -68,17 +69,14 @@ public class Attributes : MonoBehaviour {
 			InputText inputText = this.equationInputField.GetComponentInChildren<InputText>();
 			if (inputText != null) {
 				this.equationInputField.text = inputText.inputText.text;
-				Debug.Log("Hitting this 1");
-				var toggles = this.toggleGroup.ActiveToggles();
-                foreach (Toggle toggle in toggles) {
-					Debug.Log(toggle.name);
-					if (toggle.isOn) {
-						Debug.Log(toggle.name + " A OK");
-					}
+				AttributeProperty property = ProcessToggle();
+				if (property == AttributeProperty.Invalid) {
+					Debug.LogError("Toggle setup is incorrect. Please check.");
 				}
 				try {
-					Debug.Log("Hitting this 2");
-					ProcessEquation(inputText.inputText.text);
+					for (int level = 0; level < 10; level++) {
+						ProcessEquation(inputText.inputText.text, property, level + 1);
+					}
 				}
 				catch (Exception e) {
 					Debug.LogError(e.Message.ToString());
@@ -95,13 +93,33 @@ public class Attributes : MonoBehaviour {
 		}
 	}
 
-	public void ProcessEquation(string equation) {
-		List<string> result = this.regex.Split(equation).Select(t => t.Trim()).Where(t => t != "").ToList();
+	public void ProcessEquation(string equation, AttributeProperty property, int level) {
+		List<string> result = this.regex.Split(equation).Select(t => t.Trim().ToLower()).Where(t => t != "").ToList();
 		Queue<string> queue = new Queue<string>();
 		Stack<string> stack = new Stack<string>();
 
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 1");
+		}
+
+		for (int i = 0; i < result.Count; i++) {
+			if (result[i].Equals("x")) {
+				result[i] = level.ToString();
+				break;
+			}
+		}
+
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 2");
+		}
+
 		for (int i = 0; i < result.Count; i++) {
 			string element = result[i];
+
+			if (element.Equals("y") || element.Equals("=")) {
+				continue;
+			}
+
 			TokenClass tokenClass = GetTokenClass(element);
 			switch (tokenClass) {
 				case TokenClass.Value:
@@ -131,7 +149,7 @@ public class Attributes : MonoBehaviour {
 							if ((tokenAssociativity == Associativity.Left && tokenPrecedence <= stackTopPrecedence) || (tokenAssociativity == Associativity.Right && tokenPrecedence < stackTopPrecedence)) {
 								queue.Enqueue(stack.Pop());
 							}
-                        }
+						}
 					}
 					stack.Push(element);
 					break;
@@ -148,12 +166,20 @@ public class Attributes : MonoBehaviour {
 			}
 		}
 
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 3");
+		}
+
 		while (stack.Count > 0) {
 			string operand = stack.Pop();
 			if (operand.Equals("(") || operand.Equals(")")) {
 				throw new ArgumentException("Mismatched parentheses.");
 			}
 			queue.Enqueue(operand);
+		}
+
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 4");
 		}
 
 		Stack<string> expressionStack = new Stack<string>();
@@ -198,8 +224,16 @@ public class Attributes : MonoBehaviour {
 			}
 		}
 
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 5");
+		}
+
 		if (expressionStack.Count != 1) {
 			throw new ArgumentException("Invalid equation.");
+		}
+
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 6");
 		}
 
 		float finalAnswer = float.Parse(expressionStack.Pop());
@@ -249,5 +283,32 @@ public class Attributes : MonoBehaviour {
 		else {
 			throw new ArgumentException("Invalid token");
 		}
+	}
+
+	public AttributeProperty ProcessToggle() {
+		foreach (Toggle toggle in this.toggleGroup.ActiveToggles()) {
+			if (toggle.isOn) {
+				Text text = toggle.GetComponentInChildren<Text>();
+				if (text != null) {
+					string label = text.text;
+					if (label.Equals("Health")) {
+						return AttributeProperty.Health;
+					}
+					else if (label.Equals("Attack")) {
+						return AttributeProperty.Attack;
+					}
+					else if (label.Equals("Speed")) {
+						return AttributeProperty.Speed;
+					}
+					else if (label.Equals("Merge")) {
+						return AttributeProperty.Merge;
+					}
+					else if (label.Equals("Split")) {
+						return AttributeProperty.Split;
+					}
+				}
+			}
+		}
+		return AttributeProperty.Invalid;
 	}
 }
