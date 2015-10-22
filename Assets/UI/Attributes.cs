@@ -26,6 +26,18 @@ public class Attributes : MonoBehaviour {
 	public float inputLag;
 	public bool debugFlag;
 	public List<GameObject> prefabList;
+	public List<float> healthPrefabList;
+	public List<float> attackPrefabList;
+	public List<float> speedPrefabList;
+	public List<float> mergePrefabList;
+	public List<float> splitPrefabList;
+	public Toggle healthToggle;
+	public Toggle attackToggle;
+	public Toggle speedToggle;
+	public Toggle mergeToggle;
+	public Toggle splitToggle;
+	public AttributeProperty oldProperty;
+	public AttributeProperty newProperty;
 	public const int MAX_NUM_OF_LEVELS = 10;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
@@ -44,8 +56,18 @@ public class Attributes : MonoBehaviour {
 			Debug.LogError("Toggle group has not been set.");
 			return;
 		}
+		if (this.healthToggle == null || this.attackToggle == null || this.speedToggle == null || this.mergeToggle == null || this.splitToggle == null) {
+			Debug.LogError("Toggle has not been set. Please check.");
+			return;
+		}
+		this.oldProperty = this.newProperty = AttributeProperty.Health;
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
+		this.healthPrefabList = new List<float>();
+		this.attackPrefabList = new List<float>();
+		this.speedPrefabList = new List<float>();
+		this.mergePrefabList = new List<float>();
+		this.splitPrefabList = new List<float>();
 
 		//string[] attributesList = new string[] {
 		//	"Health", "Attack", "Speed", "Merge", "Split"
@@ -60,12 +82,34 @@ public class Attributes : MonoBehaviour {
 
 			Title title = obj.GetComponentInChildren<Title>();
 			if (title != null) {
-				title.titleText.text = "Level " + (i+1).ToString();
+				title.titleText.text = "Level " + (i + 1).ToString();
 			}
 
 			Number number = obj.GetComponentInChildren<Number>();
 			if (number != null) {
-				number.numberText.text = "N/A";
+				number.numberText.text = (0f).ToString();
+			}
+		}
+
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < MAX_NUM_OF_LEVELS; j++) {
+				switch (i) {
+					case 0:
+						this.healthPrefabList.Add(0f);
+						break;
+					case 1:
+						this.attackPrefabList.Add(0f);
+						break;
+					case 2:
+						this.speedPrefabList.Add(0f);
+						break;
+					case 3:
+						this.mergePrefabList.Add(0f);
+						break;
+					case 4:
+						this.splitPrefabList.Add(0f);
+						break;
+				}
 			}
 		}
 	}
@@ -79,16 +123,38 @@ public class Attributes : MonoBehaviour {
 				if (property == AttributeProperty.Invalid) {
 					Debug.LogError("Toggle setup is incorrect. Please check.");
 				}
+
+				List<float> propertyList;
+				switch (property) {
+					default:
+					case AttributeProperty.Health:
+						propertyList = this.healthPrefabList;
+						break;
+					case AttributeProperty.Attack:
+						propertyList = this.attackPrefabList;
+						break;
+					case AttributeProperty.Speed:
+						propertyList = this.speedPrefabList;
+						break;
+					case AttributeProperty.Merge:
+						propertyList = this.mergePrefabList;
+						break;
+					case AttributeProperty.Split:
+						propertyList = this.splitPrefabList;
+						break;
+				}
+
 				try {
 					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
 						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
 						GameObject panel = this.prefabList[level];
 						Title titlePanel = panel.GetComponentInChildren<Title>();
 						if (titlePanel != null) {
-							titlePanel.titleText.text = "Level " + (level+1).ToString();
+							titlePanel.titleText.text = "Level " + (level + 1).ToString();
 						}
 						Number numberPanel = panel.GetComponentInChildren<Number>();
 						if (numberPanel != null) {
+							propertyList[level] = answer;
 							numberPanel.numberText.text = answer.ToString();
 						}
 					}
@@ -98,13 +164,13 @@ public class Attributes : MonoBehaviour {
 					this.equationInputField.text = this.equationInputField.text + " [" + e.Message.ToString() + "]";
 					for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 						GameObject obj = this.prefabList[i];
-                        Title title = obj.GetComponentInChildren<Title>();
+						Title title = obj.GetComponentInChildren<Title>();
 						if (title != null) {
 							title.titleText.text = "Level " + (i + 1).ToString();
 						}
 						Number number = obj.GetComponentInChildren<Number>();
 						if (number != null) {
-							number.numberText.text = "N/A";
+							number.numberText.text = (0f).ToString();
 						}
 					}
 				}
@@ -117,6 +183,35 @@ public class Attributes : MonoBehaviour {
 
 		if (this.inputLag > 0f) {
 			this.inputLag -= Time.deltaTime;
+		}
+
+		if (this.oldProperty != this.newProperty) {
+			List<float> propertyList;
+			switch (this.newProperty) {
+				default:
+				case AttributeProperty.Health:
+					propertyList = this.healthPrefabList;
+					break;
+				case AttributeProperty.Attack:
+					propertyList = this.attackPrefabList;
+					break;
+				case AttributeProperty.Speed:
+					propertyList = this.speedPrefabList;
+					break;
+				case AttributeProperty.Merge:
+					propertyList = this.mergePrefabList;
+					break;
+				case AttributeProperty.Split:
+					propertyList = this.splitPrefabList;
+					break;
+			}
+			for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
+				Number number = this.prefabList[i].GetComponentInChildren<Number>();
+				if (number != null) {
+					number.numberText.text = propertyList[i].ToString();
+				}
+			}
+			this.oldProperty = this.newProperty;
 		}
 	}
 
@@ -342,5 +437,9 @@ public class Attributes : MonoBehaviour {
 			}
 		}
 		return AttributeProperty.Invalid;
+	}
+
+	public void ChangeProperty() {
+		this.newProperty = ProcessToggle();
 	}
 }
