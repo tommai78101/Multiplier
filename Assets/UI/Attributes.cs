@@ -25,6 +25,7 @@ public class Attributes : MonoBehaviour {
 	public ToggleGroup toggleGroup;
 	public float inputLag;
 	public bool debugFlag;
+	public List<GameObject> prefabList;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
@@ -43,23 +44,27 @@ public class Attributes : MonoBehaviour {
 			return;
 		}
 		this.inputLag = 0f;
+		this.prefabList = new List<GameObject>();
 
 		string[] attributesList = new string[] {
 			"Health", "Attack", "Speed", "Merge", "Split"
 		};
 
-		for (int i = 0; i < attributesList.Length; i++) {
+		//For each level, instantiate a prefab and place it in the Content of the ScrollView.
+		//This allows the Attributes to show consistently the progression of the attributes for each level.
+		for (int i = 0; i < 10; i++) {
 			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
 			obj.transform.SetParent(this.transform);
+			this.prefabList.Add(obj);
 
 			Title title = obj.GetComponentInChildren<Title>();
 			if (title != null) {
-				title.titleText.text = attributesList[i];
+				title.titleText.text = "Level " + (i+1).ToString();
 			}
 
 			Number number = obj.GetComponentInChildren<Number>();
 			if (number != null) {
-				number.numberText.text = (1234.001f).ToString();
+				number.numberText.text = "N/A";
 			}
 		}
 	}
@@ -75,11 +80,32 @@ public class Attributes : MonoBehaviour {
 				}
 				try {
 					for (int level = 0; level < 10; level++) {
-						ProcessEquation(inputText.inputText.text, property, level + 1);
+						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
+						GameObject panel = this.prefabList[level];
+						Title titlePanel = panel.GetComponentInChildren<Title>();
+						if (titlePanel != null) {
+							titlePanel.titleText.text = "Level " + (level+1).ToString();
+						}
+						Number numberPanel = panel.GetComponentInChildren<Number>();
+						if (numberPanel != null) {
+							numberPanel.numberText.text = answer.ToString();
+						}
 					}
 				}
 				catch (Exception e) {
 					Debug.LogError(e.Message.ToString());
+					this.equationInputField.text = e.Message.ToString();
+					for (int i = 0; i < 10; i++) {
+						GameObject obj = this.prefabList[i];
+                        Title title = obj.GetComponentInChildren<Title>();
+						if (title != null) {
+							title.titleText.text = "Level " + (i + 1).ToString();
+						}
+						Number number = obj.GetComponentInChildren<Number>();
+						if (number != null) {
+							number.numberText.text = "N/A";
+						}
+					}
 				}
 				this.inputLag = 1.0f;
 			}
@@ -93,7 +119,8 @@ public class Attributes : MonoBehaviour {
 		}
 	}
 
-	public void ProcessEquation(string equation, AttributeProperty property, int level) {
+	//Shunting yard algorithm
+	public float ProcessEquation(string equation, AttributeProperty property, int level) {
 		List<string> result = this.regex.Split(equation).Select(t => t.Trim().ToLower()).Where(t => t != "").ToList();
 		Queue<string> queue = new Queue<string>();
 		Stack<string> stack = new Stack<string>();
@@ -237,7 +264,7 @@ public class Attributes : MonoBehaviour {
 		}
 
 		float finalAnswer = float.Parse(expressionStack.Pop());
-		Debug.Log("Answer is: " + finalAnswer);
+		return finalAnswer;
 	}
 
 
