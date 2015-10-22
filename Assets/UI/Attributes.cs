@@ -133,7 +133,11 @@ public class Attributes : MonoBehaviour {
 		for (int i = 0; i < result.Count; i++) {
 			if (result[i].Equals("x")) {
 				result[i] = level.ToString();
-				break;
+			}
+			else if (result[i].Equals("r")) {
+				float value = UnityEngine.Random.Range(1f, 1000f);
+				value /= 1000f;
+				result[i] = value.ToString();
 			}
 		}
 
