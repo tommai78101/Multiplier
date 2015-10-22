@@ -26,6 +26,7 @@ public class Attributes : MonoBehaviour {
 	public float inputLag;
 	public bool debugFlag;
 	public List<GameObject> prefabList;
+	public const int MAX_NUM_OF_LEVELS = 10;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
@@ -46,13 +47,13 @@ public class Attributes : MonoBehaviour {
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
 
-		string[] attributesList = new string[] {
-			"Health", "Attack", "Speed", "Merge", "Split"
-		};
+		//string[] attributesList = new string[] {
+		//	"Health", "Attack", "Speed", "Merge", "Split"
+		//};
 
 		//For each level, instantiate a prefab and place it in the Content of the ScrollView.
 		//This allows the Attributes to show consistently the progression of the attributes for each level.
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
 			obj.transform.SetParent(this.transform);
 			this.prefabList.Add(obj);
@@ -79,7 +80,7 @@ public class Attributes : MonoBehaviour {
 					Debug.LogError("Toggle setup is incorrect. Please check.");
 				}
 				try {
-					for (int level = 0; level < 10; level++) {
+					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
 						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
 						GameObject panel = this.prefabList[level];
 						Title titlePanel = panel.GetComponentInChildren<Title>();
@@ -94,8 +95,8 @@ public class Attributes : MonoBehaviour {
 				}
 				catch (Exception e) {
 					Debug.LogError(e.Message.ToString());
-					this.equationInputField.text = e.Message.ToString();
-					for (int i = 0; i < 10; i++) {
+					this.equationInputField.text = this.equationInputField.text + " [" + e.Message.ToString() + "]";
+					for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 						GameObject obj = this.prefabList[i];
                         Title title = obj.GetComponentInChildren<Title>();
 						if (title != null) {
