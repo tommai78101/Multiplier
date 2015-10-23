@@ -83,6 +83,8 @@ public class SplitManager : NetworkBehaviour {
 	[SerializeField]
 	public SelectionManager selectionManager;
 	[SerializeField]
+	public UnitAttributes unitAttributes;
+	[SerializeField]
 	public Spawner spawner;
 	public GameObject gameUnitPrefab;
 
@@ -109,6 +111,19 @@ public class SplitManager : NetworkBehaviour {
 			}
 			if (this.selectionManager == null) {
 				Debug.LogError("Cannot find Selection Manager. Aborting");
+			}
+		}
+		if (this.unitAttributes == null) {
+			GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
+			foreach (GameObject attribute in attributes) {
+				UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
+				if (attr != null) {
+					this.unitAttributes = attr;
+					break;
+				}
+			}
+			if (this.unitAttributes == null) {
+				Debug.LogError("Split Manager: Unit Attributes Tracker is null. Please check.");
 			}
 		}
 		if (this.spawner == null) {
@@ -156,9 +171,11 @@ public class SplitManager : NetworkBehaviour {
 					this.removeList.Add(group);
 				}
 				else {
+					float splitSpeedFactor = this.unitAttributes.splitPrefabList[group.ownerUnit.level];
+
 					//Some weird C# language design...
 					group.Update();
-					group.elapsedTime += Time.deltaTime / 3f;
+					group.elapsedTime += Time.deltaTime / splitSpeedFactor;
 					this.splitGroupList[i] = group;
 				}
 			}

@@ -56,10 +56,6 @@ public class Attributes : MonoBehaviour {
 			Debug.LogError("Toggle has not been set. Please check.");
 			return;
 		}
-		if (this.unitAttributes == null) {
-			Debug.LogError("Unit Attributes have not been set. Please check.");
-			return;
-		}
 		this.oldProperty = this.newProperty = AttributeProperty.Health;
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
@@ -83,28 +79,6 @@ public class Attributes : MonoBehaviour {
 			Number number = obj.GetComponentInChildren<Number>();
 			if (number != null) {
 				number.numberText.text = (0f).ToString();
-			}
-		}
-
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < MAX_NUM_OF_LEVELS; j++) {
-				switch (i) {
-					case 0:
-						this.unitAttributes.healthPrefabList.Add(0f);
-						break;
-					case 1:
-						this.unitAttributes.attackPrefabList.Add(0f);
-						break;
-					case 2:
-						this.unitAttributes.speedPrefabList.Add(0f);
-						break;
-					case 3:
-						this.unitAttributes.mergePrefabList.Add(0f);
-						break;
-					case 4:
-						this.unitAttributes.splitPrefabList.Add(0f);
-						break;
-				}
 			}
 		}
 	}

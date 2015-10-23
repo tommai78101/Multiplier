@@ -18,8 +18,12 @@ public struct MergeGroup {
 	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit) {
 		this.ownerUnit = ownerUnit;
 		this.mergingUnit = mergingUnit;
-		this.ownerUnit.level++;
-		this.mergingUnit.level++;
+		if (this.ownerUnit.level < 10) {
+			this.ownerUnit.level++;
+		}
+		if (this.mergingUnit.level < 10) {
+			this.mergingUnit.level++;
+		}
 		this.elaspedTime = 0f;
 
 		this.ownerPosition = ownerUnit.gameObject.transform.position;
@@ -81,19 +85,21 @@ public class MergeManager : NetworkBehaviour {
 	public List<MergeGroup> removeList;
 	[SerializeField]
 	public SelectionManager selectionManager;
+	[SerializeField]
+	public UnitAttributes unitAttributes;
 
 	[Range(0.1f, 100f)]
 	public float scalingValue = 2f;
-	[Range(0.00001f, 10f)]
-	public float healthFactor = 2f;
-	[Range(0.00001f, 10f)]
-	public float speedFactor = 1f;
-	[Range(0.00001f, 10f)]
-	public float attackFactor = 2f;
+	//[Range(0.00001f, 10f)]
+	//public float healthFactor = 2f;
+	//[Range(0.00001f, 10f)]
+	//public float speedFactor = 1f;
+	//[Range(0.00001f, 10f)]
+	//public float attackFactor = 2f;
 	[Range(0.00001f, 10f)]
 	public float attackCooldownFactor = 1f;
-	[Range(1f, 10f)]
-	public float mergeSpeedFactor = 3f;
+	//[Range(1f, 10f)]
+	//public float mergeSpeedFactor = 3f;
 
 
 	void Start() {
@@ -118,6 +124,19 @@ public class MergeManager : NetworkBehaviour {
 			}
 			if (this.selectionManager == null) {
 				Debug.LogError("Merge Manager: Selection Manager is null. Please check.");
+			}
+		}
+		if (this.unitAttributes == null) {
+			GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
+			foreach (GameObject attribute in attributes) {
+				UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
+				if (attr != null) {
+					this.unitAttributes = attr;
+					break;
+				}
+			}
+			if (this.unitAttributes == null) {
+				Debug.LogError("Merge Manager: Unit Attributes Tracker is null. Please check.");
 			}
 		}
 	}
@@ -199,14 +218,22 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	private void UpdateGroup(MergeGroup group) {
+		if (group.ownerUnit.level > this.unitAttributes.healthPrefabList.Count) {
+			return;
+		}
+		int level = group.ownerUnit.level;
+        float healthFactor = this.unitAttributes.healthPrefabList[level];
+		float attackFactor = this.unitAttributes.attackPrefabList[level];
+		float speedFactor = this.unitAttributes.speedPrefabList[level];
+
 		group.ownerUnit.attackCooldown *= this.attackCooldownFactor;
-		group.ownerUnit.maxHealth = Mathf.FloorToInt((float)group.ownerUnit.maxHealth * this.healthFactor);
-		group.ownerUnit.currentHealth = Mathf.FloorToInt((float)group.ownerUnit.currentHealth * this.healthFactor);
-		group.ownerUnit.attackPower *= this.attackFactor;
+		group.ownerUnit.maxHealth = Mathf.FloorToInt((float)group.ownerUnit.maxHealth * healthFactor);
+		group.ownerUnit.currentHealth = Mathf.FloorToInt((float)group.ownerUnit.currentHealth * healthFactor);
+		group.ownerUnit.attackPower *= attackFactor;
 
 		NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
-			agent.speed *= this.speedFactor;
+			agent.speed *= speedFactor;
 		}
 	}
 
@@ -235,12 +262,15 @@ public class MergeManager : NetworkBehaviour {
 	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject) {
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
+
+		float mergeSpeedFactor = this.unitAttributes.mergePrefabList[ownerUnit.level];
+
 		NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
 		ownerAgent.Stop();
 		NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 		mergingAgent.Stop();
 		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit);
-		group.SetMergeSpeed(this.mergeSpeedFactor);
+		group.SetMergeSpeed(mergeSpeedFactor);
 
 		//this.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit));
 		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
