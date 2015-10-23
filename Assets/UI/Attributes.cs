@@ -26,11 +26,6 @@ public class Attributes : MonoBehaviour {
 	public float inputLag;
 	public bool debugFlag;
 	public List<GameObject> prefabList;
-	public List<float> healthPrefabList;
-	public List<float> attackPrefabList;
-	public List<float> speedPrefabList;
-	public List<float> mergePrefabList;
-	public List<float> splitPrefabList;
 	public Toggle healthToggle;
 	public Toggle attackToggle;
 	public Toggle speedToggle;
@@ -39,6 +34,7 @@ public class Attributes : MonoBehaviour {
 	public AttributeProperty oldProperty;
 	public AttributeProperty newProperty;
 	public const int MAX_NUM_OF_LEVELS = 10;
+	public UnitAttributes unitAttributes;
 
 	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
@@ -60,14 +56,13 @@ public class Attributes : MonoBehaviour {
 			Debug.LogError("Toggle has not been set. Please check.");
 			return;
 		}
+		if (this.unitAttributes == null) {
+			Debug.LogError("Unit Attributes have not been set. Please check.");
+			return;
+		}
 		this.oldProperty = this.newProperty = AttributeProperty.Health;
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
-		this.healthPrefabList = new List<float>();
-		this.attackPrefabList = new List<float>();
-		this.speedPrefabList = new List<float>();
-		this.mergePrefabList = new List<float>();
-		this.splitPrefabList = new List<float>();
 
 		//string[] attributesList = new string[] {
 		//	"Health", "Attack", "Speed", "Merge", "Split"
@@ -95,19 +90,19 @@ public class Attributes : MonoBehaviour {
 			for (int j = 0; j < MAX_NUM_OF_LEVELS; j++) {
 				switch (i) {
 					case 0:
-						this.healthPrefabList.Add(0f);
+						this.unitAttributes.healthPrefabList.Add(0f);
 						break;
 					case 1:
-						this.attackPrefabList.Add(0f);
+						this.unitAttributes.attackPrefabList.Add(0f);
 						break;
 					case 2:
-						this.speedPrefabList.Add(0f);
+						this.unitAttributes.speedPrefabList.Add(0f);
 						break;
 					case 3:
-						this.mergePrefabList.Add(0f);
+						this.unitAttributes.mergePrefabList.Add(0f);
 						break;
 					case 4:
-						this.splitPrefabList.Add(0f);
+						this.unitAttributes.splitPrefabList.Add(0f);
 						break;
 				}
 			}
@@ -128,19 +123,19 @@ public class Attributes : MonoBehaviour {
 				switch (property) {
 					default:
 					case AttributeProperty.Health:
-						propertyList = this.healthPrefabList;
+						propertyList = this.unitAttributes.healthPrefabList;
 						break;
 					case AttributeProperty.Attack:
-						propertyList = this.attackPrefabList;
+						propertyList = this.unitAttributes.attackPrefabList;
 						break;
 					case AttributeProperty.Speed:
-						propertyList = this.speedPrefabList;
+						propertyList = this.unitAttributes.speedPrefabList;
 						break;
 					case AttributeProperty.Merge:
-						propertyList = this.mergePrefabList;
+						propertyList = this.unitAttributes.mergePrefabList;
 						break;
 					case AttributeProperty.Split:
-						propertyList = this.splitPrefabList;
+						propertyList = this.unitAttributes.splitPrefabList;
 						break;
 				}
 
@@ -190,19 +185,19 @@ public class Attributes : MonoBehaviour {
 			switch (this.newProperty) {
 				default:
 				case AttributeProperty.Health:
-					propertyList = this.healthPrefabList;
+					propertyList = this.unitAttributes.healthPrefabList;
 					break;
 				case AttributeProperty.Attack:
-					propertyList = this.attackPrefabList;
+					propertyList = this.unitAttributes.attackPrefabList;
 					break;
 				case AttributeProperty.Speed:
-					propertyList = this.speedPrefabList;
+					propertyList = this.unitAttributes.speedPrefabList;
 					break;
 				case AttributeProperty.Merge:
-					propertyList = this.mergePrefabList;
+					propertyList = this.unitAttributes.mergePrefabList;
 					break;
 				case AttributeProperty.Split:
-					propertyList = this.splitPrefabList;
+					propertyList = this.unitAttributes.splitPrefabList;
 					break;
 			}
 			for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
