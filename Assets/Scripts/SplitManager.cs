@@ -117,7 +117,7 @@ public class SplitManager : NetworkBehaviour {
 			GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
 			foreach (GameObject attribute in attributes) {
 				UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
-				if (attr != null) {
+				if (attr != null && attr.hasAuthority) {
 					this.unitAttributes = attr;
 					break;
 				}
