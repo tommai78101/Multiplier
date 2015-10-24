@@ -93,26 +93,6 @@ public class Attributes : MonoBehaviour {
 					Debug.LogError("Toggle setup is incorrect. Please check.");
 				}
 
-				List<float> propertyList;
-				switch (property) {
-					default:
-					case AttributeProperty.Health:
-						propertyList = this.unitAttributes.healthPrefabList;
-						break;
-					case AttributeProperty.Attack:
-						propertyList = this.unitAttributes.attackPrefabList;
-						break;
-					case AttributeProperty.Speed:
-						propertyList = this.unitAttributes.speedPrefabList;
-						break;
-					case AttributeProperty.Merge:
-						propertyList = this.unitAttributes.mergePrefabList;
-						break;
-					case AttributeProperty.Split:
-						propertyList = this.unitAttributes.splitPrefabList;
-						break;
-				}
-
 				try {
 					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
 						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
@@ -123,7 +103,24 @@ public class Attributes : MonoBehaviour {
 						}
 						Number numberPanel = panel.GetComponentInChildren<Number>();
 						if (numberPanel != null) {
-							propertyList[level] = answer;
+							switch (property) {
+								default:
+								case AttributeProperty.Health:
+									this.unitAttributes.healthPrefabList[level] = answer;
+									break;
+								case AttributeProperty.Attack:
+									this.unitAttributes.attackPrefabList[level] = answer;
+									break;
+								case AttributeProperty.Speed:
+									this.unitAttributes.speedPrefabList[level] = answer;
+									break;
+								case AttributeProperty.Merge:
+									this.unitAttributes.mergePrefabList[level] = answer;
+									break;
+								case AttributeProperty.Split:
+									this.unitAttributes.splitPrefabList[level] = answer;
+									break;
+							}
 							numberPanel.numberText.text = answer.ToString();
 						}
 					}
