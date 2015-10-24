@@ -4,17 +4,18 @@ using System.Collections;
 public class CanvasSwitch : MonoBehaviour {
 	public CanvasGroup canvasGroup;
 	public bool showCanvas;
+	public UnitAttributes unitAttributes;
 
 	public void Start() {
 		if (this.canvasGroup == null) {
 			Debug.LogError("Canvas group has not been set. Please check.");
 		}
-		this.showCanvas = true;
+		this.showCanvas = false;
 		this.ToggleCanvas();
 	}
 
 	public void Update() {
-		if (Input.GetKeyUp(KeyCode.M)) {
+		if (this.unitAttributes != null && Input.GetKeyUp(KeyCode.M)) {
 			this.showCanvas = !this.showCanvas;
 			this.ToggleCanvas();
 		}

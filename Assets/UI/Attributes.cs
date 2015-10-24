@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Data;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
@@ -96,32 +93,53 @@ public class Attributes : MonoBehaviour {
 				try {
 					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
 						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
+
+						if (this.debugFlag) {
+							Debug.Log("DEBUG 8");
+						}
+
 						GameObject panel = this.prefabList[level];
 						Title titlePanel = panel.GetComponentInChildren<Title>();
+
+						if (this.debugFlag) {
+							Debug.Log("DEBUG 9");
+						}
+
 						if (titlePanel != null) {
 							titlePanel.titleText.text = "Level " + (level + 1).ToString();
 						}
+
+						if (this.debugFlag) {
+							Debug.Log("DEBUG 10");
+						}
+
 						Number numberPanel = panel.GetComponentInChildren<Number>();
 						if (numberPanel != null) {
-							switch (property) {
-								default:
-								case AttributeProperty.Health:
-									this.unitAttributes.healthPrefabList[level] = answer;
-									break;
-								case AttributeProperty.Attack:
-									this.unitAttributes.attackPrefabList[level] = answer;
-									break;
-								case AttributeProperty.Speed:
-									this.unitAttributes.speedPrefabList[level] = answer;
-									break;
-								case AttributeProperty.Merge:
-									this.unitAttributes.mergePrefabList[level] = answer;
-									break;
-								case AttributeProperty.Split:
-									this.unitAttributes.splitPrefabList[level] = answer;
-									break;
-							}
 							numberPanel.numberText.text = answer.ToString();
+							if (this.unitAttributes != null) {
+								switch (property) {
+									default:
+									case AttributeProperty.Health:
+										this.unitAttributes.healthPrefabList[level] = answer;
+										break;
+									case AttributeProperty.Attack:
+										this.unitAttributes.attackPrefabList[level] = answer;
+										break;
+									case AttributeProperty.Speed:
+										this.unitAttributes.speedPrefabList[level] = answer;
+										break;
+									case AttributeProperty.Merge:
+										this.unitAttributes.mergePrefabList[level] = answer;
+										break;
+									case AttributeProperty.Split:
+										this.unitAttributes.splitPrefabList[level] = answer;
+										break;
+								}
+							}
+						}
+
+						if (this.debugFlag) {
+							Debug.Log("DEBUG 11");
 						}
 					}
 				}
@@ -152,29 +170,27 @@ public class Attributes : MonoBehaviour {
 		}
 
 		if (this.oldProperty != this.newProperty) {
-			List<float> propertyList;
-			switch (this.newProperty) {
-				default:
-				case AttributeProperty.Health:
-					propertyList = this.unitAttributes.healthPrefabList;
-					break;
-				case AttributeProperty.Attack:
-					propertyList = this.unitAttributes.attackPrefabList;
-					break;
-				case AttributeProperty.Speed:
-					propertyList = this.unitAttributes.speedPrefabList;
-					break;
-				case AttributeProperty.Merge:
-					propertyList = this.unitAttributes.mergePrefabList;
-					break;
-				case AttributeProperty.Split:
-					propertyList = this.unitAttributes.splitPrefabList;
-					break;
-			}
 			for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 				Number number = this.prefabList[i].GetComponentInChildren<Number>();
 				if (number != null) {
-					number.numberText.text = propertyList[i].ToString();
+					switch (this.newProperty) {
+						default:
+						case AttributeProperty.Health:
+							number.numberText.text = this.unitAttributes.healthPrefabList[i].ToString();
+							break;
+						case AttributeProperty.Attack:
+							number.numberText.text = this.unitAttributes.attackPrefabList[i].ToString();
+							break;
+						case AttributeProperty.Speed:
+							number.numberText.text = this.unitAttributes.speedPrefabList[i].ToString();
+							break;
+						case AttributeProperty.Merge:
+							number.numberText.text = this.unitAttributes.mergePrefabList[i].ToString();
+							break;
+						case AttributeProperty.Split:
+							number.numberText.text = this.unitAttributes.splitPrefabList[i].ToString();
+							break;
+					}
 				}
 			}
 			this.oldProperty = this.newProperty;
@@ -183,7 +199,15 @@ public class Attributes : MonoBehaviour {
 
 	//Shunting yard algorithm
 	public float ProcessEquation(string equation, AttributeProperty property, int level) {
-		List<string> result = this.regex.Split(equation).Select(t => t.Trim().ToLower()).Where(t => t != "").ToList();
+		if (equation.Equals("")) {
+			throw new ArgumentException("Equation is empty.");
+		}
+		List<string> result = new List<string>(this.regex.Split(equation.ToLower().Trim()));
+		for (int i = 0; i < result.Count; i++) {
+			if (result[i].Equals("")) {
+				result.RemoveAt(i);
+			}
+		}
 		Queue<string> queue = new Queue<string>();
 		Stack<string> stack = new Stack<string>();
 
@@ -330,6 +354,11 @@ public class Attributes : MonoBehaviour {
 		}
 
 		float finalAnswer = float.Parse(expressionStack.Pop());
+
+		if (this.debugFlag) {
+			Debug.Log("DEBUG 7");
+		}
+
 		return finalAnswer;
 	}
 

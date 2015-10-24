@@ -114,6 +114,14 @@ public class Spawner : NetworkBehaviour {
 		if (attributes != null) {
 			splitManager.unitAttributes = attributes;
 			mergeManager.unitAttributes = attributes;
+
+			GameObject console = GameObject.FindGameObjectWithTag("Console");
+			if (console != null) {
+				CanvasSwitch canvasSwitch = console.GetComponent<CanvasSwitch>();
+				if (canvasSwitch != null) {
+					canvasSwitch.unitAttributes = attributes;
+				}
+			}
 		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
