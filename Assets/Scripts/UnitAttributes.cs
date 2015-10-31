@@ -27,19 +27,19 @@ public class UnitAttributes : NetworkBehaviour {
 					for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
 						switch (i) {
 							case 0:
-								this.healthPrefabList.Add(0f);
+								this.healthPrefabList.Add(1f);
 								break;
 							case 1:
-								this.attackPrefabList.Add(0f);
+								this.attackPrefabList.Add(1f);
 								break;
 							case 2:
-								this.speedPrefabList.Add(0f);
+								this.speedPrefabList.Add(1f);
 								break;
 							case 3:
-								this.mergePrefabList.Add(0f);
+								this.mergePrefabList.Add(3f);
 								break;
 							case 4:
-								this.splitPrefabList.Add(0f);
+								this.splitPrefabList.Add(3f);
 								break;
 						}
 					}

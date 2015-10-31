@@ -114,7 +114,17 @@ public class Spawner : NetworkBehaviour {
 		if (attributes != null) {
 			splitManager.unitAttributes = attributes;
 			mergeManager.unitAttributes = attributes;
+		}
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
+		RpcCameraSetup(obj);
+		RpcUnitAttributesSetup(manager);
+	}
+
+	[ClientRpc]
+	public void RpcUnitAttributesSetup(GameObject manager) {
+		UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
+		if (attributes != null && attributes.hasAuthority) {
 			GameObject console = GameObject.FindGameObjectWithTag("Console");
 			if (console != null) {
 				CanvasSwitch canvasSwitch = console.GetComponent<CanvasSwitch>();
@@ -123,9 +133,6 @@ public class Spawner : NetworkBehaviour {
 				}
 			}
 		}
-		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
-
-		RpcCameraSetup(obj);
 	}
 
 	[ClientRpc]
@@ -136,7 +143,7 @@ public class Spawner : NetworkBehaviour {
 
 		Vector3 pos = obj.transform.position;
 		pos.y = Camera.main.transform.position.y;
-        Camera.main.transform.position = pos;
+		Camera.main.transform.position = pos;
 	}
 
 	public void OnDestroy() {

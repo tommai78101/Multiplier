@@ -197,14 +197,14 @@ public class SplitManager : NetworkBehaviour {
 			}
 			GameUnit objUnit = obj.GetComponent<GameUnit>();
 			if (objUnit.level == 1) {
-				CmdSplit(obj);
+				CmdSplit(obj, objUnit.hasAuthority);
 			}
 		}
 		return;
 	}
 
 	[Command]
-	public void CmdSplit(GameObject obj) {
+	public void CmdSplit(GameObject obj, bool hasAuthority) {
 		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
@@ -214,11 +214,11 @@ public class SplitManager : NetworkBehaviour {
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
 		float angle = UnityEngine.Random.Range(-180f, 180f);
-		RpcSplit(obj, split, angle);
+		RpcSplit(obj, split, angle, hasAuthority);
 	}
 
 	[ClientRpc]
-	public void RpcSplit(GameObject obj, GameObject split, float angle) {
+	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
 		GameUnit original = obj.GetComponent<GameUnit>();
@@ -229,17 +229,25 @@ public class SplitManager : NetworkBehaviour {
 		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
 		copyAgent.ResetPath();
 
-		this.splitGroupList.Add(new SplitGroup(original, copy, angle));
-		if (this.selectionManager == null) {
-			GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
-			foreach (GameObject select in objs) {
-				SelectionManager manager = select.GetComponent<SelectionManager>();
-				if (manager.hasAuthority) {
-					this.selectionManager = manager;
+		GameObject[] splitManagerGroup = GameObject.FindGameObjectsWithTag("SplitManager");
+		if (splitManagerGroup.Length > 0) {
+			for (int i = 0; i < splitManagerGroup.Length; i++) {
+				SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
+				if (manager != null && manager.hasAuthority == hasAuthority) {
+					manager.splitGroupList.Add(new SplitGroup(original, copy, angle));
+					if (manager.selectionManager == null) {
+						GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
+						foreach (GameObject select in objs) {
+							SelectionManager selectManager = select.GetComponent<SelectionManager>();
+							if (selectManager.hasAuthority) {
+								manager.selectionManager = selectManager;
+							}
+						}
+					}
+					manager.selectionManager.allObjects.Add(split);
 				}
 			}
 		}
-		this.selectionManager.allObjects.Add(split);
 	}
 
 	private void Copy(GameUnit original, GameUnit copy) {
