@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System;
 
 public class UnitAttributes : NetworkBehaviour {
 	public List<float> healthPrefabList;
@@ -9,12 +10,26 @@ public class UnitAttributes : NetworkBehaviour {
 	public List<float> mergePrefabList;
 	public List<float> splitPrefabList;
 
+	public SyncListFloat healthPrefabSyncList;
+	public SyncListFloat attackPrefabSyncList;
+	public SyncListFloat speedPrefabSyncList;
+	public SyncListFloat mergePrefabSyncList;
+	public SyncListFloat splitPrefabSyncList;
+
+
 	public void Awake() {
 		this.healthPrefabList = new List<float>(10);
 		this.attackPrefabList = new List<float>(10);
 		this.speedPrefabList = new List<float>(10);
 		this.mergePrefabList = new List<float>(10);
 		this.splitPrefabList = new List<float>(10);
+
+		this.healthPrefabSyncList = new SyncListFloat();
+		this.attackPrefabSyncList = new SyncListFloat();
+		this.speedPrefabSyncList = new SyncListFloat();
+		this.mergePrefabSyncList = new SyncListFloat();
+		this.splitPrefabSyncList = new SyncListFloat();
+
 
 		GameObject content = GameObject.FindGameObjectWithTag("Content");
 		if (content != null) {
@@ -47,4 +62,33 @@ public class UnitAttributes : NetworkBehaviour {
 			}
 		}
 	}
+
+	public void UpdateValues() {
+		this.healthPrefabSyncList.Clear();
+		foreach (float value in this.healthPrefabList) {
+			this.healthPrefabSyncList.Add(value);
+		}
+
+		this.attackPrefabSyncList.Clear();
+		foreach (float value in this.healthPrefabList) {
+			this.attackPrefabSyncList.Add(value);
+		}
+
+		this.speedPrefabSyncList.Clear();
+		foreach (float value in this.healthPrefabList) {
+			this.speedPrefabSyncList.Add(value);
+		}
+
+		this.mergePrefabSyncList.Clear();
+		foreach (float value in this.healthPrefabList) {
+			this.mergePrefabSyncList.Add(value);
+		}
+
+		this.splitPrefabSyncList.Clear();
+		foreach (float value in this.healthPrefabList) {
+			this.splitPrefabSyncList.Add(value);
+		}
+	}
 }
+
+

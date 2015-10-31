@@ -193,6 +193,7 @@ public class Attributes : MonoBehaviour {
 					}
 				}
 			}
+			this.unitAttributes.UpdateValues();
 			this.oldProperty = this.newProperty;
 		}
 	}
