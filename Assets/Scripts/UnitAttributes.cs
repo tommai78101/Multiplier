@@ -35,9 +35,6 @@ public class UnitAttributes : NetworkBehaviour {
 		if (content != null) {
 			Attributes attr = content.GetComponent<Attributes>();
 			if (attr != null) {
-				attr.unitAttributes = this;
-				Debug.Log("Unit attributes set successfully.");
-
 				for (int i = 0; i < 5; i++) {
 					for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
 						switch (i) {
@@ -118,6 +115,10 @@ public class UnitAttributes : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcUpdateAnswer(float answer, int level, int propertyValue) {
+		if (!this.hasAuthority) {
+			return;
+		}
+
 		Debug.Log("I'm updating answers.");
 
 		switch (propertyValue) {

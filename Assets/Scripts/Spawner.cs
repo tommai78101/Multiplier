@@ -123,6 +123,7 @@ public class Spawner : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcUnitAttributesSetup(GameObject manager) {
+		Debug.Log("Setting up unit attributes.");
 		UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 		if (attributes != null && attributes.hasAuthority) {
 			GameObject console = GameObject.FindGameObjectWithTag("Console");
@@ -130,6 +131,14 @@ public class Spawner : NetworkBehaviour {
 				CanvasSwitch canvasSwitch = console.GetComponent<CanvasSwitch>();
 				if (canvasSwitch != null) {
 					canvasSwitch.unitAttributes = attributes;
+				}
+			}
+
+			GameObject content = GameObject.FindGameObjectWithTag("Content");
+			if (content != null) {
+				Attributes attr = content.GetComponent<Attributes>();
+				if (attr != null) {
+					attr.unitAttributes = attributes;
 				}
 			}
 		}
