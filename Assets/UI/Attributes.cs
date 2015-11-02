@@ -113,6 +113,7 @@ public class Attributes : MonoBehaviour {
 							Debug.Log("DEBUG 10");
 						}
 
+						int propertyValue = 0;
 						Number numberPanel = panel.GetComponentInChildren<Number>();
 						if (numberPanel != null) {
 							numberPanel.numberText.text = answer.ToString();
@@ -121,18 +122,23 @@ public class Attributes : MonoBehaviour {
 									default:
 									case AttributeProperty.Health:
 										this.unitAttributes.healthPrefabList[level] = answer;
+										propertyValue = 0;
 										break;
 									case AttributeProperty.Attack:
 										this.unitAttributes.attackPrefabList[level] = answer;
+										propertyValue = 1;
 										break;
 									case AttributeProperty.Speed:
 										this.unitAttributes.speedPrefabList[level] = answer;
+										propertyValue = 2;
 										break;
 									case AttributeProperty.Merge:
 										this.unitAttributes.mergePrefabList[level] = answer;
+										propertyValue = 3;
 										break;
 									case AttributeProperty.Split:
 										this.unitAttributes.splitPrefabList[level] = answer;
+										propertyValue = 4;
 										break;
 								}
 							}
@@ -140,6 +146,12 @@ public class Attributes : MonoBehaviour {
 
 						if (this.debugFlag) {
 							Debug.Log("DEBUG 11");
+						}
+
+						this.unitAttributes.CmdUpdateAnswer(answer, level, propertyValue);
+
+						if (this.debugFlag) {
+							Debug.Log("DEBUG 12");
 						}
 					}
 				}

@@ -15,7 +15,7 @@ public struct MergeGroup {
 	public float elaspedTime;
 	public float mergeSpeedFactor;
 
-	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit) {
+	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit, float mergeFactor) {
 		this.ownerUnit = ownerUnit;
 		this.mergingUnit = mergingUnit;
 		if (this.ownerUnit.level < 10) {
@@ -31,7 +31,7 @@ public struct MergeGroup {
 		this.origin = Vector3.Lerp(this.ownerPosition, this.mergingPosition, 0.5f);
 		this.ownerScale = ownerUnit.gameObject.transform.localScale;
 		this.mergingScale = mergingUnit.gameObject.transform.localScale;
-		this.mergeSpeedFactor = 3f;
+		this.mergeSpeedFactor = mergeFactor;
 
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
@@ -130,7 +130,7 @@ public class MergeManager : NetworkBehaviour {
 			GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
 			foreach (GameObject attribute in attributes) {
 				UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
-				if (attr != null) {
+				if (attr != null && attr.hasAuthority) {
 					this.unitAttributes = attr;
 					break;
 				}
@@ -269,8 +269,7 @@ public class MergeManager : NetworkBehaviour {
 		ownerAgent.Stop();
 		NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 		mergingAgent.Stop();
-		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit);
-		group.SetMergeSpeed(mergeSpeedFactor);
+		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor);
 
 		//this.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit));
 		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");

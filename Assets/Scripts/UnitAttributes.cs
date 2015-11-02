@@ -10,11 +10,11 @@ public class UnitAttributes : NetworkBehaviour {
 	public List<float> mergePrefabList;
 	public List<float> splitPrefabList;
 
-	public SyncListFloat healthPrefabSyncList;
-	public SyncListFloat attackPrefabSyncList;
-	public SyncListFloat speedPrefabSyncList;
-	public SyncListFloat mergePrefabSyncList;
-	public SyncListFloat splitPrefabSyncList;
+	//public SyncListFloat healthPrefabSyncList;
+	//public SyncListFloat attackPrefabSyncList;
+	//public SyncListFloat speedPrefabSyncList;
+	//public SyncListFloat mergePrefabSyncList;
+	//public SyncListFloat splitPrefabSyncList;
 
 
 	public void Awake() {
@@ -24,11 +24,11 @@ public class UnitAttributes : NetworkBehaviour {
 		this.mergePrefabList = new List<float>(10);
 		this.splitPrefabList = new List<float>(10);
 
-		this.healthPrefabSyncList = new SyncListFloat();
-		this.attackPrefabSyncList = new SyncListFloat();
-		this.speedPrefabSyncList = new SyncListFloat();
-		this.mergePrefabSyncList = new SyncListFloat();
-		this.splitPrefabSyncList = new SyncListFloat();
+		//this.healthPrefabSyncList = new SyncListFloat();
+		//this.attackPrefabSyncList = new SyncListFloat();
+		//this.speedPrefabSyncList = new SyncListFloat();
+		//this.mergePrefabSyncList = new SyncListFloat();
+		//this.splitPrefabSyncList = new SyncListFloat();
 
 
 		GameObject content = GameObject.FindGameObjectWithTag("Content");
@@ -64,29 +64,79 @@ public class UnitAttributes : NetworkBehaviour {
 	}
 
 	public void UpdateValues() {
-		this.healthPrefabSyncList.Clear();
-		foreach (float value in this.healthPrefabList) {
-			this.healthPrefabSyncList.Add(value);
+		//this.healthPrefabSyncList.Clear();
+		//foreach (float value in this.healthPrefabList) {
+		//	this.healthPrefabSyncList.Add(value);
+		//}
+
+		//this.attackPrefabSyncList.Clear();
+		//foreach (float value in this.healthPrefabList) {
+		//	this.attackPrefabSyncList.Add(value);
+		//}
+
+		//this.speedPrefabSyncList.Clear();
+		//foreach (float value in this.healthPrefabList) {
+		//	this.speedPrefabSyncList.Add(value);
+		//}
+
+		//this.mergePrefabSyncList.Clear();
+		//foreach (float value in this.healthPrefabList) {
+		//	this.mergePrefabSyncList.Add(value);
+		//}
+
+		//this.splitPrefabSyncList.Clear();
+		//foreach (float value in this.healthPrefabList) {
+		//	this.splitPrefabSyncList.Add(value);
+		//}
+	}
+
+	[Command]
+	public void CmdUpdateAnswer(float answer, int level, int propertyValue) {
+		Debug.Log("Sending to server to update values.");
+
+		switch (propertyValue) {
+			default:
+			case 0:
+				this.healthPrefabList[level] = answer;
+				break;
+			case 1:
+				this.attackPrefabList[level] = answer;
+				break;
+			case 2:
+				this.speedPrefabList[level] = answer;
+				break;
+			case 3:
+				this.mergePrefabList[level] = answer;
+				break;
+			case 4:
+				this.splitPrefabList[level] = answer;
+				break;
 		}
 
-		this.attackPrefabSyncList.Clear();
-		foreach (float value in this.healthPrefabList) {
-			this.attackPrefabSyncList.Add(value);
-		}
+		RpcUpdateAnswer(answer, level, propertyValue);
+	}
 
-		this.speedPrefabSyncList.Clear();
-		foreach (float value in this.healthPrefabList) {
-			this.speedPrefabSyncList.Add(value);
-		}
+	[ClientRpc]
+	public void RpcUpdateAnswer(float answer, int level, int propertyValue) {
+		Debug.Log("I'm updating answers.");
 
-		this.mergePrefabSyncList.Clear();
-		foreach (float value in this.healthPrefabList) {
-			this.mergePrefabSyncList.Add(value);
-		}
-
-		this.splitPrefabSyncList.Clear();
-		foreach (float value in this.healthPrefabList) {
-			this.splitPrefabSyncList.Add(value);
+		switch (propertyValue) {
+			default:
+			case 0:
+				this.healthPrefabList[level] = answer;
+				break;
+			case 1:
+				this.attackPrefabList[level] = answer;
+				break;
+			case 2:
+				this.speedPrefabList[level] = answer;
+				break;
+			case 3:
+				this.mergePrefabList[level] = answer;
+				break;
+			case 4:
+				this.splitPrefabList[level] = answer;
+				break;
 		}
 	}
 }
