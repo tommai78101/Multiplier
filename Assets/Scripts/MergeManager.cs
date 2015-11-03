@@ -33,16 +33,7 @@ public struct MergeGroup {
 		this.mergingScale = mergingUnit.gameObject.transform.localScale;
 		this.mergeSpeedFactor = mergeFactor;
 
-		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Stop();
-			agent.ResetPath();
-		}
-		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Stop();
-			agent.ResetPath();
-		}
+		this.Stop();
 	}
 
 	public void SetMergeSpeed(float value) {
@@ -52,6 +43,8 @@ public struct MergeGroup {
 	public void Update(float scaling) {
 		this.ownerUnit.isSelected = false;
 		this.mergingUnit.isSelected = false;
+
+		this.Stop();
 
 		//Merging animation. Most likely another known bug that I cannot fix.
 		this.ownerUnit.gameObject.transform.position = Vector3.Lerp(this.ownerPosition, this.origin, this.elaspedTime);
@@ -66,7 +59,7 @@ public struct MergeGroup {
 		this.mergingUnit.gameObject.transform.localScale = scale;
 	}
 
-	public void Stop() {
+	public void Resume() {
 		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.Resume();
@@ -74,6 +67,49 @@ public struct MergeGroup {
 		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.Resume();
+		}
+
+		Collider collider = this.ownerUnit.GetComponent<Collider>();
+		if (collider != null) {
+			Debug.Log("Collider is enabling.");
+			collider.enabled = true;
+		}
+
+		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+		}
+		transform = this.mergingUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+		}
+	}
+
+	public void Stop() {
+		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+			agent.ResetPath();
+		}
+		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+		if (agent != null) {
+			agent.Stop();
+			agent.ResetPath();
+		}
+
+		Collider collider = this.ownerUnit.GetComponent<Collider>();
+		if (collider != null) {
+			Debug.Log("Collider is disabling.");
+			collider.enabled = false;
+		}
+
+		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
+		}
+		transform = this.mergingUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
 		}
 	}
 };
@@ -175,7 +211,7 @@ public class MergeManager : NetworkBehaviour {
 				if (ownerUnit.level == mergerUnit.level) {
 					used.Add(this.selectionManager.selectedObjects[i]);
 					used.Add(this.selectionManager.selectedObjects[j]);
-					CmdAddMerge(ownerObject, mergerObject);
+					CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority);
 					break;
 				}
 			}
@@ -189,7 +225,7 @@ public class MergeManager : NetworkBehaviour {
 			for (int i = 0; i < this.mergeList.Count; i++) {
 				MergeGroup group = this.mergeList[i];
 				if (group.elaspedTime > 1f) {
-					group.Stop();
+					group.Resume();
 					if (!this.removeList.Contains(group)) {
 						FinishMergeGroup(group);
 						this.removeList.Add(group);
@@ -253,13 +289,13 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject) {
+	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
 		//NetworkServer.Destroy(mergingUnit.gameObject);
-		RpcAddMerge(ownerObject, mergingObject);
+		RpcAddMerge(ownerObject, mergingObject, hasAuthority);
 	}
 
 	[ClientRpc]
-	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject) {
+	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
 
@@ -275,7 +311,8 @@ public class MergeManager : NetworkBehaviour {
 		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
 		foreach (GameObject manager in managers) {
 			MergeManager mergeManager = manager.GetComponent<MergeManager>();
-			if (mergeManager != null) {
+			if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
+				Debug.Log("Merge group added to mergeManager (" + (mergeManager.hasAuthority ? "Has Authority" : "No Authority") + "): " + mergeManager.ToString());
 				mergeManager.mergeList.Add(group);
 			}
 		}

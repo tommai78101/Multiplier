@@ -26,11 +26,19 @@ public struct SplitGroup {
 			agent.ResetPath();
 			agent.Stop();
 		}
-
 		agent = this.splitUnit.GetComponent<NavMeshAgent>();
 		if (agent != null) {
 			agent.ResetPath();
 			agent.Stop();
+		}
+
+		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
+		}
+		transform = this.splitUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
 		}
 	}
 
@@ -70,6 +78,15 @@ public struct SplitGroup {
 			if (agent != null) {
 				agent.Resume();
 			}
+		}
+
+		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+		}
+		transform = this.splitUnit.GetComponent<NetworkTransform>();
+		if (transform != null) {
+			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 		}
 	}
 };
