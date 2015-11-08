@@ -57,6 +57,13 @@ public class Spawner : NetworkBehaviour {
 			if (cam.GetComponent<CameraPanning>() == null) {
 				Debug.Log("Camera Panning is added to camera. Please check.");
 				CameraPanning panning = cam.AddComponent<CameraPanning>();
+				GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
+				if (minimap != null) {
+					MinimapStuffs stuffs = minimap.GetComponent<MinimapStuffs>();
+					if (stuffs != null) {
+						stuffs.playerCameraPanning = panning;
+					}
+				}
 				panning.cameraPanning = true;
 			}
 			else {
@@ -170,6 +177,14 @@ public class Spawner : NetworkBehaviour {
 		foreach (GameObject cam in cams) {
 			CameraPanning panning = cam.GetComponent<CameraPanning>();
 			if (panning != null) {
+				GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
+				if (minimap != null) {
+					MinimapStuffs stuffs = minimap.GetComponent<MinimapStuffs>();
+					if (stuffs != null) {
+						stuffs.playerCameraPanning = null;
+					}
+				}
+
 				Debug.Log("Destroying camera panning.");
 				Destroy(panning);
 			}

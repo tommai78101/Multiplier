@@ -5,8 +5,11 @@ public class MinimapStuffs : MonoBehaviour {
 	public Camera playerCamera;
 	public Camera minimapCamera;
 	public Collider floorCollider;
+	public Collider minimapCollider;
+	public CameraPanning playerCameraPanning;
 	public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
 	public Vector3 mousePosition;
+	public Vector3 newCameraPosition;
 
 	public void Start() {
 		//this.minimapCamera = this.GetComponent<Camera>();
@@ -25,9 +28,44 @@ public class MinimapStuffs : MonoBehaviour {
 				Debug.LogError("Cannot set Quad floor collider to this variable. Please check.");
 			}
 		}
+
+		if (this.minimapCollider == null) {
+			GameObject minimapObject = GameObject.FindGameObjectWithTag("MinimapCollider");
+			this.minimapCollider = minimapObject.GetComponent<Collider>();
+			if (this.minimapCollider == null) {
+				Debug.LogError("Cannot set Minimap collider to this variable. Please check.");
+			}
+		}
+
+		//if (this.playerCameraPanning == null) {
+		//	if (this.playerCamera != null) {
+		//		this.playerCameraPanning = this.playerCamera.GetComponent<CameraPanning>();
+		//		if (this.playerCameraPanning == null) {
+		//			Debug.LogError("Cannot obtain CameraPanning script component.");
+		//		}
+		//	}
+		//}
 	}
 
 	public void Update() {
+		//Input.mousePosition is screen position.
+
+		if (this.playerCameraPanning != null) {
+			this.mousePosition = this.playerCamera.ScreenToViewportPoint(Input.mousePosition);
+			if (this.minimapCamera.rect.Contains(this.mousePosition)) {
+				if (Input.GetMouseButton(0)) {
+					Ray worldRay = this.minimapCamera.ScreenPointToRay(Input.mousePosition);
+					RaycastHit floorHit;
+					if (this.floorCollider.Raycast(worldRay, out floorHit, 100f)) {
+						this.newCameraPosition = floorHit.point;
+						this.newCameraPosition.y = this.playerCamera.transform.position.y;
+						this.playerCamera.gameObject.transform.position = this.newCameraPosition;
+					}
+				}
+			}
+		}
+
+
 		Ray topLeftCorner = this.playerCamera.ScreenPointToRay(new Vector3(0f, 0f));
 		Ray topRightCorner = this.playerCamera.ScreenPointToRay(new Vector3(Screen.width, 0f));
 		Ray bottomLeftCorner = this.playerCamera.ScreenPointToRay(new Vector3(0, Screen.height));
