@@ -5,19 +5,17 @@ public class MinimapStuffs : MonoBehaviour {
 	public Camera playerCamera;
 	public Camera minimapCamera;
 	public Collider floorCollider;
-	public Collider minimapCollider;
 	public CameraPanning playerCameraPanning;
 	public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
 	public Vector3 mousePosition;
 	public Vector3 newCameraPosition;
 
 	public void Start() {
-		//this.minimapCamera = this.GetComponent<Camera>();
 		if (this.playerCamera == null) {
 			Debug.LogError("Unable to determine where the Player Camera component is at.");
 		}
 
-		if (this.playerCamera == null) {
+		if (this.minimapCamera == null) {
 			Debug.LogError("Unable to determine where the Minimap Camera component is at.");
 		}
 
@@ -29,27 +27,17 @@ public class MinimapStuffs : MonoBehaviour {
 			}
 		}
 
-		if (this.minimapCollider == null) {
-			GameObject minimapObject = GameObject.FindGameObjectWithTag("MinimapCollider");
-			this.minimapCollider = minimapObject.GetComponent<Collider>();
-			if (this.minimapCollider == null) {
-				Debug.LogError("Cannot set Minimap collider to this variable. Please check.");
-			}
-		}
-
-		//if (this.playerCameraPanning == null) {
-		//	if (this.playerCamera != null) {
-		//		this.playerCameraPanning = this.playerCamera.GetComponent<CameraPanning>();
-		//		if (this.playerCameraPanning == null) {
-		//			Debug.LogError("Cannot obtain CameraPanning script component.");
-		//		}
+		//if (this.minimapCollider == null) {
+		//	GameObject minimapObject = GameObject.FindGameObjectWithTag("MinimapCollider");
+		//	this.minimapCollider = minimapObject.GetComponent<Collider>();
+		//	if (this.minimapCollider == null) {
+		//		Debug.LogError("Cannot set Minimap collider to this variable. Please check.");
 		//	}
 		//}
 	}
 
 	public void Update() {
 		//Input.mousePosition is screen position.
-
 		if (this.playerCameraPanning != null) {
 			this.mousePosition = this.playerCamera.ScreenToViewportPoint(Input.mousePosition);
 			if (this.minimapCamera.rect.Contains(this.mousePosition)) {
