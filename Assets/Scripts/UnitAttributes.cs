@@ -55,7 +55,9 @@ public class UnitAttributes : NetworkBehaviour {
 								this.attackCooldownPrefabList.Add(3f);
 								break;
 							case 5:
-								this.splitPrefabFactor = 3f;
+								if (j <= 0) {
+									this.splitPrefabFactor = 3f;
+								}
 								break;
 						}
 					}
@@ -64,32 +66,32 @@ public class UnitAttributes : NetworkBehaviour {
 		}
 	}
 
-	public void UpdateValues() {
-		//this.healthPrefabSyncList.Clear();
-		//foreach (float value in this.healthPrefabList) {
-		//	this.healthPrefabSyncList.Add(value);
-		//}
+	//public void UpdateValues() {
+	//	//this.healthPrefabSyncList.Clear();
+	//	//foreach (float value in this.healthPrefabList) {
+	//	//	this.healthPrefabSyncList.Add(value);
+	//	//}
 
-		//this.attackPrefabSyncList.Clear();
-		//foreach (float value in this.healthPrefabList) {
-		//	this.attackPrefabSyncList.Add(value);
-		//}
+	//	//this.attackPrefabSyncList.Clear();
+	//	//foreach (float value in this.healthPrefabList) {
+	//	//	this.attackPrefabSyncList.Add(value);
+	//	//}
 
-		//this.speedPrefabSyncList.Clear();
-		//foreach (float value in this.healthPrefabList) {
-		//	this.speedPrefabSyncList.Add(value);
-		//}
+	//	//this.speedPrefabSyncList.Clear();
+	//	//foreach (float value in this.healthPrefabList) {
+	//	//	this.speedPrefabSyncList.Add(value);
+	//	//}
 
-		//this.mergePrefabSyncList.Clear();
-		//foreach (float value in this.healthPrefabList) {
-		//	this.mergePrefabSyncList.Add(value);
-		//}
+	//	//this.mergePrefabSyncList.Clear();
+	//	//foreach (float value in this.healthPrefabList) {
+	//	//	this.mergePrefabSyncList.Add(value);
+	//	//}
 
-		//this.splitPrefabSyncList.Clear();
-		//foreach (float value in this.healthPrefabList) {
-		//	this.splitPrefabSyncList.Add(value);
-		//}
-	}
+	//	//this.splitPrefabSyncList.Clear();
+	//	//foreach (float value in this.healthPrefabList) {
+	//	//	this.splitPrefabSyncList.Add(value);
+	//	//}
+	//}
 
 	[Command]
 	public void CmdUpdateAnswer(float answer, int level, int propertyValue) {
@@ -113,7 +115,9 @@ public class UnitAttributes : NetworkBehaviour {
 				this.attackCooldownPrefabList[level] = answer;
 				break;
 			case 5:
-				this.splitPrefabFactor = answer;
+				if (level <= 0) {
+					this.splitPrefabFactor = answer;
+				}
 				break;
 		}
 
@@ -146,7 +150,9 @@ public class UnitAttributes : NetworkBehaviour {
 				this.attackCooldownPrefabList[level] = answer;
 				break;
 			case 5:
-				this.splitPrefabFactor = answer;
+				if (level <= 0) {
+					this.splitPrefabFactor = answer;
+				}
 				break;
 		}
 	}

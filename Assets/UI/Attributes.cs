@@ -120,32 +120,43 @@ public class Attributes : MonoBehaviour {
 						int propertyValue = 0;
 						Number numberPanel = panel.GetComponentInChildren<Number>();
 						if (numberPanel != null) {
-							numberPanel.numberText.text = answer.ToString();
 							if (this.unitAttributes != null) {
 								switch (property) {
 									default:
 									case AttributeProperty.Health:
 										this.unitAttributes.healthPrefabList[level] = answer;
+										numberPanel.numberText.text = answer.ToString();
 										propertyValue = 0;
 										break;
 									case AttributeProperty.Attack:
 										this.unitAttributes.attackPrefabList[level] = answer;
+										numberPanel.numberText.text = answer.ToString();
 										propertyValue = 1;
 										break;
 									case AttributeProperty.Speed:
 										this.unitAttributes.speedPrefabList[level] = answer;
+										numberPanel.numberText.text = answer.ToString();
 										propertyValue = 2;
 										break;
 									case AttributeProperty.Merge:
 										this.unitAttributes.mergePrefabList[level] = answer;
+										numberPanel.numberText.text = answer.ToString();
 										propertyValue = 3;
 										break;
 									case AttributeProperty.AttackCooldown:
 										this.unitAttributes.attackCooldownPrefabList[level] = answer;
+										numberPanel.numberText.text = answer.ToString();
 										propertyValue = 4;
 										break;
 									case AttributeProperty.Split:
-										this.unitAttributes.splitPrefabFactor = answer;
+										if (level <= 0) {
+											this.unitAttributes.splitPrefabFactor = answer;
+											numberPanel.numberText.text = answer.ToString();
+										}
+										else {
+											numberPanel.numberText.text = "N/A";
+										}
+										level = 10;
 										propertyValue = 5;
 										break;
 								}
@@ -211,17 +222,17 @@ public class Attributes : MonoBehaviour {
 							number.numberText.text = this.unitAttributes.attackCooldownPrefabList[i].ToString();
 							break;
 						case AttributeProperty.Split:
-							if (i > 0) {
-								number.numberText.text = "N/A";
+							if (i <= 0) {
+								number.numberText.text = this.unitAttributes.splitPrefabFactor.ToString();
 							}
 							else {
-								number.numberText.text = this.unitAttributes.splitPrefabFactor.ToString();
+								number.numberText.text = "N/A";
 							}
 							break;
 					}
 				}
 			}
-			this.unitAttributes.UpdateValues();
+			//this.unitAttributes.UpdateValues();
 			this.oldProperty = this.newProperty;
 		}
 	}
