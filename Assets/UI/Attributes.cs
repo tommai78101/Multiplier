@@ -34,7 +34,7 @@ public class Attributes : MonoBehaviour {
 	public const int MAX_NUM_OF_LEVELS = 10;
 	public UnitAttributes unitAttributes;
 
-	private Regex regex = new Regex(@"([\d]+[.][\d]+)|([\d]+)|([\+\-\*\/\^]+)|([\(\)])*");
+	private Regex regex = new Regex(@"([\d]+[.][\d]+)|([\d]+)|([\+\-\*\/\^]+)|([\(\)])?");
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 	public void Start() {
@@ -253,7 +253,7 @@ public class Attributes : MonoBehaviour {
 		}
 
 		for (int i = 0; i < result.Count; i++) {
-			if (result[i].Equals("x")) {
+			if (result[i].Equals("k")) {
 				result[i] = level.ToString();
 			}
 			else if (result[i].Equals("r")) {
