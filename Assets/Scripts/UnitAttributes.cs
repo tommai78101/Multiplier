@@ -54,66 +54,45 @@ public class UnitAttributes : NetworkBehaviour {
 
 	[Command]
 	public void CmdUpdateAnswer(float answer, int level, int propertyValue) {
-		Debug.Log("Sending to server to update values.");
-
-		switch (propertyValue) {
-			default:
-			case 0:
-				this.healthPrefabList[level] = answer;
-				break;
-			case 1:
-				this.attackPrefabList[level] = answer;
-				break;
-			case 2:
-				this.speedPrefabList[level] = answer;
-				break;
-			case 3:
-				this.mergePrefabList[level] = answer;
-				break;
-			case 4:
-				this.attackCooldownPrefabList[level] = answer;
-				break;
-			case 5:
-				if (level <= 0) {
-					this.splitPrefabFactor = answer;
-				}
-				break;
+		//Debug.Log("Sending to server to update values.");
+		NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
+		if (identity != null) {
+			RpcUpdateAnswer(answer, level, propertyValue, identity.netId);
 		}
-
-		RpcUpdateAnswer(answer, level, propertyValue);
+		//Debug.Log("I finished sending answers.");
 	}
 
 	[ClientRpc]
-	public void RpcUpdateAnswer(float answer, int level, int propertyValue) {
-		if (!this.hasAuthority) {
-			return;
+	public void RpcUpdateAnswer(float answer, int level, int propertyValue, NetworkInstanceId id) {
+		//Debug.Log("I'm updating answers.");
+		GameObject obj = ClientScene.FindLocalObject(id);
+		UnitAttributes attr = obj.GetComponent<UnitAttributes>();
+		if (attr != null) {
+			switch (propertyValue) {
+				default:
+				case 0:
+					attr.healthPrefabList[level] = answer;
+					break;
+				case 1:
+					attr.attackPrefabList[level] = answer;
+					break;
+				case 2:
+					attr.speedPrefabList[level] = answer;
+					break;
+				case 3:
+					attr.mergePrefabList[level] = answer;
+					break;
+				case 4:
+					attr.attackCooldownPrefabList[level] = answer;
+					break;
+				case 5:
+					if (level <= 0) {
+						attr.splitPrefabFactor = answer;
+					}
+					break;
+			}
 		}
-
-		Debug.Log("I'm updating answers.");
-
-		switch (propertyValue) {
-			default:
-			case 0:
-				this.healthPrefabList[level] = answer;
-				break;
-			case 1:
-				this.attackPrefabList[level] = answer;
-				break;
-			case 2:
-				this.speedPrefabList[level] = answer;
-				break;
-			case 3:
-				this.mergePrefabList[level] = answer;
-				break;
-			case 4:
-				this.attackCooldownPrefabList[level] = answer;
-				break;
-			case 5:
-				if (level <= 0) {
-					this.splitPrefabFactor = answer;
-				}
-				break;
-		}
+		//Debug.Log("I finished updating answers.");
 	}
 }
 
