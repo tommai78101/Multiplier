@@ -188,7 +188,7 @@ public class SplitManager : NetworkBehaviour {
 					this.removeList.Add(group);
 				}
 				else {
-					float splitSpeedFactor = this.unitAttributes.splitPrefabList[group.ownerUnit.level];
+					float splitSpeedFactor = this.unitAttributes.splitPrefabFactor;
 
 					//Some weird C# language design...
 					group.Update();

@@ -13,7 +13,7 @@ public enum Associativity {
 };
 
 public enum AttributeProperty {
-	Health, Attack, Speed, Merge, Split, Invalid
+	Health, Attack, Speed, Merge, Split, AttackCooldown, Invalid
 };
 
 public class Attributes : MonoBehaviour {
@@ -27,6 +27,7 @@ public class Attributes : MonoBehaviour {
 	public Toggle attackToggle;
 	public Toggle speedToggle;
 	public Toggle mergeToggle;
+	public Toggle attackCooldownToggle;
 	public Toggle splitToggle;
 	public AttributeProperty oldProperty;
 	public AttributeProperty newProperty;
@@ -34,7 +35,8 @@ public class Attributes : MonoBehaviour {
 	public UnitAttributes unitAttributes;
 
 	//private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \d])"); 
-	private Regex regex = new Regex(@"([\d]*[.][\d]*)*|[\d]|([\+\-\*\(\)\^\/\ \d])");
+	//private Regex regex = new Regex(@"[\d]*|([\d]*[.][\d]*)*|([\+\-\*\(\)\^\/\ \d])");
+	private Regex regex = new Regex(@"([\d]+[.][\d]+)|([\d]+)|([\+\-\*\/\^]+)|([\(\)])*");
 	//private Regex regex = new Regex("(?<= op) | (?= op)".Replace("op", "[-+*/ ()]"));
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
@@ -51,7 +53,7 @@ public class Attributes : MonoBehaviour {
 			Debug.LogError("Toggle group has not been set.");
 			return;
 		}
-		if (this.healthToggle == null || this.attackToggle == null || this.speedToggle == null || this.mergeToggle == null || this.splitToggle == null) {
+		if (this.healthToggle == null || this.attackToggle == null || this.speedToggle == null || this.mergeToggle == null || this.attackCooldownToggle == null || this.splitToggle == null) {
 			Debug.LogError("Toggle has not been set. Please check.");
 			return;
 		}
@@ -138,9 +140,13 @@ public class Attributes : MonoBehaviour {
 										this.unitAttributes.mergePrefabList[level] = answer;
 										propertyValue = 3;
 										break;
-									case AttributeProperty.Split:
-										this.unitAttributes.splitPrefabList[level] = answer;
+									case AttributeProperty.AttackCooldown:
+										this.unitAttributes.attackCooldownPrefabList[level] = answer;
 										propertyValue = 4;
+										break;
+									case AttributeProperty.Split:
+										this.unitAttributes.splitPrefabFactor = answer;
+										propertyValue = 5;
 										break;
 								}
 							}
@@ -201,8 +207,16 @@ public class Attributes : MonoBehaviour {
 						case AttributeProperty.Merge:
 							number.numberText.text = this.unitAttributes.mergePrefabList[i].ToString();
 							break;
+						case AttributeProperty.AttackCooldown:
+							number.numberText.text = this.unitAttributes.attackCooldownPrefabList[i].ToString();
+							break;
 						case AttributeProperty.Split:
-							number.numberText.text = this.unitAttributes.splitPrefabList[i].ToString();
+							if (i > 0) {
+								number.numberText.text = "N/A";
+							}
+							else {
+								number.numberText.text = this.unitAttributes.splitPrefabFactor.ToString();
+							}
 							break;
 					}
 				}
@@ -245,6 +259,7 @@ public class Attributes : MonoBehaviour {
 			Debug.Log("DEBUG 2");
 		}
 
+		TokenClass previousTokenClass = TokenClass.Value;
 		for (int i = 0; i < result.Count; i++) {
 			string element = result[i];
 
@@ -267,7 +282,7 @@ public class Attributes : MonoBehaviour {
 					stack.Pop();
 					break;
 				case TokenClass.Operator:
-					if (element.Equals("-") && (stack.Count == 0 || result[i - 1].Equals("("))) {
+					if (element.Equals("-") && previousTokenClass == TokenClass.Operator && (stack.Count == 0 || result[i - 1].Equals("("))) {
 						//Push unary operator "Negative" to stack.
 						stack.Push("NEG");
 						break;
@@ -296,6 +311,8 @@ public class Attributes : MonoBehaviour {
 					}
 				}
 			}
+
+			previousTokenClass = tokenClass;
 		}
 
 		if (this.debugFlag) {

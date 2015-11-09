@@ -8,7 +8,8 @@ public class UnitAttributes : NetworkBehaviour {
 	public List<float> attackPrefabList;
 	public List<float> speedPrefabList;
 	public List<float> mergePrefabList;
-	public List<float> splitPrefabList;
+	public List<float> attackCooldownPrefabList;
+	public float splitPrefabFactor;
 
 	//public SyncListFloat healthPrefabSyncList;
 	//public SyncListFloat attackPrefabSyncList;
@@ -22,7 +23,7 @@ public class UnitAttributes : NetworkBehaviour {
 		this.attackPrefabList = new List<float>(10);
 		this.speedPrefabList = new List<float>(10);
 		this.mergePrefabList = new List<float>(10);
-		this.splitPrefabList = new List<float>(10);
+		this.attackCooldownPrefabList = new List<float>(10);
 
 		//this.healthPrefabSyncList = new SyncListFloat();
 		//this.attackPrefabSyncList = new SyncListFloat();
@@ -35,7 +36,7 @@ public class UnitAttributes : NetworkBehaviour {
 		if (content != null) {
 			Attributes attr = content.GetComponent<Attributes>();
 			if (attr != null) {
-				for (int i = 0; i < 5; i++) {
+				for (int i = 0; i < 6; i++) {
 					for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
 						switch (i) {
 							case 0:
@@ -51,7 +52,10 @@ public class UnitAttributes : NetworkBehaviour {
 								this.mergePrefabList.Add(3f);
 								break;
 							case 4:
-								this.splitPrefabList.Add(3f);
+								this.attackCooldownPrefabList.Add(3f);
+								break;
+							case 5:
+								this.splitPrefabFactor = 3f;
 								break;
 						}
 					}
@@ -106,7 +110,10 @@ public class UnitAttributes : NetworkBehaviour {
 				this.mergePrefabList[level] = answer;
 				break;
 			case 4:
-				this.splitPrefabList[level] = answer;
+				this.attackCooldownPrefabList[level] = answer;
+				break;
+			case 5:
+				this.splitPrefabFactor = answer;
 				break;
 		}
 
@@ -136,7 +143,10 @@ public class UnitAttributes : NetworkBehaviour {
 				this.mergePrefabList[level] = answer;
 				break;
 			case 4:
-				this.splitPrefabList[level] = answer;
+				this.attackCooldownPrefabList[level] = answer;
+				break;
+			case 5:
+				this.splitPrefabFactor = answer;
 				break;
 		}
 	}
