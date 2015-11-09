@@ -269,11 +269,25 @@ public class SplitManager : NetworkBehaviour {
 
 	private void Copy(GameUnit original, GameUnit copy) {
 		copy.isSelected = original.isSelected;
+
 		copy.transform.position = original.transform.position;
 		copy.transform.rotation = original.transform.rotation;
 		copy.transform.localScale = original.transform.localScale;
 		copy.oldTargetPosition = original.oldTargetPosition;
 		copy.isDirected = original.isDirected = false;
+
 		copy.level = original.level;
+		if (original.currentHealth > original.maxHealth) {
+			original.currentHealth = original.maxHealth;
+		}
+		copy.currentHealth = original.currentHealth;
+		copy.maxHealth = original.maxHealth;
+		copy.recoverCooldown = original.recoverCooldown;
+		copy.recoverCounter = original.recoverCounter = 0;
+		copy.attackCooldown = original.attackCooldown;
+		copy.attackCooldownCounter = original.attackCooldownCounter = 0;
+		copy.attackPower = original.attackPower;
+
+		copy.attributes = original.attributes;
 	}
 }
