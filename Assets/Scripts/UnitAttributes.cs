@@ -86,9 +86,7 @@ public class UnitAttributes : NetworkBehaviour {
 					attr.attackCooldownPrefabList[level] = answer;
 					break;
 				case 5:
-					if (level <= 0) {
-						attr.splitPrefabFactor = answer;
-					}
+					attr.splitPrefabFactor = answer;
 					break;
 			}
 		}

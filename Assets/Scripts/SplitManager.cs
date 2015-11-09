@@ -9,13 +9,15 @@ public struct SplitGroup {
 	public GameUnit splitUnit;
 	public float elapsedTime;
 	public Vector3 rotationVector;
+	public float splitFactor;
 	public Vector3 origin;
 
-	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit, float angle) {
+	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit, float angle, float splitFactor) {
 		this.ownerUnit = ownerUnit;
 		this.splitUnit = splitUnit;
 		this.elapsedTime = 0f;
 		this.origin = ownerUnit.gameObject.transform.position;
+		this.splitFactor = splitFactor;
 
 		//TODO: Add a radius where the unit will always go towards.
 		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
@@ -188,11 +190,9 @@ public class SplitManager : NetworkBehaviour {
 					this.removeList.Add(group);
 				}
 				else {
-					float splitSpeedFactor = this.unitAttributes.splitPrefabFactor;
-
 					//Some weird C# language design...
 					group.Update();
-					group.elapsedTime += Time.deltaTime / splitSpeedFactor;
+					group.elapsedTime += Time.deltaTime / group.splitFactor;
 					this.splitGroupList[i] = group;
 				}
 			}
@@ -231,11 +231,11 @@ public class SplitManager : NetworkBehaviour {
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
 		float angle = UnityEngine.Random.Range(-180f, 180f);
-		RpcSplit(obj, split, angle, hasAuthority);
+		RpcSplit(obj, split, angle, hasAuthority, this.unitAttributes.splitPrefabFactor);
 	}
 
 	[ClientRpc]
-	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority) {
+	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
 		GameUnit original = obj.GetComponent<GameUnit>();
@@ -251,7 +251,7 @@ public class SplitManager : NetworkBehaviour {
 			for (int i = 0; i < splitManagerGroup.Length; i++) {
 				SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
 				if (manager != null && manager.hasAuthority == hasAuthority) {
-					manager.splitGroupList.Add(new SplitGroup(original, copy, angle));
+					manager.splitGroupList.Add(new SplitGroup(original, copy, angle, splitFactor));
 					if (manager.selectionManager == null) {
 						GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
 						foreach (GameObject select in objs) {
