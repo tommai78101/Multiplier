@@ -253,7 +253,7 @@ public class Attributes : MonoBehaviour {
 		}
 
 		for (int i = 0; i < result.Count; i++) {
-			if (result[i].Equals("k")) {
+			if (result[i].Equals("x")) {
 				result[i] = level.ToString();
 			}
 			else if (result[i].Equals("r")) {
