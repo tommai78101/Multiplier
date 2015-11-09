@@ -58,10 +58,6 @@ public class Attributes : MonoBehaviour {
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
 
-		//string[] attributesList = new string[] {
-		//	"Health", "Attack", "Speed", "Merge", "Split"
-		//};
-
 		//For each level, instantiate a prefab and place it in the Content of the ScrollView.
 		//This allows the Attributes to show consistently the progression of the attributes for each level.
 		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
