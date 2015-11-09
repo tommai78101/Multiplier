@@ -33,7 +33,9 @@ public class Attributes : MonoBehaviour {
 	public const int MAX_NUM_OF_LEVELS = 10;
 	public UnitAttributes unitAttributes;
 
-	private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \D])");
+	//private Regex regex = new Regex(@"([\+\-\*\(\)\^\/\ \d])"); 
+	private Regex regex = new Regex(@"([\d]*[.][\d]*)*|[\d]|([\+\-\*\(\)\^\/\ \d])");
+	//private Regex regex = new Regex("(?<= op) | (?= op)".Replace("op", "[-+*/ ()]"));
 	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 	public void Start() {
@@ -216,7 +218,7 @@ public class Attributes : MonoBehaviour {
 			throw new ArgumentException("Equation is empty.");
 		}
 		List<string> result = new List<string>(this.regex.Split(equation.ToLower().Trim()));
-		for (int i = 0; i < result.Count; i++) {
+		for (int i = result.Count-1; i >= 0; i--) {
 			if (result[i].Equals("")) {
 				result.RemoveAt(i);
 			}
