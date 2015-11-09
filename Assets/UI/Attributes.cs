@@ -119,7 +119,6 @@ public class Attributes : MonoBehaviour {
 						if (numberPanel != null) {
 							if (this.unitAttributes != null) {
 								switch (property) {
-									default:
 									case AttributeProperty.Health:
 										this.unitAttributes.healthPrefabList[level] = answer;
 										numberPanel.numberText.text = answer.ToString();
@@ -156,6 +155,9 @@ public class Attributes : MonoBehaviour {
 										level = 10;
 										propertyValue = 5;
 										break;
+									default:
+									case AttributeProperty.Invalid:
+										throw new ArgumentException("Attribute property is invalid.");
 								}
 							}
 						}
