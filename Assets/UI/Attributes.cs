@@ -465,6 +465,9 @@ public class Attributes : MonoBehaviour {
 					else if (label.Equals("Merge")) {
 						return AttributeProperty.Merge;
 					}
+					else if (label.Equals("AtkCool")) {
+						return AttributeProperty.AttackCooldown;
+					}
 					else if (label.Equals("Split")) {
 						return AttributeProperty.Split;
 					}

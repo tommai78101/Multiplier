@@ -85,16 +85,16 @@ public class Spawner : NetworkBehaviour {
 		//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
 
 		//Player unit
-		GameObject obj = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
-		obj.transform.position = this.transform.position;
-		NetworkIdentity objIdentity = obj.GetComponent<NetworkIdentity>();
-		NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+		GameObject playerObject = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
+		playerObject.transform.position = this.transform.position;
+		NetworkIdentity objIdentity = playerObject.GetComponent<NetworkIdentity>();
+		NetworkServer.SpawnWithClientAuthority(playerObject, this.connectionToClient);
 
 		//Player selection manager
 		GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
 		SelectionManager selectionManager = manager.GetComponent<SelectionManager>();
 		if (selectionManager != null) {
-			selectionManager.allObjects.Add(obj);
+			selectionManager.allObjects.Add(playerObject);
 			selectionManager.authorityOwner = objIdentity.clientAuthorityOwner;
 		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
@@ -124,12 +124,12 @@ public class Spawner : NetworkBehaviour {
 		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
-		RpcCameraSetup(obj);
-		RpcUnitAttributesSetup(manager);
+		RpcCameraSetup(playerObject);
+		RpcUnitAttributesSetup(manager, playerObject);
 	}
 
 	[ClientRpc]
-	public void RpcUnitAttributesSetup(GameObject manager) {
+	public void RpcUnitAttributesSetup(GameObject manager, GameObject playerObject) {
 		Debug.Log("Setting up unit attributes.");
 		UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 		if (attributes != null && attributes.hasAuthority) {
@@ -147,6 +147,11 @@ public class Spawner : NetworkBehaviour {
 				if (attr != null) {
 					attr.unitAttributes = attributes;
 				}
+			}
+
+			GameUnit playerUnit = playerObject.GetComponent<GameUnit>();
+			if (playerUnit != null) {
+				playerUnit.attributes = attributes;
 			}
 		}
 	}

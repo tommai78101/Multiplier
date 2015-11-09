@@ -35,6 +35,7 @@ public class GameUnit : NetworkBehaviour {
 	public Color initialColor;
 	[SyncVar]
 	public Color takeDamageColor;
+	public UnitAttributes attributes;
 
 	public static bool once = false;
 
@@ -174,7 +175,7 @@ public class GameUnit : NetworkBehaviour {
 			if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 				if (this.attackCooldownCounter <= 0f) {
 					CmdAttack(this.targetEnemy.gameObject);
-					this.attackCooldownCounter = this.attackCooldown;
+					this.attackCooldownCounter = this.attributes.attackCooldownPrefabList[this.level];
 				}
 			}
 			else if (area.enemiesInAttackRange.Count > 0) {
