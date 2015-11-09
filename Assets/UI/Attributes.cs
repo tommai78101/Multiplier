@@ -282,7 +282,7 @@ public class Attributes : MonoBehaviour {
 					stack.Pop();
 					break;
 				case TokenClass.Operator:
-					if (element.Equals("-") && previousTokenClass == TokenClass.Operator && (stack.Count == 0 || result[i - 1].Equals("("))) {
+					if (element.Equals("-") && (previousTokenClass == TokenClass.Operator || previousTokenClass == TokenClass.LeftParentheses) && (stack.Count == 0 || result[i - 1].Equals("("))) {
 						//Push unary operator "Negative" to stack.
 						stack.Push("NEG");
 						break;
