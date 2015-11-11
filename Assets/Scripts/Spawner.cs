@@ -145,6 +145,9 @@ public class Spawner : NetworkBehaviour {
 		}
 
 		Spawner.colorCode++;
+		if (Spawner.colorCode > 2) {
+			Spawner.colorCode = 0;
+		}
 		RpcUnitAttributesSetup(manager, playerObject, colorValue);
 	}
 
