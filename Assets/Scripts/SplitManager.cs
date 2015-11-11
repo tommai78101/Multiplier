@@ -289,5 +289,9 @@ public class SplitManager : NetworkBehaviour {
 		copy.attackPower = original.attackPower;
 
 		copy.attributes = original.attributes;
+		copy.teamColorValue = original.teamColorValue;
+
+		original.SetTeamColor(original.teamColorValue);
+		copy.SetTeamColor(copy.teamColorValue);
 	}
 }

@@ -11,6 +11,8 @@ public class Spawner : NetworkBehaviour {
 	[SerializeField]
 	public NetworkConnection owner;
 
+	public static int colorCode = 0;
+
 	public override void OnStartLocalPlayer() {
 		//I kept this part in, because I don't know if this is the function that sets isLocalPlayer to true, 
 		//or this function triggers after isLocalPlayer is set to true.
@@ -125,12 +127,35 @@ public class Spawner : NetworkBehaviour {
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 		RpcCameraSetup(playerObject);
-		RpcUnitAttributesSetup(manager, playerObject);
+
+		int colorValue;
+		switch (Spawner.colorCode) {
+			default:
+				colorValue = -1;
+				break;
+			case 0:
+				colorValue = 0;
+				break;
+			case 1:
+				colorValue = 1;
+				break;
+			case 2:
+				colorValue = 2;
+				break;
+		}
+
+		Spawner.colorCode++;
+		RpcUnitAttributesSetup(manager, playerObject, colorValue);
 	}
 
 	[ClientRpc]
-	public void RpcUnitAttributesSetup(GameObject manager, GameObject playerObject) {
+	public void RpcUnitAttributesSetup(GameObject manager, GameObject playerObject, int colorValue) {
 		Debug.Log("Setting up unit attributes.");
+		GameUnit playerUnit = playerObject.GetComponent<GameUnit>();
+		if (playerUnit != null) {
+			playerUnit.SetTeamColor(colorValue);
+		}
+
 		UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 		if (attributes != null && attributes.hasAuthority) {
 			GameObject console = GameObject.FindGameObjectWithTag("Console");
@@ -149,7 +174,6 @@ public class Spawner : NetworkBehaviour {
 				}
 			}
 
-			GameUnit playerUnit = playerObject.GetComponent<GameUnit>();
 			if (playerUnit != null) {
 				playerUnit.attributes = attributes;
 			}

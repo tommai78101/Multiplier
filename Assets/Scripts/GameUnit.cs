@@ -35,6 +35,8 @@ public class GameUnit : NetworkBehaviour {
 	public Color initialColor;
 	[SyncVar]
 	public Color takeDamageColor;
+	[SyncVar]
+	public int teamColorValue;
 	public UnitAttributes attributes;
 
 	public static bool once = false;
@@ -71,7 +73,6 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-
 	//This is for testing if anything inside is triggered. Turns out it depends on whether the game is a server or a client.
 	public override void OnStartLocalPlayer() {
 		base.OnStartLocalPlayer();
@@ -82,6 +83,10 @@ public class GameUnit : NetworkBehaviour {
 	public override void OnStartAuthority() {
 		base.OnStartClient();
 		Debug.LogWarning("Starting authority");
+	}
+
+	public void Start() {
+		this.SetTeamColor(this.teamColorValue);
 	}
 
 	public void Update() {
@@ -138,6 +143,30 @@ public class GameUnit : NetworkBehaviour {
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
 		if (agent != null && agent.ReachedDestination()) {
 			this.isDirected = false;
+		}
+	}
+
+	//Sets the team color.
+	public void SetTeamColor(int colorValue) {
+		this.teamColorValue = colorValue;
+
+		Renderer playerRenderer = this.GetComponent<Renderer>();
+		if (playerRenderer != null) {
+			Material customMaterial = playerRenderer.material;
+			switch (colorValue) {
+				default:
+					customMaterial.SetColor("_TeamColor", Color.gray);
+					break;
+				case 0:
+					customMaterial.SetColor("_TeamColor", Color.red);
+					break;
+				case 1:
+					customMaterial.SetColor("_TeamColor", Color.blue);
+					break;
+				case 2:
+					customMaterial.SetColor("_TeamColor", Color.green);
+					break;
+			}
 		}
 	}
 
