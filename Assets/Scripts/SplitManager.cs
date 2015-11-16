@@ -223,8 +223,13 @@ public class SplitManager : NetworkBehaviour {
 	[Command]
 	public void CmdSplit(GameObject obj, bool hasAuthority) {
 		GameUnit unit = obj.GetComponent<GameUnit>();
-		if (unit != null) {
-			Debug.Assert(unit.attributes != null);
+		if (unit.attributes == null) {
+			if (this.unitAttributes != null) {
+				unit.attributes = this.unitAttributes;
+			}
+			else {
+				Debug.LogError("Definitely something is wrong here with unit attributes.");
+			}
 		}
 
 

@@ -308,10 +308,12 @@ public class MergeManager : NetworkBehaviour {
 			}
 			if (unit.attributes != null) {
 				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+					Debug.Log("MergeManager: unit.attributes.healthPrefabList[unit.level] * unit.maxHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+					unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
 				}
 				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+					Debug.Log("MergeManager: unit.attributes.healthPrefabList[unit.level] * unit.currentHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+					unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
 				}
 				if (unit.attributes.attackPrefabList[unit.level] != 0f) {
 					unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
@@ -350,21 +352,21 @@ public class MergeManager : NetworkBehaviour {
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
 
-		float mergeSpeedFactor = this.unitAttributes.mergePrefabList[ownerUnit.level];
+		if (ownerUnit.attributes != null) {
+			float mergeSpeedFactor = ownerUnit.attributes.mergePrefabList[ownerUnit.level];
+			NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
+			ownerAgent.Stop();
+			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
+			mergingAgent.Stop();
 
-		NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
-		ownerAgent.Stop();
-		NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
-		mergingAgent.Stop();
-		MergeGroup group = new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor);
-
-		//this.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit));
-		GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
-		foreach (GameObject manager in managers) {
-			MergeManager mergeManager = manager.GetComponent<MergeManager>();
-			if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
-				Debug.Log("Merge group added to mergeManager (" + (mergeManager.hasAuthority ? "Has Authority" : "No Authority") + "): " + mergeManager.ToString());
-				mergeManager.mergeList.Add(group);
+			MergeGroup group = new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor);
+			GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
+			foreach (GameObject manager in managers) {
+				MergeManager mergeManager = manager.GetComponent<MergeManager>();
+				if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
+					Debug.Log("Merge group added to mergeManager (" + (mergeManager.hasAuthority ? "Has Authority" : "No Authority") + "): " + mergeManager.ToString());
+					mergeManager.mergeList.Add(group);
+				}
 			}
 		}
 	}
