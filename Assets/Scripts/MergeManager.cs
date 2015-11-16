@@ -18,12 +18,12 @@ public struct MergeGroup {
 	public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit, float mergeFactor) {
 		this.ownerUnit = ownerUnit;
 		this.mergingUnit = mergingUnit;
-		if (this.ownerUnit.level < 10) {
-			this.ownerUnit.level++;
-		}
-		if (this.mergingUnit.level < 10) {
-			this.mergingUnit.level++;
-		}
+		//if (this.ownerUnit.level < 10) {
+		//	this.ownerUnit.level++;
+		//}
+		//if (this.mergingUnit.level < 10) {
+		//	this.mergingUnit.level++;
+		//}
 		this.elaspedTime = 0f;
 
 		this.ownerPosition = ownerUnit.gameObject.transform.position;
@@ -32,6 +32,14 @@ public struct MergeGroup {
 		this.ownerScale = ownerUnit.gameObject.transform.localScale;
 		this.mergingScale = mergingUnit.gameObject.transform.localScale;
 		this.mergeSpeedFactor = mergeFactor;
+
+		if (ownerUnit.attributes == null) {
+			Debug.LogError("Owner unit attributes are null.");
+		}
+		if (mergingUnit.attributes == null) {
+			Debug.LogError("Merging unit attributes are null.");
+		}
+
 
 		this.Stop();
 	}
@@ -64,9 +72,13 @@ public struct MergeGroup {
 		if (agent != null) {
 			agent.Resume();
 		}
-		agent = this.mergingUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.Resume();
+		if (this.mergingUnit != null) {
+			//Meaning that this merging unit is still merging.
+			//If null, it means this is already destroyed, therefore no need to reference it anymore.
+			agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+			if (agent != null) {
+				agent.Resume();
+			}
 		}
 
 		Collider collider = this.ownerUnit.GetComponent<Collider>();
@@ -79,9 +91,11 @@ public struct MergeGroup {
 		if (transform != null) {
 			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 		}
-		transform = this.mergingUnit.GetComponent<NetworkTransform>();
-		if (transform != null) {
-			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+		if (this.mergingUnit != null) {
+			transform = this.mergingUnit.GetComponent<NetworkTransform>();
+			if (transform != null) {
+				transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+			}
 		}
 	}
 
@@ -250,7 +264,12 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	private void FinishMergeGroup(MergeGroup group) {
-		CmdEndMerge(group.ownerUnit.gameObject, group.mergingUnit.gameObject);
+		if (group.mergingUnit == null) {
+			CmdEndMerge(group.ownerUnit.gameObject, null);
+		}
+		else {
+			CmdEndMerge(group.ownerUnit.gameObject, group.mergingUnit.gameObject);
+		}
 	}
 
 	private void UpdateGroup(MergeGroup group) {
@@ -258,7 +277,7 @@ public class MergeManager : NetworkBehaviour {
 			return;
 		}
 		int level = group.ownerUnit.level;
-        float healthFactor = this.unitAttributes.healthPrefabList[level];
+		float healthFactor = this.unitAttributes.healthPrefabList[level];
 		float attackFactor = this.unitAttributes.attackPrefabList[level];
 		float speedFactor = this.unitAttributes.speedPrefabList[level];
 
@@ -277,6 +296,38 @@ public class MergeManager : NetworkBehaviour {
 	public void CmdEndMerge(GameObject ownerObject, GameObject mergingObject) {
 		if (mergingObject != null) {
 			NetworkServer.Destroy(mergingObject);
+			mergingObject = null;
+		}
+
+		//Updating merged unit attributes.
+		GameUnit unit = ownerObject.GetComponent<GameUnit>();
+		if (unit != null) {
+			if (unit.previousLevel == unit.level) {
+				unit.level++;
+				Debug.Log("Unit level is now level: " + unit.level.ToString());
+			}
+			if (unit.attributes != null) {
+				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
+					unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+				}
+				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
+					unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+				}
+				if (unit.attributes.attackPrefabList[unit.level] != 0f) {
+					unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
+				}
+				NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
+				if (agent != null) {
+					if (unit.attributes.speedPrefabList[unit.level] != 0f) {
+						agent.speed *= unit.attributes.speedPrefabList[unit.level];
+						unit.speed = agent.speed;
+					}
+				}
+				unit.previousLevel = unit.level;
+			}
+			else {
+				Debug.LogWarning("Unit attributes should not be null before end of merging.");
+			}
 		}
 		RpcEndMerge(ownerObject);
 	}

@@ -222,6 +222,13 @@ public class SplitManager : NetworkBehaviour {
 
 	[Command]
 	public void CmdSplit(GameObject obj, bool hasAuthority) {
+		GameUnit unit = obj.GetComponent<GameUnit>();
+		if (unit != null) {
+			Debug.Assert(unit.attributes != null);
+		}
+
+
+
 		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
@@ -277,6 +284,7 @@ public class SplitManager : NetworkBehaviour {
 		copy.isDirected = original.isDirected = false;
 
 		copy.level = original.level;
+		copy.previousLevel = original.previousLevel;
 		if (original.currentHealth > original.maxHealth) {
 			original.currentHealth = original.maxHealth;
 		}
@@ -284,6 +292,7 @@ public class SplitManager : NetworkBehaviour {
 		copy.maxHealth = original.maxHealth;
 		copy.recoverCooldown = original.recoverCooldown;
 		copy.recoverCounter = original.recoverCounter = 0;
+		copy.speed = original.speed;
 		copy.attackCooldown = original.attackCooldown;
 		copy.attackCooldownCounter = original.attackCooldownCounter = 0;
 		copy.attackPower = original.attackPower;

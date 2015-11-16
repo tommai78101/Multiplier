@@ -23,6 +23,8 @@ public class GameUnit : NetworkBehaviour {
 	[SyncVar]
 	public float attackCooldown;
 	[SyncVar]
+	public float speed;
+	[SyncVar]
 	public float attackCooldownCounter;
 	[Range(0.001f, 10f)]
 	[SyncVar]
@@ -31,6 +33,8 @@ public class GameUnit : NetworkBehaviour {
 	public float recoverCounter;
 	[SyncVar]
 	public int level;
+	[SyncVar]
+	public int previousLevel;
 	[SyncVar]
 	public Color initialColor;
 	[SyncVar]
@@ -66,6 +70,7 @@ public class GameUnit : NetworkBehaviour {
 			this.attackPower = 1f;
 		}
 		this.level = 1;
+		this.previousLevel = 1;
 
 		Renderer renderer = this.GetComponent<Renderer>();
 		if (renderer != null) {
