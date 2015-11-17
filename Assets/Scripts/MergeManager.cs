@@ -342,13 +342,14 @@ public class MergeManager : NetworkBehaviour {
 	[Command]
 	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
 		if (ownerObject != null && mergingObject != null) {
-			Debug.Log("This is triggered: " + this.hasAuthority + " " + hasAuthority);
 			RpcAddMerge(ownerObject, mergingObject, hasAuthority);
 		}
 	}
 
 	[ClientRpc]
 	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
+		Debug.Log("This is triggered: " + this.hasAuthority + " " + hasAuthority);
+
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
 
