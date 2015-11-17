@@ -365,7 +365,13 @@ public class MergeManager : NetworkBehaviour {
 			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 			mergingAgent.Stop();
 
-			GameObject manager = ClientScene.FindLocalObject(netId) as GameObject;
+			GameObject manager = null;
+            if (this.isServer) {
+				manager = NetworkServer.FindLocalObject(netId) as GameObject;
+			}
+			else {
+				manager = ClientScene.FindLocalObject(netId) as GameObject;
+			}
 			if (manager != null) {
 				Debug.Log("Manager has been found."); 
 				MergeManager mergeManager = manager.GetComponent<MergeManager>();
