@@ -45,33 +45,39 @@ public class Spawner : NetworkBehaviour {
 		//Camera stuff
 		GameObject[] cameraObjects = GameObject.FindGameObjectsWithTag("MainCamera");
 		foreach (GameObject cam in cameraObjects) {
-			Material borderMaterial = Resources.Load<Material>("Border");
-			if (borderMaterial != null) {
-				if (cam.GetComponent<PostRenderer>() == null) {
-					cam.AddComponent<PostRenderer>();
+			GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
+			if (minimap != null) {
+				Material borderMaterial = Resources.Load<Material>("Border");
+				if (borderMaterial != null) {
+					if (cam.GetComponent<PostRenderer>() == null) {
+						cam.AddComponent<PostRenderer>();
+					}
+					PostRenderer postRenderer = cam.GetComponent<PostRenderer>();
+					if (postRenderer != null) {
+						postRenderer.borderMaterial = borderMaterial;
+						postRenderer.minimapCamera = minimap.GetComponent<Camera>();
+						if (postRenderer.minimapCamera == null) {
+							Debug.LogError("Unable to assign minimap camera to post renderer.");
+						}
+					}
 				}
-				PostRenderer renderer = cam.GetComponent<PostRenderer>();
-				if (renderer != null) {
-					renderer.borderMaterial = borderMaterial;
-				}
-			}
 
-			if (cam.GetComponent<CameraPanning>() == null) {
-				Debug.Log("Camera Panning is added to camera. Please check.");
-				CameraPanning panning = cam.AddComponent<CameraPanning>();
-				GameObject minimap = GameObject.FindGameObjectWithTag("Minimap");
-				if (minimap != null) {
+				if (cam.GetComponent<CameraPanning>() == null) {
+					Debug.Log("Camera Panning is added to camera. Please check.");
+					CameraPanning panning = cam.AddComponent<CameraPanning>();
 					MinimapStuffs stuffs = minimap.GetComponent<MinimapStuffs>();
 					if (stuffs != null) {
 						stuffs.playerCameraPanning = panning;
 					}
+					panning.cameraPanning = true;
 				}
-				panning.cameraPanning = true;
-			}
-			else {
-				if (!cam.GetComponent<CameraPanning>().cameraPanning) {
-					cam.GetComponent<CameraPanning>().cameraPanning = true;
+				else {
+					if (!cam.GetComponent<CameraPanning>().cameraPanning) {
+						cam.GetComponent<CameraPanning>().cameraPanning = true;
+					}
 				}
+
+
 			}
 		}
 

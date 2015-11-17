@@ -10,9 +10,25 @@ public class SelectionManager : NetworkBehaviour {
 	public Rect selectionBox;
 	public Vector3 initialClick;
 	public NetworkConnection authorityOwner;
+	public Camera minimapCamera;
 
 	public bool isSelecting;
 	public bool isBoxSelecting;
+	public bool isClickingOnMinimap;
+
+	public override void OnStartClient() {
+		base.OnStartClient();
+
+		if (this.minimapCamera == null) {
+			GameObject obj = GameObject.FindGameObjectWithTag("Minimap");
+			if (obj != null) {
+				this.minimapCamera = obj.GetComponent<Camera>();
+				if (this.minimapCamera == null) {
+					Debug.LogError("Failure to obtain minimap camera.");
+				}
+			}
+		}
+	}
 
 	void Start() {
 		//If you need to use a different design instead of checking for hasAuthority, then it means
@@ -47,15 +63,24 @@ public class SelectionManager : NetworkBehaviour {
 		if (!this.hasAuthority) {
 			return;
 		}
+		if (this.minimapCamera == null) {
+			return;
+		}
 
 		//This handles all the input actions the player has done to box select in the game.
 		//Currently, it doesn't handle clicking to select.
 		if (Input.GetMouseButtonDown(0)) {
-			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
-				ClearSelectObjects();
+			Vector2 screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			if (this.minimapCamera.rect.Contains(screenPoint)) {
+				this.isClickingOnMinimap = true;
 			}
-			this.isSelecting = true;
-			this.initialClick = Input.mousePosition;
+			else {
+				if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+					ClearSelectObjects();
+				}
+				this.isSelecting = true;
+				this.initialClick = Input.mousePosition;
+			}
 		}
 		else if (Input.GetMouseButtonUp(0)) {
 			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
@@ -67,6 +92,7 @@ public class SelectionManager : NetworkBehaviour {
 			this.isSelecting = false;
 			this.isBoxSelecting = false;
 			this.initialClick = -Vector3.one;
+			this.isClickingOnMinimap = false;
 		}
 
 		if (this.isSelecting && Input.GetMouseButton(0)) {

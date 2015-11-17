@@ -3,14 +3,19 @@ using System.Collections;
 
 public class PostRenderer : MonoBehaviour {
 	public Material borderMaterial;
-	public Vector3 initialClick, startingVertex, endingVertex;
+	public Vector3 initialClick = -Vector3.one;
+	public Vector3 startingVertex = -Vector3.one;
+	public Vector3 endingVertex = -Vector3.one;
+	public Camera minimapCamera;
 
 	//This script is added to the Main Camera. It is mostly used for post-processing the drawing of a box.
 
 	public void Update() {
 		if (Input.GetMouseButtonDown(0)) {
-			this.initialClick = Input.mousePosition;
-
+			Vector3 screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			if (!this.minimapCamera.rect.Contains(screenPoint)) {
+				this.initialClick = Input.mousePosition;
+			}
 		}
 		else if (Input.GetMouseButtonUp(0)) {
 			this.initialClick = -Vector3.one;
