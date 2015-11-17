@@ -190,15 +190,17 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	void Update() {
+		if (this.mergeList.Count > 0 || this.removeList.Count > 0) {
+			UpdateMergeGroups();
+		}
+
+		//Reordering this so the common codes are at the top, and segregated codes are at the bottom.
 		if (!this.hasAuthority) {
 			return;
 		}
 
 		if (Input.GetKeyDown(KeyCode.D)) {
 			AddMergeGroup();
-		}
-		if (this.mergeList.Count > 0 || this.removeList.Count > 0) {
-			UpdateMergeGroups();
 		}
 	}
 
