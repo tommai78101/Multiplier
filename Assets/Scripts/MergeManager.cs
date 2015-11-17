@@ -83,7 +83,6 @@ public struct MergeGroup {
 
 		Collider collider = this.ownerUnit.GetComponent<Collider>();
 		if (collider != null) {
-			Debug.Log("Collider is enabling.");
 			collider.enabled = true;
 		}
 
@@ -113,7 +112,6 @@ public struct MergeGroup {
 
 		Collider collider = this.ownerUnit.GetComponent<Collider>();
 		if (collider != null) {
-			Debug.Log("Collider is disabling.");
 			collider.enabled = false;
 		}
 
@@ -343,8 +341,10 @@ public class MergeManager : NetworkBehaviour {
 
 	[Command]
 	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
-		//NetworkServer.Destroy(mergingUnit.gameObject);
-		RpcAddMerge(ownerObject, mergingObject, hasAuthority);
+		if (ownerObject != null && mergingObject != null) {
+			Debug.Log("This is triggered: " + this.hasAuthority + " " + hasAuthority);
+			RpcAddMerge(ownerObject, mergingObject, hasAuthority);
+		}
 	}
 
 	[ClientRpc]
@@ -359,13 +359,12 @@ public class MergeManager : NetworkBehaviour {
 			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 			mergingAgent.Stop();
 
-			MergeGroup group = new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor);
 			GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
 			foreach (GameObject manager in managers) {
 				MergeManager mergeManager = manager.GetComponent<MergeManager>();
 				if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
 					Debug.Log("Merge group added to mergeManager (" + (mergeManager.hasAuthority ? "Has Authority" : "No Authority") + "): " + mergeManager.ToString());
-					mergeManager.mergeList.Add(group);
+					mergeManager.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor));
 				}
 			}
 		}
