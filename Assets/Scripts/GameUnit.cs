@@ -9,6 +9,7 @@ public class GameUnit : NetworkBehaviour {
 	public bool isSelected;
 	[SyncVar]
 	public bool isDirected;
+	public bool isClickingOnMinimap;
 	public GameUnit targetEnemy;
 	public GameObject selectionRing;
 	[SyncVar]
@@ -102,11 +103,13 @@ public class GameUnit : NetworkBehaviour {
 			return;
 		}
 
+
+
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
 		if (this.isSelected) {
 			this.selectionRing.SetActive(true);
-			if (Input.GetMouseButton(1)) {
-				CastRay();
+			if (Input.GetMouseButtonDown(1) && !this.isClickingOnMinimap) {
+				CastRay(false, Input.mousePosition, null);
 			}
 		}
 		else {
@@ -268,7 +271,7 @@ public class GameUnit : NetworkBehaviour {
 					}
 				}
 			}
-			
+
 		}
 	}
 
@@ -303,14 +306,28 @@ public class GameUnit : NetworkBehaviour {
 		CmdDestroy();
 	}
 
-	private void CastRay() {
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit[] hits = Physics.RaycastAll(ray);
-		foreach (RaycastHit hit in hits) {
-			if (hit.collider.gameObject.tag.Equals("Floor")) {
-				//Call on the client->server method to start the action.
-				CmdSetTarget(this.gameObject, hit.point);
-				break;
+	public void CastRay(bool isMinimap, Vector3 mousePosition, Camera minimapCamera) {
+		if (isMinimap) {
+			//TODO: Continue working on this minimap.
+			Debug.Log("Mouse Position: " + mousePosition);
+			Ray ray = minimapCamera.ScreenPointToRay(mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll(ray);
+			foreach (RaycastHit hit in hits) {
+				if (hit.collider.gameObject.tag.Equals("Floor")) {
+					Debug.Log("Raycasting point: " + hit.point);
+					break;
+				}
+			}
+		}
+		else {
+			Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll(ray);
+			foreach (RaycastHit hit in hits) {
+				if (hit.collider.gameObject.tag.Equals("Floor")) {
+					//Call on the client->server method to start the action.
+					CmdSetTarget(this.gameObject, hit.point);
+					break;
+				}
 			}
 		}
 	}

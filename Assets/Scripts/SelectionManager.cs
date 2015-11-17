@@ -11,6 +11,7 @@ public class SelectionManager : NetworkBehaviour {
 	public Vector3 initialClick;
 	public NetworkConnection authorityOwner;
 	public Camera minimapCamera;
+	public Vector3 screenPoint;
 
 	public bool isSelecting;
 	public bool isBoxSelecting;
@@ -67,20 +68,25 @@ public class SelectionManager : NetworkBehaviour {
 			return;
 		}
 
-		//This handles all the input actions the player has done to box select in the game.
-		//Currently, it doesn't handle clicking to select.
-		if (Input.GetMouseButtonDown(0)) {
-			Vector2 screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-			if (this.minimapCamera.rect.Contains(screenPoint)) {
+		//This handles all the input actions the player has done in the minimap.
+		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) {
+			this.screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			if (this.minimapCamera.rect.Contains(this.screenPoint)) {
 				this.isClickingOnMinimap = true;
 			}
-			else {
-				if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
-					ClearSelectObjects();
-				}
-				this.isSelecting = true;
-				this.initialClick = Input.mousePosition;
+		}
+		else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) {
+			this.isClickingOnMinimap = false;
+		}
+
+		//This handles all the input actions the player has done to box select in the game.
+		//Currently, it doesn't handle clicking to select.
+		if (Input.GetMouseButtonDown(0) && !this.isClickingOnMinimap) {
+			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+				ClearSelectObjects();
 			}
+			this.isSelecting = true;
+			this.initialClick = Input.mousePosition;
 		}
 		else if (Input.GetMouseButtonUp(0)) {
 			if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
@@ -92,7 +98,6 @@ public class SelectionManager : NetworkBehaviour {
 			this.isSelecting = false;
 			this.isBoxSelecting = false;
 			this.initialClick = -Vector3.one;
-			this.isClickingOnMinimap = false;
 		}
 
 		if (this.isSelecting && Input.GetMouseButton(0)) {
@@ -109,6 +114,18 @@ public class SelectionManager : NetworkBehaviour {
 				this.selectionBox.height *= -1f;
 			}
 			TempRectSelectObjects();
+		}
+
+		if (Input.GetMouseButtonDown(1) && this.isClickingOnMinimap) {
+			if (this.selectedObjects.Count > 0) {
+				foreach (GameObject obj in this.selectedObjects) {
+					GameUnit unit = obj.GetComponent<GameUnit>();
+					if (unit != null) {
+						unit.isClickingOnMinimap = this.isClickingOnMinimap;
+						unit.CastRay(true, this.screenPoint, this.minimapCamera);
+					}
+				}
+			}
 		}
 
 		foreach (GameObject obj in this.allObjects) {

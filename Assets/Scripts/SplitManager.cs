@@ -19,7 +19,6 @@ public struct SplitGroup {
 		this.origin = ownerUnit.gameObject.transform.position;
 		this.splitFactor = splitFactor;
 
-		//TODO: Add a radius where the unit will always go towards.
 		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
 		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
 
