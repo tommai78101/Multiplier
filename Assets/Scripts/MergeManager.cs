@@ -195,14 +195,17 @@ public class MergeManager : NetworkBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.D)) {
-			AddMergeGroup();
+			NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
+			if (identity != null) {
+				AddMergeGroup(identity.netId);
+			}
 		}
 		if (this.mergeList.Count > 0 || this.removeList.Count > 0) {
 			UpdateMergeGroups();
 		}
 	}
 
-	private void AddMergeGroup() {
+	private void AddMergeGroup(NetworkInstanceId netId) {
 		//Since merging units require the selected units count to be a multiple of 2, we need to check to make sure they are a multiple of 2.
 		//Else, ignore the final selected unit.
 		//Going to change this into network code, to sync up merging.
@@ -223,7 +226,7 @@ public class MergeManager : NetworkBehaviour {
 				if (ownerUnit.level == mergerUnit.level) {
 					used.Add(this.selectionManager.selectedObjects[i]);
 					used.Add(this.selectionManager.selectedObjects[j]);
-					CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority);
+					CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority, netId);
 					break;
 				}
 			}
@@ -340,14 +343,16 @@ public class MergeManager : NetworkBehaviour {
 	}
 
 	[Command]
-	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
+	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, NetworkInstanceId netId) {
 		if (ownerObject != null && mergingObject != null) {
-			RpcAddMerge(ownerObject, mergingObject, hasAuthority);
+
+
+			RpcAddMerge(ownerObject, mergingObject, hasAuthority, netId);
 		}
 	}
 
 	[ClientRpc]
-	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority) {
+	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, NetworkInstanceId netId) {
 		Debug.Log("This is triggered: " + this.hasAuthority + " " + hasAuthority);
 
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
@@ -360,8 +365,9 @@ public class MergeManager : NetworkBehaviour {
 			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 			mergingAgent.Stop();
 
-			GameObject[] managers = GameObject.FindGameObjectsWithTag("MergeManager");
-			foreach (GameObject manager in managers) {
+			GameObject manager = ClientScene.FindLocalObject(netId) as GameObject;
+			if (manager != null) {
+				Debug.Log("Manager has been found."); 
 				MergeManager mergeManager = manager.GetComponent<MergeManager>();
 				if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
 					Debug.Log("mergeManager.hasAuthority == hasAuthority: " + (mergeManager.hasAuthority == hasAuthority).ToString());
