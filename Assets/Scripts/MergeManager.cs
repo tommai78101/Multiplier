@@ -195,17 +195,14 @@ public class MergeManager : NetworkBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.D)) {
-			NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
-			if (identity != null) {
-				AddMergeGroup(identity.netId);
-			}
+			AddMergeGroup();
 		}
 		if (this.mergeList.Count > 0 || this.removeList.Count > 0) {
 			UpdateMergeGroups();
 		}
 	}
 
-	private void AddMergeGroup(NetworkInstanceId netId) {
+	private void AddMergeGroup() {
 		//Since merging units require the selected units count to be a multiple of 2, we need to check to make sure they are a multiple of 2.
 		//Else, ignore the final selected unit.
 		//Going to change this into network code, to sync up merging.
@@ -226,7 +223,11 @@ public class MergeManager : NetworkBehaviour {
 				if (ownerUnit.level == mergerUnit.level) {
 					used.Add(this.selectionManager.selectedObjects[i]);
 					used.Add(this.selectionManager.selectedObjects[j]);
-					CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority, netId);
+
+					NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
+					if (identity != null) {
+						CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority, (this.isServer ? NetworkServer.FindLocalObject(identity.netId) : ClientScene.FindLocalObject(identity.netId)));
+					}
 					break;
 				}
 			}
@@ -299,7 +300,11 @@ public class MergeManager : NetworkBehaviour {
 			NetworkServer.Destroy(mergingObject);
 			mergingObject = null;
 		}
+		RpcEndMerge(ownerObject);
+	}
 
+	[ClientRpc]
+	public void RpcEndMerge(GameObject ownerObject) {
 		//Updating merged unit attributes.
 		GameUnit unit = ownerObject.GetComponent<GameUnit>();
 		if (unit != null) {
@@ -319,10 +324,13 @@ public class MergeManager : NetworkBehaviour {
 				if (unit.attributes.attackPrefabList[unit.level] != 0f) {
 					unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
 				}
+
 				NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
 				if (agent != null) {
 					if (unit.attributes.speedPrefabList[unit.level] != 0f) {
 						agent.speed *= unit.attributes.speedPrefabList[unit.level];
+						agent.Resume();
+						agent.ResetPath();
 						unit.speed = agent.speed;
 					}
 				}
@@ -332,27 +340,15 @@ public class MergeManager : NetworkBehaviour {
 				Debug.LogWarning("Unit attributes should not be null before end of merging.");
 			}
 		}
-		RpcEndMerge(ownerObject);
-	}
-
-	[ClientRpc]
-	public void RpcEndMerge(GameObject ownerObject) {
-		NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
-		agent.Resume();
-		agent.ResetPath();
 	}
 
 	[Command]
-	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, NetworkInstanceId netId) {
-		if (ownerObject != null && mergingObject != null) {
-
-
-			RpcAddMerge(ownerObject, mergingObject, hasAuthority, netId);
-		}
+	public void CmdAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, GameObject manager) {
+		RpcAddMerge(ownerObject, mergingObject, hasAuthority, manager);
 	}
 
 	[ClientRpc]
-	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, NetworkInstanceId netId) {
+	public void RpcAddMerge(GameObject ownerObject, GameObject mergingObject, bool hasAuthority, GameObject manager) {
 		Debug.Log("This is triggered: " + this.hasAuthority + " " + hasAuthority);
 
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
@@ -365,18 +361,11 @@ public class MergeManager : NetworkBehaviour {
 			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
 			mergingAgent.Stop();
 
-			GameObject manager = null;
-            if (this.isServer) {
-				manager = NetworkServer.FindLocalObject(netId) as GameObject;
-			}
-			else {
-				manager = ClientScene.FindLocalObject(netId) as GameObject;
-			}
 			if (manager != null) {
 				Debug.Log("Manager has been found."); 
 				MergeManager mergeManager = manager.GetComponent<MergeManager>();
-				if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
-					Debug.Log("mergeManager.hasAuthority == hasAuthority: " + (mergeManager.hasAuthority == hasAuthority).ToString());
+				if (mergeManager != null) {
+					Debug.Log("Adding new merge group...");
 					mergeManager.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor));
 				}
 			}
