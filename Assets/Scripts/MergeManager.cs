@@ -286,8 +286,8 @@ public class MergeManager : NetworkBehaviour {
 		float speedFactor = this.unitAttributes.speedPrefabList[level];
 
 		group.ownerUnit.attackCooldown *= this.attackCooldownFactor;
-		group.ownerUnit.maxHealth = Mathf.FloorToInt((float)group.ownerUnit.maxHealth * healthFactor);
-		group.ownerUnit.currentHealth = Mathf.FloorToInt((float)group.ownerUnit.currentHealth * healthFactor);
+		group.ownerUnit.maxHealth = Mathf.FloorToInt((float) group.ownerUnit.maxHealth * healthFactor);
+		group.ownerUnit.currentHealth = Mathf.FloorToInt((float) group.ownerUnit.currentHealth * healthFactor);
 		group.ownerUnit.attackPower *= attackFactor;
 
 		NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
@@ -336,7 +336,6 @@ public class MergeManager : NetworkBehaviour {
 						unit.speed = agent.speed;
 					}
 				}
-				unit.previousLevel = unit.level;
 			}
 			else {
 				Debug.LogWarning("Unit attributes should not be null before end of merging.");
@@ -356,19 +355,23 @@ public class MergeManager : NetworkBehaviour {
 		GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
 		GameUnit mergingUnit = mergingObject.GetComponent<GameUnit>();
 
-		if (ownerUnit.attributes != null) {
-			float mergeSpeedFactor = ownerUnit.attributes.mergePrefabList[ownerUnit.level];
-			NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
-			ownerAgent.Stop();
-			NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
-			mergingAgent.Stop();
+		if (ownerUnit != null && mergingUnit != null) {
+			//Update the previous level to be the current unit's level before the merge.
+			ownerUnit.previousLevel = ownerUnit.level;
+			if (ownerUnit.attributes != null) {
+				float mergeSpeedFactor = ownerUnit.attributes.mergePrefabList[ownerUnit.level];
+				NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
+				ownerAgent.Stop();
+				NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
+				mergingAgent.Stop();
 
-			if (manager != null) {
-				Debug.Log("Manager has been found."); 
-				MergeManager mergeManager = manager.GetComponent<MergeManager>();
-				if (mergeManager != null) {
-					Debug.Log("Adding new merge group...");
-					mergeManager.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor));
+				if (manager != null) {
+					Debug.Log("Manager has been found.");
+					MergeManager mergeManager = manager.GetComponent<MergeManager>();
+					if (mergeManager != null) {
+						Debug.Log("Adding new merge group...");
+						mergeManager.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor));
+					}
 				}
 			}
 		}
