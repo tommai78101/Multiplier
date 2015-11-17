@@ -364,7 +364,7 @@ public class MergeManager : NetworkBehaviour {
 			foreach (GameObject manager in managers) {
 				MergeManager mergeManager = manager.GetComponent<MergeManager>();
 				if (mergeManager != null && mergeManager.hasAuthority == hasAuthority) {
-					Debug.Log("Merge group added to mergeManager (" + (mergeManager.hasAuthority ? "Has Authority" : "No Authority") + "): " + mergeManager.ToString());
+					Debug.Log("mergeManager.hasAuthority == hasAuthority: " + (mergeManager.hasAuthority == hasAuthority).ToString());
 					mergeManager.mergeList.Add(new MergeGroup(ownerUnit, mergingUnit, mergeSpeedFactor));
 				}
 			}
