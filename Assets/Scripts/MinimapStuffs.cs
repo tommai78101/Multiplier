@@ -10,8 +10,6 @@ public class MinimapStuffs : MonoBehaviour {
 	public Vector3 mousePosition;
 	public Vector3 newCameraPosition;
 
-	public static MinimapStuffs Instance;
-
 	public void Start() {
 		if (this.playerCamera == null) {
 			Debug.LogError("Unable to determine where the Player Camera component is at.");
@@ -27,10 +25,6 @@ public class MinimapStuffs : MonoBehaviour {
 			if (this.floorCollider == null) {
 				Debug.LogError("Cannot set Quad floor collider to this variable. Please check.");
 			}
-		}
-
-		if (MinimapStuffs.Instance == null) {
-			MinimapStuffs.Instance = this;
 		}
 	}
 
