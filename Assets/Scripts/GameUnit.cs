@@ -107,11 +107,11 @@ public class GameUnit : NetworkBehaviour {
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
 		if (this.isSelected) {
 			this.selectionRing.SetActive(true);
-
-
-
-			if (Input.GetMouseButtonDown(1)) {
-				CastRay(false, Input.mousePosition, null);
+			Vector3 screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			if (!MinimapStuffs.Instance.minimapCamera.rect.Contains(screenPoint)) {
+				if (Input.GetMouseButtonDown(1)) {
+					CastRay(false, Input.mousePosition, null);
+				}
 			}
 		}
 		else {
