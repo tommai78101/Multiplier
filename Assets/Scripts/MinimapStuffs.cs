@@ -8,7 +8,10 @@ public class MinimapStuffs : MonoBehaviour {
 	public CameraPanning playerCameraPanning;
 	public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
 	public Vector3 mousePosition;
+	public Vector3 minimapMousePosition;
 	public Vector3 newCameraPosition;
+
+	public static MinimapStuffs Instance;
 
 	public void Start() {
 		if (this.playerCamera == null) {
@@ -25,6 +28,10 @@ public class MinimapStuffs : MonoBehaviour {
 			if (this.floorCollider == null) {
 				Debug.LogError("Cannot set Quad floor collider to this variable. Please check.");
 			}
+		}
+
+		if (MinimapStuffs.Instance == null) {
+			MinimapStuffs.Instance = this;
 		}
 
 		//if (this.minimapCollider == null) {
@@ -82,6 +89,8 @@ public class MinimapStuffs : MonoBehaviour {
 		this.topRightPosition.z = -1f;
 		this.bottomLeftPosition.z = -1f;
 		this.bottomRightPosition.z = -1f;
+
+
 	}
 
 	public void OnPostRender() {

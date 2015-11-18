@@ -9,7 +9,7 @@ public class GameUnit : NetworkBehaviour {
 	public bool isSelected;
 	[SyncVar]
 	public bool isDirected;
-	public bool isClickingOnMinimap;
+	//public bool isClickingOnMinimap;
 	public GameUnit targetEnemy;
 	public GameObject selectionRing;
 	[SyncVar]
@@ -108,7 +108,10 @@ public class GameUnit : NetworkBehaviour {
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
 		if (this.isSelected) {
 			this.selectionRing.SetActive(true);
-			if (Input.GetMouseButtonDown(1) && !this.isClickingOnMinimap) {
+
+
+
+			if (Input.GetMouseButtonDown(1)) {
 				CastRay(false, Input.mousePosition, null);
 			}
 		}
@@ -309,12 +312,12 @@ public class GameUnit : NetworkBehaviour {
 	public void CastRay(bool isMinimap, Vector3 mousePosition, Camera minimapCamera) {
 		if (isMinimap) {
 			//TODO: Continue working on this minimap.
-			Debug.Log("Mouse Position: " + mousePosition);
-			Ray ray = minimapCamera.ScreenPointToRay(mousePosition);
-			RaycastHit[] hits = Physics.RaycastAll(ray);
+			Debug.Log("Cast Ray Mouse Position: " + mousePosition);
+			Ray ray = minimapCamera.ViewportPointToRay(mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll(ray, 1000f);
 			foreach (RaycastHit hit in hits) {
 				if (hit.collider.gameObject.tag.Equals("Floor")) {
-					Debug.Log("Raycasting point: " + hit.point);
+					CmdSetTarget(this.gameObject, hit.point);
 					break;
 				}
 			}
