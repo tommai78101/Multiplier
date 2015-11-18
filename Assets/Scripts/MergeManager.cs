@@ -276,6 +276,7 @@ public class MergeManager : NetworkBehaviour {
 		}
 	}
 
+	//This is not used at the moment.
 	private void UpdateGroup(MergeGroup group) {
 		if (group.ownerUnit.level > this.unitAttributes.healthPrefabList.Count) {
 			return;
@@ -285,6 +286,9 @@ public class MergeManager : NetworkBehaviour {
 		float attackFactor = this.unitAttributes.attackPrefabList[level];
 		float speedFactor = this.unitAttributes.speedPrefabList[level];
 
+		//This is where we modify the unit attributes when the merge is happening.
+		//However, this should really be placed in a function call at the end of the merge, meaning
+		//this should be run only once.
 		group.ownerUnit.attackCooldown *= this.attackCooldownFactor;
 		group.ownerUnit.maxHealth = Mathf.FloorToInt((float) group.ownerUnit.maxHealth * healthFactor);
 		group.ownerUnit.currentHealth = Mathf.FloorToInt((float) group.ownerUnit.currentHealth * healthFactor);
@@ -312,19 +316,20 @@ public class MergeManager : NetworkBehaviour {
 		if (unit != null) {
 			if (unit.previousLevel == unit.level) {
 				unit.level++;
-				Debug.Log("Unit level is now level: " + unit.level.ToString());
+				Debug.Log("MergeManager: Unit.level: " + unit.level.ToString());
 			}
 			if (unit.attributes != null) {
 				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					Debug.Log("MergeManager: unit.attributes.healthPrefabList[unit.level] * unit.maxHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+					Debug.Log("MergeManager: unit.maxHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
 					unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
 				}
 				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					Debug.Log("MergeManager: unit.attributes.healthPrefabList[unit.level] * unit.currentHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+					Debug.Log("MergeManager: unit.currentHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
 					unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
 				}
 				if (unit.attributes.attackPrefabList[unit.level] != 0f) {
 					unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
+					Debug.Log("MergeManager: unit.attackPower = " + unit.attackPower);
 				}
 
 				NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
@@ -334,6 +339,7 @@ public class MergeManager : NetworkBehaviour {
 						agent.Resume();
 						agent.ResetPath();
 						unit.speed = agent.speed;
+						Debug.Log("MergeManager: unit.speed = " + unit.speed);
 					}
 				}
 			}
