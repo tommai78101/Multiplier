@@ -9,7 +9,6 @@ public class GameUnit : NetworkBehaviour {
 	public bool isSelected;
 	[SyncVar]
 	public bool isDirected;
-	//public bool isClickingOnMinimap;
 	public GameUnit targetEnemy;
 	public GameObject selectionRing;
 	[SyncVar]

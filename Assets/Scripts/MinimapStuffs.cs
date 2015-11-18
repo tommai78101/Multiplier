@@ -8,7 +8,6 @@ public class MinimapStuffs : MonoBehaviour {
 	public CameraPanning playerCameraPanning;
 	public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
 	public Vector3 mousePosition;
-	public Vector3 minimapMousePosition;
 	public Vector3 newCameraPosition;
 
 	public static MinimapStuffs Instance;
@@ -33,14 +32,6 @@ public class MinimapStuffs : MonoBehaviour {
 		if (MinimapStuffs.Instance == null) {
 			MinimapStuffs.Instance = this;
 		}
-
-		//if (this.minimapCollider == null) {
-		//	GameObject minimapObject = GameObject.FindGameObjectWithTag("MinimapCollider");
-		//	this.minimapCollider = minimapObject.GetComponent<Collider>();
-		//	if (this.minimapCollider == null) {
-		//		Debug.LogError("Cannot set Minimap collider to this variable. Please check.");
-		//	}
-		//}
 	}
 
 	public void Update() {

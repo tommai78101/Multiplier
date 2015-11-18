@@ -15,7 +15,6 @@ public class SelectionManager : NetworkBehaviour {
 
 	public bool isSelecting;
 	public bool isBoxSelecting;
-	public bool isClickingOnMinimap;
 
 	public override void OnStartClient() {
 		base.OnStartClient();
@@ -71,13 +70,6 @@ public class SelectionManager : NetworkBehaviour {
 		//This handles all the input actions the player has done in the minimap.
 		this.screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 		if (this.minimapCamera.rect.Contains(this.screenPoint)) {
-			//if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) {
-			//	this.isClickingOnMinimap = true;
-			//}
-			//else if (Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) {
-			//	this.isClickingOnMinimap = false;
-			//}
-
 			if (Input.GetMouseButtonDown(1)) {
 				if (this.selectedObjects.Count > 0) {
 					float mainX = (this.screenPoint.x - this.minimapCamera.rect.xMin) / (1.0f - this.minimapCamera.rect.xMin);
@@ -86,7 +78,6 @@ public class SelectionManager : NetworkBehaviour {
 					foreach (GameObject obj in this.selectedObjects) {
 						GameUnit unit = obj.GetComponent<GameUnit>();
 						if (unit != null) {
-							//unit.isClickingOnMinimap = this.isClickingOnMinimap;
 							unit.CastRay(true, minimapScreenPoint, this.minimapCamera);
 						}
 					}
