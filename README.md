@@ -118,7 +118,7 @@ Please continue to read Controls section for how to play.
 
 **- v0.04:**
 
-Added ability for units to heal over time.
+* Added ability for units to heal over time.
 
 **- v0.03:**
 
