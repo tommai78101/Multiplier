@@ -314,7 +314,6 @@ public class GameUnit : NetworkBehaviour {
 
 	public void CastRay(bool isMinimap, Vector3 mousePosition, Camera minimapCamera) {
 		if (isMinimap) {
-			//TODO: Continue working on this minimap.
 			Ray ray = minimapCamera.ViewportPointToRay(mousePosition);
 			RaycastHit[] hits = Physics.RaycastAll(ray, 1000f);
 			foreach (RaycastHit hit in hits) {
