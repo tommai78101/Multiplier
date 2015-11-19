@@ -69,17 +69,15 @@ public class SelectionManager : NetworkBehaviour {
 
 		//This handles all the input actions the player has done in the minimap.
 		this.screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-		if (this.minimapCamera.rect.Contains(this.screenPoint)) {
-			if (Input.GetMouseButtonDown(1)) {
-				if (this.selectedObjects.Count > 0) {
-					float mainX = (this.screenPoint.x - this.minimapCamera.rect.xMin) / (1.0f - this.minimapCamera.rect.xMin);
-					float mainY = (this.screenPoint.y) / (this.minimapCamera.rect.yMax);
-					Vector3 minimapScreenPoint = new Vector3(mainX, mainY, 0f);
-					foreach (GameObject obj in this.selectedObjects) {
-						GameUnit unit = obj.GetComponent<GameUnit>();
-						if (unit != null) {
-							unit.CastRay(true, minimapScreenPoint, this.minimapCamera);
-						}
+		if (this.minimapCamera.rect.Contains(this.screenPoint) && Input.GetMouseButtonDown(1)) {
+			if (this.selectedObjects.Count > 0) {
+				float mainX = (this.screenPoint.x - this.minimapCamera.rect.xMin) / (1.0f - this.minimapCamera.rect.xMin);
+				float mainY = (this.screenPoint.y) / (this.minimapCamera.rect.yMax);
+				Vector3 minimapScreenPoint = new Vector3(mainX, mainY, 0f);
+				foreach (GameObject obj in this.selectedObjects) {
+					GameUnit unit = obj.GetComponent<GameUnit>();
+					if (unit != null) {
+						unit.CastRay(true, minimapScreenPoint, this.minimapCamera);
 					}
 				}
 			}

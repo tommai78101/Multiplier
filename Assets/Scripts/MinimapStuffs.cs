@@ -9,6 +9,7 @@ public class MinimapStuffs : MonoBehaviour {
 	public Vector3 topLeftPosition, topRightPosition, bottomLeftPosition, bottomRightPosition;
 	public Vector3 mousePosition;
 	public Vector3 newCameraPosition;
+	public bool hasClickedInsideMinimap;
 
 	public static MinimapStuffs Instance;
 
@@ -39,7 +40,14 @@ public class MinimapStuffs : MonoBehaviour {
 		if (this.playerCameraPanning != null) {
 			this.mousePosition = this.playerCamera.ScreenToViewportPoint(Input.mousePosition);
 			if (this.minimapCamera.rect.Contains(this.mousePosition)) {
-				if (Input.GetMouseButton(0)) {
+				if (Input.GetMouseButtonDown(0)) {
+					this.hasClickedInsideMinimap = true;
+				}
+				else if (Input.GetMouseButtonUp(0)) {
+					this.hasClickedInsideMinimap = false;
+				}
+
+				if (Input.GetMouseButton(0) && this.hasClickedInsideMinimap) {
 					Ray worldRay = this.minimapCamera.ScreenPointToRay(Input.mousePosition);
 					RaycastHit floorHit;
 					if (this.floorCollider.Raycast(worldRay, out floorHit, 100f)) {
@@ -47,6 +55,9 @@ public class MinimapStuffs : MonoBehaviour {
 						this.newCameraPosition.y = this.playerCamera.transform.position.y;
 						this.playerCamera.gameObject.transform.position = this.newCameraPosition;
 					}
+				}
+				else {
+					return;
 				}
 			}
 		}
