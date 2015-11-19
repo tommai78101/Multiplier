@@ -1,6 +1,9 @@
 # Unity-UNET-RTS
 
+[Playable demo.](http://tom-mai78101.itch.io/multiplier)
+
 ## Disclaimer:
+
 As of October 23, 2015, the project has been rewritten from scratch to migrate to the new Unity Networking API (UNET), thus deprecating the old Unity Networking API. This means the old project is therefore discontinued and would not be favorable, since Unity 5 is continuously evolving. Also, since the new project now uses System.Data.dll, I'm still looking for ways on exporting it to the Web Player. At the moment, it cannot be played online.
 
 Since this prototype is all about network multiplayer RTS, I intentionally designed it so that no two players are using the same computer. If you are playing alone, you can open two webpages together. Please don't worry about Player 2 for now, and continue in the Start section below.
