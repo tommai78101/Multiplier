@@ -1,6 +1,6 @@
 # Unity-UNET-RTS
 
-# Disclaimer:
+## Disclaimer:
 As of October 23, 2015, the project has been rewritten from scratch to migrate to the new Unity Networking API (UNET), thus deprecating the old Unity Networking API. This means the old project is therefore discontinued and would not be favorable, since Unity 5 is continuously evolving. Also, since the new project now uses System.Data.dll, I'm still looking for ways on exporting it to the Web Player. At the moment, it cannot be played online.
 
 Since this prototype is all about network multiplayer RTS, I intentionally designed it so that no two players are using the same computer. If you are playing alone, you can open two webpages together. Please don't worry about Player 2 for now, and continue in the Start section below.
@@ -9,12 +9,12 @@ I have no idea if it's possible to host server games that are hosted online. Let
 
 This is a continuation effort of an older project, [Unity-RTS-Tweak](https://github.com/tommai78101/Unity-RTS-Tweak), but rewritten from scratch for Unity 5.2 UNET and up.
 
-# Branches
+## Branches
 
 *Master:* Stable codes only.  
 *Testing:* Frequently updated. May break game.
 
-# Introduction:
+## Introduction:
 
 Multiplier, a simplistic real time strategy game, is based on the math equation, y=2x. In other words, there's only cloning and kill. You create clones, you merge, and you kill the other players. Future plans may include cloning based on other simple math equations, such as the Fibonacci Sequence (1, 1, 2, 3, 5, 8, 13, ...), or:
     
@@ -34,7 +34,7 @@ In this build, you are able to create your own math expressions. As of October 2
 
 Trello Scrum board can be found [here](https://trello.com/b/VQIT6pl9/master-s-project). This shows the current progression and future plans of the project.
 
-# Start:
+## Start:
 
 You may play against yourself, or have someone to join you on another computer. If you are playing with yourself, you must also do the Player 2 instructions.
 
@@ -57,6 +57,7 @@ Player 1 is the host of the game. Player 2 is the client of the game.
 Please continue to read Controls section for how to play.
 
 ### Controls:
+
 * Left Mouse Button - Select units. (You can only select your own units.) Hold down button and drag to make selection box.
 * Right Mouse Button - Move to Location.
 * A - Attack where? (Right click to choose location)
@@ -64,7 +65,7 @@ Please continue to read Controls section for how to play.
 * D - Merge. Merge any two units together.
 * ` (Tilde) - Bring up the console. (Only when you're hosting or you're in the game)
 
-# Changelog:
+## Changelog:
 
 * Known Issue: There's a lack of polish in this build. This will definitely change
 
@@ -152,6 +153,6 @@ Added ability for units to heal over time.
 * Decrease max health point.
 * Decrease spawning time
 
-# Credits:
+## Credits:
 
 **Creator:** Thompson Lee
