@@ -204,6 +204,9 @@ public class SelectionManager : NetworkBehaviour {
 
 	private void SelectObjectsInRect() {
 		foreach (GameObject obj in this.allObjects) {
+			if (obj == null) {
+				continue;
+			}
 			GameUnit unit = obj.GetComponent<GameUnit>();
 			if (unit != null) {
 				if (this.isBoxSelecting) {
