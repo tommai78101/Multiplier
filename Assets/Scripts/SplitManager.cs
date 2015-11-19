@@ -68,6 +68,7 @@ public struct SplitGroup {
 	public void Stop() {
 		NavMeshAgent agent = null;
 		if (this.ownerUnit != null) {
+			this.ownerUnit.isSplitting = false;
 			agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
 				agent.Resume();
@@ -75,6 +76,7 @@ public struct SplitGroup {
 		}
 
 		if (this.splitUnit != null) {
+			this.splitUnit.isSplitting = false;
 			agent = this.splitUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
 				agent.Resume();
@@ -231,7 +233,9 @@ public class SplitManager : NetworkBehaviour {
 			}
 		}
 
-
+		if (unit.isSplitting) {
+			return;
+		}
 
 		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
@@ -239,6 +243,12 @@ public class SplitManager : NetworkBehaviour {
 		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
 		GameObject split = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
 		split.transform.position = obj.transform.position;
+
+		GameUnit splitUnit = split.GetComponent<GameUnit>();
+		if (splitUnit != null) {
+			splitUnit.isSplitting = unit.isSplitting = true;
+		}
+
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
 		float angle = UnityEngine.Random.Range(-180f, 180f);

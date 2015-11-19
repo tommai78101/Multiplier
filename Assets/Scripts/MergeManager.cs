@@ -222,7 +222,7 @@ public class MergeManager : NetworkBehaviour {
 				}
 				mergerObject = this.selectionManager.selectedObjects[j];
 				GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-				if (ownerUnit.level == mergerUnit.level) {
+				if (ownerUnit.level == mergerUnit.level && !ownerUnit.isMerging && !mergerUnit.isMerging) {
 					used.Add(this.selectionManager.selectedObjects[i]);
 					used.Add(this.selectionManager.selectedObjects[j]);
 
@@ -314,6 +314,7 @@ public class MergeManager : NetworkBehaviour {
 		//Updating merged unit attributes.
 		GameUnit unit = ownerObject.GetComponent<GameUnit>();
 		if (unit != null) {
+			unit.isMerging = false;
 			if (unit.previousLevel == unit.level) {
 				unit.level++;
 				Debug.Log("MergeManager: Unit.level: " + unit.level.ToString());
@@ -364,6 +365,7 @@ public class MergeManager : NetworkBehaviour {
 		if (ownerUnit != null && mergingUnit != null) {
 			//Update the previous level to be the current unit's level before the merge.
 			ownerUnit.previousLevel = ownerUnit.level;
+			ownerUnit.isMerging = mergingUnit.isMerging = true;
 			if (ownerUnit.attributes != null) {
 				float mergeSpeedFactor = ownerUnit.attributes.mergePrefabList[ownerUnit.level];
 				NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();

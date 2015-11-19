@@ -9,6 +9,10 @@ public class GameUnit : NetworkBehaviour {
 	public bool isSelected;
 	[SyncVar]
 	public bool isDirected;
+	[SyncVar]
+	public bool isSplitting;
+	[SyncVar]
+	public bool isMerging;
 	public GameUnit targetEnemy;
 	public GameObject selectionRing;
 	[SyncVar]
