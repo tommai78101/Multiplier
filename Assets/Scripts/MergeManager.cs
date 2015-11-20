@@ -290,8 +290,8 @@ public class MergeManager : NetworkBehaviour {
 		//However, this should really be placed in a function call at the end of the merge, meaning
 		//this should be run only once.
 		group.ownerUnit.attackCooldown *= this.attackCooldownFactor;
-		group.ownerUnit.maxHealth = Mathf.FloorToInt((float) group.ownerUnit.maxHealth * healthFactor);
-		group.ownerUnit.currentHealth = Mathf.FloorToInt((float) group.ownerUnit.currentHealth * healthFactor);
+		group.ownerUnit.maxHealth = Mathf.FloorToInt((float)group.ownerUnit.maxHealth * healthFactor);
+		group.ownerUnit.currentHealth = Mathf.FloorToInt((float)group.ownerUnit.currentHealth * healthFactor);
 		group.ownerUnit.attackPower *= attackFactor;
 
 		NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
@@ -318,34 +318,34 @@ public class MergeManager : NetworkBehaviour {
 			if (unit.previousLevel == unit.level) {
 				unit.level++;
 				Debug.Log("MergeManager: Unit.level: " + unit.level.ToString());
-			}
-			if (unit.attributes != null) {
-				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					Debug.Log("MergeManager: unit.maxHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
-					unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
-				}
-				if (unit.attributes.healthPrefabList[unit.level] != 0f) {
-					Debug.Log("MergeManager: unit.currentHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
-					unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
-				}
-				if (unit.attributes.attackPrefabList[unit.level] != 0f) {
-					unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
-					Debug.Log("MergeManager: unit.attackPower = " + unit.attackPower);
-				}
+				if (unit.attributes != null) {
+					if (unit.attributes.healthPrefabList[unit.level] != 0f) {
+						Debug.Log("MergeManager: unit.maxHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+						unit.maxHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.maxHealth);
+					}
+					if (unit.attributes.healthPrefabList[unit.level] != 0f) {
+						Debug.Log("MergeManager: unit.currentHealth = " + unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+						unit.currentHealth = Mathf.FloorToInt(unit.attributes.healthPrefabList[unit.level] * unit.currentHealth);
+					}
+					if (unit.attributes.attackPrefabList[unit.level] != 0f) {
+						unit.attackPower *= unit.attributes.attackPrefabList[unit.level];
+						Debug.Log("MergeManager: unit.attackPower = " + unit.attackPower);
+					}
 
-				NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
-				if (agent != null) {
-					if (unit.attributes.speedPrefabList[unit.level] != 0f) {
-						agent.speed *= unit.attributes.speedPrefabList[unit.level];
-						agent.Resume();
-						agent.ResetPath();
-						unit.speed = agent.speed;
-						Debug.Log("MergeManager: unit.speed = " + unit.speed);
+					NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
+					if (agent != null) {
+						if (unit.attributes.speedPrefabList[unit.level] != 0f) {
+							agent.speed *= unit.attributes.speedPrefabList[unit.level];
+							agent.Resume();
+							agent.ResetPath();
+							unit.speed = agent.speed;
+							Debug.Log("MergeManager: unit.speed = " + unit.speed);
+						}
 					}
 				}
-			}
-			else {
-				Debug.LogWarning("Unit attributes should not be null before end of merging.");
+				else {
+					Debug.LogWarning("Unit attributes should not be null before end of merging.");
+				}
 			}
 		}
 	}
