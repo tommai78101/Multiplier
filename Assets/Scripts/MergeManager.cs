@@ -311,10 +311,12 @@ public class MergeManager : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcEndMerge(GameObject ownerObject) {
+		Debug.Log("RpcEndMerge: Testing something when the merge is ending.");
+
+
 		//Updating merged unit attributes.
 		GameUnit unit = ownerObject.GetComponent<GameUnit>();
 		if (unit != null) {
-			unit.isMerging = false;
 			if (unit.previousLevel == unit.level) {
 				unit.level++;
 				Debug.Log("MergeManager: Unit.level: " + unit.level.ToString());
@@ -332,6 +334,11 @@ public class MergeManager : NetworkBehaviour {
 						Debug.Log("MergeManager: unit.attackPower = " + unit.attackPower);
 					}
 
+					if (unit.currentHealth > unit.maxHealth) {
+						unit.currentHealth = unit.maxHealth;
+						Debug.Log("Current Health is too big.");
+					}
+
 					NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
 					if (agent != null) {
 						if (unit.attributes.speedPrefabList[unit.level] != 0f) {
@@ -347,6 +354,10 @@ public class MergeManager : NetworkBehaviour {
 					Debug.LogWarning("Unit attributes should not be null before end of merging.");
 				}
 			}
+			else {
+				Debug.Log("Unit levels (Previous level): " + unit.level + " " + unit.previousLevel);
+			}
+			unit.isMerging = false;
 		}
 	}
 
