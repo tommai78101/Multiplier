@@ -91,11 +91,6 @@ public struct SplitGroup {
 		if (transform != null) {
 			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 		}
-
-		Debug.Log(this.ownerUnit.currentHealth);
-		Debug.Log(this.ownerUnit.maxHealth);
-		Debug.Log(this.splitUnit.currentHealth);
-		Debug.Log(this.splitUnit.maxHealth);
 	}
 };
 
