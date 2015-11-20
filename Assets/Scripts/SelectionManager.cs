@@ -78,6 +78,10 @@ public class SelectionManager : NetworkBehaviour {
 						unit.maxHealth = 3;
 						unit.attackCooldown = 3f;
 						unit.attackPower = 1;
+						unit.level = 1;
+						unit.previousLevel = 1;
+						unit.isSelected = false;
+						unit.isDirected = false;
 					}
 					NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
 					if (agent != null) {
