@@ -127,6 +127,7 @@ public class Spawner : NetworkBehaviour {
 		manager = MonoBehaviour.Instantiate(this.unitAttributesPrefab) as GameObject;
 		UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 		if (attributes != null) {
+			attributes.Initialize();
 			splitManager.unitAttributes = attributes;
 			mergeManager.unitAttributes = attributes;
 		}
@@ -180,6 +181,7 @@ public class Spawner : NetworkBehaviour {
 				Attributes attr = content.GetComponent<Attributes>();
 				if (attr != null) {
 					attr.unitAttributes = attributes;
+					attr.Setup();
 				}
 			}
 

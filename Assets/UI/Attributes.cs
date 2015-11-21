@@ -57,24 +57,6 @@ public class Attributes : MonoBehaviour {
 		this.oldProperty = this.newProperty = AttributeProperty.Health;
 		this.inputLag = 0f;
 		this.prefabList = new List<GameObject>();
-
-		//For each level, instantiate a prefab and place it in the Content of the ScrollView.
-		//This allows the Attributes to show consistently the progression of the attributes for each level.
-		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
-			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
-			obj.transform.SetParent(this.transform);
-			this.prefabList.Add(obj);
-
-			Title title = obj.GetComponentInChildren<Title>();
-			if (title != null) {
-				title.titleText.text = "Level " + (i + 1).ToString();
-			}
-
-			Number number = obj.GetComponentInChildren<Number>();
-			if (number != null) {
-				number.numberText.text = (0f).ToString();
-			}
-		}
 	}
 
 	public void Update() {
@@ -477,5 +459,26 @@ public class Attributes : MonoBehaviour {
 
 	public void ChangeProperty() {
 		this.newProperty = ProcessToggle();
+	}
+
+	public void Setup() {
+		//For each level, instantiate a prefab and place it in the Content of the ScrollView.
+		//This allows the Attributes to show consistently the progression of the attributes for each level.
+		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
+			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
+			obj.transform.SetParent(this.transform);
+			this.prefabList.Add(obj);
+
+			Title title = obj.GetComponentInChildren<Title>();
+			if (title != null) {
+				title.titleText.text = "Level " + (i + 1).ToString();
+			}
+
+			Number number = obj.GetComponentInChildren<Number>();
+			if (number != null) {
+				//number.numberText.text = (0f).ToString();
+				number.numberText.text = this.unitAttributes.healthPrefabList[i].ToString();
+			}
+		}
 	}
 }
