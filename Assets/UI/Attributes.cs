@@ -466,7 +466,13 @@ public class Attributes : MonoBehaviour {
 		//This allows the Attributes to show consistently the progression of the attributes for each level.
 		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
+			RectTransform rectTransform = obj.GetComponent<RectTransform>();
 			obj.transform.SetParent(this.transform);
+			if (rectTransform != null) {
+				rectTransform.localPosition = new Vector3(0f, 0f, 0f);
+				rectTransform.localRotation = Quaternion.identity;
+				rectTransform.localScale = new Vector3(1f, 1f, 1f);
+			}
 			this.prefabList.Add(obj);
 
 			Title title = obj.GetComponentInChildren<Title>();

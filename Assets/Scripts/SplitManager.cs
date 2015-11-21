@@ -46,11 +46,7 @@ public struct SplitGroup {
 	public void Update() {
 		this.ownerUnit.isSelected = false;
 		this.splitUnit.isSelected = false;
-
-		//Known Bug: When splitting, the local client will have smooth transitions, but the remote clients will see stuttering animations caused by
-		//constant updates to the NavMeshAgent.
-		//If it's a bug that I couldn't fix, then make it a feature!
-		//Making splitting animations an obvious cue for the players to see.
+		
 		Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
 		if (this.ownerUnit == null || this.ownerUnit.gameObject == null) {
 			this.elapsedTime = 1f;
