@@ -8,6 +8,7 @@ public class Spawner : NetworkBehaviour {
 	public GameObject splitManagerPrefab;
 	public GameObject mergeManagerPrefab;
 	public GameObject unitAttributesPrefab;
+	public GameObject unitCleanerPrefab;
 	[SerializeField]
 	public NetworkConnection owner;
 
@@ -129,6 +130,19 @@ public class Spawner : NetworkBehaviour {
 		if (attributes != null) {
 			splitManager.unitAttributes = attributes;
 			mergeManager.unitAttributes = attributes;
+		}
+		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
+
+		//Unit Cleaner 
+		manager = MonoBehaviour.Instantiate(this.unitCleanerPrefab) as GameObject;
+		UnitCleaner cleaner = manager.GetComponent<UnitCleaner>();
+		if (cleaner != null) {
+			if (attributes != null) {
+				cleaner.unitAttributes = attributes;
+			}
+			if (selectionManager != null) {
+				cleaner.selectionManager = selectionManager;
+			}
 		}
 		NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 

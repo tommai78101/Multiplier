@@ -13,11 +13,15 @@ namespace UnityEngine.Networking {
 		[SerializeField]
 		public int offsetY;
 
+		public GUIStyle style;
+
 		// Runtime variable
 		bool showServer = false;
 
 		void Awake() {
-			manager = GetComponent<NetworkManager>();
+			this.manager = GetComponent<NetworkManager>();
+			this.style = new GUIStyle();
+			this.style.normal.textColor = Color.black;
 		}
 
 		void Update() {
@@ -69,11 +73,11 @@ namespace UnityEngine.Networking {
 			}
 			else {
 				if (NetworkServer.active) {
-					GUI.Label(new Rect(xpos, ypos, 300, 20), "Server: port=" + manager.networkPort);
+					GUI.Label(new Rect(xpos, ypos, 300, 20), "Server: address=" + manager.networkAddress + " port=" + manager.networkPort, this.style);
 					ypos += spacing;
 				}
 				if (NetworkClient.active) {
-					GUI.Label(new Rect(xpos, ypos, 300, 20), "Client: address=" + manager.networkAddress + " port=" + manager.networkPort);
+					GUI.Label(new Rect(xpos, ypos, 300, 20), "Client: address=" + manager.networkAddress + " port=" + manager.networkPort, this.style);
 					ypos += spacing;
 				}
 			}

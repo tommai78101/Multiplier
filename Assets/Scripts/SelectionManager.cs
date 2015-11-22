@@ -67,31 +67,6 @@ public class SelectionManager : NetworkBehaviour {
 			return;
 		}
 
-		//Debug Mode. Reverting units back to normal.
-		if (Input.GetKeyUp(KeyCode.G)) {
-			if (this.selectedObjects.Count > 0) {
-				foreach (GameObject obj in this.selectedObjects) {
-					GameUnit unit = obj.GetComponent<GameUnit>();
-					if (unit != null) {
-						unit.speed = 1f;
-						unit.currentHealth = 3;
-						unit.maxHealth = 3;
-						unit.attackCooldown = 3f;
-						unit.attackPower = 1;
-						unit.level = 1;
-						unit.previousLevel = 1;
-						unit.isSelected = false;
-						unit.isDirected = false;
-					}
-					NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
-					if (agent != null) {
-						agent.speed = 1f;
-					}
-				}
-			}
-		}
-
-
 		//This handles all the input actions the player has done in the minimap.
 		this.screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 		if (this.minimapCamera.rect.Contains(this.screenPoint) && Input.GetMouseButtonDown(1)) {
