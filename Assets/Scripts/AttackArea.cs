@@ -8,12 +8,14 @@ public class AttackArea : MonoBehaviour {
 	public List<GameUnit> removeList;
 	public List<GameUnit> exitedList;
 	public GameUnit parent;
+	public Rigidbody sphereColliderRigidBody;
 
 	public void Start() {
 		this.enemiesInAttackRange = new List<GameUnit>();
 		this.removeList = new List<GameUnit>();
 		this.exitedList = new List<GameUnit>();
 		this.parent = this.GetComponentInParent<GameUnit>();
+		this.sphereColliderRigidBody = this.GetComponent<Rigidbody>();
 	}
 
 	public void OnTriggerEnter(Collider other) {
@@ -36,14 +38,16 @@ public class AttackArea : MonoBehaviour {
 		}
 	}
 
-	public void OnTriggerStay(Collider other) {
-		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent) && !this.exitedList.Contains(unit)) {
-			this.enemiesInAttackRange.Add(unit);
-		}
-	}
+	//public void OnTriggerStay(Collider other) {
+	//	GameUnit unit = other.GetComponent<GameUnit>();
+	//	if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent) && !this.exitedList.Contains(unit)) {
+	//		this.enemiesInAttackRange.Add(unit);
+	//	}
+	//}
 
 	public void FixedUpdate() {
+		this.sphereColliderRigidBody.WakeUp();
+
 		if (this.enemiesInAttackRange.Count > 0) {
 			foreach (GameUnit unit in this.enemiesInAttackRange) {
 				if (unit == null) {

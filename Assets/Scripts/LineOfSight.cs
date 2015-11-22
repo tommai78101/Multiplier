@@ -7,6 +7,7 @@ public class LineOfSight : MonoBehaviour {
     public List<GameUnit> exitedList;
 	public float radius;
 	public GameUnit parent;
+	public Rigidbody sphereColliderRigidBody;
 
 	public void Start() {
 		this.enemiesInRange = new List<GameUnit>();
@@ -16,6 +17,7 @@ public class LineOfSight : MonoBehaviour {
 		if (collider != null) {
 			this.radius = collider.radius;
 		}
+		this.sphereColliderRigidBody = this.GetComponent<Rigidbody>();
 		this.parent = this.GetComponentInParent<GameUnit>();
 		if (parent == null) {
 			Debug.LogError("There's something wrong with this parent GameUnit object.");
@@ -47,14 +49,16 @@ public class LineOfSight : MonoBehaviour {
 		}
 	}
 
-	public void OnTriggerStay(Collider other) {
-		GameUnit unit = other.GetComponentInParent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit) && !this.exitedList.Contains(unit)) {
-			this.enemiesInRange.Add(unit);
-		}
-	}
+	//public void OnTriggerStay(Collider other) {
+	//	GameUnit unit = other.GetComponentInParent<GameUnit>();
+	//	if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !(unit.Equals(parent)) && !this.enemiesInRange.Contains(unit) && !this.exitedList.Contains(unit)) {
+	//		this.enemiesInRange.Add(unit);
+	//	}
+	//}
 
 	public void FixedUpdate() {
+		this.sphereColliderRigidBody.WakeUp();
+
 		if (this.enemiesInRange.Count > 0) {
 			foreach (GameUnit unit in this.enemiesInRange) {
 				if (unit == null) {
