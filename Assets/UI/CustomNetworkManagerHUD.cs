@@ -76,7 +76,7 @@ namespace UnityEngine.Networking {
 					GUI.Label(new Rect(xpos, ypos, 300, 20), "Server: address=" + manager.networkAddress + " port=" + manager.networkPort, this.style);
 					ypos += spacing;
 				}
-				if (NetworkClient.active) {
+				else if (NetworkClient.active) {
 					GUI.Label(new Rect(xpos, ypos, 300, 20), "Client: address=" + manager.networkAddress + " port=" + manager.networkPort, this.style);
 					ypos += spacing;
 				}
