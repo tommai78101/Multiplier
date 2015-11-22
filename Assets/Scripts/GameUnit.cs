@@ -286,7 +286,13 @@ public class GameUnit : NetworkBehaviour {
 		this.attackCooldownCounter = attackCounter;
 		this.recoverCounter = recoverCounter;
 		this.currentHealth = currentHealth;
-		RpcUpdateStatus(targetEnemyIsGone, color);
+
+		if (this.currentHealth <= 0) {
+			RpcUnitDestroy(this.gameObject);
+		}
+		else {
+			RpcUpdateStatus(targetEnemyIsGone, color);
+		}
 	}
 
 	[ClientRpc]
@@ -342,9 +348,6 @@ public class GameUnit : NetworkBehaviour {
 		}
 		CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
 		this.recoverCounter = 0f;
-		if (this.currentHealth <= 0) {
-			CmdUnitDestroy(this.gameObject);
-		}
 	}
 
 	public bool CheckIfVisible() {
@@ -393,6 +396,7 @@ public class GameUnit : NetworkBehaviour {
 
 	[Command]
 	public void CmdAttack(GameObject victim) {
+		//TODO: Cut down the amount of Cmd and Rpc calls.
 		RpcAttack(victim);
 	}
 
@@ -468,9 +472,14 @@ public class GameUnit : NetworkBehaviour {
 
 		GameUnit unit = obj.GetComponent<GameUnit>();
 		if (unit != null) {
-			unit.DisableVisibility();
+			if (unit.currentHealth > 0) {
+				return;
+			}
 		}
 
+		if (unit != null) {
+			unit.DisableVisibility();
+		}
 
 		GameObject[] selects = GameObject.FindGameObjectsWithTag("SelectionManager");
 		foreach (GameObject selectObj in selects) {

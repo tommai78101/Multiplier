@@ -11,7 +11,7 @@ public class UnitAttributes : NetworkBehaviour {
 	public List<float> attackCooldownPrefabList;
 	public float splitPrefabFactor;
 
-	public void Initialize() {
+	public void Awake() {
 		this.healthPrefabList = new List<float>(10);
 		this.attackPrefabList = new List<float>(10);
 		this.speedPrefabList = new List<float>(10);
@@ -54,14 +54,17 @@ public class UnitAttributes : NetworkBehaviour {
 
 	[Command]
 	public void CmdUpdateAnswer(float answer, int level, int propertyValue) {
+		//Debug.Log("Sending to server to update values.");
 		NetworkIdentity identity = this.GetComponent<NetworkIdentity>();
 		if (identity != null) {
 			RpcUpdateAnswer(answer, level, propertyValue, identity.netId);
 		}
+		//Debug.Log("I finished sending answers.");
 	}
 
 	[ClientRpc]
 	public void RpcUpdateAnswer(float answer, int level, int propertyValue, NetworkInstanceId id) {
+		//Debug.Log("I'm updating answers.");
 		GameObject obj = ClientScene.FindLocalObject(id);
 		UnitAttributes attr = obj.GetComponent<UnitAttributes>();
 		if (attr != null) {
@@ -87,6 +90,7 @@ public class UnitAttributes : NetworkBehaviour {
 					break;
 			}
 		}
+		//Debug.Log("I finished updating answers.");
 	}
 }
 
