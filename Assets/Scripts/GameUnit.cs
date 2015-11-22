@@ -13,8 +13,6 @@ public class GameUnit : NetworkBehaviour {
 	public bool isSplitting;
 	[SyncVar]
 	public bool isMerging;
-	public GameUnit targetEnemy;
-	public GameObject selectionRing;
 	[SyncVar]
 	public int currentHealth;
 	[Range(3, 100)]
@@ -23,29 +21,28 @@ public class GameUnit : NetworkBehaviour {
 	[Range(1f, 100f)]
 	[SyncVar]
 	public float attackPower;
-	[Range(0f, 10f)]
+	[Range(0.001f, 10f)]
 	[SyncVar]
 	public float attackCooldown;
 	[SyncVar]
 	public float speed;
-	[SyncVar]
-	public float attackCooldownCounter;
 	[Range(0.001f, 10f)]
 	[SyncVar]
 	public float recoverCooldown;
-	[SyncVar]
-	public float recoverCounter;
 	[SyncVar]
 	public int level;
 	[SyncVar]
 	public int previousLevel;
 	[SyncVar]
-	public Color initialColor;
-	[SyncVar]
-	public Color takeDamageColor;
-	[SyncVar]
 	public int teamColorValue;
+
 	public UnitAttributes attributes;
+	public float attackCooldownCounter;
+	public float recoverCounter;
+	public Color initialColor;
+	public Color takeDamageColor;
+	public GameUnit targetEnemy;
+	public GameObject selectionRing;
 
 	public static bool once = false;
 

@@ -26,13 +26,13 @@ public class UnitAttributes : NetworkBehaviour {
 					for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
 						switch (i) {
 							case 0:
-								this.healthPrefabList.Add(1f);
+								this.healthPrefabList.Add((float) (1 + j));
 								break;
 							case 1:
-								this.attackPrefabList.Add(1f);
+								this.attackPrefabList.Add((float) (1 + j));
 								break;
 							case 2:
-								this.speedPrefabList.Add(1f);
+								this.speedPrefabList.Add((float) 3f / (1 + j));
 								break;
 							case 3:
 								this.mergePrefabList.Add(3f);

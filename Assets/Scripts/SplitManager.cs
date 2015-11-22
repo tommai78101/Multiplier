@@ -177,13 +177,13 @@ public class SplitManager : NetworkBehaviour {
 			for (int i = 0; i < this.splitGroupList.Count; i++) {
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime > 1f) {
-					group.Stop();
 					if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
 						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
 					}
 					if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
 						this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
 					}
+					group.Stop();
 					this.removeList.Add(group);
 				}
 				else {
