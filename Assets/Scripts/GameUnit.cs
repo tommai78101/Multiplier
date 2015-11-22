@@ -250,62 +250,6 @@ public class GameUnit : NetworkBehaviour {
 		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, targetEnemyIsGone, renderer.material.color);
 	}
 
-	[Command]
-	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
-		RpcSetTargetEnemy(obj, enemy, attackee);
-	}
-
-	[ClientRpc]
-	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
-		if (obj != null) {
-			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (unit != null) {
-				if (enemy != null && attackee != null && obj.Equals(enemy) && obj.Equals(attackee)) {
-					unit.targetEnemy = null;
-				}
-				else {
-					if (enemy != null) {
-						unit.targetEnemy = enemy.GetComponent<GameUnit>();
-						MoveToTarget(obj);
-					}
-					else if (attackee != null) {
-						unit.targetEnemy = attackee.GetComponent<GameUnit>();
-						MoveToTarget(obj);
-					}
-					else {
-						unit.targetEnemy = null;
-					}
-				}
-			}
-
-		}
-	}
-
-	[Command]
-	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, bool targetEnemyIsGone, Color color) {
-		this.attackCooldownCounter = attackCounter;
-		this.recoverCounter = recoverCounter;
-		this.currentHealth = currentHealth;
-
-		if (this.currentHealth <= 0) {
-			RpcUnitDestroy(this.gameObject);
-		}
-		else {
-			RpcUpdateStatus(targetEnemyIsGone, color);
-		}
-	}
-
-	[ClientRpc]
-	public void RpcUpdateStatus(bool targetEnemyIsGone, Color color) {
-		Renderer renderer = this.GetComponent<Renderer>();
-		if (renderer != null) {
-			renderer.material.color = color;
-		}
-		if (targetEnemyIsGone) {
-			this.targetEnemy = null;
-		}
-	}
-
 	public void OnPlayerDisconnected(NetworkPlayer player) {
 		//Destroy camera stuff
 		GameObject camObj = GameObject.FindGameObjectWithTag("MainCamera");
@@ -388,16 +332,94 @@ public class GameUnit : NetworkBehaviour {
 		RpcHealth(victim, newHealth);
 	}
 
-	[ClientRpc]
-	public void RpcHealth(GameObject victim, int newHealth) {
-		GameUnit victimUnit = victim.GetComponent<GameUnit>();
-		victimUnit.currentHealth = newHealth;
-	}
-
 	[Command]
 	public void CmdAttack(GameObject victim) {
 		//TODO: Cut down the amount of Cmd and Rpc calls.
 		RpcAttack(victim);
+	}
+
+	[Command]
+	public void CmdSetTarget(GameObject obj, Vector3 target) {
+		//Command call to tell the server to run the following code.
+		RpcSetTarget(obj, target);
+	}
+
+	//Destroy [Command] and [ClientRpc] code definition.
+	//It seems like all future code design patterns must use [Command] and [ClientRpc] / [ClientCallback] combo to actually get
+	//something to work across the network. Keeping this in mind.
+	[Command]
+	public void CmdDestroy() {
+		RpcDestroy();
+	}
+
+	[Command]
+	public void CmdUnitDestroy(GameObject obj) {
+		RpcUnitDestroy(this.gameObject);
+		//NetworkServer.Destroy(this.gameObject);
+	}
+
+	[Command]
+	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, bool targetEnemyIsGone, Color color) {
+		this.attackCooldownCounter = attackCounter;
+		this.recoverCounter = recoverCounter;
+		this.currentHealth = currentHealth;
+
+		if (this.currentHealth <= 0) {
+			RpcUnitDestroy(this.gameObject);
+		}
+		else {
+			RpcUpdateStatus(targetEnemyIsGone, color);
+		}
+	}
+
+	[Command]
+	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
+		RpcSetTargetEnemy(obj, enemy, attackee);
+	}
+
+	[ClientRpc]
+	public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
+		if (obj != null) {
+			GameUnit unit = obj.GetComponent<GameUnit>();
+			if (unit != null) {
+				if (enemy != null && attackee != null && obj.Equals(enemy) && obj.Equals(attackee)) {
+					unit.targetEnemy = null;
+				}
+				else {
+					if (enemy != null) {
+						unit.targetEnemy = enemy.GetComponent<GameUnit>();
+						MoveToTarget(obj);
+					}
+					else if (attackee != null) {
+						unit.targetEnemy = attackee.GetComponent<GameUnit>();
+						MoveToTarget(obj);
+					}
+					else {
+						unit.targetEnemy = null;
+					}
+				}
+			}
+
+		}
+	}
+
+
+	[ClientRpc]
+	public void RpcUpdateStatus(bool targetEnemyIsGone, Color color) {
+		Renderer renderer = this.GetComponent<Renderer>();
+		if (renderer != null) {
+			renderer.material.color = color;
+		}
+		if (targetEnemyIsGone) {
+			this.targetEnemy = null;
+		}
+	}
+
+
+	[ClientRpc]
+	public void RpcHealth(GameObject victim, int newHealth) {
+		GameUnit victimUnit = victim.GetComponent<GameUnit>();
+		victimUnit.currentHealth = newHealth;
 	}
 
 	[ClientRpc]
@@ -409,12 +431,6 @@ public class GameUnit : NetworkBehaviour {
 		if (victimUnit != null) {
 			victimUnit.TakeDamage(this);
 		}
-	}
-
-	[Command]
-	public void CmdSetTarget(GameObject obj, Vector3 target) {
-		//Command call to tell the server to run the following code.
-		RpcSetTarget(obj, target);
 	}
 
 	//My guess is that this should be a [ClientCallback] instead of [ClientRpc]
@@ -438,15 +454,6 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-
-	//Destroy [Command] and [ClientRpc] code definition.
-	//It seems like all future code design patterns must use [Command] and [ClientRpc] / [ClientCallback] combo to actually get
-	//something to work across the network. Keeping this in mind.
-	[Command]
-	public void CmdDestroy() {
-		RpcDestroy();
-	}
-
 	[ClientRpc]
 	public void RpcDestroy() {
 		GameObject[] cams = GameObject.FindGameObjectsWithTag("MainCamera");
@@ -459,12 +466,6 @@ public class GameUnit : NetworkBehaviour {
 		}
 
 		NetworkServer.Destroy(this.gameObject);
-	}
-
-	[Command]
-	public void CmdUnitDestroy(GameObject obj) {
-		RpcUnitDestroy(this.gameObject);
-		//NetworkServer.Destroy(this.gameObject);
 	}
 
 	[ClientRpc]
