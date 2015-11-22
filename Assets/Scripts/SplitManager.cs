@@ -245,6 +245,8 @@ public class SplitManager : NetworkBehaviour {
 			splitUnit.isSplitting = unit.isSplitting = true;
 		}
 
+		Copy(unit, splitUnit);
+
 		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
 		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
 		float angle = UnityEngine.Random.Range(-180f, 180f);
@@ -255,12 +257,9 @@ public class SplitManager : NetworkBehaviour {
 	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
-		GameUnit original = obj.GetComponent<GameUnit>();
-		GameUnit copy = split.GetComponent<GameUnit>();
-		Copy(original, copy);
 		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
 		originalAgent.ResetPath();
-		NavMeshAgent copyAgent = copy.GetComponent<NavMeshAgent>();
+		NavMeshAgent copyAgent = split.GetComponent<NavMeshAgent>();
 		copyAgent.ResetPath();
 
 		GameObject[] splitManagerGroup = GameObject.FindGameObjectsWithTag("SplitManager");
@@ -268,6 +267,8 @@ public class SplitManager : NetworkBehaviour {
 			for (int i = 0; i < splitManagerGroup.Length; i++) {
 				SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
 				if (manager != null && manager.hasAuthority == hasAuthority) {
+					GameUnit original = obj.GetComponent<GameUnit>();
+					GameUnit copy = split.GetComponent<GameUnit>();
 					manager.splitGroupList.Add(new SplitGroup(original, copy, angle, splitFactor));
 					if (manager.selectionManager == null) {
 						GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
