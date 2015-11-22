@@ -257,7 +257,7 @@ public class SplitManager : NetworkBehaviour {
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
 		GameUnit original = obj.GetComponent<GameUnit>();
 		GameUnit copy = split.GetComponent<GameUnit>();
-		Copy(original, copy);
+		Copy(original, copy); 
 
 		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
 		originalAgent.ResetPath();
