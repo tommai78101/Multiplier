@@ -143,7 +143,6 @@ public class GameUnit : NetworkBehaviour {
 					CmdSetTargetEnemy(this.gameObject, area.enemiesInAttackRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
 				}
 				else {
-					this.targetEnemy = null;
 					CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 				}
 			}
@@ -151,7 +150,7 @@ public class GameUnit : NetworkBehaviour {
 
 		//Start attacking.
 		Attack();
-		//Straightforward here...
+		//Updating status.
 		UpdateStatus();
 
 		//Keeping track of whether the game unit is carrying out a player's command, or is carrying out self-defense.
@@ -217,8 +216,7 @@ public class GameUnit : NetworkBehaviour {
 		if (area != null) {
 			if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 				if (this.attackCooldownCounter <= 0f) {
-					CmdAttack(this.targetEnemy.gameObject);
-					this.attackCooldownCounter = this.attributes.attackCooldownPrefabList[this.level];
+					CmdAttack(this.targetEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
 				}
 			}
 			else if (area.enemiesInAttackRange.Count > 0) {
@@ -228,35 +226,21 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 	public void UpdateStatus() {
-		Renderer renderer = this.GetComponent<Renderer>();
-		if (renderer != null) {
-			renderer.material.color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
-		}
-
-		if (this.attackCooldownCounter > 0f) {
+		if (this.attackCooldownCounter > 0) {
 			this.attackCooldownCounter -= Time.deltaTime;
 		}
 		if (this.recoverCounter < 1f) {
 			this.recoverCounter += Time.deltaTime / this.recoverCooldown;
 		}
-		bool targetEnemyIsGone = false;
-		if (this.targetEnemy != null) {
-			if (!this.targetEnemy.CheckIfVisible()) {
-				targetEnemyIsGone = true;
-			}
+		if (this.currentHealth <= 0) {
+			CmdUnitDestroy(this.gameObject);
 		}
 
 		//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
-		CmdUpdateStatus(this.attackCooldownCounter, this.recoverCounter, this.currentHealth, targetEnemyIsGone, renderer.material.color);
+		//CmdUpdateStatus();
 	}
 
 	public void OnPlayerDisconnected(NetworkPlayer player) {
-		//Destroy camera stuff
-		GameObject camObj = GameObject.FindGameObjectWithTag("MainCamera");
-		if (camObj != null) {
-			GameObject.Destroy(camObj.GetComponent<PostRenderer>());
-		}
-
 		//Destroying this client's game object on the server when the client has disconnected. This game object, the object with Quick
 		//script attached.
 		CmdDestroy();
@@ -286,13 +270,13 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-	public void TakeDamage(GameUnit attacker) {
-		if (!this.hasAuthority) {
-			return;
-		}
-		CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
-		this.recoverCounter = 0f;
-	}
+	//public void TakeDamage(int newHealth) {
+	//	if (!this.hasAuthority) {
+	//		return;
+	//	}
+	//	//CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
+	//	this.recoverCounter = 0f;
+	//}
 
 	public bool CheckIfVisible() {
 		Renderer renderer = this.GetComponent<Renderer>();
@@ -325,17 +309,25 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-	[Command]
-	public void CmdHealth(GameObject victim, int newHealth) {
-		GameUnit victimUnit = victim.GetComponent<GameUnit>();
-		victimUnit.currentHealth = newHealth;
-		RpcHealth(victim, newHealth);
-	}
+	//[Command]
+	//public void CmdHealth(GameObject victim, int newHealth) {
+	//	GameUnit victimUnit = victim.GetComponent<GameUnit>();
+	//	victimUnit.currentHealth = newHealth;
+	//	//RpcHealth(victim, newHealth);
+	//}
 
 	[Command]
-	public void CmdAttack(GameObject victim) {
+	public void CmdAttack(GameObject victim, float attackCounter) {
 		//TODO: Cut down the amount of Cmd and Rpc calls.
-		RpcAttack(victim);
+		//RpcAttack(victim);
+		if (victim == null) {
+			return;
+		}
+		GameUnit victimUnit = victim.GetComponent<GameUnit>();
+		if (victimUnit != null) {
+			victimUnit.currentHealth -= Mathf.FloorToInt(this.attackPower);
+			this.attackCooldownCounter = attackCounter;
+		}
 	}
 
 	[Command]
@@ -350,6 +342,7 @@ public class GameUnit : NetworkBehaviour {
 	[Command]
 	public void CmdDestroy() {
 		RpcDestroy();
+		NetworkServer.Destroy(this.gameObject);
 	}
 
 	[Command]
@@ -358,19 +351,35 @@ public class GameUnit : NetworkBehaviour {
 		//NetworkServer.Destroy(this.gameObject);
 	}
 
-	[Command]
-	public void CmdUpdateStatus(float attackCounter, float recoverCounter, int currentHealth, bool targetEnemyIsGone, Color color) {
-		this.attackCooldownCounter = attackCounter;
-		this.recoverCounter = recoverCounter;
-		this.currentHealth = currentHealth;
+	//[Command]
+	//public void CmdUpdateStatus() {
+	//	Renderer renderer = this.GetComponent<Renderer>();
+	//	Color color = this.initialColor;
+	//	if (renderer != null) {
+	//		color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
+	//		renderer.material.color = color;
+	//       }
 
-		if (this.currentHealth <= 0) {
-			RpcUnitDestroy(this.gameObject);
-		}
-		else {
-			RpcUpdateStatus(targetEnemyIsGone, color);
-		}
-	}
+	//	if (this.attackCooldownCounter > 0f) {
+	//		this.attackCooldownCounter -= Time.deltaTime;
+	//	}
+	//	if (this.recoverCounter < 1f) {
+	//		this.recoverCounter += Time.deltaTime / this.recoverCooldown;
+	//	}
+	//	bool targetEnemyIsGone = false;
+	//	if (this.targetEnemy != null) {
+	//		if (!this.targetEnemy.CheckIfVisible()) {
+	//			targetEnemyIsGone = true;
+	//		}
+	//	}
+
+	//	if (this.currentHealth <= 0) {
+	//		RpcUnitDestroy(this.gameObject);
+	//	}
+	//	else {
+	//		RpcUpdateStatus(targetEnemyIsGone, color);
+	//	}
+	//}
 
 	[Command]
 	public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
@@ -416,22 +425,22 @@ public class GameUnit : NetworkBehaviour {
 	}
 
 
-	[ClientRpc]
-	public void RpcHealth(GameObject victim, int newHealth) {
-		GameUnit victimUnit = victim.GetComponent<GameUnit>();
-		victimUnit.currentHealth = newHealth;
-	}
+	//[ClientRpc]
+	//public void RpcHealth(GameObject victim, int newHealth) {
+	//	GameUnit victimUnit = victim.GetComponent<GameUnit>();
+	//	victimUnit.currentHealth = newHealth;
+	//}
 
-	[ClientRpc]
-	public void RpcAttack(GameObject victim) {
-		if (victim == null) {
-			return;
-		}
-		GameUnit victimUnit = victim.GetComponent<GameUnit>();
-		if (victimUnit != null) {
-			victimUnit.TakeDamage(this);
-		}
-	}
+	//[ClientRpc]
+	//public void RpcAttack(GameObject victim) {
+	//	if (victim == null) {
+	//		return;
+	//	}
+	//	GameUnit victimUnit = victim.GetComponent<GameUnit>();
+	//	if (victimUnit != null) {
+	//		victimUnit.TakeDamage(this);
+	//	}
+	//}
 
 	//My guess is that this should be a [ClientCallback] instead of [ClientRpc]
 	//Both can work.
@@ -461,11 +470,10 @@ public class GameUnit : NetworkBehaviour {
 			CameraPanning camPan = cam.GetComponent<CameraPanning>();
 			if (camPan != null) {
 				Debug.Log("Destroying camPan. Check!");
-				Destroy(cam.GetComponent<CameraPanning>());
+				GameObject.Destroy(camPan);
+				GameObject.Destroy(cam.GetComponent<PostRenderer>());
 			}
 		}
-
-		NetworkServer.Destroy(this.gameObject);
 	}
 
 	[ClientRpc]
