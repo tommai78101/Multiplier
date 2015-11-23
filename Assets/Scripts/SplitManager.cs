@@ -239,7 +239,7 @@ public class SplitManager : NetworkBehaviour {
 		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
 		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
-		GameObject split = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
+		GameObject split = MonoBehaviour.Instantiate(unit.gameObject) as GameObject;
 		split.transform.position = obj.transform.position;
 
 		GameUnit splitUnit = split.GetComponent<GameUnit>();
