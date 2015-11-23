@@ -58,8 +58,6 @@ public class GameUnit : NetworkBehaviour {
 	public override void OnStartClient() {
 		base.OnStartAuthority();
 
-		Debug.LogWarning("Starting client");
-
 		//Initialization code for local player (local client on the host, and remote clients).
 		this.oldTargetPosition = Vector3.one * -9999f;
 		this.oldEnemyTargetPosition = Vector3.one * -9999f;
