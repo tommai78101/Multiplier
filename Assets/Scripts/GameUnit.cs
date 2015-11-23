@@ -91,6 +91,9 @@ public class GameUnit : NetworkBehaviour {
 			return;
 		}
 
+		if (this.isSplitting || this.isMerging) {
+			return;
+		}
 
 
 		//Simple, "quick," MOBA-style controls. Hence, the class name.
