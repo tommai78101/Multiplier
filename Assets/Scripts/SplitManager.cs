@@ -240,8 +240,6 @@ public class SplitManager : NetworkBehaviour {
 		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
 		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
 		GameObject split = MonoBehaviour.Instantiate(unit.gameObject) as GameObject;
-		split.transform.position = obj.transform.position;
-
 		GameUnit splitUnit = split.GetComponent<GameUnit>();
 		if (splitUnit != null) {
 			Copy(unit, splitUnit);
@@ -287,6 +285,7 @@ public class SplitManager : NetworkBehaviour {
 		}
 	}
 
+	[ServerCallback]
 	private static void Copy(GameUnit original, GameUnit copy) {
 		copy.isSelected = original.isSelected;
 		copy.isSplitting = original.isSplitting;
@@ -300,8 +299,8 @@ public class SplitManager : NetworkBehaviour {
 
 		copy.level = original.level;
 		copy.previousLevel = original.previousLevel;
-		copy.maxHealth = original.maxHealth;
 		copy.currentHealth = original.currentHealth;
+		copy.maxHealth = original.maxHealth;
 		if (copy.currentHealth > copy.maxHealth) {
 			copy.currentHealth = copy.maxHealth;
 		}
