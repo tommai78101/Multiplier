@@ -148,11 +148,11 @@ public class SelectionManager : NetworkBehaviour {
 
 	public void InitializeList() {
 		if (this.selectedObjects == null) {
-			this.selectedObjects = new List<GameObject>();
+			this.selectedObjects = new List<GameObject>(100);
 		}
 
 		if (this.allObjects == null) {
-			this.allObjects = new List<GameObject>();
+			this.allObjects = new List<GameObject>(100);
 		}
 	}
 
