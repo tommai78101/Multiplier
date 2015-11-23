@@ -178,6 +178,10 @@ public class SplitManager : NetworkBehaviour {
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime >= 1f) {
 					group.Stop();
+					Increment(group.ownerUnit);
+					Decrement(group.ownerUnit);
+					Increment(group.splitUnit);
+					Decrement(group.splitUnit);
 					if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
 						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
 					}
@@ -338,5 +342,39 @@ public class SplitManager : NetworkBehaviour {
 
 		original.SetTeamColor(original.teamColorValue);
 		copy.SetTeamColor(copy.teamColorValue);
+	}
+
+	[ServerCallback]
+	private static void Increment(GameUnit unit) {
+		unit.isSelected = !unit.isSelected;
+		unit.isDirected = !unit.isDirected;
+		unit.isSplitting = !unit.isSplitting;
+		unit.isMerging = !unit.isMerging;
+		unit.currentHealth++;
+		unit.maxHealth++;
+		unit.attackPower++;
+		unit.attackCooldown++;
+		unit.speed++;
+		unit.recoverCooldown++;
+		unit.level++;
+		unit.previousLevel++;
+		unit.teamColorValue = (unit.teamColorValue + 1) % 3;
+	}
+
+	[ServerCallback]
+	private static void Decrement(GameUnit unit) {
+		unit.isSelected = !unit.isSelected;
+		unit.isDirected = !unit.isDirected;
+		unit.isSplitting = !unit.isSplitting;
+		unit.isMerging = !unit.isMerging;
+		unit.currentHealth--;
+		unit.maxHealth--;
+		unit.attackPower--;
+		unit.attackCooldown--;
+		unit.speed--;
+		unit.recoverCooldown--;
+		unit.level--;
+		unit.previousLevel--;
+		unit.teamColorValue = (unit.teamColorValue + 2) % 3;
 	}
 }
