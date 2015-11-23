@@ -3,6 +3,8 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using Extension;
 
+
+[System.Serializable]
 public class GameUnit : NetworkBehaviour {
 	//Properties of a Game Unit
 	[SyncVar]
