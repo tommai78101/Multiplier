@@ -87,6 +87,11 @@ public struct SplitGroup {
 		if (transform != null) {
 			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 		}
+
+		if (this.ownerUnit.currentHealth != 3 || this.ownerUnit.maxHealth != 3 || this.splitUnit.currentHealth != 3 || this.splitUnit.maxHealth != 3) {
+			this.ownerUnit.SetDirtyBit(int.MaxValue);
+			this.splitUnit.SetDirtyBit(int.MaxValue);
+		}
 	}
 };
 
@@ -172,21 +177,12 @@ public class SplitManager : NetworkBehaviour {
 		UpdateSplitGroup();
 	}
 
-	[ClientCallback]
-	public void CheckIntegrity(SplitGroup group) {
-		if (group.ownerUnit.currentHealth != 3 || group.ownerUnit.maxHealth != 3 || group.splitUnit.currentHealth != 3 || group.splitUnit.maxHealth != 3) {
-			group.ownerUnit.SetDirtyBit(int.MaxValue);
-			group.splitUnit.SetDirtyBit(int.MaxValue);
-		}
-	}
-
 	public void UpdateSplitGroup() {
 		if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 			for (int i = 0; i < this.splitGroupList.Count; i++) {
 				SplitGroup group = this.splitGroupList[i];
 				if (group.elapsedTime >= 1f) {
 					group.Stop();
-					CheckIntegrity(group);
 					if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
 						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
 					}
