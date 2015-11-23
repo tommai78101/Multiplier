@@ -87,11 +87,6 @@ public struct SplitGroup {
 		if (transform != null) {
 			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 		}
-
-		if (this.ownerUnit.currentHealth != 3 || this.ownerUnit.maxHealth != 3 || this.splitUnit.currentHealth != 3 || this.splitUnit.maxHealth != 3) {
-			this.ownerUnit.SetDirtyBit(int.MaxValue);
-			this.splitUnit.SetDirtyBit(int.MaxValue);
-		}
 	}
 };
 

@@ -147,6 +147,14 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
+	public void FixedUpdate() {
+		if (this.level == 1) {
+			if (this.currentHealth != 3 || this.maxHealth != 3 || this.currentHealth != 3 || this.maxHealth != 3) {
+				this.SetDirtyBit(int.MaxValue);
+			}
+		}
+	}
+
 	//Sets the team color.
 	public void SetTeamColor(int colorValue) {
 		this.teamColorValue = colorValue;
