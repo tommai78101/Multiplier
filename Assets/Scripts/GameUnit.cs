@@ -79,18 +79,6 @@ public class GameUnit : NetworkBehaviour {
 		}
 	}
 
-	//This is for testing if anything inside is triggered. Turns out it depends on whether the game is a server or a client.
-	public override void OnStartLocalPlayer() {
-		base.OnStartLocalPlayer();
-		Debug.LogWarning("Starting local player");
-	}
-
-	//This is for testing if anything inside is triggered. Turns out it depends on whether the game is a server or a client.
-	public override void OnStartAuthority() {
-		base.OnStartClient();
-		Debug.LogWarning("Starting authority");
-	}
-
 	public void Start() {
 		this.SetTeamColor(this.teamColorValue);
 	}
