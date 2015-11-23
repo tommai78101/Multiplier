@@ -261,6 +261,27 @@ public class SplitManager : NetworkBehaviour {
 	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
 		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
+		GameUnit original = obj.GetComponent<GameUnit>();
+		GameUnit copy = split.GetComponent<GameUnit>();
+
+		if (original.attributes == null) {
+			GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
+			if (obj != null) {
+				original.attributes = attrObj.GetComponent<UnitAttributes>();
+				if (original.attributes == null) {
+					Debug.LogError("Unit attributes are missing from original unit.");
+				}
+			}
+		}
+		if (copy.attributes == null) {
+			GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
+			if (obj != null) {
+				copy.attributes = attrObj.GetComponent<UnitAttributes>();
+				if (copy.attributes == null) {
+					Debug.LogError("Unit attributes are missing from copy unit.");
+				}
+			}
+		}
 
 		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
 		originalAgent.ResetPath();
@@ -272,8 +293,6 @@ public class SplitManager : NetworkBehaviour {
 			for (int i = 0; i < splitManagerGroup.Length; i++) {
 				SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
 				if (manager != null && manager.hasAuthority == hasAuthority) {
-					GameUnit original = obj.GetComponent<GameUnit>();
-					GameUnit copy = split.GetComponent<GameUnit>();
 					manager.splitGroupList.Add(new SplitGroup(original, copy, angle, splitFactor));
 					if (manager.selectionManager == null) {
 						GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
