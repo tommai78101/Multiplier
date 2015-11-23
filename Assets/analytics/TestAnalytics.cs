@@ -10,18 +10,19 @@ public class TestAnalytics : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update() {
+		if (Input.GetKeyDown(KeyCode.P)) {
+			//Analytics.CustomEvent("Hello World Event", this.customDictionary);
 
-		//Analytics.CustomEvent("Hello World Event", this.customDictionary);
+			//Analytics.Transaction("12345abcde", 0.99m, "USD", null, null);
 
-		//Analytics.Transaction("12345abcde", 0.99m, "USD", null, null);
+			Gender gender = Gender.Female;
+			Analytics.SetUserGender(gender);
 
-		Gender gender = Gender.Female;
-		Analytics.SetUserGender(gender);
+			int birthYear = 2014;
+			Analytics.SetUserBirthYear(birthYear);
 
-		int birthYear = 2014;
-		Analytics.SetUserBirthYear(birthYear);
-
-		Analytics.SetUserId("Test11234");
+			Analytics.SetUserId("Test11234");
+		}
 	}
 }
