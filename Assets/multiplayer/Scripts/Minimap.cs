@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class Minimap : MonoBehaviour {
 	public Camera minimapCamera;
 

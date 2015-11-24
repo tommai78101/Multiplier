@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MultiPlayer;
 
 public class HealthBar : MonoBehaviour {
 	public GameUnit unit;

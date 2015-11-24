@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using MultiPlayer;
 
 public class AttackArea : MonoBehaviour {
 	//Same design pattern as LineOfSight class.

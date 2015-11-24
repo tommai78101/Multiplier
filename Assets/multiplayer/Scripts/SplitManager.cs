@@ -3,378 +3,380 @@ using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
 
-[System.Serializable]
-public struct SplitGroup {
-	public GameUnit ownerUnit;
-	public GameUnit splitUnit;
-	public float elapsedTime;
-	public Vector3 rotationVector;
-	public float splitFactor;
-	public Vector3 origin;
+namespace MultiPlayer {
+	[System.Serializable]
+	public struct SplitGroup {
+		public GameUnit ownerUnit;
+		public GameUnit splitUnit;
+		public float elapsedTime;
+		public Vector3 rotationVector;
+		public float splitFactor;
+		public Vector3 origin;
 
-	public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit, float angle, float splitFactor) {
-		this.ownerUnit = ownerUnit;
-		this.splitUnit = splitUnit;
-		this.elapsedTime = 0f;
-		this.origin = ownerUnit.gameObject.transform.position;
-		this.splitFactor = splitFactor;
+		public SplitGroup(GameUnit ownerUnit, GameUnit splitUnit, float angle, float splitFactor) {
+			this.ownerUnit = ownerUnit;
+			this.splitUnit = splitUnit;
+			this.elapsedTime = 0f;
+			this.origin = ownerUnit.gameObject.transform.position;
+			this.splitFactor = splitFactor;
 
-		SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
-		this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
+			SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
+			this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
 
-		NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.ResetPath();
-			agent.Stop();
-		}
-		agent = this.splitUnit.GetComponent<NavMeshAgent>();
-		if (agent != null) {
-			agent.ResetPath();
-			agent.Stop();
-		}
-
-		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
-		if (transform != null) {
-			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
-		}
-		transform = this.splitUnit.GetComponent<NetworkTransform>();
-		if (transform != null) {
-			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
-		}
-	}
-
-	public void Update() {
-		this.ownerUnit.isSelected = false;
-		this.splitUnit.isSelected = false;
-		
-		Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
-		if (this.ownerUnit == null || this.ownerUnit.gameObject == null) {
-			this.elapsedTime = 1f;
-			return;
-		}
-		this.ownerUnit.gameObject.transform.position = pos;
-		pos = Vector3.Lerp(this.origin, this.origin - this.rotationVector, this.elapsedTime);
-		if (this.splitUnit == null || this.splitUnit.gameObject == null) {
-			this.elapsedTime = 1f;
-			return;
-		}
-		this.splitUnit.gameObject.transform.position = pos;
-	}
-
-	public void Stop() {
-		NavMeshAgent agent = null;
-		if (this.ownerUnit != null) {
-			this.ownerUnit.isSplitting = false;
-			agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+			NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
-				agent.Resume();
+				agent.ResetPath();
+				agent.Stop();
 			}
-		}
-
-		if (this.splitUnit != null) {
-			this.splitUnit.isSplitting = false;
 			agent = this.splitUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
-				agent.Resume();
+				agent.ResetPath();
+				agent.Stop();
+			}
+
+			NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+			if (transform != null) {
+				transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
+			}
+			transform = this.splitUnit.GetComponent<NetworkTransform>();
+			if (transform != null) {
+				transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
 			}
 		}
 
-		NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
-		if (transform != null) {
-			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
-		}
-		transform = this.splitUnit.GetComponent<NetworkTransform>();
-		if (transform != null) {
-			transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
-		}
-	}
-};
+		public void Update() {
+			this.ownerUnit.isSelected = false;
+			this.splitUnit.isSelected = false;
 
-
-public class SplitManager : NetworkBehaviour {
-	[SerializeField]
-	public List<SplitGroup> splitGroupList;
-	[SerializeField]
-	public List<SplitGroup> removeList;
-	[SerializeField]
-	public SelectionManager selectionManager;
-	[SerializeField]
-	public UnitAttributes unitAttributes;
-	[SerializeField]
-	public Spawner spawner;
-	public GameObject gameUnitPrefab;
-
-	//Split Manager is designed to streamline the creation of new game units.
-	//To achieve this, there needs to be two different array list that keeps track of all the creations, called Split Groups.
-	//One keeps track of the Split Groups, the other removes them from the tracking list.
-
-	public void Start() {
-		if (!this.hasAuthority) {
-			return;
+			Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
+			if (this.ownerUnit == null || this.ownerUnit.gameObject == null) {
+				this.elapsedTime = 1f;
+				return;
+			}
+			this.ownerUnit.gameObject.transform.position = pos;
+			pos = Vector3.Lerp(this.origin, this.origin - this.rotationVector, this.elapsedTime);
+			if (this.splitUnit == null || this.splitUnit.gameObject == null) {
+				this.elapsedTime = 1f;
+				return;
+			}
+			this.splitUnit.gameObject.transform.position = pos;
 		}
 
-		if (this.splitGroupList == null) {
-			this.splitGroupList = new List<SplitGroup>();
-		}
-		if (this.selectionManager == null) {
-			GameObject[] managers = GameObject.FindGameObjectsWithTag("SelectionManager");
-			foreach (GameObject manager in managers) {
-				SelectionManager select = manager.GetComponent<SelectionManager>();
-				if (select != null && select.hasAuthority) {
-					this.selectionManager = select;
-					break;
+		public void Stop() {
+			NavMeshAgent agent = null;
+			if (this.ownerUnit != null) {
+				this.ownerUnit.isSplitting = false;
+				agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+				if (agent != null) {
+					agent.Resume();
 				}
 			}
-			if (this.selectionManager == null) {
-				Debug.LogError("Cannot find Selection Manager. Aborting");
+
+			if (this.splitUnit != null) {
+				this.splitUnit.isSplitting = false;
+				agent = this.splitUnit.GetComponent<NavMeshAgent>();
+				if (agent != null) {
+					agent.Resume();
+				}
+			}
+
+			NetworkTransform transform = this.ownerUnit.GetComponent<NetworkTransform>();
+			if (transform != null) {
+				transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
+			}
+			transform = this.splitUnit.GetComponent<NetworkTransform>();
+			if (transform != null) {
+				transform.transformSyncMode = NetworkTransform.TransformSyncMode.SyncTransform;
 			}
 		}
-		if (this.unitAttributes == null) {
-			GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
-			foreach (GameObject attribute in attributes) {
-				UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
-				if (attr != null && attr.hasAuthority) {
-					this.unitAttributes = attr;
-					break;
+	};
+
+
+	public class SplitManager : NetworkBehaviour {
+		[SerializeField]
+		public List<SplitGroup> splitGroupList;
+		[SerializeField]
+		public List<SplitGroup> removeList;
+		[SerializeField]
+		public SelectionManager selectionManager;
+		[SerializeField]
+		public UnitAttributes unitAttributes;
+		[SerializeField]
+		public Spawner spawner;
+		public GameObject gameUnitPrefab;
+
+		//Split Manager is designed to streamline the creation of new game units.
+		//To achieve this, there needs to be two different array list that keeps track of all the creations, called Split Groups.
+		//One keeps track of the Split Groups, the other removes them from the tracking list.
+
+		public void Start() {
+			if (!this.hasAuthority) {
+				return;
+			}
+
+			if (this.splitGroupList == null) {
+				this.splitGroupList = new List<SplitGroup>();
+			}
+			if (this.selectionManager == null) {
+				GameObject[] managers = GameObject.FindGameObjectsWithTag("SelectionManager");
+				foreach (GameObject manager in managers) {
+					SelectionManager select = manager.GetComponent<SelectionManager>();
+					if (select != null && select.hasAuthority) {
+						this.selectionManager = select;
+						break;
+					}
+				}
+				if (this.selectionManager == null) {
+					Debug.LogError("Cannot find Selection Manager. Aborting");
 				}
 			}
 			if (this.unitAttributes == null) {
-				Debug.LogError("Split Manager: Unit Attributes Tracker is null. Please check.");
-			}
-		}
-		if (this.spawner == null) {
-			GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
-			foreach (GameObject obj in spawners) {
-				Spawner spawner = obj.GetComponent<Spawner>();
-				if (spawner != null && spawner.hasAuthority) {
-					this.spawner = spawner;
-					break;
+				GameObject[] attributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
+				foreach (GameObject attribute in attributes) {
+					UnitAttributes attr = attribute.GetComponent<UnitAttributes>();
+					if (attr != null && attr.hasAuthority) {
+						this.unitAttributes = attr;
+						break;
+					}
+				}
+				if (this.unitAttributes == null) {
+					Debug.LogError("Split Manager: Unit Attributes Tracker is null. Please check.");
 				}
 			}
 			if (this.spawner == null) {
-				Debug.LogError("Spawner is never set. Please check.");
+				GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
+				foreach (GameObject obj in spawners) {
+					Spawner spawner = obj.GetComponent<Spawner>();
+					if (spawner != null && spawner.hasAuthority) {
+						this.spawner = spawner;
+						break;
+					}
+				}
+				if (this.spawner == null) {
+					Debug.LogError("Spawner is never set. Please check.");
+				}
 			}
 		}
-	}
 
-	public void Update() {
-		if (!this.hasAuthority) {
+		public void Update() {
+			if (!this.hasAuthority) {
+				return;
+			}
+
+			//When the player starts the action to split a game unit into two, it takes in all the selected game units
+			//one by one, and splits them individually.
+			if (Input.GetKeyDown(KeyCode.S)) {
+				if (this.selectionManager != null) {
+					AddingNewSplitGroup();
+				}
+			}
+			UpdateSplitGroup();
+		}
+
+		public void UpdateSplitGroup() {
+			if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
+				for (int i = 0; i < this.splitGroupList.Count; i++) {
+					SplitGroup group = this.splitGroupList[i];
+					if (group.elapsedTime >= 1f) {
+						group.Stop();
+						Increment(group.ownerUnit);
+						Decrement(group.ownerUnit);
+						Increment(group.splitUnit);
+						Decrement(group.splitUnit);
+						if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
+							this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
+						}
+						if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
+							this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
+						}
+						this.removeList.Add(group);
+					}
+					else {
+						//Some weird C# language design...
+						group.Update();
+						group.elapsedTime += Time.deltaTime / group.splitFactor;
+						this.splitGroupList[i] = group;
+					}
+				}
+			}
+
+			if (this.removeList != null && this.removeList.Count > 0) {
+				foreach (SplitGroup group in this.removeList) {
+					this.splitGroupList.Remove(group);
+				}
+				this.removeList.Clear();
+			}
+		}
+
+		private void AddingNewSplitGroup() {
+			foreach (GameObject obj in this.selectionManager.selectedObjects) {
+				if (obj == null) {
+					this.selectionManager.removeList.Add(obj);
+					continue;
+				}
+				GameUnit objUnit = obj.GetComponent<GameUnit>();
+				if (objUnit.level == 1) {
+					CmdSplit(obj, objUnit.hasAuthority);
+				}
+			}
 			return;
 		}
 
-		//When the player starts the action to split a game unit into two, it takes in all the selected game units
-		//one by one, and splits them individually.
-		if (Input.GetKeyDown(KeyCode.S)) {
-			if (this.selectionManager != null) {
-				AddingNewSplitGroup();
-			}
-		}
-		UpdateSplitGroup();
-	}
-
-	public void UpdateSplitGroup() {
-		if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
-			for (int i = 0; i < this.splitGroupList.Count; i++) {
-				SplitGroup group = this.splitGroupList[i];
-				if (group.elapsedTime >= 1f) {
-					group.Stop();
-					Increment(group.ownerUnit);
-					Decrement(group.ownerUnit);
-					Increment(group.splitUnit);
-					Decrement(group.splitUnit);
-					if (group.splitUnit != null && !this.selectionManager.allObjects.Contains(group.splitUnit.gameObject)) {
-						this.selectionManager.allObjects.Add(group.splitUnit.gameObject);
-					}
-					if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
-						this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
-					}
-					this.removeList.Add(group);
+		[Command]
+		public void CmdSplit(GameObject obj, bool hasAuthority) {
+			GameUnit unit = obj.GetComponent<GameUnit>();
+			if (unit.attributes == null) {
+				if (this.unitAttributes != null) {
+					unit.attributes = this.unitAttributes;
 				}
 				else {
-					//Some weird C# language design...
-					group.Update();
-					group.elapsedTime += Time.deltaTime / group.splitFactor;
-					this.splitGroupList[i] = group;
+					Debug.LogError("Definitely something is wrong here with unit attributes.");
 				}
 			}
-		}
 
-		if (this.removeList != null && this.removeList.Count > 0) {
-			foreach (SplitGroup group in this.removeList) {
-				this.splitGroupList.Remove(group);
+			if (unit.isSplitting) {
+				return;
 			}
-			this.removeList.Clear();
-		}
-	}
 
-	private void AddingNewSplitGroup() {
-		foreach (GameObject obj in this.selectionManager.selectedObjects) {
-			if (obj == null) {
-				this.selectionManager.removeList.Add(obj);
-				continue;
+			unit.isSplitting = true;
+
+			//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
+			//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
+			//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
+			//I am guessing it has to do with how player objects and non-player objects interact with UNET.
+			GameObject split = MonoBehaviour.Instantiate(unit.gameObject) as GameObject;
+			GameUnit splitUnit = split.GetComponent<GameUnit>();
+			if (splitUnit != null) {
+				Copy(unit, splitUnit);
 			}
-			GameUnit objUnit = obj.GetComponent<GameUnit>();
-			if (objUnit.level == 1) {
-				CmdSplit(obj, objUnit.hasAuthority);
-			}
-		}
-		return;
-	}
 
-	[Command]
-	public void CmdSplit(GameObject obj, bool hasAuthority) {
-		GameUnit unit = obj.GetComponent<GameUnit>();
-		if (unit.attributes == null) {
-			if (this.unitAttributes != null) {
-				unit.attributes = this.unitAttributes;
-			}
-			else {
-				Debug.LogError("Definitely something is wrong here with unit attributes.");
-			}
+			NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
+			NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
+			float angle = UnityEngine.Random.Range(-180f, 180f);
+
+			RpcSplit(obj, split, angle, hasAuthority, this.unitAttributes.splitPrefabFactor);
 		}
 
-		if (unit.isSplitting) {
-			return;
-		}
+		[ClientRpc]
+		public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
+			//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
+			//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
+			GameUnit original = obj.GetComponent<GameUnit>();
+			GameUnit copy = split.GetComponent<GameUnit>();
 
-		unit.isSplitting = true;
-
-		//This is profoundly one of the hardest puzzles I had tackled. Non-player object spawning non-player object.
-		//Instead of the usual spawning design used in the Spawner script, the spawning codes here are swapped around.
-		//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
-		//I am guessing it has to do with how player objects and non-player objects interact with UNET.
-		GameObject split = MonoBehaviour.Instantiate(unit.gameObject) as GameObject;
-		GameUnit splitUnit = split.GetComponent<GameUnit>();
-		if (splitUnit != null) {
-			Copy(unit, splitUnit);
-		}
-
-		NetworkIdentity managerIdentity = this.GetComponent<NetworkIdentity>();
-		NetworkServer.SpawnWithClientAuthority(split, managerIdentity.clientAuthorityOwner);
-		float angle = UnityEngine.Random.Range(-180f, 180f);
-
-		RpcSplit(obj, split, angle, hasAuthority, this.unitAttributes.splitPrefabFactor);
-	}
-
-	[ClientRpc]
-	public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
-		//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
-		//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
-		GameUnit original = obj.GetComponent<GameUnit>();
-		GameUnit copy = split.GetComponent<GameUnit>();
-
-		if (original.attributes == null) {
-			GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
-			if (obj != null) {
-				original.attributes = attrObj.GetComponent<UnitAttributes>();
-				if (original.attributes == null) {
-					Debug.LogError("Unit attributes are missing from original unit.");
+			if (original.attributes == null) {
+				GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
+				if (obj != null) {
+					original.attributes = attrObj.GetComponent<UnitAttributes>();
+					if (original.attributes == null) {
+						Debug.LogError("Unit attributes are missing from original unit.");
+					}
 				}
 			}
-		}
-		if (copy.attributes == null) {
-			GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
-			if (obj != null) {
-				copy.attributes = attrObj.GetComponent<UnitAttributes>();
-				if (copy.attributes == null) {
-					Debug.LogError("Unit attributes are missing from copy unit.");
+			if (copy.attributes == null) {
+				GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
+				if (obj != null) {
+					copy.attributes = attrObj.GetComponent<UnitAttributes>();
+					if (copy.attributes == null) {
+						Debug.LogError("Unit attributes are missing from copy unit.");
+					}
 				}
 			}
-		}
 
-		NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
-		originalAgent.ResetPath();
-		NavMeshAgent copyAgent = split.GetComponent<NavMeshAgent>();
-		copyAgent.ResetPath();
+			NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
+			originalAgent.ResetPath();
+			NavMeshAgent copyAgent = split.GetComponent<NavMeshAgent>();
+			copyAgent.ResetPath();
 
-		GameObject[] splitManagerGroup = GameObject.FindGameObjectsWithTag("SplitManager");
-		if (splitManagerGroup.Length > 0) {
-			for (int i = 0; i < splitManagerGroup.Length; i++) {
-				SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
-				if (manager != null && manager.hasAuthority == hasAuthority) {
-					manager.splitGroupList.Add(new SplitGroup(original, copy, angle, splitFactor));
-					if (manager.selectionManager == null) {
-						GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
-						foreach (GameObject select in objs) {
-							SelectionManager selectManager = select.GetComponent<SelectionManager>();
-							if (selectManager.hasAuthority) {
-								manager.selectionManager = selectManager;
+			GameObject[] splitManagerGroup = GameObject.FindGameObjectsWithTag("SplitManager");
+			if (splitManagerGroup.Length > 0) {
+				for (int i = 0; i < splitManagerGroup.Length; i++) {
+					SplitManager manager = splitManagerGroup[i].GetComponent<SplitManager>();
+					if (manager != null && manager.hasAuthority == hasAuthority) {
+						manager.splitGroupList.Add(new SplitGroup(original, copy, angle, splitFactor));
+						if (manager.selectionManager == null) {
+							GameObject[] objs = GameObject.FindGameObjectsWithTag("SelectionManager");
+							foreach (GameObject select in objs) {
+								SelectionManager selectManager = select.GetComponent<SelectionManager>();
+								if (selectManager.hasAuthority) {
+									manager.selectionManager = selectManager;
+								}
 							}
 						}
+						manager.selectionManager.allObjects.Add(split);
 					}
-					manager.selectionManager.allObjects.Add(split);
 				}
 			}
 		}
-	}
 
-	[ServerCallback]
-	private static void Copy(GameUnit original, GameUnit copy) {
-		copy.isSelected = original.isSelected;
-		copy.isSplitting = original.isSplitting;
-		copy.isMerging = original.isMerging;
+		[ServerCallback]
+		private static void Copy(GameUnit original, GameUnit copy) {
+			copy.isSelected = original.isSelected;
+			copy.isSplitting = original.isSplitting;
+			copy.isMerging = original.isMerging;
 
-		copy.transform.position = original.transform.position;
-		copy.transform.rotation = original.transform.rotation;
-		copy.transform.localScale = original.transform.localScale;
-		copy.oldTargetPosition = original.oldTargetPosition = -Vector3.one * 9999f;
-		copy.isDirected = original.isDirected = false;
+			copy.transform.position = original.transform.position;
+			copy.transform.rotation = original.transform.rotation;
+			copy.transform.localScale = original.transform.localScale;
+			copy.oldTargetPosition = original.oldTargetPosition = -Vector3.one * 9999f;
+			copy.isDirected = original.isDirected = false;
 
-		copy.level = original.level;
-		copy.previousLevel = original.previousLevel;
-		copy.currentHealth = original.currentHealth;
-		copy.maxHealth = original.maxHealth;
-		if (copy.currentHealth > copy.maxHealth) {
-			copy.currentHealth = copy.maxHealth;
+			copy.level = original.level;
+			copy.previousLevel = original.previousLevel;
+			copy.currentHealth = original.currentHealth;
+			copy.maxHealth = original.maxHealth;
+			if (copy.currentHealth > copy.maxHealth) {
+				copy.currentHealth = copy.maxHealth;
+			}
+			if (original.currentHealth > original.maxHealth) {
+				original.currentHealth = original.maxHealth;
+			}
+			copy.recoverCooldown = original.recoverCooldown;
+			copy.recoverCounter = original.recoverCounter = 0;
+			copy.speed = original.speed;
+			copy.attackCooldown = original.attackCooldown;
+			copy.attackCooldownCounter = original.attackCooldownCounter = 0;
+			copy.attackPower = original.attackPower;
+
+			copy.attributes = original.attributes;
+			copy.teamColorValue = original.teamColorValue;
+
+			original.SetTeamColor(original.teamColorValue);
+			copy.SetTeamColor(copy.teamColorValue);
 		}
-		if (original.currentHealth > original.maxHealth) {
-			original.currentHealth = original.maxHealth;
+
+		[ServerCallback]
+		private static void Increment(GameUnit unit) {
+			unit.isSelected = !unit.isSelected;
+			unit.isDirected = !unit.isDirected;
+			unit.isSplitting = !unit.isSplitting;
+			unit.isMerging = !unit.isMerging;
+			unit.currentHealth++;
+			unit.maxHealth++;
+			unit.attackPower++;
+			unit.attackCooldown++;
+			unit.speed++;
+			unit.recoverCooldown++;
+			unit.level++;
+			unit.previousLevel++;
+			unit.teamColorValue = (unit.teamColorValue + 1) % 3;
 		}
-		copy.recoverCooldown = original.recoverCooldown;
-		copy.recoverCounter = original.recoverCounter = 0;
-		copy.speed = original.speed;
-		copy.attackCooldown = original.attackCooldown;
-		copy.attackCooldownCounter = original.attackCooldownCounter = 0;
-		copy.attackPower = original.attackPower;
 
-		copy.attributes = original.attributes;
-		copy.teamColorValue = original.teamColorValue;
-
-		original.SetTeamColor(original.teamColorValue);
-		copy.SetTeamColor(copy.teamColorValue);
-	}
-
-	[ServerCallback]
-	private static void Increment(GameUnit unit) {
-		unit.isSelected = !unit.isSelected;
-		unit.isDirected = !unit.isDirected;
-		unit.isSplitting = !unit.isSplitting;
-		unit.isMerging = !unit.isMerging;
-		unit.currentHealth++;
-		unit.maxHealth++;
-		unit.attackPower++;
-		unit.attackCooldown++;
-		unit.speed++;
-		unit.recoverCooldown++;
-		unit.level++;
-		unit.previousLevel++;
-		unit.teamColorValue = (unit.teamColorValue + 1) % 3;
-	}
-
-	[ServerCallback]
-	private static void Decrement(GameUnit unit) {
-		unit.isSelected = !unit.isSelected;
-		unit.isDirected = !unit.isDirected;
-		unit.isSplitting = !unit.isSplitting;
-		unit.isMerging = !unit.isMerging;
-		unit.currentHealth--;
-		unit.maxHealth--;
-		unit.attackPower--;
-		unit.attackCooldown--;
-		unit.speed--;
-		unit.recoverCooldown--;
-		unit.level--;
-		unit.previousLevel--;
-		unit.teamColorValue = (unit.teamColorValue + 2) % 3;
+		[ServerCallback]
+		private static void Decrement(GameUnit unit) {
+			unit.isSelected = !unit.isSelected;
+			unit.isDirected = !unit.isDirected;
+			unit.isSplitting = !unit.isSplitting;
+			unit.isMerging = !unit.isMerging;
+			unit.currentHealth--;
+			unit.maxHealth--;
+			unit.attackPower--;
+			unit.attackCooldown--;
+			unit.speed--;
+			unit.recoverCooldown--;
+			unit.level--;
+			unit.previousLevel--;
+			unit.teamColorValue = (unit.teamColorValue + 2) % 3;
+		}
 	}
 }

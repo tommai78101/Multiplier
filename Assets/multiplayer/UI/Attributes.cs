@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using MultiPlayer;
 
 public enum TokenClass {
 	Value, Function, Operator, LeftParentheses, RightParentheses, Negative
