@@ -1,21 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using MultiPlayer;
-
-public enum TokenClass {
-	Value, Function, Operator, LeftParentheses, RightParentheses, Negative
-};
-
-public enum Associativity {
-	Left, Right
-};
-
-public enum AttributeProperty {
-	Health, Attack, Speed, Merge, Split, AttackCooldown, Invalid
-};
+using CustomMath;
 
 public class Attributes : MonoBehaviour {
 	public GameObject panelPrefab;
@@ -34,9 +22,6 @@ public class Attributes : MonoBehaviour {
 	public AttributeProperty newProperty;
 	public const int MAX_NUM_OF_LEVELS = 10;
 	public UnitAttributes unitAttributes;
-
-	private Regex regex = new Regex(@"([\d]+[.][\d]+)|([\d]+)|([\+\-\*\/\^]+)|([\(\)])?");
-	private List<string> binaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 	public void Start() {
 		if (this.panelPrefab == null) {
@@ -90,7 +75,7 @@ public class Attributes : MonoBehaviour {
 
 				try {
 					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
-						float answer = ProcessEquation(inputText.inputText.text, property, level + 1);
+						float answer = (float) MathParser.ProcessEquation(inputText.inputText.text, property, level + 1);
 
 						if (this.debugFlag) {
 							Debug.Log("DEBUG 8");
@@ -230,219 +215,6 @@ public class Attributes : MonoBehaviour {
 			}
 			//this.unitAttributes.UpdateValues();
 			this.oldProperty = this.newProperty;
-		}
-	}
-
-	//Shunting yard algorithm
-	public float ProcessEquation(string equation, AttributeProperty property, int level) {
-		if (equation.Equals("")) {
-			throw new ArgumentException("Equation is empty.");
-		}
-		List<string> result = new List<string>(this.regex.Split(equation.ToLower().Trim()));
-		for (int i = result.Count-1; i >= 0; i--) {
-			if (result[i].Equals("")) {
-				result.RemoveAt(i);
-			}
-		}
-		Queue<string> queue = new Queue<string>();
-		Stack<string> stack = new Stack<string>();
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 1");
-		}
-
-		for (int i = 0; i < result.Count; i++) {
-			if (result[i].Equals("x")) {
-				result[i] = level.ToString();
-			}
-			else if (result[i].Equals("r")) {
-				float value = UnityEngine.Random.Range(1f, 1000f);
-				value /= 1000f;
-				result[i] = value.ToString();
-			}
-		}
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 2");
-		}
-
-		TokenClass previousTokenClass = TokenClass.Value;
-		for (int i = 0; i < result.Count; i++) {
-			string element = result[i];
-
-			if (element.Equals("y") || element.Equals("=")) {
-				continue;
-			}
-
-			TokenClass tokenClass = GetTokenClass(element);
-			switch (tokenClass) {
-				case TokenClass.Value:
-					queue.Enqueue(element);
-					break;
-				case TokenClass.LeftParentheses:
-					stack.Push(element);
-					break;
-				case TokenClass.RightParentheses:
-					while (!stack.Peek().Equals("(")) {
-						queue.Enqueue(stack.Pop());
-					}
-					stack.Pop();
-					break;
-				case TokenClass.Operator:
-					if (element.Equals("-") && (previousTokenClass == TokenClass.Operator || previousTokenClass == TokenClass.LeftParentheses) && (stack.Count == 0 || result[i - 1].Equals("("))) {
-						//Push unary operator "Negative" to stack.
-						stack.Push("NEG");
-						break;
-					}
-					if (stack.Count > 0) {
-						string stackTopToken = stack.Peek();
-						if (GetTokenClass(stackTopToken) == TokenClass.Operator) {
-							Associativity tokenAssociativity = GetAssociativity(stackTopToken);
-							int tokenPrecedence = GetPrecedence(element);
-							int stackTopPrecedence = GetPrecedence(stackTopToken);
-							if ((tokenAssociativity == Associativity.Left && tokenPrecedence <= stackTopPrecedence) || (tokenAssociativity == Associativity.Right && tokenPrecedence < stackTopPrecedence)) {
-								queue.Enqueue(stack.Pop());
-							}
-						}
-					}
-					stack.Push(element);
-					break;
-			}
-
-			if (tokenClass == TokenClass.Value || tokenClass == TokenClass.RightParentheses) {
-				if (i < result.Count - 1) {
-					string nextToken = result[i + 1];
-					TokenClass nextTokenClass = GetTokenClass(nextToken);
-					if (nextTokenClass != TokenClass.Operator && nextTokenClass != TokenClass.RightParentheses) {
-						result.Insert(i + 1, "*");
-					}
-				}
-			}
-
-			previousTokenClass = tokenClass;
-		}
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 3");
-		}
-
-		while (stack.Count > 0) {
-			string operand = stack.Pop();
-			if (operand.Equals("(") || operand.Equals(")")) {
-				throw new ArgumentException("Mismatched parentheses.");
-			}
-			queue.Enqueue(operand);
-		}
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 4");
-		}
-
-		Stack<string> expressionStack = new Stack<string>();
-		while (queue.Count > 0) {
-			string token = queue.Dequeue();
-			TokenClass tokenClass = GetTokenClass(token);
-			if (tokenClass == TokenClass.Value) {
-				expressionStack.Push(token);
-			}
-			else {
-				float answer = 0f;
-				if (tokenClass == TokenClass.Operator) {
-					string rightOperand = expressionStack.Pop();
-					string leftOperand = expressionStack.Pop();
-					if (token.Equals("+")) {
-						answer = float.Parse(leftOperand);
-						answer += float.Parse(rightOperand);
-					}
-					else if (token.Equals("-")) {
-						answer = float.Parse(leftOperand);
-						answer -= float.Parse(rightOperand);
-					}
-					else if (token.Equals("*")) {
-						answer = float.Parse(leftOperand);
-						answer *= float.Parse(rightOperand);
-					}
-					else if (token.Equals("/")) {
-						answer = float.Parse(leftOperand);
-						answer /= float.Parse(rightOperand);
-					}
-					else if (token.Equals("^")) {
-						float baseValue = float.Parse(leftOperand);
-						float exponent = float.Parse(rightOperand);
-						answer = Mathf.Pow(baseValue, exponent);
-					}
-				}
-				else if (tokenClass == TokenClass.Negative) {
-					string operand = expressionStack.Pop();
-					answer = float.Parse(operand) * -1f;
-				}
-				expressionStack.Push(answer.ToString());
-			}
-		}
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 5");
-		}
-
-		if (expressionStack.Count != 1) {
-			throw new ArgumentException("Invalid equation.");
-		}
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 6");
-		}
-
-		float finalAnswer = float.Parse(expressionStack.Pop());
-
-		if (this.debugFlag) {
-			Debug.Log("DEBUG 7");
-		}
-
-		return finalAnswer;
-	}
-
-
-	public TokenClass GetTokenClass(string token) {
-		double tempDouble;
-		if (double.TryParse(token, out tempDouble)) {
-			return TokenClass.Value;
-		}
-		else if (token.Equals("(")) {
-			return TokenClass.LeftParentheses;
-		}
-		else if (token.Equals(")")) {
-			return TokenClass.RightParentheses;
-		}
-		else if (binaryInfixOperators.Contains(token)) {
-			return TokenClass.Operator;
-		}
-		else if (token.Equals("NEG")) {
-			return TokenClass.Negative;
-		}
-		else {
-			throw new ArgumentException("Invalid token.");
-		}
-	}
-
-	public Associativity GetAssociativity(string token) {
-		if (token.Equals("^")) {
-			return Associativity.Right;
-		}
-		return Associativity.Left;
-	}
-
-	public int GetPrecedence(string token) {
-		if (token.Equals("+") || token.Equals("-")) {
-			return 1;
-		}
-		else if (token.Equals("*") || token.Equals("/")) {
-			return 2;
-		}
-		else if (token.Equals("^")) {
-			return 3;
-		}
-		else {
-			throw new ArgumentException("Invalid token");
 		}
 	}
 
