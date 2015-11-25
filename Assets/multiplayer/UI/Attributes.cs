@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using MultiPlayer;
-using CustomMath;
+using Common;
 
 public class Attributes : MonoBehaviour {
 	public GameObject panelPrefab;

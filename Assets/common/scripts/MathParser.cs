@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace CustomMath {
+namespace Common {
 	public enum TokenClass {
 		Value, Function, Operator, LeftParentheses, RightParentheses, Negative
 	};
