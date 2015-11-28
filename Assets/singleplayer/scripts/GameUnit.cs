@@ -13,8 +13,12 @@ namespace SinglePlayer {
 		public float speed;
 		public bool isSelected;
 
-		public void Start() {
+		public SelectionManager selectionManager;
 
+		public void Start() {
+			if (this.selectionManager != null) {
+				this.selectionManager.allObjects.Add(this);
+			}
 		}
 
 		public void Update() {
