@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Common;
 
 namespace SinglePlayer {
 	public class GameUnit : MonoBehaviour {
@@ -17,12 +18,25 @@ namespace SinglePlayer {
 		private Vector3 oldTargetPosition;
 		public bool isDirected;
 		public GameUnit targetEnemy;
+		public GameObject selectionRing;
 
 		public void Start() {
 		}
 
 		public void Update() {
-
+			//Simple, "quick," MOBA-style controls. Hence, the class name.
+			if (this.isSelected) {
+				this.selectionRing.SetActive(true);
+				Vector3 screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+				if (!MinimapStuffs.Instance.minimapCamera.rect.Contains(screenPoint)) {
+					if (Input.GetMouseButtonDown(1)) {
+						CastRay(false, Input.mousePosition, null);
+					}
+				}
+			}
+			else {
+				this.selectionRing.SetActive(false);
+			}
 		}
 
 		public void Copy(GameUnit original) {
