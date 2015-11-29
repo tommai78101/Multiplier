@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using Common;
 
 namespace MultiPlayer {
 	public class Spawner : NetworkBehaviour {

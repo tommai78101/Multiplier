@@ -14,7 +14,7 @@ public class CameraPanning : MonoBehaviour {
 	[SerializeField]
 	private bool cameraZoomingFlag;
 
-	public readonly float aspectRatio = (float) Screen.currentResolution.width / (float) Screen.currentResolution.height;
+	public float aspectRatio;
 	public int marginSize = 15;
 	public bool useDebugSceneCameraBorder = true;
 	public float cameraSpeed = 1f;
@@ -53,6 +53,10 @@ public class CameraPanning : MonoBehaviour {
 		get {
 			return this.marginSize * this.aspectRatio;
 		}
+	}
+
+	public void Awake() {
+         this.aspectRatio = (float) Screen.currentResolution.width / (float) Screen.currentResolution.height;
 	}
 
 	public void Start() {

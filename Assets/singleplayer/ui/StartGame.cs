@@ -9,6 +9,8 @@ public class StartGame : MonoBehaviour {
 	public GameObject gameUnitPrefab;
 	public SelectionManager playerSelectionManager;
 	public SelectionManager computerSelectionManager;
+	public Camera minimapCamera;
+	public CameraPanning cameraPanning;
 
 
 	public void StartButtonAction() {
@@ -19,7 +21,7 @@ public class StartGame : MonoBehaviour {
 
 	private void InitializationCheck() {
 		bool flag = (this.attributePanelCanvasGroup == null) || (this.playerStartingPosition == null) || (this.computerStartingPosition == null) || (this.gameUnitPrefab == null)
-			|| (this.playerSelectionManager == null) || (this.computerSelectionManager == null);
+			|| (this.playerSelectionManager == null) || (this.computerSelectionManager == null) || (this.minimapCamera == null) || (this.cameraPanning == null);
 		if (flag) {
 			Debug.LogError("There's something wrong with the Start Game menu button. Check again.");
 		}
@@ -57,6 +59,14 @@ public class StartGame : MonoBehaviour {
 		if (unit != null) {
 			unit.teamFaction = this.computerSelectionManager.teamFaction;
 			this.computerSelectionManager.singleAllObjects.Add(unit);
+		}
+
+		if (!this.cameraPanning.enabled) {
+			this.cameraPanning.enabled = true;
+		}
+
+		if (!(this.minimapCamera.gameObject.activeSelf || this.minimapCamera.gameObject.activeInHierarchy)) {
+			this.minimapCamera.gameObject.SetActive(true);
 		}
 	}
 }

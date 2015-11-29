@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace MultiPlayer {
+namespace Common {
 	public class PostRenderer : MonoBehaviour {
 		public Material borderMaterial;
 		public Vector3 initialClick = -Vector3.one;

@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using Extension;
+using Common;
 
 namespace MultiPlayer {
 	[System.Serializable]
