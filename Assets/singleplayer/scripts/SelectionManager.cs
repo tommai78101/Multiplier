@@ -6,6 +6,7 @@ namespace SinglePlayer {
 		public List<GameUnit> allObjects;
 		public List<GameUnit> selectedObjects;
 		public List<GameUnit> removeList;
+		public EnumTeam teamFaction;
 
 		public void Start() {
 			this.allObjects = new List<GameUnit>();

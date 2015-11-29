@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using SinglePlayer;
 
 public class StartGame : MonoBehaviour {
 	public CanvasGroup attributePanelCanvasGroup;
 	public Transform playerStartingPosition;
 	public Transform computerStartingPosition;
 	public GameObject gameUnitPrefab;
-	public GameObject playerUnitCategory;
-	public GameObject computerUnitCategory;
+	public SelectionManager playerSelectionManager;
+	public SelectionManager computerSelectionManager;
 
 
 	public void StartButtonAction() {
@@ -18,7 +19,7 @@ public class StartGame : MonoBehaviour {
 
 	private void InitializationCheck() {
 		bool flag = (this.attributePanelCanvasGroup == null) || (this.playerStartingPosition == null) || (this.computerStartingPosition == null) || (this.gameUnitPrefab == null)
-			|| (this.playerUnitCategory == null) || (this.computerUnitCategory == null);
+			|| (this.playerSelectionManager == null) || (this.computerSelectionManager == null);
 		if (flag) {
 			Debug.LogError("There's something wrong with the Start Game menu button. Check again.");
 		}
@@ -37,7 +38,12 @@ public class StartGame : MonoBehaviour {
 		GameObject playerUnit = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
 		Transform unitTransform = playerUnit.transform;
 		unitTransform.position = this.playerStartingPosition.transform.position;
-		unitTransform.SetParent(this.playerUnitCategory.transform);
+		unitTransform.SetParent(this.playerSelectionManager.transform);
+		GameUnit unit = playerUnit.GetComponent<GameUnit>();
+		if (unit != null) {
+			unit.teamFaction = this.playerSelectionManager.teamFaction;
+			this.playerSelectionManager.allObjects.Add(unit);
+		}
 
 		GameObject computerUnit = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
 		NavMeshAgent agent = computerUnit.GetComponent<NavMeshAgent>();
@@ -46,6 +52,11 @@ public class StartGame : MonoBehaviour {
 		}
 		unitTransform = computerUnit.transform;
 		unitTransform.position = this.computerStartingPosition.transform.position;
-		unitTransform.SetParent(this.computerUnitCategory.transform);
+		unitTransform.SetParent(this.computerSelectionManager.transform);
+		unit = computerUnit.GetComponent<GameUnit>();
+		if (unit != null) {
+			unit.teamFaction = this.computerSelectionManager.teamFaction;
+			this.computerSelectionManager.allObjects.Add(unit);
+		}
 	}
 }

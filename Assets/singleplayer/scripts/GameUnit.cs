@@ -12,13 +12,9 @@ namespace SinglePlayer {
 		public float recoveryCooldownCounter;
 		public float speed;
 		public bool isSelected;
-
-		public SelectionManager selectionManager;
+		public EnumTeam teamFaction;
 
 		public void Start() {
-			if (this.selectionManager != null) {
-				this.selectionManager.allObjects.Add(this);
-			}
 		}
 
 		public void Update() {
