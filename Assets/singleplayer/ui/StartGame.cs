@@ -42,7 +42,7 @@ public class StartGame : MonoBehaviour {
 		GameUnit unit = playerUnit.GetComponent<GameUnit>();
 		if (unit != null) {
 			unit.teamFaction = this.playerSelectionManager.teamFaction;
-			this.playerSelectionManager.allObjects.Add(unit);
+			this.playerSelectionManager.singleAllObjects.Add(unit);
 		}
 
 		GameObject computerUnit = MonoBehaviour.Instantiate(this.gameUnitPrefab) as GameObject;
@@ -56,7 +56,7 @@ public class StartGame : MonoBehaviour {
 		unit = computerUnit.GetComponent<GameUnit>();
 		if (unit != null) {
 			unit.teamFaction = this.computerSelectionManager.teamFaction;
-			this.computerSelectionManager.allObjects.Add(unit);
+			this.computerSelectionManager.singleAllObjects.Add(unit);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace SinglePlayer {
-	public class SplitManagerSingle : MonoBehaviour {
+	public class SplitManager : MonoBehaviour {
 
 		// Use this for initialization
 		void Start() {

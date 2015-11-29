@@ -6,7 +6,7 @@ namespace MultiPlayer {
 	public class SelectionManager : NetworkBehaviour {
 		public List<GameObject> selectedObjects;
 		public List<GameObject> allObjects;
-		public List<GameObject> removeList;
+		public List<GameObject> removeList; 
 
 		public Rect selectionBox;
 		public Vector3 initialClick;
