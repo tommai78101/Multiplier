@@ -102,7 +102,7 @@ namespace MultiPlayer {
 					SelectObjects();
 					this.isSelecting = false;
 					this.isBoxSelecting = false;
-					this.initialClick = -Vector3.one;
+					this.initialClick = -Vector3.one * 9999f;
 				}
 			}
 
