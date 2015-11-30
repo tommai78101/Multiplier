@@ -91,25 +91,25 @@ public class SingleStartGame : MonoBehaviour {
 		pos.y = Camera.main.transform.position.y;
 		Camera.main.transform.position = pos;
 
-		int colorValue;
-		switch (Spawner.colorCode) {
-			default:
-				colorValue = -1;
-				break;
-			case 0:
-				colorValue = 0;
-				break;
-			case 1:
-				colorValue = 1;
-				break;
-			case 2:
-				colorValue = 2;
-				break;
-		}
+		//int colorValue;
+		//switch (Spawner.colorCode) {
+		//	default:
+		//		colorValue = -1;
+		//		break;
+		//	case 0:
+		//		colorValue = 0;
+		//		break;
+		//	case 1:
+		//		colorValue = 1;
+		//		break;
+		//	case 2:
+		//		colorValue = 2;
+		//		break;
+		//}
 
-		Spawner.colorCode++;
-		if (Spawner.colorCode > 2) {
-			Spawner.colorCode = 0;
-		}
+		//Spawner.colorCode++;
+		//if (Spawner.colorCode > 2) {
+		//	Spawner.colorCode = 0;
+		//}
 	}
 }
