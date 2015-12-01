@@ -12,6 +12,11 @@ public class SingleHost : NetworkManager {
 			this.attributePanelGroup.interactable = false;
 		}
 
+		GameObject minimapCamera = GameObject.FindGameObjectWithTag("Minimap");
+		if (minimapCamera != null && !(minimapCamera.activeSelf && minimapCamera.activeInHierarchy)) {
+			minimapCamera.SetActive(true);
+		}
+
 		this.StartHost();
 	}
 

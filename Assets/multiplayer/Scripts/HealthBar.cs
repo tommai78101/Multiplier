@@ -10,9 +10,19 @@ public class HealthBar : MonoBehaviour {
 	public void Start() {
 		if (this.minimapCamera == null) {
 			GameObject obj = GameObject.FindGameObjectWithTag("Minimap");
-			this.minimapCamera = obj.GetComponent<Camera>();
-			if (this.minimapCamera == null) {
-				Debug.LogError("HealthBar: This failed to initialize minimap camera.");
+			if (obj != null) {
+				if (obj.activeSelf || obj.activeInHierarchy) {
+					this.minimapCamera = obj.GetComponent<Camera>();
+					if (this.minimapCamera == null) {
+						Debug.LogError("HealthBar: This failed to initialize minimap camera.");
+					}
+					if (!this.minimapCamera.isActiveAndEnabled || !this.minimapCamera.enabled) {
+						this.minimapCamera.enabled = true;
+					}
+				}
+			}
+			else {
+				Debug.LogError("Object is null. Must enable the game object, and disable the component instead.");
 			}
 		}
 	}
