@@ -94,14 +94,21 @@ namespace MultiPlayer {
 			//This is run for spawning new non-player objects. Since it is a server calling to all clients (local and remote), it needs to pass in a
 			//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
 
+			//Setting up Player
+			GameObject playerUmbrellaObject = new GameObject("Player");
+			GameObject playerUnitUmbrellaObject = new GameObject("Units");
+			playerUnitUmbrellaObject.transform.SetParent(playerUmbrellaObject.transform);
+
 			//Player unit
 			GameObject playerObject = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;
+			playerObject.transform.SetParent(playerUnitUmbrellaObject.transform);
 			playerObject.transform.position = this.transform.position;
 			NetworkIdentity objIdentity = playerObject.GetComponent<NetworkIdentity>();
 			NetworkServer.SpawnWithClientAuthority(playerObject, this.connectionToClient);
 
 			//Player selection manager
 			GameObject manager = MonoBehaviour.Instantiate(this.selectionManagerPrefab) as GameObject;
+			manager.transform.SetParent(playerUmbrellaObject.transform);
 			SelectionManager selectionManager = manager.GetComponent<SelectionManager>();
 			if (selectionManager != null) {
 				selectionManager.allObjects.Add(playerObject);
@@ -111,6 +118,7 @@ namespace MultiPlayer {
 
 			//Player split manager
 			manager = MonoBehaviour.Instantiate(this.splitManagerPrefab) as GameObject;
+			manager.transform.SetParent(playerUmbrellaObject.transform);
 			SplitManager splitManager = manager.GetComponent<SplitManager>();
 			if (splitManager != null) {
 				splitManager.selectionManager = selectionManager;
@@ -119,6 +127,7 @@ namespace MultiPlayer {
 
 			//Player merge manager
 			manager = MonoBehaviour.Instantiate(this.mergeManagerPrefab) as GameObject;
+			manager.transform.SetParent(playerUmbrellaObject.transform);
 			MergeManager mergeManager = manager.GetComponent<MergeManager>();
 			if (mergeManager != null) {
 				mergeManager.selectionManager = selectionManager;
@@ -127,6 +136,7 @@ namespace MultiPlayer {
 
 			//Unit Attributes Tracker
 			manager = MonoBehaviour.Instantiate(this.unitAttributesPrefab) as GameObject;
+			manager.transform.SetParent(playerUmbrellaObject.transform);
 			UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 			if (attributes != null) {
 				splitManager.unitAttributes = attributes;
