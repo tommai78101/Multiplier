@@ -315,7 +315,6 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdAttack(GameObject victim, float attackCounter) {
-			//TODO: Cut down the amount of Cmd and Rpc calls.
 			//RpcAttack(victim);
 			if (victim == null) {
 				return;
