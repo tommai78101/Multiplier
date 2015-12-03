@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections;
 
-public class AttributeManager : MonoBehaviour {
+public class AILineOfSight : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

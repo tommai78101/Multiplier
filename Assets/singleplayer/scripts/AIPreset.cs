@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MultiPlayer;
 
 namespace SinglePlayer {
-	public class PresetSetter : MonoBehaviour {
+	public class AIPreset : MonoBehaviour {
 		public Dropdown dropdown;
 		public UnitAttributes unitAttributes;
 
