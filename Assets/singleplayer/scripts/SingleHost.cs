@@ -5,6 +5,10 @@ using System.Collections.Generic;
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
 	public bool notReady = false;
+	public GameObject AIPlayer;
+	public GameObject AIUnits;
+	public GameObject AIUnitPrefab;
+
 	private GameObject playerObject;
 
 	public void Start() {
@@ -45,6 +49,13 @@ public class SingleHost : NetworkManager {
 
 		if (this.playerObject != null) {
 			this.playerObject.SetActive(true);
+		}
+
+		if (this.AIPlayer != null) {
+			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
+			obj.transform.SetParent(this.AIUnits.transform);
+			obj.transform.position = this.GetStartPosition().position;
+			NetworkServer.Spawn(obj);
 		}
 
 		this.notReady = false;
