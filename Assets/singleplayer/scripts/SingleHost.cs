@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
 	public bool notReady = false;
+	private GameObject playerObject;
 
 	public void Start() {
 		this.notReady = true;
@@ -17,6 +18,14 @@ public class SingleHost : NetworkManager {
 			Camera minimapCamera = minimapCameraObject.GetComponent<Camera>();
 			if (minimapCamera != null && minimapCamera.enabled) {
 				minimapCamera.enabled = false;
+			}
+
+			if (this.playerObject == null) {
+				this.playerObject = GameObject.FindGameObjectWithTag("Unit");
+				if (this.playerObject != null && (playerObject.activeSelf || playerObject.activeInHierarchy)) {
+					Debug.Log("Deactivating the player's game unit.");
+					this.playerObject.SetActive(false);
+				}
 			}
 		}
 	}
@@ -32,6 +41,10 @@ public class SingleHost : NetworkManager {
 		Camera minimapCamera = minimapCameraObject.GetComponent<Camera>();
 		if (minimapCamera != null && !minimapCamera.enabled) {
 			minimapCamera.enabled = true;
+		}
+
+		if (this.playerObject != null) {
+			this.playerObject.SetActive(true);
 		}
 
 		this.notReady = false;
