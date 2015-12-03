@@ -17,10 +17,13 @@ namespace SinglePlayer {
 					switch (this.dropdown.value) {
 						default:
 						case 0:
+							Debug.Log("Setting first value.");
 							break;
 						case 1:
+							Debug.Log("Setting second value.");
 							break;
 						case 2:
+							Debug.Log("Setting third value.");
 							break;
 					}
 				}

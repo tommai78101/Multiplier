@@ -7,6 +7,10 @@ namespace SinglePlayer {
 		public List<AIUnit> removeList;
 		public bool startAIFlag;
 
+		//TODO: Continue working on the AI.
+
+
+
 		public void Start() {
 			this.startAIFlag = false;
 		}
@@ -15,6 +19,8 @@ namespace SinglePlayer {
 			if (!this.startAIFlag) {
 				return;
 			}
+
+			
 		}
 
 		public void Activate() {
