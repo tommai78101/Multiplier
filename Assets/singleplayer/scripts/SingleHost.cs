@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using SinglePlayer;
 
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
@@ -52,10 +53,18 @@ public class SingleHost : NetworkManager {
 		}
 
 		if (this.AIPlayer != null) {
+			//AI Unit spawning.
 			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
 			obj.transform.SetParent(this.AIUnits.transform);
 			obj.transform.position = this.GetStartPosition().position;
 			NetworkServer.Spawn(obj);
+
+			//AI manager spawning.
+			AIManager AIManager = this.AIPlayer.GetComponentInChildren<AIManager>();
+			if (AIManager != null) {
+				AIManager.allUnits.Add(obj.GetComponent<AIUnit>());
+				AIManager.Activate();
+			}
 		}
 
 		this.notReady = false;
