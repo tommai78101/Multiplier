@@ -20,7 +20,7 @@ namespace SinglePlayer {
 						float height = dropdownRectTransform.GetHeight();
 						float ownerHeight = ownerRectTransform.GetHeight();
 						dropdownRectTransform.offsetMax = new Vector2(dropdownRectTransform.offsetMax.x, -ownerHeight);
-						dropdownRectTransform.offsetMin = new Vector2(dropdownRectTransform.offsetMin.x, dropdownRectTransform.offsetMin.y - height);
+						dropdownRectTransform.offsetMin = new Vector2(dropdownRectTransform.offsetMin.x, -(ownerHeight + height));
 					}
 				}
 			}
