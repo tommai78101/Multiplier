@@ -11,6 +11,7 @@ namespace MultiPlayer {
 		public List<float> mergePrefabList;
 		public List<float> attackCooldownPrefabList;
 		public float splitPrefabFactor;
+		public int maxLevelCount;
 
 		public void Awake() {
 			this.healthPrefabList = new List<float>(10);

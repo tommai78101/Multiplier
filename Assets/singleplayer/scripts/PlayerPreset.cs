@@ -2,9 +2,10 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using MultiPlayer;
+using Common;
 
 namespace SinglePlayer {
-	public class AIPreset : MonoBehaviour {
+	public class PlayerPreset : MonoBehaviour {
 		public Dropdown dropdown;
 		public UnitAttributes unitAttributes;
 
@@ -28,6 +29,25 @@ namespace SinglePlayer {
 					}
 				}
 			}
+		}
+
+		public void SetHealthAttributes(string mathExpression) {
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i);
+				this.unitAttributes.healthPrefabList.Add(answer);
+			}
+		}
+
+		public void SetSpeedAttributes(string mathExpression) {
+		}
+
+		public void SetAttackAttributes(string mathExpression) {
+		}
+
+		public void SetSplitAttributes(string mathExpression) {
+		}
+
+		public void SetMergeAttributes(string mathExpression) {
 		}
 	}
 }
