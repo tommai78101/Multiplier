@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Common;
 using Extension;
+using MultiPlayer;
 
 namespace SinglePlayer {
 	public enum State {
@@ -13,6 +14,8 @@ namespace SinglePlayer {
 		public State currentState;
 		public float splitFactor;
 		public float mergeFactor;
+		[Range(3, 100)]
+		public float attackCooldownFactor;
 		public AIManager unitManager;
 		public int level;
 		public int previousLevel;
@@ -25,6 +28,7 @@ namespace SinglePlayer {
 
 		private float splitCounter;
 		private float mergeCounter;
+		private float attackCooldownCounter;
 		private NavMeshAgent agent;
 
 		public void Start() {
@@ -33,11 +37,16 @@ namespace SinglePlayer {
 			this.previousLevel = 1;
 			this.isSplitting = false;
 			this.splitCounter = 0f;
+			this.mergeCounter = 0f;
+			this.attackCooldownCounter = 0f;
 			if (this.splitFactor == 0f) {
 				this.splitFactor = 1f;
 			}
 			if (this.mergeFactor == 0f) {
 				this.mergeFactor = 1f;
+			}
+			if (this.attackCooldownFactor == 0f) {
+				this.attackCooldownFactor = 1f;
 			}
 			this.currentHealth = this.maxHealth;
 			if (this.lineOfSight == null) {
@@ -56,9 +65,18 @@ namespace SinglePlayer {
 		}
 
 		public void Update() {
+			if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
+				this.currentState = State.Attack;
+			}
+
 			switch (this.currentState) {
 				default:
 				case State.Idle:
+					if (this.agent != null) {
+						if (!this.agent.ReachedDestination()) {
+							this.agent.ResetPath();
+						}
+					}
 					break;
 				case State.Split:
 					if (this.splitCounter > 0f) {
@@ -81,6 +99,51 @@ namespace SinglePlayer {
 				case State.Merge:
 					if (this.mergeCounter > 0f) {
 						this.mergeCounter -= Time.deltaTime / this.mergeFactor;
+					}
+					else {
+						this.currentState = State.Idle;
+					}
+					break;
+				case State.Attack:
+					//Attack logic.
+					if (this.attackCooldownCounter > 0f) {
+						this.attackCooldownCounter -= Time.deltaTime / this.attackCooldownFactor;
+					}
+					else {
+						if (this.attackRange != null && this.attackRange.enemies.Count > 0) {
+							if (this.attackRange.enemies[0] != null) {
+								AIUnit other = this.attackRange.enemies[0].GetComponent<AIUnit>();
+								if (other != null) {
+									other.TakeDamage();
+									this.attackCooldownCounter = 1f;
+								}
+								else {
+									GameUnit unit = this.attackRange.enemies[0].GetComponent<GameUnit>();
+									if (unit != null) {
+										unit.CmdTakeDamage(unit.currentHealth - 1);
+										this.attackCooldownCounter = 1f;
+									}
+								}
+							}
+						}
+					}
+
+					//Navigation - Follow the enemy.
+					if (this.attackRange != null && this.attackRange.enemies.Count > 0) {
+						if (this.agent != null && this.attackRange.enemies[0] != null) {
+							this.agent.SetDestination(this.attackRange.enemies[0].transform.position);
+						}
+						else {
+							this.currentState = State.Idle;
+						}
+					}
+					else if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
+						if (this.agent != null && this.lineOfSight.enemies[0] != null) {
+							this.agent.SetDestination(this.lineOfSight.enemies[0].transform.position);
+						}
+						else {
+							this.currentState = State.Idle;
+						}
 					}
 					else {
 						this.currentState = State.Idle;
@@ -140,6 +203,13 @@ namespace SinglePlayer {
 			this.currentHealth = original.currentHealth;
 			this.maxHealth = original.maxHealth;
 			this.splitCounter = original.splitCounter;
+		}
+
+		public void TakeDamage() {
+			this.currentHealth--;
+			if (this.currentHealth <= 0) {
+				MonoBehaviour.Destroy(this.gameObject);
+			}
 		}
 	}
 }

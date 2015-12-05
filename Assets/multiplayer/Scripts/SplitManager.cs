@@ -348,6 +348,7 @@ namespace MultiPlayer {
 
 			original.SetTeamColor(original.teamColorValue);
 			copy.SetTeamColor(copy.teamColorValue);
+			copy.teamFaction = original.teamFaction;
 		}
 
 		[ServerCallback]

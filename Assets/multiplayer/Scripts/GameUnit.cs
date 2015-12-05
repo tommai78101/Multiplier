@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using Extension;
 using Common;
+using SinglePlayer;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -46,6 +47,7 @@ namespace MultiPlayer {
 		public Color takeDamageColor;
 		public GameUnit targetEnemy;
 		public GameObject selectionRing;
+		public EnumTeam teamFaction;
 
 		public static bool once = false;
 
@@ -68,6 +70,7 @@ namespace MultiPlayer {
 			this.currentHealth = this.maxHealth;
 			this.recoverCounter = this.recoverCooldown = 1f;
 			this.attackCooldownCounter = this.attackCooldown;
+			this.teamFaction = EnumTeam.Player;
 			if (this.attackPower <= 1f) {
 				this.attackPower = 1f;
 			}
@@ -267,13 +270,16 @@ namespace MultiPlayer {
 			}
 		}
 
-		//public void TakeDamage(int newHealth) {
-		//	if (!this.hasAuthority) {
-		//		return;
-		//	}
-		//	//CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
-		//	this.recoverCounter = 0f;
-		//}
+		[Command]
+		public void CmdTakeDamage(int newHealth) {
+			//ONLY USED FOR SINGLE PLAYER.
+			if (!this.hasAuthority) {
+				return;
+			}
+			//CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
+			this.currentHealth = newHealth;
+			this.recoverCounter = 0f;
+		}
 
 		public bool CheckIfVisible() {
 			Renderer renderer = this.GetComponent<Renderer>();
