@@ -13,7 +13,7 @@ namespace MultiPlayer {
 		public Vector3 mergingPosition;
 		public Vector3 ownerScale;
 		public Vector3 mergingScale;
-		public float elaspedTime;
+		public float elapsedTime;
 		public float mergeSpeedFactor;
 
 		public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit, float mergeFactor) {
@@ -25,7 +25,7 @@ namespace MultiPlayer {
 			//if (this.mergingUnit.level < 10) {
 			//	this.mergingUnit.level++;
 			//}
-			this.elaspedTime = 0f;
+			this.elapsedTime = 0f;
 
 			this.ownerPosition = ownerUnit.gameObject.transform.position;
 			this.mergingPosition = mergingUnit.gameObject.transform.position;
@@ -56,14 +56,14 @@ namespace MultiPlayer {
 			this.Stop();
 
 			//Merging animation. Most likely another known bug that I cannot fix.
-			this.ownerUnit.gameObject.transform.position = Vector3.Lerp(this.ownerPosition, this.origin, this.elaspedTime);
-			this.mergingUnit.gameObject.transform.position = Vector3.Lerp(this.mergingPosition, this.origin, this.elaspedTime);
+			this.ownerUnit.gameObject.transform.position = Vector3.Lerp(this.ownerPosition, this.origin, this.elapsedTime);
+			this.mergingUnit.gameObject.transform.position = Vector3.Lerp(this.mergingPosition, this.origin, this.elapsedTime);
 
 			//Scaling animation. Same persistent bug? It might be another mysterious bug.
-			Vector3 scale = Vector3.Lerp(this.ownerScale, this.ownerScale * scaling, this.elaspedTime);
+			Vector3 scale = Vector3.Lerp(this.ownerScale, this.ownerScale * scaling, this.elapsedTime);
 			scale.y = this.ownerScale.y;
 			this.ownerUnit.gameObject.transform.localScale = scale;
-			scale = Vector3.Lerp(this.mergingScale, this.mergingScale * scaling, this.elaspedTime);
+			scale = Vector3.Lerp(this.mergingScale, this.mergingScale * scaling, this.elapsedTime);
 			scale.y = this.mergingScale.y;
 			this.mergingUnit.gameObject.transform.localScale = scale;
 		}
@@ -243,7 +243,7 @@ namespace MultiPlayer {
 			if (this.mergeList.Count > 0) {
 				for (int i = 0; i < this.mergeList.Count; i++) {
 					MergeGroup group = this.mergeList[i];
-					if (group.elaspedTime > 1f) {
+					if (group.elapsedTime > 1f) {
 						group.Resume();
 						if (!this.removeList.Contains(group)) {
 							FinishMergeGroup(group);
@@ -252,7 +252,7 @@ namespace MultiPlayer {
 					}
 					else {
 						group.Update(this.scalingValue);
-						group.elaspedTime += Time.deltaTime / group.mergeSpeedFactor;
+						group.elapsedTime += Time.deltaTime / group.mergeSpeedFactor;
 						this.mergeList[i] = group;
 					}
 				}

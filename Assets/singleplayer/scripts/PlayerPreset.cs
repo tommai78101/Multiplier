@@ -14,9 +14,9 @@ namespace SinglePlayer {
 			if (obj != null) {
 				this.unitAttributes = obj.GetComponent<UnitAttributes>();
 				if (this.unitAttributes != null && this.dropdown != null) {
-					//TODO: Set attribute presets here...
+					//TODO: Make complex presets.
 					int itemValue = this.dropdown.value;
-					switch (itemValue) {
+                    switch (itemValue) {
 						default:
 						case 0:
 						case 1:
@@ -30,6 +30,12 @@ namespace SinglePlayer {
 							this.SetMergeAttributes(expression);
 							break;
 						case 3:
+							this.SetHealthAttributes("y=2*x");
+							string otherExpression = "y=1.414*x";
+							this.SetAttackAttributes(otherExpression);
+							this.SetSpeedAttributes(otherExpression);
+							this.SetSplitAttributes(otherExpression);
+							this.SetMergeAttributes(otherExpression);
 							break;
 					}
 				}

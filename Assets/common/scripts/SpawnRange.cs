@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace MultiPlayer {
+namespace Common {
 	public class SpawnRange : MonoBehaviour {
 		public float radius;
 		public SphereCollider spawnRangeTrigger;

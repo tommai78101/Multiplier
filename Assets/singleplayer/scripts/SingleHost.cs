@@ -57,12 +57,13 @@ public class SingleHost : NetworkManager {
 			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
 			obj.transform.SetParent(this.AIUnits.transform);
 			obj.transform.position = this.GetStartPosition().position;
-			NetworkServer.Spawn(obj);
+			AIUnit unit = obj.GetComponent<AIUnit>();
+			//NetworkServer.Spawn(obj);
 
 			//AI manager spawning.
 			AIManager AIManager = this.AIPlayer.GetComponentInChildren<AIManager>();
 			if (AIManager != null) {
-				AIManager.allUnits.Add(obj.GetComponent<AIUnit>());
+				unit.unitManager = AIManager;
 				AIManager.Activate();
 			}
 		}

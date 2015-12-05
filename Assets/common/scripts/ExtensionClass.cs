@@ -93,5 +93,15 @@ namespace Extension {
 		public static void SetRightTopPosition(this RectTransform trans, Vector2 newPos) {
 			trans.localPosition = new Vector3(newPos.x - ((1f - trans.pivot.x) * trans.rect.width), newPos.y - ((1f - trans.pivot.y) * trans.rect.height), trans.localPosition.z);
 		}
+
+		public static Vector3 GetRandomPosition(this GameObject gameObject) {
+			Renderer renderer = gameObject.GetComponent<Renderer>();
+			if (renderer != null) {
+				Vector3 size = renderer.bounds.size;
+				Vector3 halfSize = size / 2f;
+				return new Vector3(UnityEngine.Random.Range(0f, size.x) - halfSize.x, UnityEngine.Random.Range(0f, size.y) - halfSize.y, UnityEngine.Random.Range(0f, size.z) - halfSize.z);
+            }
+			return Vector3.zero;
+		}
 	}
 }
