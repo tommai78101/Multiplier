@@ -28,7 +28,7 @@ namespace Common {
 			}
 			List<string> result = new List<string>(Regex.Split(equation.ToLower().Trim()));
 			for (int i = result.Count - 1; i >= 0; i--) {
-				if (result[i].Equals("")) {
+				if (result[i].Equals("") || result[i].Equals(" ")) {
 					result.RemoveAt(i);
 				}
 			}

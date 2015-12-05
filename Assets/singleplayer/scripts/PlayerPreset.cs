@@ -15,16 +15,21 @@ namespace SinglePlayer {
 				this.unitAttributes = obj.GetComponent<UnitAttributes>();
 				if (this.unitAttributes != null && this.dropdown != null) {
 					//TODO: Set attribute presets here...
-					switch (this.dropdown.value) {
+					int itemValue = this.dropdown.value;
+					switch (itemValue) {
 						default:
 						case 0:
-							Debug.Log("Setting first value.");
-							break;
 						case 1:
-							Debug.Log("Setting second value.");
-							break;
 						case 2:
-							Debug.Log("Setting third value.");
+							Debug.Log("Setting expression: " + this.dropdown.options[itemValue].text);
+							string expression = this.dropdown.options[itemValue].text;
+							this.SetHealthAttributes(expression);
+							this.SetAttackAttributes(expression);
+							this.SetSpeedAttributes(expression);
+							this.SetSplitAttributes(expression);
+							this.SetMergeAttributes(expression);
+							break;
+						case 3:
 							break;
 					}
 				}
@@ -39,15 +44,29 @@ namespace SinglePlayer {
 		}
 
 		public void SetSpeedAttributes(string mathExpression) {
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i);
+				this.unitAttributes.speedPrefabList.Add(answer);
+			}
 		}
 
 		public void SetAttackAttributes(string mathExpression) {
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i);
+				this.unitAttributes.attackPrefabList.Add(answer);
+			}
 		}
 
 		public void SetSplitAttributes(string mathExpression) {
+			float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1);
+			this.unitAttributes.splitPrefabFactor = answer;
 		}
 
 		public void SetMergeAttributes(string mathExpression) {
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i);
+				this.unitAttributes.mergePrefabList.Add(answer);
+			}
 		}
 	}
 }
