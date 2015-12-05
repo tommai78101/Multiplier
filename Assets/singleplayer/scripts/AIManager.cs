@@ -108,6 +108,7 @@ namespace SinglePlayer {
 		public Difficulty difficulty;
 		public FSMState currentFiniteState;
 		public GameObject AIUnitPrefab;
+		[Range(15, 50)]
 		public int maxUnitCount;
 
 
@@ -153,7 +154,6 @@ namespace SinglePlayer {
 						this.splitGroupList[i] = group;
 					}
 				}
-				//this.splitGroupList.Clear();
 			}
 			if (this.mergeGroupList.Count > 0) {
 				for (int i = 0; i < this.mergeGroupList.Count; i++) {
@@ -173,7 +173,6 @@ namespace SinglePlayer {
 						this.mergeGroupList[i] = group;
 					}
 				}
-				//this.mergeGroupList.Clear();
 			}
 			if (this.removeUnitList.Count > 0) {
 				foreach (AIUnit unit in this.removeUnitList) {
@@ -212,7 +211,7 @@ namespace SinglePlayer {
 						this.selectedUnits.Clear();
 					}
 
-					if (this.unitCount == 0) {
+					if (this.unitCount <= 0) {
 						//Defeat. No more AI units on the map.
 						Debug.Log("AI Player is defeated.");
 						this.startAIFlag = false;
@@ -303,9 +302,9 @@ namespace SinglePlayer {
 				case FSMState.Split:
 					if (this.spawnList.Count > 0) {
 						foreach (AIUnit unit in this.spawnList) {
-							if (unit != null) {
+							if (unit != null && unit.currentState != State.Split) {
 								if (this.unitCount < this.maxUnitCount) {
-									GameObject splitObject = unit.Split(this.AIUnitPrefab);
+									GameObject splitObject = SplitUnit(unit);
 									if (splitObject != null) {
 										this.splitGroupList.Add(new SplitGroup(unit.gameObject, splitObject));
 										this.unitCount = this.unitContainer.transform.childCount;
@@ -323,22 +322,12 @@ namespace SinglePlayer {
 				case FSMState.Scout:
 					Debug.Log("AI player is ready to scout.");
 					if (this.selectedUnits.Count > 0) {
-						GameObject floor = GameObject.FindGameObjectWithTag("Floor");
-						if (floor != null) {
-							for (int i = 0; i < this.selectedUnits.Count; i++) {
-								if (this.selectedUnits[i] != null) {
-									AIUnit unit = this.selectedUnits[i];
-									if (unit != null) {
-										NavMeshAgent agent = unit.GetComponent<NavMeshAgent>();
-										if (agent != null) {
-											Vector3 randomPosition = floor.GetRandomPosition();
-											agent.SetDestination(randomPosition);
-										}
-									}
-									else {
-										this.selectedUnits.RemoveAt(i);
-									}
-								}
+						for (int i = 0; i < this.selectedUnits.Count; i++) {
+							if (this.selectedUnits[i] != null) {
+								this.selectedUnits[i].SetScoutFlag();
+							}
+							else {
+								this.selectedUnits.RemoveAt(i);
 							}
 						}
 						this.selectedUnits.Clear();
@@ -359,14 +348,23 @@ namespace SinglePlayer {
 							for (int i = 0; i < this.mergeList.Count - 1; i++) {
 								if (this.mergeList[i] != null && !removeList.Contains(this.mergeList[i])) {
 									owner = this.mergeList[i];
-									for (int j = i + 1; j < this.mergeList.Count; j++) {
-										if (this.mergeList[j] != null && !removeList.Contains(this.mergeList[j]) && !owner.Equals(this.mergeList[j]) && owner.level == this.mergeList[j].level) {
+									if (owner.CheckMergeFlag()) {
+										for (int j = i + 1; j < this.mergeList.Count; j++) {
 											merge = this.mergeList[j];
-											//TODO: Once unit attribute manager is implemented for the AI player, change the 2f to the actual scaling factor.
-											this.mergeGroupList.Add(new MergeGroup(owner.gameObject, merge.gameObject, 2f));
-											removeList.Add(this.mergeList[i]);
-											removeList.Add(this.mergeList[j]);
-											break;
+											if (merge != null && !removeList.Contains(merge) && !owner.Equals(merge) && owner.level == merge.level) {
+												//TODO: Once unit attribute manager is implemented for the AI player, change the 2f to the actual scaling factor.
+												if (merge.CheckMergeFlag()) {
+													owner.SetMergeFlag();
+													merge.SetMergeFlag();
+													this.mergeGroupList.Add(new MergeGroup(owner.gameObject, merge.gameObject, 2f));
+													removeList.Add(owner);
+													removeList.Add(merge);
+													break;
+												}
+												else {
+													continue;
+												}
+											}
 										}
 									}
 								}
@@ -387,6 +385,25 @@ namespace SinglePlayer {
 					}
 				}
 			}
+		}
+
+		//------------------------------------
+
+		private GameObject SplitUnit(AIUnit original) {
+			original.SetSplitFlag();
+			if (original.currentState == State.Split) {
+				GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
+				if (obj != null) {
+					obj.transform.SetParent(original.transform.parent);
+					obj.transform.position = original.transform.position;
+					AIUnit unit = obj.GetComponent<AIUnit>();
+					if (unit != null) {
+						unit.Copy(original);
+					}
+				}
+				return obj;
+			}
+			return null;
 		}
 	}
 }
