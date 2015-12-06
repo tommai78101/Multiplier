@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using Common;
@@ -76,6 +77,13 @@ namespace SinglePlayer {
 				Camera camera = minimapObject.GetComponent<Camera>();
 				this.minimapCameraRect = camera.rect;
 			}
+			else {
+				minimapObject = GameObject.FindGameObjectWithTag("Menu");
+				if (minimapObject != null) {
+					Image image = minimapObject.GetComponent<Image>();
+					this.minimapCameraRect = image.GetPixelAdjustedRect();
+				}
+			}
 		}
 
 		public void Update() {
@@ -128,7 +136,7 @@ namespace SinglePlayer {
 					else {
 						if (this.attackRange != null && this.attackRange.enemies.Count > 0) {
 							if (this.attackRange.enemies[0] != null) {
-								AIUnit other = this.attackRange.enemies[0].GetComponent<AIUnit>();
+								AIUnit other = this.attackRange.enemies[0].GetComponentInParent<AIUnit>();
 								if (other != null) {
 									other.TakeDamage(this.attackFactor);
 									this.attackCooldownCounter = 1f;

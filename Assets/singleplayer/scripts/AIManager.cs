@@ -144,34 +144,42 @@ namespace SinglePlayer {
 		public void Update() {
 			if (this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
-					SplitGroup group = this.splitGroupList[i];
-					if (group.elapsedTime > 1f) {
+					SplitGroup splitGroup = this.splitGroupList[i];
+					if (splitGroup.elapsedTime > 1f) {
 						this.splitGroupList.RemoveAt(i);
 						i--;
 					}
 					else {
-						group.Update();
-						group.elapsedTime += Time.deltaTime;
-						this.splitGroupList[i] = group;
+						splitGroup.Update();
+						splitGroup.elapsedTime += Time.deltaTime;
+						this.splitGroupList[i] = splitGroup;
 					}
 				}
 			}
 			if (this.mergeGroupList.Count > 0) {
 				for (int i = 0; i < this.mergeGroupList.Count; i++) {
-					MergeGroup group = this.mergeGroupList[i];
-					if (group.elapsedTime > 1f) {
-						AIUnit unit = group.owner.GetComponent<AIUnit>();
-						unit.previousLevel = unit.level;
-						unit.level++;
-						this.removeUnitList.Add(group.merge.GetComponent<AIUnit>());
-						MonoBehaviour.Destroy(group.merge);
+					MergeGroup mergeGroup = this.mergeGroupList[i];
+					if (mergeGroup.elapsedTime > 1f) {
+						if (mergeGroup.owner != null) {
+							AIUnit unit = mergeGroup.owner.GetComponent<AIUnit>();
+							unit.previousLevel = unit.level;
+							unit.level++;
+
+							//TODO: Use the attribute manager to manage the attributes after merging.
+							unit.attackFactor *= 3f;
+							unit.currentHealth *= 2;
+							unit.maxHealth *= 2;
+							unit.mergeFactor *= 2f;
+						}
+						this.removeUnitList.Add(mergeGroup.merge.GetComponent<AIUnit>());
+						//MonoBehaviour.Destroy(mergeGroup.merge);
 						this.mergeGroupList.RemoveAt(i);
 						i--;
 					}
 					else {
-						group.Update();
-						group.elapsedTime += Time.deltaTime;
-						this.mergeGroupList[i] = group;
+						mergeGroup.Update();
+						mergeGroup.elapsedTime += Time.deltaTime;
+						this.mergeGroupList[i] = mergeGroup;
 					}
 				}
 			}
@@ -201,6 +209,10 @@ namespace SinglePlayer {
 
 		public void Activate() {
 			this.startAIFlag = true;
+		}
+
+		public void Deactivate() {
+			this.startAIFlag = false;
 		}
 
 		//Actual update tick
