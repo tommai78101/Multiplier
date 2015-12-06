@@ -27,6 +27,7 @@ namespace SinglePlayer {
 		public AIAttackRange attackRange;
 		public bool isSplitting;
 		public EnumTeam teamFaction;
+		public int teamColorValue;
 
 		private float splitCounter;
 		private float mergeCounter;
@@ -236,6 +237,8 @@ namespace SinglePlayer {
 			this.minimapCameraRect = original.minimapCameraRect;
 			this.teamFaction = original.teamFaction;
 
+			this.SetTeamColor(original.teamColorValue);
+
 			AILineOfSight myLOS = this.GetComponentInChildren<AILineOfSight>();
 			AILineOfSight originalLOS = original.GetComponentInChildren<AILineOfSight>();
 			AIAttackRange myAR = this.GetComponentInChildren<AIAttackRange>();
@@ -249,6 +252,30 @@ namespace SinglePlayer {
 			this.currentHealth -= Mathf.FloorToInt(damageAmount);
 			if (this.currentHealth <= 0) {
 				MonoBehaviour.Destroy(this.gameObject);
+			}
+		}
+
+		//Sets the team color.
+		public void SetTeamColor(int colorValue) {
+			this.teamColorValue = colorValue;
+
+			Renderer playerRenderer = this.GetComponent<Renderer>();
+			if (playerRenderer != null) {
+				Material customMaterial = playerRenderer.material;
+				switch (colorValue) {
+					default:
+						customMaterial.SetColor("_TeamColor", Color.gray);
+						break;
+					case 0:
+						customMaterial.SetColor("_TeamColor", Color.red);
+						break;
+					case 1:
+						customMaterial.SetColor("_TeamColor", Color.blue);
+						break;
+					case 2:
+						customMaterial.SetColor("_TeamColor", Color.green);
+						break;
+				}
 			}
 		}
 	}
