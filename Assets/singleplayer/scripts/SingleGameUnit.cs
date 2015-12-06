@@ -1,15 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using MultiPlayer;
 
-public class SingleGameUnit : MonoBehaviour {
+namespace SinglePlayer {
+	public class SingleGameUnit : GameUnit {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

@@ -14,6 +14,7 @@ namespace SinglePlayer {
 		public State currentState;
 		public float splitFactor;
 		public float mergeFactor;
+		public float attackFactor;
 		[Range(3, 100)]
 		public float attackCooldownFactor;
 		public AIManager unitManager;
@@ -39,6 +40,9 @@ namespace SinglePlayer {
 			this.splitCounter = 0f;
 			this.mergeCounter = 0f;
 			this.attackCooldownCounter = 0f;
+			if (this.attackFactor == 0f) {
+				this.attackFactor = 1f;
+			}
 			if (this.splitFactor == 0f) {
 				this.splitFactor = 1f;
 			}
@@ -114,7 +118,7 @@ namespace SinglePlayer {
 							if (this.attackRange.enemies[0] != null) {
 								AIUnit other = this.attackRange.enemies[0].GetComponent<AIUnit>();
 								if (other != null) {
-									other.TakeDamage();
+									other.TakeDamage(this.attackFactor);
 									this.attackCooldownCounter = 1f;
 								}
 								else {
@@ -205,8 +209,8 @@ namespace SinglePlayer {
 			this.splitCounter = original.splitCounter;
 		}
 
-		public void TakeDamage() {
-			this.currentHealth--;
+		public void TakeDamage(float damageAmount) {
+			this.currentHealth -= Mathf.FloorToInt(damageAmount);
 			if (this.currentHealth <= 0) {
 				MonoBehaviour.Destroy(this.gameObject);
 			}

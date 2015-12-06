@@ -46,6 +46,7 @@ namespace MultiPlayer {
 		public Color initialColor;
 		public Color takeDamageColor;
 		public GameUnit targetEnemy;
+		public AIUnit targetAIEnemy;
 		public GameObject selectionRing;
 		public EnumTeam teamFaction;
 
@@ -65,6 +66,7 @@ namespace MultiPlayer {
 			this.oldTargetPosition = Vector3.one * -9999f;
 			this.oldEnemyTargetPosition = Vector3.one * -9999f;
 			this.targetEnemy = null;
+			this.targetAIEnemy = null;
 			this.isSelected = false;
 			this.isDirected = false;
 			this.currentHealth = this.maxHealth;
@@ -125,6 +127,7 @@ namespace MultiPlayer {
 				if (sight != null && area != null) {
 					//There are 4 cases when detecting an enemy in both areas, line of sight and attack range. I had to consider each of the cases 
 					//in order to ease the Console error gods...
+					// (12/5/2015) Now there are 8 cases in total. Consider AI players.
 					if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count > 0) {
 						CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
 					}
@@ -136,6 +139,19 @@ namespace MultiPlayer {
 					}
 					else {
 						CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
+					}
+
+					if (sight.otherEnemies.Count > 0 && area.otherEnemies.Count > 0) {
+						SetTargetAIEnemy(this.gameObject, sight.otherEnemies[0].gameObject, area.otherEnemies[0].gameObject);
+					}
+					else if (sight.otherEnemies.Count > 0 && area.otherEnemies.Count <= 0) {
+						SetTargetAIEnemy(this.gameObject, sight.otherEnemies[0].gameObject, sight.otherEnemies[0].gameObject);
+					}
+					else if (sight.otherEnemies.Count <= 0 && area.otherEnemies.Count > 0) {
+						SetTargetAIEnemy(this.gameObject, area.otherEnemies[0].gameObject, area.otherEnemies[0].gameObject);
+					}
+					else {
+						SetTargetAIEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 				}
 			}
@@ -207,20 +223,52 @@ namespace MultiPlayer {
 			}
 		}
 
-		public void Attack() {
-			if (this.targetEnemy == null) {
-				return;
+		public void MoveToAITarget(GameObject attacker) {
+			NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+			GameUnit unit = attacker.GetComponent<GameUnit>();
+			if (agent != null) {
+				if (unit.targetAIEnemy != null) {
+					agent.stoppingDistance = 0.5f;
+					agent.SetDestination(unit.targetAIEnemy.transform.position);
+				}
+				else {
+					agent.stoppingDistance = 0f;
+					agent.SetDestination(unit.oldTargetPosition);
+				}
 			}
-			//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
-			AttackArea area = this.GetComponentInChildren<AttackArea>();
-			if (area != null) {
-				if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
-					if (this.attackCooldownCounter <= 0f) {
-						CmdAttack(this.targetEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+		}
+
+		public void Attack() {
+			if (this.targetEnemy != null) {
+				//Attack Reach. If a nearby enemy game unit is within attack range, engage and attack.
+				AttackArea area = this.GetComponentInChildren<AttackArea>();
+				if (area != null) {
+					if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
+						if (this.attackCooldownCounter <= 0f) {
+							CmdAttack(this.targetEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+						}
+					}
+					else if (area.enemiesInAttackRange.Count > 0) {
+						this.targetEnemy = area.enemiesInAttackRange[0];
 					}
 				}
-				else if (area.enemiesInAttackRange.Count > 0) {
-					this.targetEnemy = area.enemiesInAttackRange[0];
+			}
+			else if (this.targetAIEnemy != null) {
+				AttackArea area = this.GetComponentInChildren<AttackArea>();
+				if (area != null) {
+					if (area.otherEnemies.Contains(this.targetAIEnemy)) {
+						if (this.attackCooldownCounter <= 0f) {
+							if (this.attributes.attackCooldownPrefabList.Count > 0) {
+								AttackAI(this.targetAIEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+							}
+							else {
+								AttackAI(this.targetAIEnemy.gameObject, 1f);
+							}
+						}
+					}
+					else if (area.otherEnemies.Count > 0) {
+						this.targetAIEnemy = area.otherEnemies[0];
+					}
 				}
 			}
 		}
@@ -332,6 +380,17 @@ namespace MultiPlayer {
 			}
 		}
 
+		public void AttackAI(GameObject victim, float attackCounter) {
+			if (victim == null) {
+				return;
+			}
+			AIUnit victimUnit = victim.GetComponent<AIUnit>();
+			if (victimUnit != null) {
+				victimUnit.TakeDamage(this.attackPower);
+				this.attackCooldownCounter = attackCounter;
+			}
+		}
+
 		[Command]
 		public void CmdSetTarget(GameObject obj, Vector3 target) {
 			//Command call to tell the server to run the following code.
@@ -389,28 +448,52 @@ namespace MultiPlayer {
 		}
 
 		[ClientRpc]
-		public void RpcSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {
-			if (obj != null) {
-				GameUnit unit = obj.GetComponent<GameUnit>();
+		public void RpcSetTargetEnemy(GameObject attacker, GameObject enemyInLineOfSight, GameObject victimInAttackRange) {
+			if (attacker != null && (enemyInLineOfSight != null || victimInAttackRange != null)) {
+				GameUnit unit = attacker.GetComponent<GameUnit>();
 				if (unit != null) {
-					if (enemy != null && attackee != null && obj.Equals(enemy) && obj.Equals(attackee)) {
+					if (victimInAttackRange != null && attacker.Equals(enemyInLineOfSight) && attacker.Equals(victimInAttackRange)) {
 						unit.targetEnemy = null;
 					}
 					else {
-						if (enemy != null) {
-							unit.targetEnemy = enemy.GetComponent<GameUnit>();
-							MoveToTarget(obj);
+						if (victimInAttackRange != null) {
+							unit.targetEnemy = victimInAttackRange.GetComponent<GameUnit>();
+							MoveToTarget(attacker);
 						}
-						else if (attackee != null) {
-							unit.targetEnemy = attackee.GetComponent<GameUnit>();
-							MoveToTarget(obj);
+						else if (enemyInLineOfSight != null) {
+							unit.targetEnemy = enemyInLineOfSight.GetComponent<GameUnit>();
+							MoveToTarget(attacker);
 						}
 						else {
 							unit.targetEnemy = null;
 						}
 					}
 				}
+			}
+		}
 
+		public void SetTargetAIEnemy(GameObject attacker, GameObject enemyInLineOfSight, GameObject victimInAttackRange) {
+			GameUnit unit = attacker.GetComponent<GameUnit>();
+			if (unit != null) {
+				AIUnit AIunit = enemyInLineOfSight != null ? enemyInLineOfSight.GetComponent<AIUnit>() : victimInAttackRange.GetComponent<AIUnit>();
+				if (AIunit != null) {
+					if (victimInAttackRange != null && attacker.Equals(enemyInLineOfSight) && attacker.Equals(victimInAttackRange)) {
+						unit.targetAIEnemy = null;
+					}
+					else {
+						if (victimInAttackRange != null) {
+							unit.targetAIEnemy = victimInAttackRange.GetComponent<AIUnit>();
+							MoveToAITarget(attacker);
+						}
+						else if (enemyInLineOfSight != null) {
+							unit.targetAIEnemy = enemyInLineOfSight.GetComponent<AIUnit>();
+							MoveToAITarget(attacker);
+						}
+						else {
+							unit.targetAIEnemy = null;
+						}
+					}
+				}
 			}
 		}
 

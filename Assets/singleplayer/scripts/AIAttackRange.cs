@@ -6,6 +6,7 @@ namespace SinglePlayer {
 	public class AIAttackRange : MonoBehaviour {
 		public EnumTeam teamFaction;
 		public List<GameObject> enemies;
+		public Rigidbody sphereColliderRigidBody;
 
 		public void Start() {
 			this.enemies = new List<GameObject>();
@@ -18,7 +19,7 @@ namespace SinglePlayer {
 			}
 			else {
 				GameUnit unit = other.GetComponent<GameUnit>();
-				if (unit != null && unit.teamFaction != this.teamFaction) {
+				if (unit != null && unit.teamFaction != this.teamFaction && !this.enemies.Contains(unit.gameObject)) {
 					this.enemies.Add(unit.gameObject);
 				}
 			}
@@ -31,13 +32,14 @@ namespace SinglePlayer {
 			}
 			else {
 				GameUnit unit = other.GetComponent<GameUnit>();
-				if (unit != null && unit.teamFaction != this.teamFaction) {
+				if (unit != null && unit.teamFaction != this.teamFaction && this.enemies.Contains(unit.gameObject)) {
 					this.enemies.Remove(unit.gameObject);
 				}
 			}
 		}
 
-		public void Update() {
+		public void FixedUpdate() {
+			this.sphereColliderRigidBody.WakeUp();
 			if (this.enemies.Count > 0) {
 				for (int i = 0; i < this.enemies.Count; i++) {
 					if (this.enemies[i] == null) {

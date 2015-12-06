@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using MultiPlayer;
+using SinglePlayer;
 
 public class LineOfSight : MonoBehaviour {
 	public List<GameUnit> enemiesInRange;
 	public List<GameUnit> removeList;
     public List<GameUnit> exitedList;
+	public List<AIUnit> otherEnemies;
+	public List<AIUnit> exitedEnemies;
 	public float radius;
 	public GameUnit parent;
 	public Rigidbody sphereColliderRigidBody;
@@ -34,8 +37,17 @@ public class LineOfSight : MonoBehaviour {
 		if (unit != null && myself != null && (unit != myself) && unit.CheckIfVisible() && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
+		else {
+			AIUnit AIunit = other.GetComponent<AIUnit>();
+			if (AIunit != null && !this.otherEnemies.Contains(AIunit)) {
+				this.otherEnemies.Add(AIunit);
+			}
+		}
 		if (this.exitedList.Count > 0) {
 			this.exitedList.Clear();
+		}
+		if (this.exitedEnemies.Count > 0) {
+			this.exitedEnemies.Clear();
 		}
 	}
 
@@ -46,6 +58,12 @@ public class LineOfSight : MonoBehaviour {
 			if ((myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
 				this.enemiesInRange.Remove(unit);
 				this.exitedList.Add(unit);
+			}
+		}
+		else {
+			AIUnit AIunit = other.GetComponent<AIUnit>();
+			if (AIunit != null && this.otherEnemies.Contains(AIunit)) {
+				this.otherEnemies.Remove(AIunit);
 			}
 		}
 	}
@@ -64,6 +82,14 @@ public class LineOfSight : MonoBehaviour {
 			foreach (GameUnit unit in this.enemiesInRange) {
 				if (unit == null) {
 					this.removeList.Add(unit);
+				}
+			}
+		}
+
+		if (this.otherEnemies.Count > 0) {
+			for (int i = 0; i < this.otherEnemies.Count; i++) {
+				if (this.otherEnemies[i] == null) {
+					this.otherEnemies.RemoveAt(i);
 				}
 			}
 		}
