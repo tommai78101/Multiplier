@@ -171,7 +171,9 @@ namespace SinglePlayer {
 							unit.maxHealth *= 2;
 							unit.mergeFactor *= 2f;
 						}
-						this.removeUnitList.Add(mergeGroup.merge.GetComponent<AIUnit>());
+						if (mergeGroup.merge != null) {
+							this.removeUnitList.Add(mergeGroup.merge.GetComponent<AIUnit>());
+						}
 						//MonoBehaviour.Destroy(mergeGroup.merge);
 						this.mergeGroupList.RemoveAt(i);
 						i--;
