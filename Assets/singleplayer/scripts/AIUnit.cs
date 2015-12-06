@@ -31,6 +31,8 @@ namespace SinglePlayer {
 		private float mergeCounter;
 		private float attackCooldownCounter;
 		private NavMeshAgent agent;
+		private Rect minimapCameraRect;
+		private Vector3 healthViewportPosition;
 
 		public void Start() {
 			this.currentState = State.Idle;
@@ -66,6 +68,12 @@ namespace SinglePlayer {
 				}
 			}
 			this.agent = this.GetComponent<NavMeshAgent>();
+
+			GameObject minimapObject = GameObject.FindGameObjectWithTag("Minimap");
+			if (minimapObject != null) {
+				Camera camera = minimapObject.GetComponent<Camera>();
+				this.minimapCameraRect = camera.rect;
+			}
 		}
 
 		public void Update() {
@@ -156,6 +164,20 @@ namespace SinglePlayer {
 			}
 		}
 
+		public void OnGUI() {
+			if (this.minimapCameraRect != null) {
+				GUIStyle style = new GUIStyle();
+				style.normal.textColor = Color.black;
+				style.alignment = TextAnchor.MiddleCenter;
+				Vector3 healthPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+				this.healthViewportPosition = Camera.main.ScreenToViewportPoint(new Vector3(healthPosition.x, healthPosition.y + 30f));
+				if (!this.minimapCameraRect.Contains(this.healthViewportPosition)) {
+					Rect healthRect = new Rect(healthPosition.x - 50f, (Screen.height - healthPosition.y) - 45f, 100f, 25f);
+					GUI.Label(healthRect, this.currentHealth.ToString() + "/" + this.maxHealth.ToString(), style);
+				}
+			}
+		}
+
 		public void Tick() {
 			switch (this.currentState) {
 				default:
@@ -203,10 +225,14 @@ namespace SinglePlayer {
 		public void Copy(AIUnit original) {
 			this.currentState = original.currentState;
 			this.splitFactor = original.splitFactor;
+			this.mergeFactor = original.mergeFactor;
+			this.attackCooldownFactor = original.attackCooldownFactor;
+			this.attackFactor = original.attackFactor;
 			this.unitManager = original.unitManager;
 			this.currentHealth = original.currentHealth;
 			this.maxHealth = original.maxHealth;
 			this.splitCounter = original.splitCounter;
+			this.minimapCameraRect = original.minimapCameraRect;
 		}
 
 		public void TakeDamage(float damageAmount) {
