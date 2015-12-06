@@ -14,7 +14,7 @@ namespace SinglePlayer {
 
 		public void OnTriggerEnter(Collider other) {
 			AILineOfSight sight = other.GetComponent<AILineOfSight>();
-			if (sight != null && sight.teamFaction != this.teamFaction) {
+			if (sight != null && sight.teamFaction != this.teamFaction && !this.enemies.Contains(sight.gameObject)) {
 				this.enemies.Add(sight.gameObject);
 			}
 			else {
@@ -27,7 +27,7 @@ namespace SinglePlayer {
 
 		public void OnTriggerExit(Collider other) {
 			AILineOfSight sight = other.GetComponent<AILineOfSight>();
-			if (sight != null && sight.teamFaction != this.teamFaction) {
+			if (sight != null && sight.teamFaction != this.teamFaction && this.enemies.Contains(sight.gameObject)) {
 				this.enemies.Remove(sight.gameObject);
 			}
 			else {

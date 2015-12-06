@@ -110,6 +110,7 @@ namespace SinglePlayer {
 		public GameObject AIUnitPrefab;
 		[Range(15, 50)]
 		public int maxUnitCount;
+		public EnumTeam teamFaction;
 
 
 		private float tickIntervalCounter;
@@ -291,8 +292,13 @@ namespace SinglePlayer {
 						//Usually at the start of the game, or when the AI player is on the brink of defeat.
 						Transform child = this.unitContainer.transform.GetChild(this.unitContainer.transform.childCount - 1);
 						AIUnit unit = child.GetComponent<AIUnit>();
+						AILineOfSight lineOfSight = child.GetComponentInChildren<AILineOfSight>();
+						AIAttackRange attackRange = child.GetComponentInChildren<AIAttackRange>();
 
 						//TODO: Refer to an attribute manager for AI units on what attributes are required.
+						unit.teamFaction = this.teamFaction;
+						lineOfSight.teamFaction = this.teamFaction;
+						attackRange.teamFaction = this.teamFaction;
 
 						//Always select the unit before doing other AI state machines.
 						this.spawnList.Add(unit);

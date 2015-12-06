@@ -26,6 +26,7 @@ namespace SinglePlayer {
 		public AILineOfSight lineOfSight;
 		public AIAttackRange attackRange;
 		public bool isSplitting;
+		public EnumTeam teamFaction;
 
 		private float splitCounter;
 		private float mergeCounter;
@@ -167,16 +168,14 @@ namespace SinglePlayer {
 		}
 
 		public void OnGUI() {
-			if (this.minimapCameraRect != null) {
-				GUIStyle style = new GUIStyle();
-				style.normal.textColor = Color.black;
-				style.alignment = TextAnchor.MiddleCenter;
-				Vector3 healthPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
-				this.healthViewportPosition = Camera.main.ScreenToViewportPoint(new Vector3(healthPosition.x, healthPosition.y + 30f));
-				if (!this.minimapCameraRect.Contains(this.healthViewportPosition)) {
-					Rect healthRect = new Rect(healthPosition.x - 50f, (Screen.height - healthPosition.y) - 45f, 100f, 25f);
-					GUI.Label(healthRect, this.currentHealth.ToString() + "/" + this.maxHealth.ToString(), style);
-				}
+			GUIStyle style = new GUIStyle();
+			style.normal.textColor = Color.black;
+			style.alignment = TextAnchor.MiddleCenter;
+			Vector3 healthPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+			this.healthViewportPosition = Camera.main.ScreenToViewportPoint(new Vector3(healthPosition.x, healthPosition.y + 30f));
+			if (!this.minimapCameraRect.Contains(this.healthViewportPosition)) {
+				Rect healthRect = new Rect(healthPosition.x - 50f, (Screen.height - healthPosition.y) - 45f, 100f, 25f);
+				GUI.Label(healthRect, this.currentHealth.ToString() + "/" + this.maxHealth.ToString(), style);
 			}
 		}
 
@@ -235,6 +234,15 @@ namespace SinglePlayer {
 			this.maxHealth = original.maxHealth;
 			this.splitCounter = original.splitCounter;
 			this.minimapCameraRect = original.minimapCameraRect;
+			this.teamFaction = original.teamFaction;
+
+			AILineOfSight myLOS = this.GetComponentInChildren<AILineOfSight>();
+			AILineOfSight originalLOS = original.GetComponentInChildren<AILineOfSight>();
+			AIAttackRange myAR = this.GetComponentInChildren<AIAttackRange>();
+			AIAttackRange originalAR = original.GetComponentInChildren<AIAttackRange>();
+
+			myLOS.teamFaction = originalLOS.teamFaction;
+			myAR.teamFaction = originalAR.teamFaction;
 		}
 
 		public void TakeDamage(float damageAmount) {
