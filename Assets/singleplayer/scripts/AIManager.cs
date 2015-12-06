@@ -122,13 +122,13 @@ namespace SinglePlayer {
 			}
 			switch (this.difficulty) {
 				case Difficulty.Easy:
-					tickIntervals = 5f;
+					tickIntervals = 2f;
 					break;
 				case Difficulty.Normal:
-					tickIntervals = 3f;
+					tickIntervals = 1f;
 					break;
 				case Difficulty.Hard:
-					tickIntervals = 1f;
+					tickIntervals = 0.5f;
 					break;
 			}
 			this.tickIntervalCounter = this.tickIntervals;

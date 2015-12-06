@@ -473,6 +473,9 @@ namespace MultiPlayer {
 		}
 
 		public void SetTargetAIEnemy(GameObject attacker, GameObject enemyInLineOfSight, GameObject victimInAttackRange) {
+			if (enemyInLineOfSight == null && victimInAttackRange == null) {
+				return;
+			}
 			GameUnit unit = attacker.GetComponent<GameUnit>();
 			if (unit != null) {
 				AIUnit AIunit = enemyInLineOfSight != null ? enemyInLineOfSight.GetComponent<AIUnit>() : victimInAttackRange.GetComponent<AIUnit>();

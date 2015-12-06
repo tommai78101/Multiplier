@@ -78,7 +78,9 @@ namespace SinglePlayer {
 
 		public void Update() {
 			if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
-				this.currentState = State.Attack;
+				if (this.currentState != State.Split || this.currentState != State.Merge) {
+					this.currentState = State.Attack;
+				}
 			}
 
 			switch (this.currentState) {
