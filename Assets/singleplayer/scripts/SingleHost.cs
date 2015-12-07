@@ -58,13 +58,13 @@ public class SingleHost : NetworkManager {
 			obj.transform.SetParent(this.AIUnits.transform);
 			obj.transform.position = this.GetStartPosition().position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
-			//NetworkServer.Spawn(obj);
 
 			//AI manager spawning.
-			AIManager AIManager = this.AIPlayer.GetComponentInChildren<AIManager>();
-			if (AIManager != null) {
-				unit.unitManager = AIManager;
-				AIManager.Activate();
+			AIManager AImanager = this.AIPlayer.GetComponentInChildren<AIManager>();
+			if (AImanager != null) {
+				unit.unitManager = AImanager;
+				unit.SetTeam(AImanager.teamFaction);
+				AImanager.Activate();
 			}
 		}
 

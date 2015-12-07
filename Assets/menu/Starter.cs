@@ -39,15 +39,15 @@ public class Starter : MonoBehaviour {
 			obj.transform.SetParent(this.redTeamUnits.transform);
 			obj.transform.position = this.redTeamStartPosiiton.position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
-			unit.SetTeamColor(0);
 
 			//AI manager spawning.
-			AIManager AIManager = this.redTeam.GetComponentInChildren<AIManager>();
-			if (AIManager != null) {
-				this.redTeamAI = AIManager;
-				unit.unitManager = AIManager;
-				AIManager.teamFaction = EnumTeam.Player;
-				AIManager.Activate();
+			AIManager AImanager = this.redTeam.GetComponentInChildren<AIManager>();
+			if (AImanager != null) {
+				this.redTeamAI = AImanager;
+				unit.unitManager = AImanager;
+				unit.teamFaction = AImanager.teamFaction;
+				unit.SetTeamColor(0);
+				AImanager.Activate();
 			}
 		}
 
@@ -60,12 +60,13 @@ public class Starter : MonoBehaviour {
 			unit.SetTeamColor(1);
 
 			//AI manager spawning.
-			AIManager AIManager = this.blueTeam.GetComponentInChildren<AIManager>();
-			if (AIManager != null) {
-				this.blueTeamAI = AIManager;
-				unit.unitManager = AIManager;
-				AIManager.teamFaction = EnumTeam.Computer;
-				AIManager.Activate();
+			AIManager AImanager = this.blueTeam.GetComponentInChildren<AIManager>();
+			if (AImanager != null) {
+				this.blueTeamAI = AImanager;
+				unit.unitManager = AImanager;
+				unit.teamFaction = AImanager.teamFaction;
+				unit.SetTeamColor(1);
+				AImanager.Activate();
 			}
 		}
 

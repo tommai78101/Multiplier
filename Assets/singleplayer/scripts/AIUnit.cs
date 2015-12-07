@@ -286,5 +286,20 @@ namespace SinglePlayer {
 				}
 			}
 		}
+
+		public void SetTeam(EnumTeam teamFaction) {
+			this.teamFaction = teamFaction;
+			switch (teamFaction) {
+				case EnumTeam.Player:
+					this.SetTeamColor(0);
+					break;
+				case EnumTeam.Computer:
+					this.SetTeamColor(-1);
+					break;
+				case EnumTeam.Neutral:
+					this.SetTeamColor((int) UnityEngine.Random.Range(0, 3));
+					break;
+			}
+		}
 	}
 }

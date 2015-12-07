@@ -132,7 +132,7 @@ namespace SinglePlayer {
 					tickIntervals = 0.5f;
 					break;
 			}
-			this.tickIntervalCounter = this.tickIntervals;
+			this.tickIntervalCounter = UnityEngine.Random.Range(0f, this.tickIntervals + 1f);
 			this.currentFiniteState = FSMState.Wait;
 			this.removeUnitList = new List<AIUnit>();
 			this.selectedUnits = new List<AIUnit>();
@@ -237,10 +237,7 @@ namespace SinglePlayer {
 					if (this.unitCount >= 8 && this.unitCount <= this.maxUnitCount) {
 						//AI player is ready to merge.
 						int chosen = Mathf.FloorToInt(Random.value * this.unitCount) + 1;
-						int halfChosen = 0;
-						if (chosen > 8) {
-							halfChosen = chosen / 2;
-						}
+						int halfChosen = chosen / 2;
 						int remaining = this.unitCount;
 						while (chosen > 0 && halfChosen > 0) {
 							int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
