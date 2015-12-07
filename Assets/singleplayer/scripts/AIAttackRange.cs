@@ -13,7 +13,10 @@ namespace SinglePlayer {
 		}
 
 		public void OnTriggerEnter(Collider other) {
-			AIAttackRange attackRange = other.GetComponent<AIAttackRange>();
+			if (other.GetComponent<AILineOfSight>() != null || other.GetComponent<AIAttackRange>() != null) {
+				return;
+			}
+			AIUnit attackRange = other.GetComponentInParent<AIUnit>();
 			if (attackRange != null && attackRange.teamFaction != this.teamFaction && !this.enemies.Contains(attackRange.gameObject)) {
 				this.enemies.Add(attackRange.gameObject);
 				this.enemies.Sort(this);
@@ -28,7 +31,7 @@ namespace SinglePlayer {
 		}
 
 		public void OnTriggerExit(Collider other) {
-			AIAttackRange attackRange = other.GetComponent<AIAttackRange>();
+			AIUnit attackRange = other.GetComponentInParent<AIUnit>();
 			if (attackRange != null && attackRange.teamFaction != this.teamFaction && this.enemies.Contains(attackRange.gameObject)) {
 				this.enemies.Remove(attackRange.gameObject);
 			}

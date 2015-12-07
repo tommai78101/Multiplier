@@ -7,7 +7,7 @@ using SinglePlayer;
 
 namespace MultiPlayer {
 	[System.Serializable]
-	public class GameUnit : NetworkBehaviour {
+	public class GameUnit : BaseUnit {
 		//Properties of a Game Unit
 		[SyncVar]
 		public bool isSelected;

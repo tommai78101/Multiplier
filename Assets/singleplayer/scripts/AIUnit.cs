@@ -11,28 +11,29 @@ namespace SinglePlayer {
 		Idle, Move, Attack, Split, Merge, Scout, Random
 	};
 
-	public class AIUnit : MonoBehaviour {
+	public class AIUnit : BaseUnit {
+		public BaseUnit targetUnit;
 		public State currentState;
 		public float splitFactor;
 		public float mergeFactor;
 		public float attackFactor;
 		[Range(3, 100)]
 		public float attackCooldownFactor;
-		public AIManager unitManager;
-		public int level;
-		public int previousLevel;
+		public float attackCooldownCounter;
 		public int currentHealth;
 		[Range(3, 100)]
 		public int maxHealth;
+		public bool isSplitting;
+		public int teamColorValue;
+		public EnumTeam teamFaction;
+		public AIManager unitManager;
 		public AILineOfSight lineOfSight;
 		public AIAttackRange attackRange;
-		public bool isSplitting;
-		public EnumTeam teamFaction;
-		public int teamColorValue;
+		public int level;
+		public int previousLevel;
 
 		private float splitCounter;
 		private float mergeCounter;
-		private float attackCooldownCounter;
 		private NavMeshAgent agent;
 		private Rect minimapCameraRect;
 		private Vector3 healthViewportPosition;
@@ -44,7 +45,7 @@ namespace SinglePlayer {
 			this.isSplitting = false;
 			this.splitCounter = 0f;
 			this.mergeCounter = 0f;
-			this.attackCooldownCounter = 0f;
+			this.attackCooldownCounter = 1f;
 			if (this.attackFactor == 0f) {
 				this.attackFactor = 1f;
 			}
@@ -71,6 +72,9 @@ namespace SinglePlayer {
 				}
 			}
 			this.agent = this.GetComponent<NavMeshAgent>();
+			if (this.agent != null) {
+				this.agent.stoppingDistance = 1.5f;
+			}
 
 			GameObject minimapObject = GameObject.FindGameObjectWithTag("Minimap");
 			if (minimapObject != null) {
@@ -81,15 +85,42 @@ namespace SinglePlayer {
 				minimapObject = GameObject.FindGameObjectWithTag("Menu");
 				if (minimapObject != null) {
 					Image image = minimapObject.GetComponent<Image>();
-					this.minimapCameraRect = image.GetPixelAdjustedRect();
+					this.minimapCameraRect = image.rectTransform.rect;
 				}
 			}
 		}
 
 		public void Update() {
-			if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
-				if (this.currentState != State.Split || this.currentState != State.Merge) {
-					this.currentState = State.Attack;
+			if (this.attackCooldownCounter >= 0f) {
+				this.attackCooldownCounter -= Time.deltaTime / this.attackCooldownFactor;
+			}
+
+			if (this.targetUnit == null && this.currentState != State.Split && this.currentState != State.Merge) {
+				this.lineOfSight.sphereColliderRigidBody.WakeUp();
+				if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
+					for (int i = 0; i < this.lineOfSight.enemies.Count; i++) {
+						GameObject enemy = this.lineOfSight.enemies[i];
+						if (enemy != null) {
+							AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
+							GameUnit playerUnit = enemy.GetComponent<GameUnit>();
+							if (aiUnit != null || playerUnit != null) {
+								if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
+									if (this.agent != null) {
+										this.agent.SetDestination(aiUnit.transform.position);
+									}
+									this.currentState = State.Attack;
+									break;
+								}
+								else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
+									if (this.agent != null) {
+										this.agent.SetDestination(playerUnit.transform.position);
+									}
+									this.currentState = State.Attack;
+									break;
+								}
+							}
+						}
+					}
 				}
 			}
 
@@ -116,6 +147,7 @@ namespace SinglePlayer {
 				case State.Scout:
 					if (this.agent != null) {
 						if (this.agent.ReachedDestination()) {
+							this.targetUnit = null;
 							this.currentState = State.Idle;
 						}
 					}
@@ -130,48 +162,51 @@ namespace SinglePlayer {
 					break;
 				case State.Attack:
 					//Attack logic.
-					if (this.attackCooldownCounter > 0f) {
-						this.attackCooldownCounter -= Time.deltaTime / this.attackCooldownFactor;
-					}
-					else {
-						if (this.attackRange != null && this.attackRange.enemies.Count > 0) {
-							if (this.attackRange.enemies[0] != null) {
-								AIUnit other = this.attackRange.enemies[0].GetComponentInParent<AIUnit>();
-								if (other != null) {
-									other.TakeDamage(this.attackFactor);
-									this.attackCooldownCounter = 1f;
-								}
-								else {
-									GameUnit unit = this.attackRange.enemies[0].GetComponent<GameUnit>();
-									if (unit != null) {
-										unit.CmdTakeDamage(unit.currentHealth - 1);
-										this.attackCooldownCounter = 1f;
+					if (this.attackCooldownCounter < 0f) {
+						if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0 && this.attackRange != null && this.attackRange.enemies.Count > 0) {
+							for (int i = 0; i < this.attackRange.enemies.Count; i++) {
+								GameObject enemy = this.attackRange.enemies[i];
+								if (enemy != null) {
+									AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
+									GameUnit playerUnit = enemy.GetComponent<GameUnit>();
+									if (aiUnit != null || playerUnit != null) {
+										if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
+											this.targetUnit = aiUnit;
+											aiUnit.TakeDamage(this.attackFactor);
+											this.attackCooldownCounter = 1f;
+											break;
+										}
+										else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
+											this.targetUnit = playerUnit;
+											playerUnit.CmdTakeDamage(playerUnit.currentHealth - 1);
+											this.attackCooldownCounter = 1f;
+											break;
+										}
 									}
 								}
 							}
 						}
 					}
-
-					//Navigation - Follow the enemy.
-					if (this.attackRange != null && this.attackRange.enemies.Count > 0) {
-						if (this.agent != null && this.attackRange.enemies[0] != null) {
-							this.agent.SetDestination(this.attackRange.enemies[0].transform.position);
-						}
-						else {
-							this.currentState = State.Idle;
-						}
-					}
-					else if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
-						if (this.agent != null && this.lineOfSight.enemies[0] != null) {
-							this.agent.SetDestination(this.lineOfSight.enemies[0].transform.position);
-						}
-						else {
-							this.currentState = State.Idle;
-						}
-					}
-					else {
-						this.currentState = State.Idle;
-					}
+					//if (this.targetUnit != null) {
+					//	AIUnit aiUnit = this.targetUnit as AIUnit;
+					//	if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
+					//		aiUnit.TakeDamage(this.attackFactor);
+					//		this.attackCooldownCounter = 1f;
+					//	}
+					//	else {
+					//		GameUnit unit = this.targetUnit as GameUnit;
+					//		if (unit != null && unit.teamFaction != this.teamFaction) {
+					//			unit.CmdTakeDamage(unit.currentHealth - 1);
+					//			this.attackCooldownCounter = 1f;
+					//		}
+					//		else {
+					//			this.targetUnit = null;
+					//		}
+					//	}
+					//	if (this.agent != null) {
+					//		this.agent.SetDestination(this.targetUnit.transform.position);
+					//	}
+					//}
 					break;
 			}
 		}

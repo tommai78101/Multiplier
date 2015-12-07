@@ -14,7 +14,10 @@ namespace SinglePlayer {
 		}
 
 		public void OnTriggerEnter(Collider other) {
-			AILineOfSight sight = other.GetComponent<AILineOfSight>();
+			if (other.GetComponent<AILineOfSight>() != null || other.GetComponent<AIAttackRange>() != null) {
+				return;
+			}
+			AIUnit sight = other.GetComponentInParent<AIUnit>();
 			if (sight != null && sight.teamFaction != this.teamFaction && !this.enemies.Contains(sight.gameObject)) {
 				this.enemies.Add(sight.gameObject);
 				this.enemies.Sort(this);
@@ -29,7 +32,7 @@ namespace SinglePlayer {
 		}
 
 		public void OnTriggerExit(Collider other) {
-			AILineOfSight sight = other.GetComponent<AILineOfSight>();
+			AIUnit sight = other.GetComponentInParent<AIUnit>();
 			if (sight != null && sight.teamFaction != this.teamFaction && this.enemies.Contains(sight.gameObject)) {
 				this.enemies.Remove(sight.gameObject);
 			}

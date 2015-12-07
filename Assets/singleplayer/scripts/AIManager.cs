@@ -110,10 +110,19 @@ namespace SinglePlayer {
 		public GameObject AIUnitPrefab;
 		[Range(15, 50)]
 		public int maxUnitCount;
+		[Range(0f, 1f)]
+		public float mergeRatio;
+		[Range(0f, 1f)]
+		public float scoutRatio;
+		[Range(0f, 1f)]
+		public float splitRatio;
 		public EnumTeam teamFaction;
 
 
 		private float tickIntervalCounter;
+		private float splitPercentage = 0f;
+		private float mergePercentage = 0f;
+		private float scoutPercentage = 0f;
 
 		public void Start() {
 			this.startAIFlag = false;
@@ -139,6 +148,9 @@ namespace SinglePlayer {
 			this.spawnList = new List<AIUnit>();
 			this.splitGroupList = new List<SplitGroup>();
 			this.mergeGroupList = new List<MergeGroup>();
+			this.splitPercentage = 0f;
+			this.mergePercentage = 0f;
+			this.scoutPercentage = 0f;
 		}
 
 		public void Update() {
@@ -233,73 +245,7 @@ namespace SinglePlayer {
 						return;
 					}
 
-					//INFLEXIBLE BUILD ORDER
-					if (this.unitCount >= 8 && this.unitCount <= this.maxUnitCount) {
-						//AI player is ready to merge.
-						int chosen = Mathf.FloorToInt(Random.value * this.unitCount) + 1;
-						int halfChosen = chosen / 2;
-						int remaining = this.unitCount;
-						while (chosen > 0 && halfChosen > 0) {
-							int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
-							Transform child = this.unitContainer.transform.GetChild(randomIndex);
-							this.mergeList.Add(child.GetComponent<AIUnit>());
-							chosen--;
-							halfChosen--;
-							remaining--;
-						}
-						while (chosen > 0 && halfChosen <= 0) {
-							int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
-							Transform child = this.unitContainer.transform.GetChild(randomIndex);
-							this.selectedUnits.Add(child.GetComponent<AIUnit>());
-							chosen--;
-							remaining--;
-						}
-						if (remaining > 0) {
-							foreach (Transform child in this.unitContainer.transform) {
-								if (child != null) {
-									AIUnit unit = child.GetComponent<AIUnit>();
-									if (!this.selectedUnits.Contains(unit)) {
-										this.spawnList.Add(unit);
-									}
-								}
-							}
-						}
-						this.currentFiniteState = FSMState.Merge;
-					}
-					else if (this.unitCount >= 4 && this.unitCount < 8) {
-						//AI is ready to scout.
-						int chosen = Mathf.FloorToInt(Random.value * this.unitCount) + 1;
-						int remaining = this.unitCount;
-						while (chosen > 0) {
-							int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
-							Transform child = this.unitContainer.transform.GetChild(randomIndex);
-							this.selectedUnits.Add(child.GetComponent<AIUnit>());
-							chosen--;
-							remaining--;
-						}
-						if (remaining > 0) {
-							foreach (Transform child in this.unitContainer.transform) {
-								if (child != null) {
-									AIUnit unit = child.GetComponent<AIUnit>();
-									if (!this.selectedUnits.Contains(unit)) {
-										this.spawnList.Add(unit);
-									}
-								}
-							}
-						}
-						this.currentFiniteState = FSMState.Scout;
-					}
-					else if (this.unitCount > 1 && this.unitCount < 4) {
-						//AI is getting ready. Build to 4 units
-						foreach (Transform child in this.unitContainer.transform) {
-							AIUnit unit = child.GetComponent<AIUnit>();
-							if (unit != null) {
-								this.spawnList.Add(unit);
-							}
-						}
-						this.currentFiniteState = FSMState.Split;
-					}
-					else if (this.unitCount <= 1) {
+					if (this.unitCount == 1) {
 						//Usually at the start of the game, or when the AI player is on the brink of defeat.
 						Transform child = this.unitContainer.transform.GetChild(this.unitContainer.transform.childCount - 1);
 						AIUnit unit = child.GetComponent<AIUnit>();
@@ -314,7 +260,143 @@ namespace SinglePlayer {
 						//Always select the unit before doing other AI state machines.
 						this.spawnList.Add(unit);
 						this.currentFiniteState = FSMState.Split;
+						break;
 					}
+
+					int scoutUnitCount = 0;
+					int splitUnitCount = 0;
+					int mergeUnitCount = 0;
+
+					foreach (Transform child in this.unitContainer.transform) {
+						if (splitUnitCount > 0) {
+							splitPercentage = splitRatio / splitUnitCount;
+						}
+						else {
+							splitPercentage = splitRatio / 1f;
+						}
+
+						if (mergeUnitCount > 0) {
+							mergePercentage = mergeRatio / mergeUnitCount;
+						}
+						else {
+							mergePercentage = mergeRatio / 1f;
+						}
+
+						if (scoutUnitCount > 0) {
+							scoutPercentage = scoutRatio / scoutUnitCount;
+						}
+						else {
+							scoutPercentage = scoutRatio / 1f;
+						}
+
+						if (this.splitPercentage > this.mergePercentage && this.splitPercentage > this.scoutPercentage) {
+							this.spawnList.Add(child.GetComponent<AIUnit>());
+							splitUnitCount++;
+						}
+						else if (this.splitPercentage > this.mergePercentage && this.splitPercentage < this.scoutPercentage) {
+							this.selectedUnits.Add(child.GetComponent<AIUnit>());
+							scoutUnitCount++;
+						}
+						else if (this.splitPercentage < this.mergePercentage && this.splitPercentage > this.scoutPercentage) {
+							this.mergeList.Add(child.GetComponent<AIUnit>());
+							mergeUnitCount++;
+						}
+						else if (this.splitPercentage < this.mergePercentage && this.splitPercentage < this.scoutPercentage) {
+							if (this.mergePercentage > this.scoutPercentage) {
+								this.mergeList.Add(child.GetComponent<AIUnit>());
+								mergeUnitCount++;
+							}
+							else {
+								this.selectedUnits.Add(child.GetComponent<AIUnit>());
+								scoutUnitCount++;
+							}
+						}
+					}
+					this.currentFiniteState = FSMState.Merge;
+					
+
+					//INFLEXIBLE BUILD ORDER
+					//if (this.unitCount >= 8 && this.unitCount <= this.maxUnitCount) {
+					//	//AI player is ready to merge.
+					//	int chosen = Mathf.FloorToInt(Random.value * this.unitCount) + 1;
+					//	int halfChosen = chosen / 2;
+					//	int remaining = this.unitCount;
+					//	while (chosen > 0 && halfChosen > 0) {
+					//		int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
+					//		Transform child = this.unitContainer.transform.GetChild(randomIndex);
+					//		this.mergeList.Add(child.GetComponent<AIUnit>());
+					//		chosen--;
+					//		halfChosen--;
+					//		remaining--;
+					//	}
+					//	while (chosen > 0 && halfChosen <= 0) {
+					//		int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
+					//		Transform child = this.unitContainer.transform.GetChild(randomIndex);
+					//		this.selectedUnits.Add(child.GetComponent<AIUnit>());
+					//		chosen--;
+					//		remaining--;
+					//	}
+					//	if (remaining > 0) {
+					//		foreach (Transform child in this.unitContainer.transform) {
+					//			if (child != null) {
+					//				AIUnit unit = child.GetComponent<AIUnit>();
+					//				if (!this.selectedUnits.Contains(unit)) {
+					//					this.spawnList.Add(unit);
+					//				}
+					//			}
+					//		}
+					//	}
+					//	this.currentFiniteState = FSMState.Merge;
+					//}
+					//else if (this.unitCount >= 4 && this.unitCount < 8) {
+					//	//AI is ready to scout.
+					//	int chosen = Mathf.FloorToInt(Random.value * this.unitCount) + 1;
+					//	int remaining = this.unitCount;
+					//	while (chosen > 0) {
+					//		int randomIndex = Mathf.FloorToInt(Random.value * this.unitCount);
+					//		Transform child = this.unitContainer.transform.GetChild(randomIndex);
+					//		this.selectedUnits.Add(child.GetComponent<AIUnit>());
+					//		chosen--;
+					//		remaining--;
+					//	}
+					//	if (remaining > 0) {
+					//		foreach (Transform child in this.unitContainer.transform) {
+					//			if (child != null) {
+					//				AIUnit unit = child.GetComponent<AIUnit>();
+					//				if (!this.selectedUnits.Contains(unit)) {
+					//					this.spawnList.Add(unit);
+					//				}
+					//			}
+					//		}
+					//	}
+					//	this.currentFiniteState = FSMState.Scout;
+					//}
+					//else if (this.unitCount > 1 && this.unitCount < 4) {
+					//	//AI is getting ready. Build to 4 units
+					//	foreach (Transform child in this.unitContainer.transform) {
+					//		AIUnit unit = child.GetComponent<AIUnit>();
+					//		if (unit != null) {
+					//			this.spawnList.Add(unit);
+					//		}
+					//	}
+					//	this.currentFiniteState = FSMState.Split;
+					//}
+					//else if (this.unitCount <= 1) {
+					//	//Usually at the start of the game, or when the AI player is on the brink of defeat.
+					//	Transform child = this.unitContainer.transform.GetChild(this.unitContainer.transform.childCount - 1);
+					//	AIUnit unit = child.GetComponent<AIUnit>();
+					//	AILineOfSight lineOfSight = child.GetComponentInChildren<AILineOfSight>();
+					//	AIAttackRange attackRange = child.GetComponentInChildren<AIAttackRange>();
+
+					//	//TODO: Refer to an attribute manager for AI units on what attributes are required.
+					//	unit.teamFaction = this.teamFaction;
+					//	lineOfSight.teamFaction = this.teamFaction;
+					//	attackRange.teamFaction = this.teamFaction;
+
+					//	//Always select the unit before doing other AI state machines.
+					//	this.spawnList.Add(unit);
+					//	this.currentFiniteState = FSMState.Split;
+					//}
 					break;
 				case FSMState.Split:
 					if (this.spawnList.Count > 0) {
