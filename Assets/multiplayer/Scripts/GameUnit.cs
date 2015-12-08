@@ -128,27 +128,64 @@ namespace MultiPlayer {
 					//There are 4 cases when detecting an enemy in both areas, line of sight and attack range. I had to consider each of the cases 
 					//in order to ease the Console error gods...
 					// (12/5/2015) Now there are 8 cases in total. Consider AI players.
-					if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count > 0) {
-						CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
+					GameUnit sightGameUnit = null;
+					if (sight.enemiesInRange.Count > 0) {
+						foreach (GameUnit temp in sight.enemiesInRange) {
+							if (temp != null) {
+								sightGameUnit = temp;
+								break;
+							}
+						}
 					}
-					else if (sight.enemiesInRange.Count > 0 && area.enemiesInAttackRange.Count <= 0) {
-						CmdSetTargetEnemy(this.gameObject, sight.enemiesInRange[0].gameObject, sight.enemiesInRange[0].gameObject);
+					GameUnit attackGameUnit = null;
+					if (sight.enemiesInRange.Count > 0) {
+						foreach (GameUnit temp in sight.enemiesInRange) {
+							if (temp != null) {
+								attackGameUnit = temp;
+								break;
+							}
+						}
 					}
-					else if (sight.enemiesInRange.Count <= 0 && area.enemiesInAttackRange.Count > 0) {
-						CmdSetTargetEnemy(this.gameObject, area.enemiesInAttackRange[0].gameObject, area.enemiesInAttackRange[0].gameObject);
+					AIUnit sightAiUnit = null;
+					if (sight.otherEnemies.Count > 0) {
+						foreach (AIUnit temp in sight.otherEnemies) {
+							if (temp != null) {
+								sightAiUnit = temp;
+								break;
+							}
+						}
+					}
+					AIUnit attackAiUnit = null;
+					if (sight.otherEnemies.Count > 0) {
+						foreach (AIUnit temp in sight.otherEnemies) {
+							if (temp != null) {
+								attackAiUnit = temp;
+								break;
+							}
+						}
+					}
+
+					if (sightGameUnit != null && attackGameUnit != null) {
+						CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, attackGameUnit.gameObject);
+					}
+					else if (sightGameUnit != null && attackGameUnit == null) {
+						CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, sightGameUnit.gameObject);
+					}
+					else if (sightGameUnit == null && attackGameUnit != null) {
+						CmdSetTargetEnemy(this.gameObject, attackGameUnit.gameObject, attackGameUnit.gameObject);
 					}
 					else {
 						CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 
-					if (sight.otherEnemies.Count > 0 && area.otherEnemies.Count > 0) {
-						SetTargetAIEnemy(this.gameObject, sight.otherEnemies[0].gameObject, area.otherEnemies[0].gameObject);
+					if (sightAiUnit != null && attackAiUnit != null) {
+						SetTargetAIEnemy(this.gameObject, sightAiUnit.gameObject, attackAiUnit.gameObject);
 					}
-					else if (sight.otherEnemies.Count > 0 && area.otherEnemies.Count <= 0) {
-						SetTargetAIEnemy(this.gameObject, sight.otherEnemies[0].gameObject, sight.otherEnemies[0].gameObject);
+					else if (sightAiUnit != null && attackAiUnit == null) {
+						SetTargetAIEnemy(this.gameObject, sightAiUnit.gameObject, sightAiUnit.gameObject);
 					}
-					else if (sight.otherEnemies.Count <= 0 && area.otherEnemies.Count > 0) {
-						SetTargetAIEnemy(this.gameObject, area.otherEnemies[0].gameObject, area.otherEnemies[0].gameObject);
+					else if (sightAiUnit == null && attackAiUnit != null) {
+						SetTargetAIEnemy(this.gameObject, attackAiUnit.gameObject, attackAiUnit.gameObject);
 					}
 					else {
 						SetTargetAIEnemy(this.gameObject, this.gameObject, this.gameObject);
