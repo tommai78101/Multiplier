@@ -104,7 +104,7 @@ namespace SinglePlayer {
 		public float tickIntervals;
 		public int unitCount;
 		public GameObject unitContainer;
-		public GameObject attributeManager;
+		public AIAttributeManager attributeManager;
 		public Difficulty difficulty;
 		public FSMState currentFiniteState;
 		public GameObject AIUnitPrefab;
@@ -154,13 +154,6 @@ namespace SinglePlayer {
 		}
 
 		public void Update() {
-            float sumRatio = this.mergeRatio + this.scoutRatio + this.splitRatio;
-            if (sumRatio > 0f) {
-				this.mergeRatio /= sumRatio;
-				this.scoutRatio /= sumRatio;
-				this.splitRatio /= sumRatio;
-            }
-
 			if (this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
 					SplitGroup splitGroup = this.splitGroupList[i];
@@ -225,6 +218,15 @@ namespace SinglePlayer {
 			else {
 				Tick();
 				this.tickIntervalCounter = this.tickIntervals;
+			}
+		}
+
+		public void OnValidate() {
+			float sumRatio = this.mergeRatio + this.scoutRatio + this.splitRatio;
+			if (sumRatio > 0f) {
+				this.mergeRatio /= sumRatio;
+				this.scoutRatio /= sumRatio;
+				this.splitRatio /= sumRatio;
 			}
 		}
 

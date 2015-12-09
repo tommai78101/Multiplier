@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using SinglePlayer;
+using SinglePlayer.UI;
 
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
@@ -53,6 +54,12 @@ public class SingleHost : NetworkManager {
 		}
 
 		if (this.AIPlayer != null) {
+			//AI attribute manager.
+			AIAttributeManager attributeManager = this.AIPlayer.GetComponentInChildren<AIAttributeManager>();
+			if (attributeManager != null) {
+				Debug.Log("It works!");
+			}
+
 			//AI Unit spawning.
 			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
 			obj.transform.SetParent(this.AIUnits.transform);
@@ -63,14 +70,15 @@ public class SingleHost : NetworkManager {
 			AIManager AImanager = this.AIPlayer.GetComponentInChildren<AIManager>();
 			if (AImanager != null) {
 				unit.unitManager = AImanager;
+
+				if (attributeManager != null && attributeManager.attributePanelUI != null) {
+					DifficultyGroup group = attributeManager.attributePanelUI.aiCalibrationDifficulty;
+					AImanager.difficulty = group.GetDifficulty();
+                }
+
 				unit.SetTeam(AImanager.teamFaction);
 				AImanager.Activate();
 			}
-		}
-
-		AIAttributeManager attributeManager = this.AIPlayer.GetComponentInChildren<AIAttributeManager>();
-		if (attributeManager != null) {
-			Debug.Log("It works!");
 		}
 
 		this.notReady = false;

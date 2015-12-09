@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using SinglePlayer.UI;
 
 namespace SinglePlayer {
 	[Serializable]
@@ -16,8 +17,9 @@ namespace SinglePlayer {
 	public class AIAttributeManager : MonoBehaviour {
 		public List<TierUpgrade> tiers;
 		public int maxTiersLimit;
+		public AttributePanelUI attributePanelUI;
 
-		public void Start() {
+		public void Awake() {
 			Debug.Log("Initializing AI attribute manager.");
 			this.maxTiersLimit = 10;
 			this.tiers = new List<TierUpgrade>();
@@ -42,6 +44,17 @@ namespace SinglePlayer {
 				}
 				this.tiers.Add(tier);
 			}
+			GameObject tempAttribute = GameObject.FindGameObjectWithTag("AIAttributePanel");
+			if (tempAttribute != null) {
+				this.attributePanelUI = tempAttribute.GetComponent<AttributePanelUI>();
+				if (this.attributePanelUI == null) {
+					Debug.LogError("Something is not right.");
+				}
+			}
+		}
+
+		public void Start() {
+
 		}
 	}
 }
