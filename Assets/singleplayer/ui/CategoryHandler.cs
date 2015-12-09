@@ -21,7 +21,7 @@ namespace SinglePlayer.UI {
 					GameObject obj = GameObject.Instantiate(this.categoryItemPrefab) as GameObject;
 					Text text = obj.GetComponentInChildren<Text>();
 					text.text = this.items[i];
-					Toggle toggle = obj.GetComponent<Toggle>(); asdasd
+					Toggle toggle = obj.GetComponent<Toggle>(); FIX THIS!!
 					if (toggle != null) {
 						if (i == 0) {
 							toggle.isOn = true;
