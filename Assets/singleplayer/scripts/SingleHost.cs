@@ -68,6 +68,11 @@ public class SingleHost : NetworkManager {
 			}
 		}
 
+		AIAttributeManager attributeManager = this.AIPlayer.GetComponentInChildren<AIAttributeManager>();
+		if (attributeManager != null) {
+			Debug.Log("It works!");
+		}
+
 		this.notReady = false;
 	}
 

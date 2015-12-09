@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace SinglePlayer {
+namespace SinglePlayer.UI {
 	public class StopHost : MonoBehaviour {
 		public SingleHost host;
 

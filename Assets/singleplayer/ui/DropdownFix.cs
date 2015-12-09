@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 using Extension;
 
-namespace SinglePlayer {
+namespace SinglePlayer.UI {
 	public class DropdownFix : Dropdown, IPointerClickHandler {
 		public override void OnPointerClick(PointerEventData eventData) {
 			base.OnPointerClick(eventData);
