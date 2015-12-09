@@ -8,8 +8,8 @@ namespace SinglePlayer.UI {
 		public CategoryHandler categoryContentObject;
 		public LevelRateHandler levelingRatesObject;
 		public Text equationTextObject;
-		public Difficulty aiCalibrationDifficulty;
-		public PresetDefault aiCalibrationPresetModeObject;
-		public CustomFieldHandler aiCalibrationFieldItemObject;
+		public DifficultyGroup aiCalibrationDifficulty;
+		public PresetDefault aiCalibrationPresets;
+		public CustomFieldHandler aiCalibrationCustomFields;
 	}
 }
