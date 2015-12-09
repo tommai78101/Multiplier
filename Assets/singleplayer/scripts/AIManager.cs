@@ -154,6 +154,13 @@ namespace SinglePlayer {
 		}
 
 		public void Update() {
+            float sumRatio = this.mergeRatio + this.scoutRatio + this.splitRatio;
+            if (sumRatio > 0f) {
+				this.mergeRatio /= sumRatio;
+				this.scoutRatio /= sumRatio;
+				this.splitRatio /= sumRatio;
+            }
+
 			if (this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
 					SplitGroup splitGroup = this.splitGroupList[i];
