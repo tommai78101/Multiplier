@@ -1,6 +1,6 @@
 # Unity-UNET-RTS
 
-![](https://giant.gfycat.com/SelfreliantPointlessAustralianshelduck.gif)
+![](http://i.imgur.com/enhODwf.gif)
 
 [Playable demo.](http://tom-mai78101.itch.io/multiplier)
 
