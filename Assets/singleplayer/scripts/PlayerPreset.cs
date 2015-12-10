@@ -30,7 +30,8 @@ namespace SinglePlayer {
 							this.SetSpeedAttributes(expression);
 							this.SetSplitAttributes(expression);
 							this.SetMergeAttributes(expression);
-							break;
+							this.SetAttackCooldownAttributes(expression);
+                            break;
 						case 3:
 							this.SetHealthAttributes("y=2*x");
 							string otherExpression = "y=1.414*x";
@@ -38,6 +39,7 @@ namespace SinglePlayer {
 							this.SetSpeedAttributes(otherExpression);
 							this.SetSplitAttributes(otherExpression);
 							this.SetMergeAttributes(otherExpression);
+							this.SetAttackCooldownAttributes(otherExpression);
 							break;
 					}
 					if (this.attributePanelUI != null) {
@@ -89,6 +91,16 @@ namespace SinglePlayer {
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i+1);
 				this.unitAttributes.mergePrefabList.Add(answer);
+			}
+		}
+
+		public void SetAttackCooldownAttributes(string mathExpression) {
+			if (this.unitAttributes.attackCooldownPrefabList.Count > 0) {
+				this.unitAttributes.attackCooldownPrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i + 1);
+				this.unitAttributes.attackCooldownPrefabList.Add(answer);
 			}
 		}
 	}

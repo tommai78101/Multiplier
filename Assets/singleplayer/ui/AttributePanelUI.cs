@@ -86,7 +86,42 @@ namespace SinglePlayer.UI {
 		}
 
 		public void RefreshAttributes(UnitAttributes unitAttributes) {
-			
+			foreach (Category cat in this.categoryContentObject.items) {
+				List<LevelRate> tempList = this.levelingRatesObject.allAttributes[cat.value];
+				for (int i = 0; i < tempList.Count; i++) {
+					LevelRate rate = tempList[i];
+					switch (cat.value) {
+						default:
+							break;
+						case 0:
+							rate.rate = unitAttributes.healthPrefabList[i];
+							break;
+						case 1:
+							rate.rate = unitAttributes.attackPrefabList[i];
+							break;
+						case 2:
+							rate.rate = unitAttributes.attackCooldownPrefabList[i];
+							break;
+						case 3:
+							rate.rate = unitAttributes.speedPrefabList[i];
+							break;
+						case 4:
+							if (i == 0) {
+								rate.rate = unitAttributes.splitPrefabFactor;
+							}
+							else {
+								rate.rate = 0f;
+							}
+							break;
+						case 5:
+							rate.rate = unitAttributes.mergePrefabList[i];
+							break;
+					}
+					tempList[i] = rate;
+				}
+				this.levelingRatesObject.allAttributes[cat.value] = tempList;
+            }
+			this.levelingRatesObject.UpdateAllPanelItems();
 		}
 	}
 }

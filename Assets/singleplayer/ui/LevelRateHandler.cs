@@ -87,12 +87,39 @@ namespace SinglePlayer.UI {
 						else {
 							item.isIncreasingText.text = "N/A";
 						}
-						tempList[i] = levelRate;
 					}
 				}
 			}
 			else {
 				Debug.LogError("There's something wrong with the attributes panel UI. Please check.");
+			}
+		}
+
+		public void UpdateAllPanelItems() {
+			foreach (Category cat in Category.Values) {
+				List<LevelRate> tempList = this.allAttributes[cat.value];
+				if (tempList != null) {
+					for (int i = 0; i < tempList.Count; i++) {
+						//Panel items
+						Transform child = this.transform.GetChild(i);
+						PanelItem item = child.GetComponent<PanelItem>();
+						if (item != null) {
+							LevelRate levelRate = tempList[i];
+							item.levelText.text = "Level " + levelRate.level.ToString();
+							item.rateText.text = levelRate.rate.ToString();
+							if (levelRate.isIncreasing > 0) {
+								item.isIncreasingText.text = "++";
+							}
+							else if (levelRate.isIncreasing < 0) {
+								item.isIncreasingText.text = "--";
+							}
+							else {
+								item.isIncreasingText.text = "N/A";
+							}
+						}
+					}
+					Debug.Log("Updated all panel items");
+				}
 			}
 		}
 	}

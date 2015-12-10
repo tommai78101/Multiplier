@@ -14,6 +14,15 @@ namespace MultiPlayer {
 		public int maxLevelCount;
 
 		public void Awake() {
+			Initialize();
+		}
+
+		//public override void OnStartClient() {
+		//	base.OnStartClient();
+		//	Initialize();
+		//}
+
+		public void Initialize() {
 			this.healthPrefabList = new List<float>(10);
 			this.attackPrefabList = new List<float>(10);
 			this.speedPrefabList = new List<float>(10);
