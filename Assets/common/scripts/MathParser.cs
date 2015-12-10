@@ -74,6 +74,10 @@ namespace Common {
 							stack.Push("NEG");
 							break;
 						}
+						if (element.Equals("-") && (i + 1 < result.Count) && GetTokenClass(result[i + 1]) == TokenClass.Value) {
+							stack.Push("NEG");
+							break;
+						}
 						if (stack.Count > 0) {
 							string stackTopToken = stack.Peek();
 							if (GetTokenClass(stackTopToken) == TokenClass.Operator) {
