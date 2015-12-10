@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using MultiPlayer;
+using Common;
 
 namespace SinglePlayer.UI {
 	public class Category {
@@ -81,6 +83,10 @@ namespace SinglePlayer.UI {
 					this.levelingRatesObject.ChangeCategory(temp);
 				}
 			}
+		}
+
+		public void RefreshAttributes(UnitAttributes unitAttributes) {
+			
 		}
 	}
 }
