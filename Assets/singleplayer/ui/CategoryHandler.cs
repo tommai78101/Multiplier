@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using Extension;
 
 namespace SinglePlayer.UI {
-
 	public class CategoryHandler : MonoBehaviour {
 		public GameObject categoryItemPrefab;
-		public List<string> items;
+		public IEnumerable<Category> items;
 		public ToggleGroup categoriesToggleGroup;
 		public string selectedToggle;
 		private bool flipFlag;
 
 		public void Start() {
 			this.flipFlag = true;
-			this.items = new List<string>() { "Health", "Attack", "Speed", "AtkCooldown", "Split", "Merge" };
+			this.items = Category.Values;
 			if (this.categoriesToggleGroup == null) {
 				Debug.LogError("Something is wrong with the toggle group. Please check.");
 			}
@@ -25,7 +24,8 @@ namespace SinglePlayer.UI {
 				}
 			}
 			if (this.categoryItemPrefab != null) {
-				for (int i = 0; i < this.items.Count; i++) {
+				bool first = true;
+				foreach (Category cat in this.items) {
 					GameObject obj = GameObject.Instantiate(this.categoryItemPrefab) as GameObject;
 					obj.transform.SetParent(this.transform);
 					RectTransform rectTransform = obj.GetComponent<RectTransform>();
@@ -35,7 +35,7 @@ namespace SinglePlayer.UI {
 					}
 					Text text = obj.GetComponentInChildren<Text>();
 					if (text != null) {
-						text.text = this.items[i];
+						text.text = cat.name;
 						RectTransform textTransform = text.GetComponent<RectTransform>();
 						if (textTransform != null) {
 							textTransform.offsetMin = new Vector2(-textTransform.GetWidth() + 17f, textTransform.offsetMin.y);
@@ -44,10 +44,11 @@ namespace SinglePlayer.UI {
 					Toggle toggle = obj.GetComponent<Toggle>();
 					if (toggle != null) {
 						toggle.group = this.categoriesToggleGroup;
-						if (i == 0) {
+						if (first) {
 							toggle.isOn = true;
 							this.flipFlag = false;
 							this.OnChangeCategory(toggle);
+							first = false;
 						}
 						else {
 							toggle.isOn = false;
