@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using System;
+using Common;
 
 namespace MultiPlayer {
 	public class UnitAttributes : NetworkBehaviour {
@@ -102,6 +103,62 @@ namespace MultiPlayer {
 				}
 			}
 			//Debug.Log("I finished updating answers.");
+		}
+
+
+		public void SetHealthAttributes(string mathExpression) {
+			if (this.healthPrefabList.Count > 0) {
+				this.healthPrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i + 1);
+				this.healthPrefabList.Add(answer);
+			}
+		}
+
+		public void SetSpeedAttributes(string mathExpression) {
+			if (this.speedPrefabList.Count > 0) {
+				this.speedPrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i + 1);
+				this.speedPrefabList.Add(answer);
+			}
+		}
+
+		public void SetAttackAttributes(string mathExpression) {
+			if (this.attackPrefabList.Count > 0) {
+				this.attackPrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i + 1);
+				this.attackPrefabList.Add(answer);
+			}
+		}
+
+		public void SetSplitAttributes(string mathExpression) {
+			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1 + 1);
+			this.splitPrefabFactor = answer;
+		}
+
+		public void SetMergeAttributes(string mathExpression) {
+			if (this.mergePrefabList.Count > 0) {
+				this.mergePrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i + 1);
+				this.mergePrefabList.Add(answer);
+			}
+		}
+
+		public void SetAttackCooldownAttributes(string mathExpression) {
+			if (this.attackCooldownPrefabList.Count > 0) {
+				this.attackCooldownPrefabList.Clear();
+			}
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i + 1);
+				this.attackCooldownPrefabList.Add(answer);
+			}
 		}
 	}
 }

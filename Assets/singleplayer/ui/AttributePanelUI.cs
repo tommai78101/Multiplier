@@ -50,16 +50,18 @@ namespace SinglePlayer.UI {
 	}
 
 
-	public class AttributePanelUI : MonoBehaviour  {
+	public class AttributePanelUI : MonoBehaviour {
 		public readonly static int MAX_NUMBER_OF_LEVELS = 10;
 
 		public DropdownFix selections;
 		public CategoryHandler categoryContentObject;
 		public LevelRateHandler levelingRatesObject;
 		public Text equationTextObject;
+		public InputField equationInputField;
 		public DifficultyGroup aiCalibrationDifficulty;
 		public PresetDefault aiCalibrationPresets;
 		public CustomFieldHandler aiCalibrationCustomFields;
+		public bool enablePlayerCustomEquations = false;
 
 		public void Start() {
 			bool flag = (this.selections != null) && (this.categoryContentObject != null) && (this.levelingRatesObject != null) && (this.equationTextObject != null) && (this.aiCalibrationDifficulty != null)
@@ -67,6 +69,14 @@ namespace SinglePlayer.UI {
 			if (!flag) {
 				Debug.LogError("One or many of the variables are null. Please check.");
 			}
+			this.enablePlayerCustomEquations = false;
+			this.equationInputField = this.equationTextObject.GetComponentInParent<InputField>();
+			if (this.equationInputField != null) {
+				this.equationInputField.onEndEdit.AddListener(delegate {
+					this.FinishedEditing();
+				});
+			}
+			this.DisableCustomEquations();
 		}
 
 		public void Update() {
@@ -75,7 +85,7 @@ namespace SinglePlayer.UI {
 				Category temp = null;
 				foreach (Category cat in this.categoryContentObject.items) {
 					if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
-						temp = cat;	
+						temp = cat;
 						break;
 					}
 				}
@@ -90,6 +100,9 @@ namespace SinglePlayer.UI {
 				List<LevelRate> tempList = this.levelingRatesObject.allAttributes[cat.value];
 				for (int i = 0; i < tempList.Count; i++) {
 					LevelRate rate = tempList[i];
+					if (!this.enablePlayerCustomEquations) {
+						rate.isIncreasing = 0;
+					}
 					switch (cat.value) {
 						default:
 							break;
@@ -120,8 +133,109 @@ namespace SinglePlayer.UI {
 					tempList[i] = rate;
 				}
 				this.levelingRatesObject.allAttributes[cat.value] = tempList;
-            }
-			this.levelingRatesObject.UpdateAllPanelItems();
+			}
+			this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
+		}
+
+		public void EnableCustomEquations() {
+			if (this.equationInputField != null) {
+				this.equationInputField.interactable = true;
+				this.enablePlayerCustomEquations = true;
+			}
+		}
+
+		public void DisableCustomEquations() {
+			if (this.equationInputField != null) {
+				this.equationInputField.interactable = false;
+				this.enablePlayerCustomEquations = false;
+			}
+		}
+
+		public void FinishedEditing() {
+			GameObject obj = GameObject.FindGameObjectWithTag("UnitAttributes");
+			if (obj != null) {
+				UnitAttributes unitAttributes = obj.GetComponent<UnitAttributes>();
+				if (unitAttributes != null) {
+					foreach (Category cat in Category.Values) {
+						if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
+							int catValue = cat.value;
+							switch (catValue) {
+								default:
+								case 0:
+									unitAttributes.SetHealthAttributes(this.equationTextObject.text);
+									break;
+								case 1:
+									unitAttributes.SetAttackAttributes(this.equationTextObject.text);
+									break;
+								case 2:
+									unitAttributes.SetAttackCooldownAttributes(this.equationTextObject.text);
+									break;
+								case 3:
+									unitAttributes.SetSpeedAttributes(this.equationTextObject.text);
+									break;
+								case 4:
+									unitAttributes.SetSplitAttributes(this.equationTextObject.text);
+									break;
+								case 5:
+									unitAttributes.SetMergeAttributes(this.equationTextObject.text);
+									break;
+							}
+							List<LevelRate> tempList = this.levelingRatesObject.allAttributes[catValue];
+							for (int i = 0; i < tempList.Count; i++) {
+								bool flag = i > 0;
+								LevelRate rate = tempList[i];
+								switch (cat.value) {
+									default:
+									case 0:
+										rate.rate = unitAttributes.healthPrefabList[i];
+										if (flag) {
+											rate.isIncreasing = rate.rate > unitAttributes.healthPrefabList[i - 1] ? 1 : -1;
+										}
+										break;
+									case 1:
+										rate.rate = unitAttributes.attackPrefabList[i];
+										if (flag) {
+											rate.isIncreasing = rate.rate > unitAttributes.attackPrefabList[i - 1] ? 1 : -1;
+										}
+										break;
+									case 2:
+										rate.rate = unitAttributes.attackCooldownPrefabList[i];
+										if (flag) {
+											rate.isIncreasing = rate.rate > unitAttributes.attackCooldownPrefabList[i - 1] ? 1 : -1;
+										}
+										break;
+									case 3:
+										rate.rate = unitAttributes.speedPrefabList[i];
+										if (flag) {
+											rate.isIncreasing = rate.rate > unitAttributes.speedPrefabList[i - 1] ? 1 : -1;
+										}
+										break;
+									case 4:
+										if (i == 0) {
+											rate.rate = unitAttributes.splitPrefabFactor;
+											rate.isIncreasing = 0;
+										}
+										else {
+											rate.rate = 0f;
+											rate.isIncreasing = 0;
+										}
+										break;
+									case 5:
+										rate.rate = unitAttributes.mergePrefabList[i];
+										if (flag) {
+											rate.isIncreasing = rate.rate > unitAttributes.mergePrefabList[i - 1] ? 1 : -1;
+										}
+										break;
+								}
+								tempList[i] = rate;
+							}
+							this.levelingRatesObject.allAttributes[cat.value] = tempList;
+							break;
+						}
+					}
+					this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
+				}
+			}
 		}
 	}
 }
