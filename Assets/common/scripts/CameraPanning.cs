@@ -17,7 +17,7 @@ public class CameraPanning : MonoBehaviour {
 	public float aspectRatio;
 	public int marginSize = 15;
 	public bool useDebugSceneCameraBorder = true;
-	public float cameraSpeed = 1f;
+	public float cameraSpeed = 0.05f;
 	public int zoomLevel = 3;
 
 	//Some fancy way of using the C# setter/getter code design pattern. Note that the actual variables for storing data has FLAG suffixes.
@@ -61,7 +61,7 @@ public class CameraPanning : MonoBehaviour {
 
 	public void Start() {
 		this.mouseInFocusFlag = true;
-		this.cameraZoomingFlag = true; 
+		this.cameraZoomingFlag = false; 
 	}
 
 	public void OnApplicationFocus(bool focus) {
