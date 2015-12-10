@@ -1,6 +1,6 @@
 # Unity-UNET-RTS
 
-![](http://i.imgur.com/enhODwf.gif)
+![](https://github.com/tommai78101/Unity-UNET-RTS/raw/testing/demo.gif)
 
 [Playable demo.](http://tom-mai78101.itch.io/multiplier)
 
