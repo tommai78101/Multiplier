@@ -32,7 +32,15 @@ namespace SinglePlayer.UI {
 			foreach (Category cat in Category.Values) {
 				List<LevelRate> tempList = new List<LevelRate>();
 				for (int j = 0; j < AttributePanelUI.MAX_NUMBER_OF_LEVELS; j++) {
-					LevelRate rate = new LevelRate(cat, j + 1, 1f);
+					LevelRate rate = new LevelRate(cat, j + 1, 3f);
+					switch (cat.value) {
+						default:
+							rate.rate = 1f;
+							break;
+						case 0:
+							break;
+
+					}
 					tempList.Add(rate);
 				}
 				this.allAttributes.Add(tempList);
