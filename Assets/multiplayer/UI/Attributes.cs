@@ -49,6 +49,10 @@ public class Attributes : MonoBehaviour {
 		for (int i = 0; i < MAX_NUM_OF_LEVELS; i++) {
 			GameObject obj = MonoBehaviour.Instantiate<GameObject>(this.panelPrefab);
 			obj.transform.SetParent(this.transform);
+			RectTransform rectTransform = obj.GetComponent<RectTransform>();
+			if (rectTransform != null) {
+				rectTransform.localScale = Vector3.one;
+			}
 			this.prefabList.Add(obj);
 
 			Title title = obj.GetComponentInChildren<Title>();
