@@ -54,7 +54,27 @@ namespace SinglePlayer {
 		}
 
 		public void Start() {
-
+			LevelRateHandler rateHandler = this.attributePanelUI.levelingRatesObject;
+			if (rateHandler != null && rateHandler.allAttributes != null) {
+				List<LevelRate> healthList = rateHandler.allAttributes[Category.Health.value];
+				List<LevelRate> attackList = rateHandler.allAttributes[Category.Attack.value];
+				List<LevelRate> speedList = rateHandler.allAttributes[Category.Speed.value];
+				List<LevelRate> splitList = rateHandler.allAttributes[Category.Split.value];
+				List<LevelRate> mergeList = rateHandler.allAttributes[Category.Merge.value];
+				for (int i = 0; i < this.maxTiersLimit; i++) {
+					TierUpgrade tierUpgrade = this.tiers[i];
+					tierUpgrade.health = healthList[i].rate;
+					tierUpgrade.attack = attackList[i].rate;
+					tierUpgrade.speed = speedList[i].rate;
+					tierUpgrade.split = splitList[i].rate;
+					tierUpgrade.merge = mergeList[i].rate;
+					this.tiers[i] = tierUpgrade;
+				}
+			}
+			else {
+				Debug.LogError("Something is wrong.");
+			}
+			CustomFieldHandler fieldHandler = this.attributePanelUI.aiCalibrationCustomFields;
 		}
 	}
 }

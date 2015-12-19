@@ -24,10 +24,7 @@ namespace SinglePlayer.UI {
 		public GameObject panelItemPrefab;
 		public List<List<LevelRate>> allAttributes;
 
-		public void Start() {
-			if (this.panelItemPrefab == null) {
-				Debug.LogError("Panel item prefab is null. Please check.");
-			}
+		public void Awake() {
 			this.allAttributes = new List<List<LevelRate>>();
 			foreach (Category cat in Category.Values) {
 				List<LevelRate> tempList = new List<LevelRate>();
@@ -44,6 +41,12 @@ namespace SinglePlayer.UI {
 					tempList.Add(rate);
 				}
 				this.allAttributes.Add(tempList);
+			}
+		}
+
+		public void Start() {
+			if (this.panelItemPrefab == null) {
+				Debug.LogError("Panel item prefab is null. Please check.");
 			}
 
 			//Panel Items

@@ -77,6 +77,9 @@ namespace SinglePlayer.UI {
 				});
 			}
 			this.DisableCustomEquations();
+			if (this.aiCalibrationCustomFields != null) {
+				this.aiCalibrationCustomFields.attributePanelUI = this;
+			}
 		}
 
 		public void Update() {
