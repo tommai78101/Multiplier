@@ -57,7 +57,7 @@ namespace SinglePlayer {
 		}
 
 		public void Start() {
-			this.aiLevelRateHandler = this.attributePanelUI.levelingRatesObject;
+			this.aiLevelRateHandler = this.attributePanelUI.aiLevelingRatesObject;
 			if (this.aiLevelRateHandler != null && this.aiLevelRateHandler.allAttributes != null) {
 				List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
 				List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
