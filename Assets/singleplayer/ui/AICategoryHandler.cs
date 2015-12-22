@@ -1,15 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
-public class AICategoryHandler : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+namespace SinglePlayer.UI {
+	public class AICategoryHandler : CategoryHandler {
+		public void Refresh() {
+			//TODO.
+			Debug.Log("Refresh the category rates and numbers in the AI leveling rates.");
+		}
 	}
 }

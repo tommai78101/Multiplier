@@ -8,6 +8,7 @@ namespace SinglePlayer {
 		public Dropdown dropdown;
 		public AIAttributeManager attributeManager;
 		public UIEnableDisable aiAttributePanelUI;
+		public AICategoryHandler aiCategoryHandler;
 
 		public void SetAIAttributes() {
 			if (this.attributeManager == null) {
@@ -54,6 +55,7 @@ namespace SinglePlayer {
 						this.aiAttributePanelUI.EnableCustomEquations();
 						break;
 				}
+				this.aiCategoryHandler.Refresh();
 			}
 			else {
 				Debug.Log("Cannot obtain AI attribute manager. Please check.");
