@@ -62,6 +62,8 @@ namespace SinglePlayer.UI {
 		public LevelRateHandler aiLevelingRatesObject;
 		public DifficultyGroup aiCalibrationDifficulty;
 		public PresetDefault aiCalibrationPresets;
+		public Text aiEquationTextObject;
+		public InputField aiEquationInputField;
 		//public CustomFieldHandler aiCalibrationCustomFields;
 		public bool enablePlayerCustomEquations = false;
 
@@ -78,10 +80,14 @@ namespace SinglePlayer.UI {
 					this.FinishedEditing();
 				});
 			}
+
+			this.aiEquationInputField = this.aiEquationTextObject.GetComponentInParent<InputField>();
+			if (this.aiEquationInputField != null) {
+				this.aiEquationInputField.onEndEdit.AddListener(delegate {
+					this.AIFinishedEditing();
+				});
+			}
 			this.DisableCustomEquations();
-			//if (this.aiCalibrationCustomFields != null) {
-			//	this.aiCalibrationCustomFields.attributePanelUI = this;
-			//}
 		}
 
 		public void Update() {
@@ -250,6 +256,93 @@ namespace SinglePlayer.UI {
 						}
 					}
 					this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
+				}
+			}
+		}
+
+		public void AIFinishedEditing() {
+			GameObject obj = GameObject.FindGameObjectWithTag("AIAttributeManager");
+			if (obj != null) {
+				AIAttributeManager aiAttributeManager = obj.GetComponent<AIAttributeManager>();
+				if (aiAttributeManager != null) {
+					foreach (Category cat in Category.Values) {
+						if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
+							int catValue = cat.value;
+							switch (catValue) {
+								default:
+								case 0:
+									aiAttributeManager.SetHealthAttribute(this.aiEquationTextObject.text);
+									break;
+								case 1:
+									aiAttributeManager.SetAttackAttribute(this.aiEquationTextObject.text);
+									break;
+								case 2:
+									aiAttributeManager.SetAttackCooldownAttribute(this.aiEquationTextObject.text);
+									break;
+								case 3:
+									aiAttributeManager.SetSpeedAttribute(this.aiEquationTextObject.text);
+									break;
+								case 4:
+									aiAttributeManager.SetSplitAttribute(this.aiEquationTextObject.text);
+									break;
+								case 5:
+									aiAttributeManager.SetMergeAttribute(this.aiEquationTextObject.text);
+									break;
+							}
+							List<LevelRate> tempList = this.aiLevelingRatesObject.allAttributes[catValue];
+							for (int i = 0; i < tempList.Count; i++) {
+								bool flag = i > 0;
+								LevelRate rate = tempList[i];
+								switch (cat.value) {
+									default:
+									case 0:
+										rate.rate = aiAttributeManager.tiers[i].health;
+										if (flag) {
+											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].health ? 1 : -1;
+										}
+										break;
+									case 1:
+										rate.rate = aiAttributeManager.tiers[i].attack;
+										if (flag) {
+											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attack ? 1 : -1;
+										}
+										break;
+									case 2:
+										rate.rate = aiAttributeManager.tiers[i].attackCooldown;
+										if (flag) {
+											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attackCooldown ? 1 : -1;
+										}
+										break;
+									case 3:
+										rate.rate = aiAttributeManager.tiers[i].speed;
+										if (flag) {
+											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].speed ? 1 : -1;
+										}
+										break;
+									case 4:
+										if (i == 0) {
+											rate.rate = aiAttributeManager.tiers[i].split;
+											rate.isIncreasing = 0;
+										}
+										else {
+											rate.rate = 0f;
+											rate.isIncreasing = 0;
+										}
+										break;
+									case 5:
+										rate.rate = aiAttributeManager.tiers[i].merge;
+										if (flag) {
+											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].merge ? 1 : -1;
+										}
+										break;
+								}
+								tempList[i] = rate;
+							}
+							this.aiLevelingRatesObject.allAttributes[cat.value] = tempList;
+							break;
+						}
+					}
+					this.aiLevelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
 				}
 			}
 		}
