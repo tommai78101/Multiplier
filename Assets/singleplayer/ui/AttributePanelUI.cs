@@ -58,7 +58,7 @@ namespace SinglePlayer.UI {
 		public LevelRateHandler levelingRatesObject;
 		public Text equationTextObject;
 		public InputField equationInputField;
-		public AICategoryHandler aiCategoryContentObject;
+		public CategoryHandler aiCategoryContentObject;
 		public LevelRateHandler aiLevelingRatesObject;
 		public DifficultyGroup aiCalibrationDifficulty;
 		public PresetDefault aiCalibrationPresets;

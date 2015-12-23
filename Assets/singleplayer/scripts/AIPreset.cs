@@ -8,7 +8,7 @@ namespace SinglePlayer {
 		public Dropdown dropdown;
 		public AIAttributeManager aiAttributeManager;
 		public UIEnableDisable aiAttributePanelUI;
-		public AICategoryHandler aiCategoryHandler;
+		public CategoryHandler aiCategoryHandler;
 
 		public void SetAIAttributes() {
 			if (this.aiAttributeManager == null) {
