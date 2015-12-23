@@ -107,6 +107,9 @@ namespace MultiPlayer {
 
 
 		public void SetHealthAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			if (this.healthPrefabList.Count > 0) {
 				this.healthPrefabList.Clear();
 			}
@@ -117,6 +120,9 @@ namespace MultiPlayer {
 		}
 
 		public void SetSpeedAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			if (this.speedPrefabList.Count > 0) {
 				this.speedPrefabList.Clear();
 			}
@@ -127,6 +133,9 @@ namespace MultiPlayer {
 		}
 
 		public void SetAttackAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			if (this.attackPrefabList.Count > 0) {
 				this.attackPrefabList.Clear();
 			}
@@ -137,11 +146,17 @@ namespace MultiPlayer {
 		}
 
 		public void SetSplitAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1 + 1);
 			this.splitPrefabFactor = answer;
 		}
 
 		public void SetMergeAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			if (this.mergePrefabList.Count > 0) {
 				this.mergePrefabList.Clear();
 			}
@@ -152,6 +167,9 @@ namespace MultiPlayer {
 		}
 
 		public void SetAttackCooldownAttributes(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			if (this.attackCooldownPrefabList.Count > 0) {
 				this.attackCooldownPrefabList.Clear();
 			}

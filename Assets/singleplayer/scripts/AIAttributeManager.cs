@@ -80,6 +80,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetHealthAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < healthList.Count) {
@@ -110,6 +113,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetAttackAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackList.Count) {
@@ -140,6 +146,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetAttackCooldownAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> attackCooldownList = this.aiLevelRateHandler.allAttributes[Category.AttackCooldown.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackCooldownList.Count) {
@@ -170,6 +179,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetSpeedAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < speedList.Count) {
@@ -200,6 +212,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetSplitAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < splitList.Count) {
@@ -230,6 +245,9 @@ namespace SinglePlayer {
 		}
 
 		public void SetMergeAttribute(string mathExpression) {
+			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
+				return;
+			}
 			List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < mergeList.Count) {
