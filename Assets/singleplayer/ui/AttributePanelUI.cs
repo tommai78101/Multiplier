@@ -58,15 +58,16 @@ namespace SinglePlayer.UI {
 		public LevelRateHandler levelingRatesObject;
 		public Text equationTextObject;
 		public InputField equationInputField;
+		public AICategoryHandler aiCategoryContentObject;
 		public LevelRateHandler aiLevelingRatesObject;
 		public DifficultyGroup aiCalibrationDifficulty;
 		public PresetDefault aiCalibrationPresets;
-		public CustomFieldHandler aiCalibrationCustomFields;
+		//public CustomFieldHandler aiCalibrationCustomFields;
 		public bool enablePlayerCustomEquations = false;
 
 		public void Start() {
 			bool flag = (this.selections != null) && (this.categoryContentObject != null) && (this.levelingRatesObject != null) && (this.equationTextObject != null) && (this.aiCalibrationDifficulty != null)
-				&& (this.aiCalibrationPresets != null) && (this.aiCalibrationCustomFields != null);
+				&& (this.aiCalibrationPresets != null); // && (this.aiCalibrationCustomFields != null);
 			if (!flag) {
 				Debug.LogError("One or many of the variables are null. Please check.");
 			}
@@ -78,9 +79,9 @@ namespace SinglePlayer.UI {
 				});
 			}
 			this.DisableCustomEquations();
-			if (this.aiCalibrationCustomFields != null) {
-				this.aiCalibrationCustomFields.attributePanelUI = this;
-			}
+			//if (this.aiCalibrationCustomFields != null) {
+			//	this.aiCalibrationCustomFields.attributePanelUI = this;
+			//}
 		}
 
 		public void Update() {
@@ -95,6 +96,17 @@ namespace SinglePlayer.UI {
 				}
 				if (temp != null) {
 					this.levelingRatesObject.ChangeCategory(temp);
+				}
+				temp = null;
+
+				foreach (Category cat in this.aiCategoryContentObject.items) {
+					if (cat.name.Equals(this.aiCategoryContentObject.selectedToggle)) {
+						temp = cat;
+						break;
+					}
+				}
+				if (temp != null) {
+					this.aiLevelingRatesObject.ChangeCategory(temp);
 				}
 			}
 		}

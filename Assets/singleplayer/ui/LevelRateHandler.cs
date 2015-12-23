@@ -22,6 +22,7 @@ namespace SinglePlayer.UI {
 
 	public class LevelRateHandler : MonoBehaviour {
 		public GameObject panelItemPrefab;
+		[SerializeField]
 		public List<List<LevelRate>> allAttributes;
 
 		public void Awake() {

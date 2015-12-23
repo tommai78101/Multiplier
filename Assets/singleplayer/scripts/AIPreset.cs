@@ -6,18 +6,18 @@ using SinglePlayer.UI;
 namespace SinglePlayer {
 	public class AIPreset : MonoBehaviour {
 		public Dropdown dropdown;
-		public AIAttributeManager attributeManager;
+		public AIAttributeManager aiAttributeManager;
 		public UIEnableDisable aiAttributePanelUI;
 		public AICategoryHandler aiCategoryHandler;
 
 		public void SetAIAttributes() {
-			if (this.attributeManager == null) {
+			if (this.aiAttributeManager == null) {
 				GameObject obj = GameObject.FindGameObjectWithTag("AIAttributeManager");
 				if (obj != null) {
-					this.attributeManager = obj.GetComponent<AIAttributeManager>();
+					this.aiAttributeManager = obj.GetComponent<AIAttributeManager>();
 				}
 			}
-			if (this.attributeManager != null && this.dropdown != null) {
+			if (this.aiAttributeManager != null && this.dropdown != null) {
 				int itemValue = this.dropdown.value;
 				switch (itemValue) {
 					default:
@@ -26,36 +26,36 @@ namespace SinglePlayer {
 					case 2:
 						Debug.Log("Setting expressions for AI: " + this.dropdown.options[itemValue].text);
 						string expression = this.dropdown.options[itemValue].text;
-						this.attributeManager.SetHealthAttribute(expression);
-						this.attributeManager.SetAttackAttribute(expression);
-						this.attributeManager.SetAttackCooldownAttribute(expression);
-						this.attributeManager.SetSpeedAttribute(expression);
-						this.attributeManager.SetSplitAttribute(expression);
-						this.attributeManager.SetMergeAttribute(expression);
+						this.aiAttributeManager.SetHealthAttribute(expression);
+						this.aiAttributeManager.SetAttackAttribute(expression);
+						this.aiAttributeManager.SetAttackCooldownAttribute(expression);
+						this.aiAttributeManager.SetSpeedAttribute(expression);
+						this.aiAttributeManager.SetSplitAttribute(expression);
+						this.aiAttributeManager.SetMergeAttribute(expression);
 						this.aiAttributePanelUI.DisableCustomEquations();
 						break;
 					case 3:
-						this.attributeManager.SetHealthAttribute("y=2*x");
+						this.aiAttributeManager.SetHealthAttribute("y=2*x");
 						string otherExpression = "y=1.414*x";
-						this.attributeManager.SetAttackAttribute(otherExpression);
-						this.attributeManager.SetSpeedAttribute(otherExpression);
-						this.attributeManager.SetSplitAttribute(otherExpression);
-						this.attributeManager.SetMergeAttribute(otherExpression);
-						this.attributeManager.SetAttackCooldownAttribute(otherExpression);
+						this.aiAttributeManager.SetAttackAttribute(otherExpression);
+						this.aiAttributeManager.SetSpeedAttribute(otherExpression);
+						this.aiAttributeManager.SetSplitAttribute(otherExpression);
+						this.aiAttributeManager.SetMergeAttribute(otherExpression);
+						this.aiAttributeManager.SetAttackCooldownAttribute(otherExpression);
 						this.aiAttributePanelUI.DisableCustomEquations();
 						break;
 					case 4:
 						string zero = "y=0";
-						this.attributeManager.SetHealthAttribute(zero);
-						this.attributeManager.SetAttackAttribute(zero);
-						this.attributeManager.SetAttackCooldownAttribute(zero);
-						this.attributeManager.SetSpeedAttribute(zero);
-						this.attributeManager.SetSplitAttribute(zero);
-						this.attributeManager.SetMergeAttribute(zero);
+						this.aiAttributeManager.SetHealthAttribute(zero);
+						this.aiAttributeManager.SetAttackAttribute(zero);
+						this.aiAttributeManager.SetAttackCooldownAttribute(zero);
+						this.aiAttributeManager.SetSpeedAttribute(zero);
+						this.aiAttributeManager.SetSplitAttribute(zero);
+						this.aiAttributeManager.SetMergeAttribute(zero);
 						this.aiAttributePanelUI.EnableCustomEquations();
 						break;
 				}
-				this.aiCategoryHandler.Refresh();
+				this.aiAttributeManager.aiLevelRateHandler.UpdateAllPanelItems(this.aiCategoryHandler.selectedToggle);
 			}
 			else {
 				Debug.Log("Cannot obtain AI attribute manager. Please check.");
