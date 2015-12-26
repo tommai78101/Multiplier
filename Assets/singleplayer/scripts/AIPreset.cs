@@ -7,7 +7,8 @@ namespace SinglePlayer {
 	public class AIPreset : MonoBehaviour {
 		public Dropdown dropdown;
 		public AIAttributeManager aiAttributeManager;
-		public UIEnableDisable aiAttributePanelUI;
+		public AttributePanelUI aiAttributePanelUI;
+		public UIEnableDisable aiEnableDisableUI;
 		public CategoryHandler aiCategoryHandler;
 
 		public void SetAIAttributes() {
@@ -32,7 +33,7 @@ namespace SinglePlayer {
 						this.aiAttributeManager.SetSpeedAttribute(expression);
 						this.aiAttributeManager.SetSplitAttribute(expression);
 						this.aiAttributeManager.SetMergeAttribute(expression);
-						this.aiAttributePanelUI.DisableCustomEquations();
+						this.aiEnableDisableUI.DisableCustomEquations();
 						break;
 					case 3:
 						this.aiAttributeManager.SetHealthAttribute("y=2*x");
@@ -42,7 +43,7 @@ namespace SinglePlayer {
 						this.aiAttributeManager.SetSplitAttribute(otherExpression);
 						this.aiAttributeManager.SetMergeAttribute(otherExpression);
 						this.aiAttributeManager.SetAttackCooldownAttribute(otherExpression);
-						this.aiAttributePanelUI.DisableCustomEquations();
+						this.aiEnableDisableUI.DisableCustomEquations();
 						break;
 					case 4:
 						string zero = "y=0";
@@ -52,10 +53,10 @@ namespace SinglePlayer {
 						this.aiAttributeManager.SetSpeedAttribute(zero);
 						this.aiAttributeManager.SetSplitAttribute(zero);
 						this.aiAttributeManager.SetMergeAttribute(zero);
-						this.aiAttributePanelUI.EnableCustomEquations();
+						this.aiEnableDisableUI.EnableCustomEquations();
 						break;
 				}
-				this.aiAttributeManager.aiLevelRateHandler.UpdateAllPanelItems(this.aiCategoryHandler.selectedToggle);
+				this.aiAttributePanelUI.aiRefreshAttributes(this.aiAttributeManager);
 			}
 			else {
 				Debug.Log("Cannot obtain AI attribute manager. Please check.");

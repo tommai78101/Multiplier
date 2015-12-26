@@ -115,6 +115,9 @@ namespace SinglePlayer.UI {
 								if (levelRate.isIncreasing > 0) {
 									item.isIncreasingText.text = "++";
 								}
+								else if (levelRate.isIncreasing == 0) {
+									item.isIncreasingText.text = "==";
+								}
 								else if (levelRate.isIncreasing < 0) {
 									item.isIncreasingText.text = "--";
 								}

@@ -159,6 +159,40 @@ namespace SinglePlayer.UI {
 			this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
 		}
 
+		public void aiRefreshAttributes(AIAttributeManager attributeManager) {
+			foreach (Category cat in this.aiCategoryContentObject.items) {
+				if (cat.name.Equals(this.aiCategoryContentObject.selectedToggle)) {
+					List<LevelRate> tempRate = this.aiLevelingRatesObject.allAttributes[cat.value];
+					for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+						TierUpgrade tier = attributeManager.tiers[i];
+						LevelRate rate = tempRate[i];
+						if (cat.value == Category.Health.value) {
+							 rate.rate = tier.health;
+						}
+						else if (cat.value == Category.Attack.value) {
+							rate.rate = tier.attack;
+						}
+						else if (cat.value == Category.AttackCooldown.value) {
+							rate.rate = tier.attackCooldown;
+						}
+						else if (cat.value == Category.Speed.value) {
+							rate.rate = tier.speed;
+						}
+						else if (cat.value == Category.Split.value) {
+							rate.rate = tier.split;
+						}
+						else if (cat.value == Category.Merge.value) {
+							rate.rate = tier.merge;
+						}
+						tempRate[i] = rate;
+					}
+					this.aiLevelingRatesObject.allAttributes[cat.value] = tempRate;
+					break;
+				}
+			}
+			this.aiLevelingRatesObject.UpdateAllPanelItems(this.aiCategoryContentObject.selectedToggle);
+		}
+
 		public void EnableCustomEquations() {
 			if (this.equationInputField != null) {
 				this.equationInputField.interactable = true;
@@ -266,7 +300,7 @@ namespace SinglePlayer.UI {
 				AIAttributeManager aiAttributeManager = obj.GetComponent<AIAttributeManager>();
 				if (aiAttributeManager != null) {
 					foreach (Category cat in Category.Values) {
-						if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
+						if (cat.name.Equals(this.aiCategoryContentObject.selectedToggle)) {
 							int catValue = cat.value;
 							switch (catValue) {
 								default:
@@ -342,7 +376,7 @@ namespace SinglePlayer.UI {
 							break;
 						}
 					}
-					this.aiLevelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
+					this.aiLevelingRatesObject.UpdateAllPanelItems(this.aiCategoryContentObject.selectedToggle);
 				}
 			}
 		}
