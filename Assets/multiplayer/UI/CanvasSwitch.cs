@@ -6,6 +6,7 @@ namespace MultiPlayer {
 		public CanvasGroup canvasGroup;
 		public bool showCanvas;
 		public UnitAttributes unitAttributes;
+		public KeyCode keyCode;
 
 		public void Start() {
 			if (this.canvasGroup == null) {
@@ -16,7 +17,7 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
-			if (this.unitAttributes != null && Input.GetKeyUp(KeyCode.M)) {
+			if (this.unitAttributes != null && Input.GetKeyUp(this.keyCode)) {
 				this.showCanvas = !this.showCanvas;
 				this.ToggleCanvas();
 			}

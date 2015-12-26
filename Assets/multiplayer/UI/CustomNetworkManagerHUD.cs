@@ -7,7 +7,7 @@ namespace UnityEngine.Networking {
 	public class CustomNetworkManagerHUD : MonoBehaviour {
 		public NetworkManager manager;
 		[SerializeField]
-		public bool showGUI = true;
+		public bool showGUI = false;
 		[SerializeField]
 		public int offsetX;
 		[SerializeField]
@@ -18,21 +18,31 @@ namespace UnityEngine.Networking {
 		// Runtime variable
 		bool showServer = false;
 
-		void Awake() {
+		public void Awake() {
 			this.manager = GetComponent<NetworkManager>();
 			this.style = new GUIStyle();
 			this.style.normal.textColor = Color.black;
 		}
 
-		void Update() {
+		public void Start() {
+			this.showGUI = true;
+		}
+
+		public void Update() {
+			if ((NetworkClient.active || NetworkServer.active) && Input.GetKeyUp(KeyCode.Escape)) {
+				this.showGUI = !this.showGUI;
+			}
+
 			if (!showGUI)
 				return;
 
 			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null) {
 				if (Input.GetKeyDown(KeyCode.S)) {
+					this.showGUI = false;
 					manager.StartServer();
 				}
 				if (Input.GetKeyDown(KeyCode.H)) {
+					this.showGUI = false;
 					manager.StartHost();
 				}
 				if (Input.GetKeyDown(KeyCode.C)) {
@@ -42,11 +52,12 @@ namespace UnityEngine.Networking {
 			if (NetworkServer.active && NetworkClient.active) {
 				if (Input.GetKeyDown(KeyCode.K)) {
 					manager.StopHost();
+					this.showGUI = true;
 				}
 			}
 		}
 
-		void OnGUI() {
+		public void OnGUI() {
 			if (!showGUI)
 				return;
 
@@ -56,6 +67,7 @@ namespace UnityEngine.Networking {
 
 			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null) {
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Host(H)")) {
+					this.showGUI = false;
 					manager.StartHost();
 				}
 				ypos += spacing;
@@ -67,6 +79,7 @@ namespace UnityEngine.Networking {
 				ypos += spacing;
 
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Server Only(S)")) {
+					this.showGUI = false;
 					manager.StartServer();
 				}
 				ypos += spacing;
@@ -85,7 +98,7 @@ namespace UnityEngine.Networking {
 			if (NetworkClient.active && !ClientScene.ready) {
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Client Ready")) {
 					ClientScene.Ready(manager.client.connection);
-
+					this.showGUI = false;
 					if (ClientScene.localPlayers.Count == 0) {
 						ClientScene.AddPlayer(0);
 					}
@@ -93,9 +106,11 @@ namespace UnityEngine.Networking {
 				ypos += spacing;
 			}
 
+
 			if (NetworkServer.active || NetworkClient.active) {
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Stop (K)")) {
 					manager.StopHost();
+					this.showGUI = true;
 				}
 				ypos += spacing;
 			}
@@ -132,7 +147,7 @@ namespace UnityEngine.Networking {
 							foreach (var match in manager.matches) {
 								if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Join Match:" + match.name)) {
 									manager.matchName = match.name;
-									manager.matchSize = (uint) match.currentSize;
+									manager.matchSize = (uint)match.currentSize;
 									manager.matchMaker.JoinMatch(match.networkId, "", manager.OnMatchJoined);
 								}
 								ypos += spacing;
@@ -172,6 +187,15 @@ namespace UnityEngine.Networking {
 					ypos += spacing;
 				}
 			}
+
+			if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Return to Main Menu")) {
+				if (NetworkServer.active || NetworkClient.active) {
+					manager.StopHost();
+					this.showGUI = false;
+				}
+				Application.LoadLevel("menu");
+			}
+			ypos += spacing;
 		}
 	}
 };
