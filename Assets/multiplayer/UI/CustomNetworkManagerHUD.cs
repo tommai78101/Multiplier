@@ -1,5 +1,7 @@
 ﻿#if ENABLE_UNET
 
+using UnityEngine.SceneManagement;
+
 namespace UnityEngine.Networking {
 	[AddComponentMenu("Network/NetworkManagerHUD")]
 	[RequireComponent(typeof(NetworkManager))]
@@ -68,11 +70,13 @@ namespace UnityEngine.Networking {
 			if (!NetworkClient.active && !NetworkServer.active && manager.matchMaker == null) {
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Host(H)")) {
 					this.showGUI = false;
+					Debug.Log("Starting host.");
 					manager.StartHost();
 				}
 				ypos += spacing;
 
 				if (GUI.Button(new Rect(xpos, ypos, 105, 20), "LAN Client(C)")) {
+					Debug.Log("Starting client.");
 					manager.StartClient();
 				}
 				manager.networkAddress = GUI.TextField(new Rect(xpos + 100, ypos, 95, 20), manager.networkAddress);
@@ -80,6 +84,7 @@ namespace UnityEngine.Networking {
 
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "LAN Server Only(S)")) {
 					this.showGUI = false;
+					Debug.Log("Starting server.");
 					manager.StartServer();
 				}
 				ypos += spacing;
@@ -109,7 +114,12 @@ namespace UnityEngine.Networking {
 
 			if (NetworkServer.active || NetworkClient.active) {
 				if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Stop (K)")) {
+					Debug.Log("Stopping host.");
 					manager.StopHost();
+					if (NetworkClient.active) {
+						Debug.Log("Also stopping client.");
+						manager.StopClient();
+					}
 					this.showGUI = true;
 				}
 				ypos += spacing;
@@ -120,6 +130,7 @@ namespace UnityEngine.Networking {
 
 				if (manager.matchMaker == null) {
 					if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Enable Match Maker (M)")) {
+						Debug.Log("Starting match maker.");
 						manager.StartMatchMaker();
 					}
 					ypos += spacing;
@@ -182,6 +193,7 @@ namespace UnityEngine.Networking {
 					ypos += spacing;
 
 					if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Disable Match Maker")) {
+						Debug.Log("Stopping match maker.");
 						manager.StopMatchMaker();
 					}
 					ypos += spacing;
@@ -190,10 +202,11 @@ namespace UnityEngine.Networking {
 
 			if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Return to Main Menu")) {
 				if (NetworkServer.active || NetworkClient.active) {
+					Debug.Log("Stopping host.");
 					manager.StopHost();
 					this.showGUI = false;
 				}
-				Application.LoadLevel("menu");
+				SceneManager.LoadScene("menu");
 			}
 			ypos += spacing;
 		}

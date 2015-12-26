@@ -54,28 +54,35 @@ namespace SinglePlayer {
 					Debug.LogError("Something is not right.");
 				}
 			}
+			//If tempAttribute is null, then it means the game does not allow the player to do customizations.
+			//This means, the only scenario that doesn't allow the player to make customizations would be in
+			//the menu screen, where the AI players are duking out without player's interventions.
 		}
 
 		public void Start() {
-			this.aiLevelRateHandler = this.attributePanelUI.aiLevelingRatesObject;
-			if (this.aiLevelRateHandler != null && this.aiLevelRateHandler.allAttributes != null) {
-				List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
-				List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
-				List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
-				List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
-				List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
-				for (int i = 0; i < this.maxTiersLimit; i++) {
-					TierUpgrade tierUpgrade = this.tiers[i];
-					tierUpgrade.health = healthList[i].rate;
-					tierUpgrade.attack = attackList[i].rate;
-					tierUpgrade.speed = speedList[i].rate;
-					tierUpgrade.split = splitList[i].rate;
-					tierUpgrade.merge = mergeList[i].rate;
-					this.tiers[i] = tierUpgrade;
+			if (this.attributePanelUI != null) {
+				//This is only set if the game allows the player to do customizations to the AI players.
+				//Else, the game is in the menu, with the AI players duking out in the background.
+				this.aiLevelRateHandler = this.attributePanelUI.aiLevelingRatesObject;
+				if (this.aiLevelRateHandler != null && this.aiLevelRateHandler.allAttributes != null) {
+					List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
+					List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
+					List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
+					List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
+					List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
+					for (int i = 0; i < this.maxTiersLimit; i++) {
+						TierUpgrade tierUpgrade = this.tiers[i];
+						tierUpgrade.health = healthList[i].rate;
+						tierUpgrade.attack = attackList[i].rate;
+						tierUpgrade.speed = speedList[i].rate;
+						tierUpgrade.split = splitList[i].rate;
+						tierUpgrade.merge = mergeList[i].rate;
+						this.tiers[i] = tierUpgrade;
+					}
 				}
-			}
-			else {
-				Debug.LogError("Something is wrong. Please check.");
+				else {
+					Debug.LogError("Something is wrong. Please check.");
+				}
 			}
 		}
 
@@ -109,7 +116,7 @@ namespace SinglePlayer {
 					tier.health = healthList[i].rate;
 					this.tiers[i] = tier;
 				}
-            }
+			}
 		}
 
 		public void SetAttackAttribute(string mathExpression) {
@@ -119,7 +126,7 @@ namespace SinglePlayer {
 			List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackList.Count) {
-					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i);
 					LevelRate rate = attackList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -152,7 +159,7 @@ namespace SinglePlayer {
 			List<LevelRate> attackCooldownList = this.aiLevelRateHandler.allAttributes[Category.AttackCooldown.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackCooldownList.Count) {
-					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i);
 					LevelRate rate = attackCooldownList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -185,7 +192,7 @@ namespace SinglePlayer {
 			List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < speedList.Count) {
-					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i);
 					LevelRate rate = speedList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -218,7 +225,7 @@ namespace SinglePlayer {
 			List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < splitList.Count) {
-					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i);
 					LevelRate rate = splitList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -251,7 +258,7 @@ namespace SinglePlayer {
 			List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < mergeList.Count) {
-					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i);
 					LevelRate rate = mergeList[i];
 					rate.rate = answer;
 					rate.level = i + 1;

@@ -69,7 +69,7 @@ namespace SinglePlayer.UI {
 
 		public void Start() {
 			bool flag = (this.selections != null) && (this.categoryContentObject != null) && (this.levelingRatesObject != null) && (this.equationTextObject != null) && (this.aiCalibrationDifficulty != null)
-				&& (this.aiCalibrationPresets != null); // && (this.aiCalibrationCustomFields != null);
+				&& (this.aiCalibrationPresets != null) && (this.aiLevelingRatesObject != null); // && (this.aiCalibrationCustomFields != null);
 			if (!flag) {
 				Debug.LogError("One or many of the variables are null. Please check.");
 			}
