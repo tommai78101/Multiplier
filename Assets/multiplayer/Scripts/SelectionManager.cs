@@ -266,8 +266,10 @@ namespace MultiPlayer {
 						}
 					}
 					else {
-						unit.isSelected = true;
-						this.selectedObjects.Add(obj);
+						if (unit != null) {
+							unit.isSelected = true;
+							this.selectedObjects.Add(obj);
+						}
 					}
 				}
 			}
