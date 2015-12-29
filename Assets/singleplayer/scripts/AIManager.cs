@@ -104,7 +104,7 @@ namespace SinglePlayer {
 		public float tickIntervals;
 		public int unitCount;
 		public GameObject unitContainer;
-		public AIAttributeManager attributeManager;
+		public AIAttributeManager aiAttributeManager;
 		public Difficulty difficulty;
 		public FSMState currentFiniteState;
 		public GameObject AIUnitPrefab;
@@ -178,10 +178,19 @@ namespace SinglePlayer {
 							unit.level++;
 
 							//TODO: Use the attribute manager to manage the attributes after merging.
-							unit.attackFactor *= 3f;
-							unit.currentHealth *= 2;
-							unit.maxHealth *= 2;
-							unit.mergeFactor *= 2f;
+							TierUpgrade tier = this.aiAttributeManager.tiers[unit.level];
+
+							float temp = unit.currentHealth;
+							unit.currentHealth = (int) (temp * tier.health);
+							temp = unit.maxHealth;
+							unit.maxHealth = (int) (temp * tier.health);
+
+							unit.attackFactor *= tier.attack;
+							unit.mergeFactor *= tier.merge;
+							unit.attackCooldownFactor = tier.attackCooldown;
+							unit.splitFactor = tier.split;
+							unit.mergeFactor = tier.merge;
+							unit.speedFactor = tier.speed;
 						}
 						if (mergeGroup.merge != null) {
 							this.removeUnitList.Add(mergeGroup.merge.GetComponent<AIUnit>());

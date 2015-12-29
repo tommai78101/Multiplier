@@ -17,6 +17,7 @@ namespace SinglePlayer {
 		public float splitFactor;
 		public float mergeFactor;
 		public float attackFactor;
+		public float speedFactor;
 		[Range(3, 100)]
 		public float attackCooldownFactor;
 		public float attackCooldownCounter;
@@ -39,6 +40,23 @@ namespace SinglePlayer {
 		private Vector3 healthViewportPosition;
 
 		public void Start() {
+			bool initialStateFlag = false;
+			if (this.unitManager != null) {
+				AIAttributeManager aiAttributeManager = this.unitManager.aiAttributeManager;
+				if (aiAttributeManager.tiers != null) {
+					TierUpgrade firstTier = aiAttributeManager.tiers[0];
+					this.maxHealth = (int) (firstTier.health * 3f);
+					this.currentHealth = this.maxHealth;
+					this.attackFactor = firstTier.attack;
+					this.attackCooldownFactor = firstTier.attackCooldown;
+					this.speedFactor = firstTier.speed;
+					this.splitFactor = firstTier.split;
+					this.mergeFactor = firstTier.merge;
+
+					initialStateFlag = true;
+				}
+			}
+
 			this.currentState = State.Idle;
 			this.level = 1;
 			this.previousLevel = 1;
@@ -46,19 +64,23 @@ namespace SinglePlayer {
 			this.splitCounter = 0f;
 			this.mergeCounter = 0f;
 			this.attackCooldownCounter = 1f;
-			if (this.attackFactor == 0f) {
-				this.attackFactor = 1f;
+
+			if (!initialStateFlag) {
+				this.speedFactor = 1f;
+				if (this.attackFactor == 0f) {
+					this.attackFactor = 1f;
+				}
+				if (this.splitFactor == 0f) {
+					this.splitFactor = 1f;
+				}
+				if (this.mergeFactor == 0f) {
+					this.mergeFactor = 1f;
+				}
+				if (this.attackCooldownFactor == 0f) {
+					this.attackCooldownFactor = 1f;
+				}
+				this.currentHealth = this.maxHealth;
 			}
-			if (this.splitFactor == 0f) {
-				this.splitFactor = 1f;
-			}
-			if (this.mergeFactor == 0f) {
-				this.mergeFactor = 1f;
-			}
-			if (this.attackCooldownFactor == 0f) {
-				this.attackCooldownFactor = 1f;
-			}
-			this.currentHealth = this.maxHealth;
 			if (this.lineOfSight == null) {
 				this.lineOfSight = this.GetComponentInChildren<AILineOfSight>();
 				if (this.lineOfSight == null) {
@@ -74,6 +96,9 @@ namespace SinglePlayer {
 			this.agent = this.GetComponent<NavMeshAgent>();
 			if (this.agent != null) {
 				this.agent.stoppingDistance = 1.5f;
+				if (!initialStateFlag) {
+					this.agent.speed = this.speedFactor;
+				}
 			}
 
 			GameObject minimapObject = GameObject.FindGameObjectWithTag("Minimap");
