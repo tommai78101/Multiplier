@@ -389,7 +389,7 @@ namespace SinglePlayer {
 												if (merge.CheckMergeFlag()) {
 													owner.SetMergeFlag();
 													merge.SetMergeFlag();
-													this.mergeGroupList.Add(new MergeGroup(owner.gameObject, merge.gameObject, 2f));
+													this.mergeGroupList.Add(new MergeGroup(owner.gameObject, merge.gameObject, 1.5f));  //ScaleFactor is done here.
 													removeList.Add(owner);
 													removeList.Add(merge);
 													break;
