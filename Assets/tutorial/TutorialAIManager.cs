@@ -42,10 +42,11 @@ namespace Tutorial {
 			this.delay = 0f;
 			this.delayInterval = 0.01f;
 			this.dialogueSectionCounter = 0;
-			this.dialogue = "";
 			this.currentTutorialStage = Parts.Introduction;
+			this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
+            this.dialogueSectionCounter++;
 			this.stringLetterCounter = 0;
-			this.startTextRollingFlag = false;
+			this.startTextRollingFlag = true;
 			if (this.dialogueText != null) {
 				this.dialogueText.text = "";
 			}
