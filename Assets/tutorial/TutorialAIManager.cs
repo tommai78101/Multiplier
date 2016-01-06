@@ -34,6 +34,24 @@ namespace Tutorial {
 							return "The other method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around.";
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
+						case 5:
+							return "Now, let's move onwards to learn about Game Unit Controls.";
+					}
+					break;
+				case Parts.Unit_Controls:
+					switch (section) {
+						case 0:
+							return "Test 1";
+						case 1:
+							return "Test 2";
+						case 2:
+							return "Test 3";
+						case 3:
+							return "Test 4";
+						case 4:
+							return "Test 5";
+						case 5:
+							return "Test 6";
 					}
 					break;
 			}
@@ -60,7 +78,7 @@ namespace Tutorial {
 			this.dialogueSectionCounter = 0;
 			this.currentTutorialStage = Parts.Introduction;
 			this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-            this.dialogueSectionCounter++;
+			this.dialogueSectionCounter++;
 			this.stringLetterCounter = 0;
 			this.startTextRollingFlag = true;
 			if (this.dialogueText != null) {
@@ -109,31 +127,42 @@ namespace Tutorial {
 					break;
 				case Parts.Introduction:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					this.dialogueSectionCounter++;
-					if (this.dialogueSectionCounter >= 3) {
+					if (this.dialogueSectionCounter >= 2) {
 						this.currentTutorialStage = Parts.Camera_Controls;
 						this.dialogueSectionCounter = 0;
+						break;
 					}
+					this.dialogueSectionCounter++;
 					break;
 				case Parts.Camera_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					this.dialogueSectionCounter++;
 					if (this.dialogueSectionCounter >= 5) {
-						this.currentTutorialStage = Parts.Camera_Controls;
+						this.currentTutorialStage = Parts.Unit_Controls;
 						this.dialogueSectionCounter = 0;
+						break;
 					}
-					if (this.dialogueSectionCounter - 1 == 1) {
+					if (this.dialogueSectionCounter == 1) {
 						CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
 						if (panning != null) {
 							panning.enabled = true;
 						}
 					}
-					else if (this.dialogueSectionCounter - 1 == 3) {
+					else if (this.dialogueSectionCounter == 3) {
 						Camera minimapCamera = this.minimap.GetComponent<Camera>();
 						if (minimapCamera != null) {
 							minimapCamera.enabled = true;
 						}
 					}
+					this.dialogueSectionCounter++;
+					break;
+				case Parts.Unit_Controls:
+					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
+					if (this.dialogueSectionCounter >= 5) {
+						this.currentTutorialStage = Parts.Unit_Controls;
+						this.dialogueSectionCounter = 0;
+						break;
+					}
+					this.dialogueSectionCounter++;
 					break;
 			}
 			this.dialogueText.text = "";
