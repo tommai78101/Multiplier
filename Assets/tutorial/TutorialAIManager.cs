@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Common;
 
 namespace Tutorial {
 	public enum Parts {
@@ -30,7 +31,7 @@ namespace Tutorial {
 						case 2:
 							return "When you put your mouse at the edge of where you wished to go, the camera will move in that general direction. This is useful if you want to \"nudge\" the camera just a tiny bit to see clearly.";
 						case 3:
-							return "The other method of moving the camera is by clicking and dragging on the minimap in the lower right of your screen.";
+							return "The other method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around.";
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
 					}
@@ -50,6 +51,8 @@ namespace Tutorial {
 		[Range(0.01f, 2f)]
 		public float delayInterval;
 		public int dialogueSectionCounter;
+		public Camera mainCamera;
+		public MinimapStuffs minimap;
 
 		public void Start() {
 			this.delay = 0f;
@@ -62,6 +65,14 @@ namespace Tutorial {
 			this.startTextRollingFlag = true;
 			if (this.dialogueText != null) {
 				this.dialogueText.text = "";
+			}
+			CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
+			if (panning != null) {
+				panning.enabled = false;
+			}
+			Camera minimapCamera = this.minimap.GetComponent<Camera>();
+			if (minimapCamera != null) {
+				minimapCamera.enabled = false;
 			}
 		}
 
@@ -110,6 +121,18 @@ namespace Tutorial {
 					if (this.dialogueSectionCounter >= 5) {
 						this.currentTutorialStage = Parts.Camera_Controls;
 						this.dialogueSectionCounter = 0;
+					}
+					if (this.dialogueSectionCounter - 1 == 1) {
+						CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
+						if (panning != null) {
+							panning.enabled = true;
+						}
+					}
+					else if (this.dialogueSectionCounter - 1 == 3) {
+						Camera minimapCamera = this.minimap.GetComponent<Camera>();
+						if (minimapCamera != null) {
+							minimapCamera.enabled = true;
+						}
 					}
 					break;
 			}
