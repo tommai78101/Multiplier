@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using Common;
+using SinglePlayer;
 
 namespace Tutorial {
 	public enum Parts {
@@ -41,7 +42,7 @@ namespace Tutorial {
 				case Parts.Unit_Controls:
 					switch (section) {
 						case 0:
-							return "Test 1";
+							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top.";
 						case 1:
 							return "Test 2";
 						case 2:
@@ -71,6 +72,8 @@ namespace Tutorial {
 		public int dialogueSectionCounter;
 		public Camera mainCamera;
 		public MinimapStuffs minimap;
+		public AIUnit tutorialUnitA;
+		public AIUnit tutorialUnitB;
 
 		public void Start() {
 			this.delay = 0f;
@@ -161,6 +164,14 @@ namespace Tutorial {
 						this.currentTutorialStage = Parts.Unit_Controls;
 						this.dialogueSectionCounter = 0;
 						break;
+					}
+					if (this.dialogueSectionCounter == 0) {
+						if (this.tutorialUnitA != null && (!this.tutorialUnitA.gameObject.activeSelf || !this.tutorialUnitA.gameObject.activeInHierarchy)) {
+							this.tutorialUnitA.gameObject.SetActive(true);
+						}
+						//if (this.tutorialUnitB != null && (!this.tutorialUnitB.gameObject.activeSelf || !this.tutorialUnitB.gameObject.activeInHierarchy)) {
+						//	this.tutorialUnitB.gameObject.SetActive(true);
+						//}
 					}
 					this.dialogueSectionCounter++;
 					break;
