@@ -179,10 +179,10 @@ namespace MultiPlayer {
 
 			UnitAttributes attributes = manager.GetComponent<UnitAttributes>();
 			if (attributes != null && attributes.hasAuthority) {
-				CanvasSwitch canvasSwitch = GameObject.FindObjectOfType<CanvasSwitch>() as CanvasSwitch;
-				if (canvasSwitch != null) {
-					canvasSwitch.unitAttributes = attributes;
-				}
+				//CanvasSwitch canvasSwitch = GameObject.FindObjectOfType<CanvasSwitch>() as CanvasSwitch;
+				//if (canvasSwitch != null) {
+				//	canvasSwitch.unitAttributes = attributes;
+				//}
 
 				GameObject content = GameObject.FindGameObjectWithTag("Content");
 				if (content != null) {

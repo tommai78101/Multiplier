@@ -12,15 +12,14 @@ namespace SinglePlayer {
 	};
 
 	public class AIUnit : BaseUnit {
-		public BaseUnit targetUnit;
 		public State currentState;
 		public float splitFactor;
 		public float mergeFactor;
 		public float attackFactor;
 		public float speedFactor;
-		[Range(3, 100)]
 		public float attackCooldownFactor;
 		public float attackCooldownCounter;
+		[Range(3, 100)]
 		public int currentHealth;
 		[Range(3, 100)]
 		public int maxHealth;
@@ -120,7 +119,7 @@ namespace SinglePlayer {
 				this.attackCooldownCounter -= Time.deltaTime / this.attackCooldownFactor;
 			}
 
-			if (this.targetUnit == null && this.currentState != State.Split && this.currentState != State.Merge) {
+			if (this.targetEnemy == null && this.currentState != State.Split && this.currentState != State.Merge) {
 				this.lineOfSight.sphereColliderRigidBody.WakeUp();
 				if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
 					for (int i = 0; i < this.lineOfSight.enemies.Count; i++) {
@@ -172,7 +171,7 @@ namespace SinglePlayer {
 				case State.Scout:
 					if (this.agent != null) {
 						if (this.agent.ReachedDestination()) {
-							this.targetUnit = null;
+							this.targetEnemy = null;
 							this.currentState = State.Idle;
 						}
 					}
@@ -194,19 +193,17 @@ namespace SinglePlayer {
 								if (enemy != null) {
 									AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
 									GameUnit playerUnit = enemy.GetComponent<GameUnit>();
-									if (aiUnit != null || playerUnit != null) {
-										if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
-											this.targetUnit = aiUnit;
-											aiUnit.TakeDamage(this.attackFactor);
-											this.attackCooldownCounter = 1f;
-											break;
-										}
-										else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
-											this.targetUnit = playerUnit;
-											playerUnit.CmdTakeDamage(playerUnit.currentHealth - 1);
-											this.attackCooldownCounter = 1f;
-											break;
-										}
+									if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
+										this.attackCooldownCounter = 1f;
+										this.targetEnemy = aiUnit;
+										aiUnit.TakeDamage(this.attackFactor);
+										break;
+									}
+									else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
+										this.attackCooldownCounter = 1f;
+										this.targetEnemy = playerUnit;
+										playerUnit.CmdTakeDamage(playerUnit.gameObject, playerUnit.currentHealth - 1);
+										break;
 									}
 								}
 							}

@@ -44,9 +44,9 @@ namespace Tutorial {
 						case 0:
 							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top.";
 						case 1:
-							return "Test 2";
+							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with using the mouse.";
 						case 2:
-							return "Test 3";
+							return "To begin, left click on the Capsule.";
 						case 3:
 							return "Test 4";
 						case 4:
@@ -169,9 +169,9 @@ namespace Tutorial {
 						if (this.tutorialUnitA != null && (!this.tutorialUnitA.gameObject.activeSelf || !this.tutorialUnitA.gameObject.activeInHierarchy)) {
 							this.tutorialUnitA.gameObject.SetActive(true);
 						}
-						//if (this.tutorialUnitB != null && (!this.tutorialUnitB.gameObject.activeSelf || !this.tutorialUnitB.gameObject.activeInHierarchy)) {
-						//	this.tutorialUnitB.gameObject.SetActive(true);
-						//}
+					}
+					else if (this.dialogueSectionCounter == 2) {
+
 					}
 					this.dialogueSectionCounter++;
 					break;

@@ -34,7 +34,8 @@ public class LineOfSight : MonoBehaviour {
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
-		if (unit != null && myself != null && (unit != myself) && unit.CheckIfVisible() && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+		Renderer unitRenderer = unit.GetComponent<Renderer>();
+		if (unit != null && myself != null && (unit != myself) && unitRenderer.enabled && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
 			this.enemiesInRange.Add(unit);
 		}
 		else {
@@ -55,7 +56,8 @@ public class LineOfSight : MonoBehaviour {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
 		if (unit != null) {
-			if ((myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unit.CheckIfVisible() && this.enemiesInRange.Contains(unit))) {
+			Renderer unitRenderer = unit.GetComponent<Renderer>();
+			if ((myself != null && (unit != myself) && !unit.hasAuthority && this.enemiesInRange.Contains(unit)) || (!unitRenderer.enabled && this.enemiesInRange.Contains(unit))) {
 				this.enemiesInRange.Remove(unit);
 				this.exitedList.Add(unit);
 			}

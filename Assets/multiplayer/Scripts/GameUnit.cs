@@ -45,8 +45,7 @@ namespace MultiPlayer {
 		public float recoverCounter;
 		public Color initialColor;
 		public Color takeDamageColor;
-		public GameUnit targetEnemy;
-		public AIUnit targetAIEnemy;
+		public BaseUnit targetAIEnemy;
 		public GameObject selectionRing;
 		public EnumTeam teamFaction;
 
@@ -249,7 +248,8 @@ namespace MultiPlayer {
 			NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
 			GameUnit unit = obj.GetComponent<GameUnit>();
 			if (agent != null && unit != null) {
-				if (unit.targetEnemy != null && unit.targetEnemy.CheckIfVisible()) {  //&& checkEnemyNearby
+				Renderer unitRenderer = unit.targetEnemy.GetComponent<Renderer>();
+				if (unit.targetEnemy != null && unitRenderer.enabled) {  //&& checkEnemyNearby
 					agent.stoppingDistance = 0.5f;
 					agent.SetDestination(unit.targetEnemy.transform.position);
 				}
@@ -356,23 +356,16 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdTakeDamage(int newHealth) {
-			//ONLY USED FOR SINGLE PLAYER.
-			if (!this.hasAuthority) {
-				return;
-			}
-			//CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
-			this.currentHealth = newHealth;
-			this.recoverCounter = 0f;
-		}
-
-		public bool CheckIfVisible() {
-			Renderer renderer = this.GetComponent<Renderer>();
-			if (renderer != null) {
-				return renderer.enabled;
-			}
-			else {
-				return false;
+		public void CmdTakeDamage(GameObject playerUnitObject, int newHealth) {
+			GameUnit playerUnit = playerUnitObject.GetComponent<GameUnit>();
+			if (playerUnit != null) {
+				//ONLY USED FOR SINGLE PLAYER.
+				if (!playerUnit.hasAuthority) {
+					return;
+				}
+				//CmdHealth(this.gameObject, this.currentHealth - Mathf.FloorToInt(attacker.attackPower));
+				playerUnit.currentHealth = newHealth;
+				playerUnit.recoverCounter = 0f;
 			}
 		}
 

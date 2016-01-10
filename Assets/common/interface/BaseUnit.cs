@@ -5,5 +5,6 @@ using System.Collections.Generic;
 
 namespace Common {
 	public class BaseUnit : NetworkBehaviour {
+		public BaseUnit targetEnemy;
 	}
 }

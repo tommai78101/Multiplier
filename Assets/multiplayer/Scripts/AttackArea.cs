@@ -3,29 +3,31 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using MultiPlayer;
 using SinglePlayer;
+using Common;
 
 public class AttackArea : MonoBehaviour {
 	//Same design pattern as LineOfSight class.
-	public List<GameUnit> enemiesInAttackRange;
-	public List<GameUnit> removeList;
-	public List<GameUnit> exitedList;
-	public List<AIUnit> otherEnemies;
-	public List<AIUnit> exitedEnemies;
+	public List<BaseUnit> enemiesInAttackRange;
+	public List<BaseUnit> removeList;
+	public List<BaseUnit> exitedList;
+	public List<BaseUnit> otherEnemies;
+	public List<BaseUnit> exitedEnemies;
 	public GameUnit parent;
 	public Rigidbody sphereColliderRigidBody;
 
 	public void Start() {
-		this.enemiesInAttackRange = new List<GameUnit>();
-		this.removeList = new List<GameUnit>();
-		this.exitedList = new List<GameUnit>();
+		this.enemiesInAttackRange = new List<BaseUnit>();
+		this.removeList = new List<BaseUnit>();
+		this.exitedList = new List<BaseUnit>();
 		this.parent = this.GetComponentInParent<GameUnit>();
 		this.sphereColliderRigidBody = this.GetComponent<Rigidbody>();
-		this.otherEnemies = new List<AIUnit>();
+		this.otherEnemies = new List<BaseUnit>();
 	}
 
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		if (unit != null && !unit.hasAuthority && unit.CheckIfVisible() && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+		Renderer unitRenderer = unit.GetComponent<Renderer>();
+		if (unit != null && !unit.hasAuthority && unitRenderer.enabled && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
 			this.enemiesInAttackRange.Add(unit);
 		}
 		else {
@@ -45,7 +47,8 @@ public class AttackArea : MonoBehaviour {
 	public void OnTriggerExit(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		if (unit != null) {
-			if ((!unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) || (!unit.CheckIfVisible() && this.enemiesInAttackRange.Contains(unit))) {
+			Renderer unitRenderer = unit.GetComponent<Renderer>();
+			if ((!unit.hasAuthority && this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) || (!unitRenderer.enabled && this.enemiesInAttackRange.Contains(unit))) {
 				this.enemiesInAttackRange.Remove(unit);
 				this.exitedList.Add(unit);
 			}
