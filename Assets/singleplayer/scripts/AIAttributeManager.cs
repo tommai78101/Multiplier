@@ -35,6 +35,7 @@ namespace SinglePlayer {
 					tier.speed = 1.2f;
 					tier.split = 2f;
 					tier.merge = 2f;
+					tier.attackCooldown = 1f;
 				}
 				else {
 					TierUpgrade previous = this.tiers[i - 1];
@@ -44,6 +45,7 @@ namespace SinglePlayer {
 					tier.speed = previous.speed * 1.2f;
 					tier.split = previous.split * 2f;
 					tier.merge = previous.merge * 2f;
+					tier.attackCooldown = previous.attackCooldown * 1.2f;
 				}
 				this.tiers.Add(tier);
 			}
@@ -67,6 +69,7 @@ namespace SinglePlayer {
 				if (this.aiLevelRateHandler != null && this.aiLevelRateHandler.allAttributes != null) {
 					List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
 					List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
+					List<LevelRate> attackCooldownList = this.aiLevelRateHandler.allAttributes[Category.AttackCooldown.value];
 					List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
 					List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
 					List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
@@ -74,6 +77,7 @@ namespace SinglePlayer {
 						TierUpgrade tierUpgrade = this.tiers[i];
 						tierUpgrade.health = healthList[i].rate;
 						tierUpgrade.attack = attackList[i].rate;
+						tierUpgrade.attackCooldown = attackCooldownList[i].rate;
 						tierUpgrade.speed = speedList[i].rate;
 						tierUpgrade.split = splitList[i].rate;
 						tierUpgrade.merge = mergeList[i].rate;
