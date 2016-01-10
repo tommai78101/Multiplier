@@ -24,8 +24,18 @@ namespace SinglePlayer {
 				switch (itemValue) {
 					default:
 					case 0:
+						string zero1 = "y=0";
+						unitAttributes.SetHealthAttributes(zero1);
+						unitAttributes.SetAttackAttributes(zero1);
+						unitAttributes.SetSpeedAttributes(zero1);
+						unitAttributes.SetSplitAttributes(zero1);
+						unitAttributes.SetMergeAttributes(zero1);
+						unitAttributes.SetAttackCooldownAttributes(zero1);
+						this.attributePanelUI.DisableCustomEquations();
+						break;
 					case 1:
 					case 2:
+					case 3:
 						Debug.Log("Setting expression: " + this.dropdown.options[itemValue].text);
 						string expression = this.dropdown.options[itemValue].text;
 						unitAttributes.SetHealthAttributes(expression);
@@ -36,7 +46,7 @@ namespace SinglePlayer {
 						unitAttributes.SetAttackCooldownAttributes(expression);
 						this.attributePanelUI.DisableCustomEquations();
 						break;
-					case 3:
+					case 4:
 						unitAttributes.SetHealthAttributes("y=2*x");
 						string otherExpression = "y=1.414*x";
 						unitAttributes.SetAttackAttributes(otherExpression);
@@ -46,7 +56,7 @@ namespace SinglePlayer {
 						unitAttributes.SetAttackCooldownAttributes(otherExpression);
 						this.attributePanelUI.DisableCustomEquations();
 						break;
-					case 4:
+					case 5:
 						string zero = "y=0";
 						unitAttributes.SetHealthAttributes(zero);
 						unitAttributes.SetAttackAttributes(zero);
