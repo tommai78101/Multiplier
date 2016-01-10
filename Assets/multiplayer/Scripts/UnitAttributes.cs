@@ -149,7 +149,7 @@ namespace MultiPlayer {
 			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
 				return;
 			}
-			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1 + 1);
+			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1);
 			this.splitPrefabFactor = answer;
 		}
 
