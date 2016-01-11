@@ -97,6 +97,18 @@ public class SingleHost : NetworkManager {
 				AImanager.Activate();
 			}
 		}
+
+		GameObject playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
+		if (playerUmbrellaObject != null) {
+			this.HumanPlayer = playerUmbrellaObject;
+			Transform unitUmbrellaTransform = playerUmbrellaObject.transform.GetChild(0);
+			this.HumanUnits = unitUmbrellaTransform.gameObject;
+		}
+
+		if (!this.isNetworkActive) {
+			this.StartHost();
+		}
+
 		this.enablePauseGameMenu = true;
 		GameObject playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
 		if (playerUmbrellaObject != null) {
