@@ -1,4 +1,4 @@
-﻿#if (UNITY_5_2_3 || UNITY_5_2_4)
+﻿#if UNITY_5_2_3
 #else
 using UnityEngine;
 using UnityEngine.Analytics;
