@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+#if UNITY_5_2_3
+#else
 using UnityEngine.SceneManagement;
+#endif
 using System.Collections;
 
 namespace Common {
@@ -17,7 +20,11 @@ namespace Common {
 					manager.StopHost();
 				}
 			}
+#if UNITY_5_2_3
+			Application.LoadLevel(value);
+#else
 			SceneManager.LoadScene(value);
+#endif
 		}
 	}
 }

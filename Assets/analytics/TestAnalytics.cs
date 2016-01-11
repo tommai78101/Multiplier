@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_5_2_3
+#else
+using UnityEngine;
 using UnityEngine.Analytics;
 using System.Collections.Generic;
 
@@ -26,3 +28,4 @@ public class TestAnalytics : MonoBehaviour {
 		}
 	}
 }
+#endif

@@ -1,6 +1,9 @@
 ﻿#if ENABLE_UNET
 
+#if UNITY_5_2_3
+#else
 using UnityEngine.SceneManagement;
+#endif
 
 namespace UnityEngine.Networking {
 	[AddComponentMenu("Network/NetworkManagerHUD")]
@@ -24,7 +27,10 @@ namespace UnityEngine.Networking {
 			this.manager = GetComponent<NetworkManager>();
 			this.style = new GUIStyle();
 			this.style.normal.textColor = Color.black;
+#if UNITY_WEBGL
 			this.manager.useWebSockets = true;
+#else
+#endif
 		}
 
 		public void Start() {
@@ -207,7 +213,11 @@ namespace UnityEngine.Networking {
 					manager.StopHost();
 					this.showGUI = false;
 				}
+#if UNITY_5_2_3
+				Application.LoadLevel("menu");
+#else
 				SceneManager.LoadScene("menu");
+#endif
 			}
 			ypos += spacing;
 		}
