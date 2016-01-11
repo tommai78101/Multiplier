@@ -6,7 +6,9 @@ using SinglePlayer.UI;
 
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
+	public CanvasGroup pauseMenuGroup;
 	public bool notReady = false;
+	public bool enablePauseGameMenu = false;
 	public GameObject AIPlayer;
 	public GameObject AIUnits;
 	public GameObject AIUnitPrefab;
@@ -15,10 +17,23 @@ public class SingleHost : NetworkManager {
 
 	public void Start() {
 		this.notReady = true;
+		this.enablePauseGameMenu = false;
 		this.StartHost();
 	}
 
 	public void Update() {
+		//TODO: Create a menu to back out into the main menu.
+		if (this.enablePauseGameMenu && Input.GetKeyUp(KeyCode.Escape)) {
+			if (this.pauseMenuGroup != null) {
+				if (this.pauseMenuGroup.gameObject.activeInHierarchy || this.pauseMenuGroup.gameObject.activeSelf) {
+					this.pauseMenuGroup.gameObject.SetActive(false);
+				}
+				else {
+					this.pauseMenuGroup.gameObject.SetActive(true);
+				}
+			}
+		}
+
 		if (this.notReady) {
 			GameObject minimapCameraObject = GameObject.FindGameObjectWithTag("Minimap");
 			Camera minimapCamera = minimapCameraObject.GetComponent<Camera>();
@@ -74,13 +89,13 @@ public class SingleHost : NetworkManager {
 				if (attributeManager != null && attributeManager.attributePanelUI != null) {
 					DifficultyGroup group = attributeManager.attributePanelUI.aiCalibrationDifficulty;
 					AImanager.difficulty = group.GetDifficulty();
-                }
+				}
 
 				unit.SetTeam(AImanager.teamFaction);
 				AImanager.Activate();
 			}
 		}
-
+		this.enablePauseGameMenu = true;
 		this.notReady = false;
 	}
 
