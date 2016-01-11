@@ -31,15 +31,40 @@ namespace SinglePlayer.UI {
 				List<LevelRate> tempList = new List<LevelRate>();
 				for (int j = 0; j < AttributePanelUI.MAX_NUMBER_OF_LEVELS; j++) {
 					LevelRate rate = new LevelRate(cat, j + 1, 3f);
-					switch (cat.value) {
-						default:
-							rate.rate = 1f;
-							break;
-						case 0:
-							break;
-						case 2:
-							rate.rate = 2f;
-							break;
+					if (j == 0) {
+						switch (cat.value) {
+							default: //Everything else
+								rate.rate = 1f;
+								break;
+							case 0: //Health
+								break;
+							case 2: //Attack Cooldown
+								rate.rate = 1.2f;
+								break;
+						}
+					}
+					else {
+						LevelRate previous = tempList[j - 1];
+						switch (cat.value) {
+							case 0: //Health
+								rate.rate = previous.rate * 2f;
+								break;
+							case 1: //Attack
+								rate.rate = previous.rate * 1.8f;
+								break;
+							case 2: //Attack cooldown
+								rate.rate = previous.rate;
+								break;
+							case 3: //Speed
+								rate.rate = previous.rate * 1.2f;
+								break;
+							case 4: //Split
+								rate.rate = previous.rate;
+								break;
+							case 5: //Merge
+								rate.rate = previous.rate * 2f;
+								break;
+						}
 					}
 					tempList.Add(rate);
 				}
