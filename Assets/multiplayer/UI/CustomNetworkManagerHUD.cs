@@ -24,6 +24,7 @@ namespace UnityEngine.Networking {
 			this.manager = GetComponent<NetworkManager>();
 			this.style = new GUIStyle();
 			this.style.normal.textColor = Color.black;
+			this.manager.useWebSockets = true;
 		}
 
 		public void Start() {
