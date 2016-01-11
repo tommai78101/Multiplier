@@ -98,6 +98,7 @@ namespace MultiPlayer {
 			GameObject playerUmbrellaObject = new GameObject("Player");
 			GameObject playerUnitUmbrellaObject = new GameObject("Units");
 			playerUnitUmbrellaObject.transform.SetParent(playerUmbrellaObject.transform);
+			playerUmbrellaObject.tag = "Player";
 
 			//Player unit
 			GameObject playerObject = MonoBehaviour.Instantiate(this.spawnPrefab) as GameObject;

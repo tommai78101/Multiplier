@@ -11,6 +11,8 @@ public class SingleHost : NetworkManager {
 	public bool enablePauseGameMenu = false;
 	public GameObject AIPlayer;
 	public GameObject AIUnits;
+	public GameObject HumanPlayer;
+	public GameObject HumanUnits;
 	public GameObject AIUnitPrefab;
 
 	private GameObject playerObject;
@@ -95,8 +97,66 @@ public class SingleHost : NetworkManager {
 				AImanager.Activate();
 			}
 		}
+
+		GameObject playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
+		if (playerUmbrellaObject != null) {
+			this.HumanPlayer = playerUmbrellaObject;
+			Transform unitUmbrellaTransform = playerUmbrellaObject.transform.GetChild(0);
+			this.HumanUnits = unitUmbrellaTransform.gameObject;
+		}
+
+		if (!this.isNetworkActive) {
+			this.StartHost();
+		}
+
 		this.enablePauseGameMenu = true;
 		this.notReady = false;
 	}
 
+	public void ResetAttributePanelUI() {
+		if (this.pauseMenuGroup != null) {
+			if (this.pauseMenuGroup.gameObject.activeInHierarchy || this.pauseMenuGroup.gameObject.activeSelf) {
+				this.pauseMenuGroup.gameObject.SetActive(false);
+			}
+		}
+
+		if (this.attributePanelGroup != null) {
+			this.attributePanelGroup.alpha = 1f;
+			this.attributePanelGroup.blocksRaycasts = true;
+			this.attributePanelGroup.interactable = true;
+		}
+
+		GameObject minimapCameraObject = GameObject.FindGameObjectWithTag("Minimap");
+		Camera minimapCamera = minimapCameraObject.GetComponent<Camera>();
+		if (minimapCamera != null && minimapCamera.enabled) {
+			minimapCamera.enabled = false;
+		}
+
+		if (this.playerObject != null) {
+			this.playerObject.SetActive(false);
+		}
+
+		AIManager AImanager = this.AIPlayer.GetComponentInChildren<AIManager>();
+		if (AImanager != null) {
+			AImanager.Deactivate();
+		}
+
+		foreach (Transform child in this.AIUnits.transform) {
+			MonoBehaviour.Destroy(child.gameObject);
+		}
+
+		GameObject spawner = GameObject.FindGameObjectWithTag("Spawner");
+		if (spawner != null) {
+			MonoBehaviour.Destroy(spawner);
+			MonoBehaviour.Destroy(this.HumanPlayer);
+			this.HumanPlayer = null;
+			this.HumanUnits = null;
+		}
+
+		this.StopHost();
+		this.StopServer();
+
+		this.enablePauseGameMenu = false;
+		this.notReady = true;
+	}
 }
