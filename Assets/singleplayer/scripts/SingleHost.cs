@@ -26,7 +26,14 @@ public class SingleHost : NetworkManager {
 	public void Update() {
 		//TODO: Create a menu to back out into the main menu.
 		if (this.enablePauseGameMenu && Input.GetKeyUp(KeyCode.Escape)) {
-			TogglePauseMenu();
+			if (this.pauseMenuGroup != null) {
+				if (this.pauseMenuGroup.gameObject.activeInHierarchy || this.pauseMenuGroup.gameObject.activeSelf) {
+					this.pauseMenuGroup.gameObject.SetActive(false);
+				}
+				else {
+					this.pauseMenuGroup.gameObject.SetActive(true);
+				}
+			}
 		}
 
 		if (this.notReady) {
@@ -90,7 +97,7 @@ public class SingleHost : NetworkManager {
 				AImanager.Activate();
 			}
 		}
-
+		this.enablePauseGameMenu = true;
 		GameObject playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
 		if (playerUmbrellaObject != null) {
 			this.HumanPlayer = playerUmbrellaObject;
