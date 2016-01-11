@@ -26,14 +26,7 @@ public class SingleHost : NetworkManager {
 	public void Update() {
 		//TODO: Create a menu to back out into the main menu.
 		if (this.enablePauseGameMenu && Input.GetKeyUp(KeyCode.Escape)) {
-			if (this.pauseMenuGroup != null) {
-				if (this.pauseMenuGroup.gameObject.activeInHierarchy || this.pauseMenuGroup.gameObject.activeSelf) {
-					this.pauseMenuGroup.gameObject.SetActive(false);
-				}
-				else {
-					this.pauseMenuGroup.gameObject.SetActive(true);
-				}
-			}
+			TogglePauseMenu();
 		}
 
 		if (this.notReady) {
@@ -158,5 +151,16 @@ public class SingleHost : NetworkManager {
 
 		this.enablePauseGameMenu = false;
 		this.notReady = true;
+	}
+
+	public void TogglePauseMenu() {
+		if (this.pauseMenuGroup != null) {
+			if (this.pauseMenuGroup.gameObject.activeInHierarchy || this.pauseMenuGroup.gameObject.activeSelf) {
+				this.pauseMenuGroup.gameObject.SetActive(false);
+			}
+			else {
+				this.pauseMenuGroup.gameObject.SetActive(true);
+			}
+		}
 	}
 }
