@@ -26,16 +26,18 @@ public class AttackArea : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
-		Renderer unitRenderer = unit.GetComponent<Renderer>();
-		if (unit != null && !unit.hasAuthority && unitRenderer.enabled && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
-			this.enemiesInAttackRange.Add(unit);
-		}
-		else {
-			AIUnit AIunit = other.GetComponent<AIUnit>();
-			if (AIunit != null && !this.otherEnemies.Contains(AIunit)) {
-				this.otherEnemies.Add(AIunit);
+		if (unit != null) {
+			Renderer unitRenderer = unit.GetComponent<Renderer>();
+			if (!unit.hasAuthority && unitRenderer.enabled && !this.enemiesInAttackRange.Contains(unit) && !unit.Equals(this.parent)) {
+				this.enemiesInAttackRange.Add(unit);
 			}
 		}
+
+		AIUnit AIunit = other.GetComponent<AIUnit>();
+		if (AIunit != null && !this.otherEnemies.Contains(AIunit)) {
+			this.otherEnemies.Add(AIunit);
+		}
+
 		if (this.exitedList.Count > 0) {
 			this.exitedList.Clear();
 		}

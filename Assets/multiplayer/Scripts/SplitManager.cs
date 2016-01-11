@@ -266,6 +266,10 @@ namespace MultiPlayer {
 		public void RpcSplit(GameObject obj, GameObject split, float angle, bool hasAuthority, float splitFactor) {
 			//We do not call on NetworkServer methods here. This is used only to sync up with the original game unit for all clients.
 			//This includes adding the newly spawned game unit into the Selection Manager that handles keeping track of all game units.
+			if (obj == null || split == null) {
+				return;
+			}
+
 			GameUnit original = obj.GetComponent<GameUnit>();
 			GameUnit copy = split.GetComponent<GameUnit>();
 

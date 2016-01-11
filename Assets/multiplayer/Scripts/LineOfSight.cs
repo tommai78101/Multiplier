@@ -6,7 +6,7 @@ using SinglePlayer;
 public class LineOfSight : MonoBehaviour {
 	public List<GameUnit> enemiesInRange;
 	public List<GameUnit> removeList;
-    public List<GameUnit> exitedList;
+	public List<GameUnit> exitedList;
 	public List<AIUnit> otherEnemies;
 	public List<AIUnit> exitedEnemies;
 	public float radius;
@@ -34,16 +34,18 @@ public class LineOfSight : MonoBehaviour {
 	public void OnTriggerEnter(Collider other) {
 		GameUnit unit = other.GetComponent<GameUnit>();
 		GameUnit myself = this.GetComponentInParent<GameUnit>();
-		Renderer unitRenderer = unit.GetComponent<Renderer>();
-		if (unit != null && myself != null && (unit != myself) && unitRenderer.enabled && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
-			this.enemiesInRange.Add(unit);
-		}
-		else {
-			AIUnit AIunit = other.GetComponent<AIUnit>();
-			if (AIunit != null && !this.otherEnemies.Contains(AIunit)) {
-				this.otherEnemies.Add(AIunit);
+		if (unit != null) {
+			Renderer unitRenderer = unit.GetComponent<Renderer>();
+			if (myself != null && (unit != myself) && unitRenderer.enabled && !unit.hasAuthority && !this.enemiesInRange.Contains(unit)) {
+				this.enemiesInRange.Add(unit);
 			}
 		}
+
+		AIUnit AIunit = other.GetComponent<AIUnit>();
+		if (AIunit != null && !this.otherEnemies.Contains(AIunit)) {
+			this.otherEnemies.Add(AIunit);
+		}
+
 		if (this.exitedList.Count > 0) {
 			this.exitedList.Clear();
 		}

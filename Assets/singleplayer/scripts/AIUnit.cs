@@ -191,15 +191,15 @@ namespace SinglePlayer {
 							for (int i = 0; i < this.attackRange.enemies.Count; i++) {
 								GameObject enemy = this.attackRange.enemies[i];
 								if (enemy != null) {
-									AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
-									GameUnit playerUnit = enemy.GetComponent<GameUnit>();
+									AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>() as AIUnit;
+									GameUnit playerUnit = enemy.GetComponent<GameUnit>() as GameUnit;
 									if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
 										this.attackCooldownCounter = 1f;
 										this.targetEnemy = aiUnit;
 										aiUnit.TakeDamage(this.attackFactor);
 										break;
 									}
-									else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
+									if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
 										this.attackCooldownCounter = 1f;
 										this.targetEnemy = playerUnit;
 										playerUnit.CmdTakeDamage(playerUnit.gameObject, playerUnit.currentHealth - 1);
@@ -209,26 +209,6 @@ namespace SinglePlayer {
 							}
 						}
 					}
-					//if (this.targetUnit != null) {
-					//	AIUnit aiUnit = this.targetUnit as AIUnit;
-					//	if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
-					//		aiUnit.TakeDamage(this.attackFactor);
-					//		this.attackCooldownCounter = 1f;
-					//	}
-					//	else {
-					//		GameUnit unit = this.targetUnit as GameUnit;
-					//		if (unit != null && unit.teamFaction != this.teamFaction) {
-					//			unit.CmdTakeDamage(unit.currentHealth - 1);
-					//			this.attackCooldownCounter = 1f;
-					//		}
-					//		else {
-					//			this.targetUnit = null;
-					//		}
-					//	}
-					//	if (this.agent != null) {
-					//		this.agent.SetDestination(this.targetUnit.transform.position);
-					//	}
-					//}
 					break;
 			}
 		}
