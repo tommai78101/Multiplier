@@ -123,28 +123,50 @@ namespace SinglePlayer {
 				this.attackCooldownCounter -= Time.deltaTime / this.attackCooldownFactor;
 			}
 
+			//Check if targetEnemy is within sight range.
+			if (this.targetEnemy != null) {
+				if (this.lineOfSight != null) {
+					this.lineOfSight.sphereColliderRigidBody.WakeUp();
+					if (!this.lineOfSight.enemies.Contains(this.targetEnemy.gameObject)) {
+						this.targetEnemy = null;
+						this.currentState = State.Idle;
+						this.lineOfSight.Clean();
+					}
+				}
+				else if (this.attackRange != null) {
+					this.attackRange.sphereColliderRigidBody.WakeUp();
+					if (!this.attackRange.enemies.Contains(this.targetEnemy.gameObject)) {
+						this.targetEnemy = null;
+						this.currentState = State.Idle;
+						this.attackRange.Clean();
+					}
+				}
+			}
+
 			if (this.targetEnemy == null && this.currentState != State.Split && this.currentState != State.Merge) {
-				this.lineOfSight.sphereColliderRigidBody.WakeUp();
-				if (this.lineOfSight != null && this.lineOfSight.enemies.Count > 0) {
-					for (int i = 0; i < this.lineOfSight.enemies.Count; i++) {
-						GameObject enemy = this.lineOfSight.enemies[i];
-						if (enemy != null) {
-							AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
-							GameUnit playerUnit = enemy.GetComponent<GameUnit>();
-							if (aiUnit != null || playerUnit != null) {
-								if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
-									if (this.agent != null) {
-										this.agent.SetDestination(aiUnit.transform.position);
+				if (this.lineOfSight != null) {
+					this.lineOfSight.sphereColliderRigidBody.WakeUp();
+					if (this.lineOfSight.enemies.Count > 0) {
+						for (int i = 0; i < this.lineOfSight.enemies.Count; i++) {
+							GameObject enemy = this.lineOfSight.enemies[i];
+							if (enemy != null) {
+								AIUnit aiUnit = enemy.GetComponentInParent<AIUnit>();
+								GameUnit playerUnit = enemy.GetComponent<GameUnit>();
+								if (aiUnit != null || playerUnit != null) {
+									if (aiUnit != null && aiUnit.teamFaction != this.teamFaction) {
+										if (this.agent != null) {
+											this.agent.SetDestination(aiUnit.transform.position);
+										}
+										this.currentState = State.Attack;
+										break;
 									}
-									this.currentState = State.Attack;
-									break;
-								}
-								else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
-									if (this.agent != null) {
-										this.agent.SetDestination(playerUnit.transform.position);
+									else if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
+										if (this.agent != null) {
+											this.agent.SetDestination(playerUnit.transform.position);
+										}
+										this.currentState = State.Attack;
+										break;
 									}
-									this.currentState = State.Attack;
-									break;
 								}
 							}
 						}
@@ -155,6 +177,10 @@ namespace SinglePlayer {
 			switch (this.currentState) {
 				default:
 				case State.Idle:
+					if (this.targetEnemy != null) {
+						this.currentState = State.Attack;
+						break;
+					}
 					if (this.agent != null) {
 						if (!this.agent.ReachedDestination()) {
 							this.agent.ResetPath();
@@ -173,6 +199,10 @@ namespace SinglePlayer {
 					}
 					break;
 				case State.Scout:
+					if (this.targetEnemy != null) {
+						this.currentState = State.Attack;
+						break;
+					}
 					if (this.agent != null) {
 						if (this.agent.ReachedDestination()) {
 							this.targetEnemy = null;
@@ -181,6 +211,10 @@ namespace SinglePlayer {
 					}
 					break;
 				case State.Merge:
+					if (this.targetEnemy != null) {
+						this.currentState = State.Attack;
+						break;
+					}
 					if (this.mergeCounter > 0f) {
 						this.mergeCounter -= Time.deltaTime / this.mergeFactor;
 					}

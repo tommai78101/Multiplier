@@ -27,6 +27,12 @@ namespace SinglePlayer {
 
 			SpawnRange range = owner.GetComponentInChildren<SpawnRange>();
 			this.rotationVector = Quaternion.Euler(new Vector3(0f, Random.Range(-180f, 180f), 0f)) * (Vector3.one * range.radius);
+
+			AIUnit ownerUnit = owner.GetComponent<AIUnit>();
+			AIUnit splitUnit = split.GetComponent<AIUnit>();
+			if (ownerUnit != null && splitUnit != null && ownerUnit.targetEnemy != null) {
+				splitUnit.targetEnemy = ownerUnit.targetEnemy;
+			}
 		}
 
 		public void Update() {

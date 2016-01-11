@@ -93,5 +93,13 @@ namespace SinglePlayer {
 			}
 			return 0;
 		}
+
+		public void Clean() {
+			for (int i = 0; i < this.enemies.Count; i++) {
+				if (this.enemies[i] == null) {
+					this.enemies.RemoveAt(i);
+				}
+			}
+		}
 	}
 }
