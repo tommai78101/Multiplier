@@ -108,7 +108,7 @@ namespace SinglePlayer {
 		public Difficulty difficulty;
 		public FSMState currentFiniteState;
 		public GameObject AIUnitPrefab;
-		[Range(15, 50)]
+		[Range(1, 50)]
 		public int maxUnitCount;
 		[Range(0f, 1f)]
 		public float mergeRatio;

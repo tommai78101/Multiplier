@@ -37,7 +37,9 @@ namespace SinglePlayer.UI {
 							break;
 						case 0:
 							break;
-
+						case 2:
+							rate.rate = 2f;
+							break;
 					}
 					tempList.Add(rate);
 				}

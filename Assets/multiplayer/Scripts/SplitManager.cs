@@ -340,7 +340,7 @@ namespace MultiPlayer {
 			if (original.currentHealth > original.maxHealth) {
 				original.currentHealth = original.maxHealth;
 			}
-			copy.recoverCooldown = original.recoverCooldown;
+			//copy.recoverCooldown = original.recoverCooldown;
 			copy.recoverCounter = original.recoverCounter = 0;
 			copy.speed = original.speed;
 			copy.attackCooldown = original.attackCooldown;
@@ -366,7 +366,7 @@ namespace MultiPlayer {
 			unit.attackPower++;
 			unit.attackCooldown++;
 			unit.speed++;
-			unit.recoverCooldown++;
+			//unit.recoverCooldown++;
 			unit.level++;
 			unit.previousLevel++;
 			unit.teamColorValue = (unit.teamColorValue + 1) % 3;
@@ -383,7 +383,7 @@ namespace MultiPlayer {
 			unit.attackPower--;
 			unit.attackCooldown--;
 			unit.speed--;
-			unit.recoverCooldown--;
+			//unit.recoverCooldown--;
 			unit.level--;
 			unit.previousLevel--;
 			unit.teamColorValue = (unit.teamColorValue + 2) % 3;

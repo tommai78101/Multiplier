@@ -19,9 +19,10 @@ namespace SinglePlayer {
 		public float speedFactor;
 		public float attackCooldownFactor;
 		public float attackCooldownCounter;
-		[Range(3, 100)]
+		public float recoveryCounter;
+		[Range(0, 100)]
 		public int currentHealth;
-		[Range(3, 100)]
+		[Range(0, 100)]
 		public int maxHealth;
 		public bool isSplitting;
 		public int teamColorValue;
@@ -37,6 +38,8 @@ namespace SinglePlayer {
 		private NavMeshAgent agent;
 		private Rect minimapCameraRect;
 		private Vector3 healthViewportPosition;
+		private Color takeDamageColor = Color.red;
+		private Color initialColor = Color.white;
 
 		public void Start() {
 			bool initialStateFlag = false;
@@ -44,7 +47,7 @@ namespace SinglePlayer {
 				AIAttributeManager aiAttributeManager = this.unitManager.aiAttributeManager;
 				if (aiAttributeManager.tiers != null) {
 					TierUpgrade firstTier = aiAttributeManager.tiers[0];
-					this.maxHealth = (int) (firstTier.health * 3f);
+					this.maxHealth = (int) (firstTier.health);
 					this.currentHealth = this.maxHealth;
 					this.attackFactor = firstTier.attack;
 					this.attackCooldownFactor = firstTier.attackCooldown;
@@ -63,6 +66,7 @@ namespace SinglePlayer {
 			this.splitCounter = 0f;
 			this.mergeCounter = 0f;
 			this.attackCooldownCounter = 1f;
+			this.recoveryCounter = 1f;
 
 			if (!initialStateFlag) {
 				this.speedFactor = 1f;
@@ -211,6 +215,14 @@ namespace SinglePlayer {
 					}
 					break;
 			}
+
+			if (this.recoveryCounter < 1f) {
+				this.recoveryCounter += Time.deltaTime;
+			}
+			Renderer renderer = this.GetComponent<Renderer>();
+			if (renderer != null) {
+				renderer.material.color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoveryCounter);
+			}
 		}
 
 		public void OnGUI() {
@@ -295,6 +307,7 @@ namespace SinglePlayer {
 
 		public void TakeDamage(float damageAmount) {
 			this.currentHealth -= Mathf.FloorToInt(damageAmount);
+			this.recoveryCounter = 0f;
 			if (this.currentHealth <= 0) {
 				MonoBehaviour.Destroy(this.gameObject);
 			}

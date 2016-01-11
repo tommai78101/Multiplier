@@ -30,9 +30,9 @@ namespace MultiPlayer {
 		public float attackCooldown;
 		[SyncVar]
 		public float speed;
-		[Range(0.001f, 10f)]
-		[SyncVar]
-		public float recoverCooldown;
+		//[Range(0.001f, 10f)]
+		//[SyncVar]
+		//public float recoverCooldown;
 		[SyncVar]
 		public int level;
 		[SyncVar]
@@ -69,7 +69,8 @@ namespace MultiPlayer {
 			this.isSelected = false;
 			this.isDirected = false;
 			this.currentHealth = this.maxHealth;
-			this.recoverCounter = this.recoverCooldown = 1f;
+			this.recoverCounter = 1f;
+			//this.recoverCooldown = this.attackCooldown + 3.5f;
 			this.attackCooldownCounter = this.attackCooldown;
 			this.teamFaction = EnumTeam.Player;
 			if (this.attackPower <= 1f) {
@@ -314,15 +315,42 @@ namespace MultiPlayer {
 			if (this.attackCooldownCounter > 0) {
 				this.attackCooldownCounter -= Time.deltaTime;
 			}
+
 			if (this.recoverCounter < 1f) {
-				this.recoverCounter += Time.deltaTime / this.recoverCooldown;
+				this.recoverCounter += Time.deltaTime;
 			}
+
 			if (this.currentHealth <= 0) {
 				CmdUnitDestroy(this.gameObject);
 			}
 
+
+			//TODO: Work on this logic. Make sure updates are handled locally, and only significant data is transferred
+			//across the network.
+			Renderer renderer = this.GetComponent<Renderer>();
+			Color color = this.initialColor;
+			if (renderer != null) {
+				color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
+				renderer.material.color = color;
+			}
+
+			if (this.attackCooldownCounter > 0f) {
+				this.attackCooldownCounter -= Time.deltaTime;
+			}
+
+			bool targetEnemyIsGone = false;
+			if (this.targetEnemy != null) {
+				Renderer targetRenderer = this.targetEnemy.GetComponent<Renderer>();
+				if (!targetRenderer.enabled) {
+					targetEnemyIsGone = true;
+				}
+			}
+			else {
+				targetEnemyIsGone = true;
+			}
+
 			//This is used for syncing up with the non-authoritative game unit. It is used with [SyncVar].
-			//CmdUpdateStatus();
+			CmdUpdateStatus(targetEnemyIsGone, color);
 		}
 
 		public void OnPlayerDisconnected(NetworkPlayer player) {
@@ -442,35 +470,15 @@ namespace MultiPlayer {
 			//NetworkServer.Destroy(this.gameObject);
 		}
 
-		//[Command]
-		//public void CmdUpdateStatus() {
-		//	Renderer renderer = this.GetComponent<Renderer>();
-		//	Color color = this.initialColor;
-		//	if (renderer != null) {
-		//		color = Color.Lerp(this.takeDamageColor, this.initialColor, this.recoverCounter);
-		//		renderer.material.color = color;
-		//       }
-
-		//	if (this.attackCooldownCounter > 0f) {
-		//		this.attackCooldownCounter -= Time.deltaTime;
-		//	}
-		//	if (this.recoverCounter < 1f) {
-		//		this.recoverCounter += Time.deltaTime / this.recoverCooldown;
-		//	}
-		//	bool targetEnemyIsGone = false;
-		//	if (this.targetEnemy != null) {
-		//		if (!this.targetEnemy.CheckIfVisible()) {
-		//			targetEnemyIsGone = true;
-		//		}
-		//	}
-
-		//	if (this.currentHealth <= 0) {
-		//		RpcUnitDestroy(this.gameObject);
-		//	}
-		//	else {
-		//		RpcUpdateStatus(targetEnemyIsGone, color);
-		//	}
-		//}
+		[Command]
+		public void CmdUpdateStatus(bool targetEnemyIsGone, Color recoveryColor) {
+			if (this.currentHealth <= 0) {
+				RpcUnitDestroy(this.gameObject);
+			}
+			else {
+				RpcUpdateStatus(targetEnemyIsGone, recoveryColor);
+			}
+		}
 
 		[Command]
 		public void CmdSetTargetEnemy(GameObject obj, GameObject enemy, GameObject attackee) {

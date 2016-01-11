@@ -30,12 +30,12 @@ namespace SinglePlayer {
 				TierUpgrade tier = new TierUpgrade();
 				if (i == 0) {
 					tier.level = i + 1;
-					tier.health = 2f;
-					tier.attack = 2f;
+					tier.health = 1f;
+					tier.attack = 1f;
 					tier.speed = 1.2f;
 					tier.split = 2f;
 					tier.merge = 2f;
-					tier.attackCooldown = 1f;
+					tier.attackCooldown = 3f;
 				}
 				else {
 					TierUpgrade previous = this.tiers[i - 1];
@@ -45,7 +45,7 @@ namespace SinglePlayer {
 					tier.speed = previous.speed * 1.2f;
 					tier.split = previous.split * 2f;
 					tier.merge = previous.merge * 2f;
-					tier.attackCooldown = previous.attackCooldown * 1.2f;
+					tier.attackCooldown = previous.attackCooldown * 2f;
 				}
 				this.tiers.Add(tier);
 			}
