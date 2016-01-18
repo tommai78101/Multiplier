@@ -15,7 +15,7 @@ public class RainbowEffect : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		this.degrees = (this.degrees + Time.deltaTime * 50f) % 360f;
-#if UNITY_5_2_3
+#if (UNITY_5_2_3 || UNITY_5_2_4)
 		this.textShadow.effectColor = EditorGUIUtility.HSVToRGB(degrees / 360f, 1f, 1f);
 		this.text.color = EditorGUIUtility.HSVToRGB(((degrees + 180f) % 360f) / 360f, 1f, 1f);
 #else
