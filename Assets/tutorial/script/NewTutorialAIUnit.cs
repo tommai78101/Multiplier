@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class NewTutorialAIUnit : MonoBehaviour {
-	public void Start() {
+	public void Awake() {
 		this.gameObject.SetActive(false);
 	}
 }
