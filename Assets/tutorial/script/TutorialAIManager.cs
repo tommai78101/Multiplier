@@ -42,7 +42,7 @@ namespace Tutorial {
 				case Parts.Unit_Controls:
 					switch (section) {
 						case 0:
-							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top.";
+							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top. ";
 						case 1:
 							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with using the mouse.";
 						case 2:
