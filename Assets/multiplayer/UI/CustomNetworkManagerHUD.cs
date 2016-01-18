@@ -1,6 +1,6 @@
 ﻿#if ENABLE_UNET
 
-#if UNITY_5_2_3
+#if (UNITY_5_2_3 || UNITY_5_2_4)
 #else
 using UnityEngine.SceneManagement;
 #endif
@@ -213,7 +213,7 @@ namespace UnityEngine.Networking {
 					manager.StopHost();
 					this.showGUI = false;
 				}
-#if UNITY_5_2_3
+#if (UNITY_5_2_3 || UNITY_5_2_4)
 				Application.LoadLevel("menu");
 #else
 				SceneManager.LoadScene("menu");
