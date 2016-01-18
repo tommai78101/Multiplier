@@ -72,8 +72,6 @@ namespace Tutorial {
 		public int dialogueSectionCounter;
 		public Camera mainCamera;
 		public MinimapStuffs minimap;
-		public AIUnit tutorialUnitA;
-		public AIUnit tutorialUnitB;
 
 		public void Start() {
 			this.delay = 0f;
@@ -166,9 +164,8 @@ namespace Tutorial {
 						break;
 					}
 					if (this.dialogueSectionCounter == 0) {
-						if (this.tutorialUnitA != null && (!this.tutorialUnitA.gameObject.activeSelf || !this.tutorialUnitA.gameObject.activeInHierarchy)) {
-							this.tutorialUnitA.gameObject.SetActive(true);
-						}
+
+
 					}
 					else if (this.dialogueSectionCounter == 2) {
 
