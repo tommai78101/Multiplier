@@ -72,6 +72,9 @@ namespace Tutorial {
 		public int dialogueSectionCounter;
 		public Camera mainCamera;
 		public MinimapStuffs minimap;
+		public NewTutorialAIUnit tutorialUnit;
+		public SplitMergeManager splitMergeManager;
+		public Transform tutorialUnitParent;
 
 		public void Start() {
 			this.delay = 0f;
@@ -164,11 +167,13 @@ namespace Tutorial {
 						break;
 					}
 					if (this.dialogueSectionCounter == 0) {
-
-
+						this.tutorialUnit.gameObject.SetActive(true);
 					}
 					else if (this.dialogueSectionCounter == 2) {
-
+						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
+						clone.SetActive(true);
+						clone.transform.SetParent(this.tutorialUnitParent);
+						this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
 					}
 					this.dialogueSectionCounter++;
 					break;
