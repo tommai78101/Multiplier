@@ -1,8 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Common;
 
-public class NewTutorialAIUnit : MonoBehaviour {
-	public void Awake() {
-		this.gameObject.SetActive(false);
+namespace Tutorial {
+	public class NewTutorialAIUnit : MonoBehaviour {
+		public MeshRenderer selectionRingRenderer;
+
+		public void Awake() {
+			this.gameObject.SetActive(false);
+			if (this.selectionRingRenderer != null) {
+				this.selectionRingRenderer.enabled = false;
+			}
+		}
 	}
 }
