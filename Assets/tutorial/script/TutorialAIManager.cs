@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 using Common;
 using SinglePlayer;
+using System;
 
 namespace Tutorial {
 	public enum Parts {
@@ -42,11 +43,11 @@ namespace Tutorial {
 				case Parts.Unit_Controls:
 					switch (section) {
 						case 0:
-							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top. ";
+							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top.";
 						case 1:
-							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with using the mouse.";
+							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with showing what the mouse can do.";
 						case 2:
-							return "To begin, left click on the Capsule.";
+							return "The following animation shows what happens when the player controls the mouse, and left clicks on the Capsule.";
 						case 3:
 							return "Test 4";
 						case 4:
@@ -75,6 +76,12 @@ namespace Tutorial {
 		public NewTutorialAIUnit tutorialUnit;
 		public SplitMergeManager splitMergeManager;
 		public Transform tutorialUnitParent;
+		public GameObject cursorPrefab;
+		public Cursor mainCursor;
+		public Canvas mainCanvas;
+
+		public List<CursorPanGroup> groupList = new List<CursorPanGroup>();
+		public int groupListCounter = 0;
 
 		public void Start() {
 			this.delay = 0f;
@@ -96,6 +103,16 @@ namespace Tutorial {
 			if (minimapCamera != null) {
 				minimapCamera.enabled = false;
 			}
+
+			//Cursor setup
+			GameObject obj = MonoBehaviour.Instantiate(this.cursorPrefab) as GameObject;
+			obj.transform.SetParent(this.mainCanvas.transform);
+			this.mainCursor = obj.GetComponent<Cursor>();
+			if (this.mainCursor == null) {
+				Debug.LogError("Cursor isn't obtained. Please check.");
+			}
+
+			InitializeCursorPanGroups();
 		}
 
 		public void Update() {
@@ -170,6 +187,11 @@ namespace Tutorial {
 						this.tutorialUnit.gameObject.SetActive(true);
 					}
 					else if (this.dialogueSectionCounter == 2) {
+						//Selecting with cursor
+						this.mainCursor.PanCursor(this.GetNextPanning());
+					}
+					else if (this.dialogueSectionCounter == 5) {
+						//Splitting
 						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
 						clone.SetActive(true);
 						clone.transform.SetParent(this.tutorialUnitParent);
@@ -181,6 +203,25 @@ namespace Tutorial {
 			this.dialogueText.text = "";
 			this.stringLetterCounter = 0;
 			this.startTextRollingFlag = true;
+		}
+
+		//It loops back to the beginning if there's no more Pan Group.
+		public CursorPanGroup GetNextPanning() {
+			if (this.groupListCounter + 1 < this.groupList.Count) {
+				return this.groupList[this.groupListCounter++];
+			}
+			else {
+				this.groupListCounter = 0;
+				return this.groupList[this.groupListCounter];
+			}
+		}
+
+		//------------------------------       PRIVATE METHODS      --------------------------
+
+		private void InitializeCursorPanGroups() {
+			//Initialize panning groups here. Crude way, not elegant in readability, but it gets the job done faster.
+			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(0f, -15f)));
+			//this.groupList.Add(new CursorPanGroup());
 		}
 	}
 }
