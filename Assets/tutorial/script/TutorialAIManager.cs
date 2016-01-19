@@ -49,7 +49,7 @@ namespace Tutorial {
 						case 2:
 							return "The following animation shows what happens when the player controls the mouse, and left clicks on the Capsule.";
 						case 3:
-							return "Test 4";
+							return "The Capsule will indicate that it has been selected.";
 						case 4:
 							return "Test 5";
 						case 5:
@@ -72,6 +72,7 @@ namespace Tutorial {
 		public float delayInterval;
 		public int dialogueSectionCounter;
 		public Camera mainCamera;
+		public Vector3 cameraOrigin;
 		public MinimapStuffs minimap;
 		public NewTutorialAIUnit tutorialUnit;
 		public SplitMergeManager splitMergeManager;
@@ -95,6 +96,11 @@ namespace Tutorial {
 			if (this.dialogueText != null) {
 				this.dialogueText.text = "";
 			}
+			if (this.mainCamera == null) {
+				Debug.LogError("Cannot obtain main camera. Please check.");
+			}
+			this.cameraOrigin = this.mainCamera.transform.position;
+
 			CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
 			if (panning != null) {
 				panning.enabled = false;
@@ -187,8 +193,10 @@ namespace Tutorial {
 						this.tutorialUnit.gameObject.SetActive(true);
 					}
 					else if (this.dialogueSectionCounter == 2) {
+						//TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
+						this.mainCamera.transform.position = this.cameraOrigin;
 						//Selecting with cursor
-						this.mainCursor.PanCursor(this.GetNextPanning());
+						this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
 					}
 					else if (this.dialogueSectionCounter == 5) {
 						//Splitting
@@ -220,7 +228,8 @@ namespace Tutorial {
 
 		private void InitializeCursorPanGroups() {
 			//Initialize panning groups here. Crude way, not elegant in readability, but it gets the job done faster.
-			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(0f, -15f)));
+			Debug.Log("Adding new cursor pan group.");
+			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(10f, -20f)));
 			//this.groupList.Add(new CursorPanGroup());
 		}
 	}

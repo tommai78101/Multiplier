@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 namespace Tutorial {
+	[System.Serializable]
 	public struct CursorPanGroup {
 		public Vector3 start;
 		public Vector3 end;
@@ -12,15 +13,21 @@ namespace Tutorial {
 		}
 	}
 
+	public enum CursorButton {
+		Nothing, Left_Click, Right_Click
+	}
 
 	public class Cursor : MonoBehaviour {
 		public CanvasGroup cursorGroup;
 		public RectTransform rectTransform;
 		public Vector3 startingPosition;
 		public Vector3 endingPosition;
+
 		public bool isAppearing;
 		public bool isPanning;
 		public float panningElapsedTime;
+
+		public CursorButton buttonToPress;
 
 		public void Start() {
 			this.rectTransform = this.GetComponent<RectTransform>();
@@ -41,6 +48,8 @@ namespace Tutorial {
 
 			this.rectTransform.localPosition = Vector3.zero;
 			this.endingPosition = this.startingPosition = Vector3.zero;
+
+			this.buttonToPress = CursorButton.Nothing;
 		}
 
 		public void Update() {
@@ -102,15 +111,22 @@ namespace Tutorial {
 		/// <param name="start">Vector3 position to indicate where the cursor begins the panning animation.</param>
 		/// <param name="end">Vector3 position to indicate where the cursor ends in the panning animation.</param>
 		/// <returns></returns>
-		public bool PanCursor(CursorPanGroup group) {
+		public bool PanCursor(CursorPanGroup group, CursorButton button) {
 			if (this.isPanning) {
 				return false;
 			}
 			this.startingPosition = group.start;
 			this.endingPosition = group.end;
-			this.rectTransform.position = group.start;
+			this.rectTransform.localPosition = group.start;
 			this.panningElapsedTime = 0f;
 			this.isAppearing = true;
+
+
+			ObtainStartingPosition s = this.GetComponentInChildren<ObtainStartingPosition>();
+			s.rectTransform.localPosition = group.start;
+			ObtainEndingPosition e = this.GetComponentInChildren<ObtainEndingPosition>();
+			e.rectTransform.localPosition = group.end;
+
 			return true;
 		}
 
