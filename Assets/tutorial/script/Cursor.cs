@@ -72,14 +72,14 @@ namespace Tutorial {
 					else {
 						CanvasGroup mouseButtonGroup = this.icon.GetComponent<CanvasGroup>();
 						if (this.isButtonPressed) {
-							mouseButtonGroup.alpha += Time.deltaTime;
+							mouseButtonGroup.alpha += Time.deltaTime * 2.5f;
 							if (mouseButtonGroup.alpha >= 1f) {
 								mouseButtonGroup.alpha = 1f;
 								this.isButtonPressed = false;
 							}
 						}
 						if (!this.isButtonPressed) {
-							mouseButtonGroup.alpha -= Time.deltaTime;
+							mouseButtonGroup.alpha -= Time.deltaTime * 2.5f;
 							if (mouseButtonGroup.alpha <= 0) {
 								mouseButtonGroup.alpha = 0;
 								this.isAppearing = false;
