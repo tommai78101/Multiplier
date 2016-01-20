@@ -47,7 +47,7 @@ namespace Tutorial {
 						case 1:
 							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with showing what the mouse can do.";
 						case 2:
-							return "The following animation shows what happens when the player controls the mouse, and left clicks on the Capsule.";
+							return "The following animation shows what happens when the player controls the mouse, and left clicks on the Capsule. (Blue marker is left mouse button click.)";
 						case 3:
 							return "The Capsule will indicate that it has been selected.";
 						case 4:
