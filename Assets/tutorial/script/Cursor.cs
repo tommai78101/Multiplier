@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 namespace Tutorial {
@@ -19,6 +20,7 @@ namespace Tutorial {
 
 	public class Cursor : MonoBehaviour {
 		public CanvasGroup cursorGroup;
+
 		public RectTransform rectTransform;
 		public Vector3 startingPosition;
 		public Vector3 endingPosition;
@@ -27,7 +29,10 @@ namespace Tutorial {
 		public bool isPanning;
 		public float panningElapsedTime;
 
-		public CursorButton buttonToPress;
+		public bool isButtonPressed;
+		public bool isButtonHeld;
+		public float buttonPressedElapsedTime;
+		public CursorButtonIcon icon;
 
 		public void Start() {
 			this.rectTransform = this.GetComponent<RectTransform>();
@@ -37,6 +42,10 @@ namespace Tutorial {
 			this.cursorGroup = this.GetComponent<CanvasGroup>();
 			if (this.cursorGroup == null) {
 				Debug.LogError("Cannot obtain cursor's CanvasGroup. Please check.");
+			}
+			this.icon = this.GetComponentInChildren<CursorButtonIcon>();
+			if (this.icon == null) {
+				Debug.LogError("Cannot obtain cursor mouse button click icons. Please check.");
 			}
 
 			this.isAppearing = false;
@@ -48,39 +57,61 @@ namespace Tutorial {
 
 			this.rectTransform.localPosition = Vector3.zero;
 			this.endingPosition = this.startingPosition = Vector3.zero;
-
-			this.buttonToPress = CursorButton.Nothing;
 		}
 
 		public void Update() {
 			if (this.isAppearing) {
 				if (this.cursorGroup.alpha < 1f) {
 					this.cursorGroup.alpha += Time.deltaTime;
-					this.isPanning = false;
 				}
 				else {
-					this.isPanning = true;
+					this.rectTransform.localPosition = Vector3.Lerp(this.startingPosition, this.endingPosition, this.panningElapsedTime);
+					if (this.panningElapsedTime < 1f) {
+						this.panningElapsedTime += Time.deltaTime / 2f;
+					}
+					else {
+						CanvasGroup mouseButtonGroup = this.icon.GetComponent<CanvasGroup>();
+						if (this.isButtonPressed) {
+							mouseButtonGroup.alpha += Time.deltaTime;
+							if (mouseButtonGroup.alpha >= 1f) {
+								mouseButtonGroup.alpha = 1f;
+								this.isButtonPressed = false;
+							}
+						}
+						if (!this.isButtonPressed) {
+							mouseButtonGroup.alpha -= Time.deltaTime;
+							if (mouseButtonGroup.alpha <= 0) {
+								mouseButtonGroup.alpha = 0;
+								this.isAppearing = false;
+							}
+						}
+					}
 				}
 			}
-			else {
+			if (!this.isAppearing) {
 				if (this.cursorGroup.alpha > 0f) {
 					this.cursorGroup.alpha -= Time.deltaTime;
 				}
 			}
-
-			if (this.isPanning) {
-				this.rectTransform.localPosition = Vector3.Lerp(this.startingPosition, this.endingPosition, this.panningElapsedTime);
-				if (this.panningElapsedTime < 1f) {
-					this.panningElapsedTime += Time.deltaTime / 2f;
-				}
-				else {
-					this.isPanning = false;
-					this.isAppearing = false;
-
-				}
-			}
 		}
 
+		public void Appear() {
+			this.isAppearing = true;
+		}
+
+		public void Disappear() {
+			this.isAppearing = false;
+		}
+
+		public void OnDrawGizmosSelected() {
+			Gizmos.color = Color.blue;
+			Gizmos.DrawLine(this.startingPosition, this.endingPosition);
+		}
+
+		public void OnDrawGizmos() {
+			Gizmos.color = Color.blue;
+			Gizmos.DrawLine(this.startingPosition, this.endingPosition);
+		}
 
 
 		/// <summary>
@@ -127,18 +158,14 @@ namespace Tutorial {
 			ObtainEndingPosition e = this.GetComponentInChildren<ObtainEndingPosition>();
 			e.rectTransform.localPosition = group.end;
 
+			if (!button.Equals(CursorButton.Nothing)) {
+				this.icon.SetButton(button);
+				this.buttonPressedElapsedTime = 0f;
+				this.isButtonPressed = true;
+			}
+
 			return true;
 		}
 
-		public void OnDrawGizmosSelected() {
-			Gizmos.color = Color.blue;
-			Gizmos.DrawLine(this.startingPosition, this.endingPosition);
-		}
-
-		public void OnDrawGizmos() {
-			Gizmos.color = Color.blue;
-			Gizmos.DrawLine(this.startingPosition, this.endingPosition);
-		}
-	
 	}
 }
