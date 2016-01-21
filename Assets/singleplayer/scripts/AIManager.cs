@@ -343,7 +343,7 @@ namespace SinglePlayer {
 					break;
 				case FSMState.Split:
 					if (this.globalManager != null) {
-						this.maxUnitCount = this.globalManager.aiMaxUnitCount;
+						this.maxUnitCount = this.globalManager.playerMaxUnitCount;
 					}
 					if (this.spawnList.Count > 0) {
 						foreach (AIUnit unit in this.spawnList) {
