@@ -123,7 +123,8 @@ namespace MultiPlayer {
 			SplitManager splitManager = manager.GetComponent<SplitManager>();
 			if (splitManager != null) {
 				splitManager.selectionManager = selectionManager;
-			}
+				splitManager.unitParent = playerUnitUmbrellaObject.transform;
+            }
 			NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 			//Player merge manager
