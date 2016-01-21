@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
 using Common;
+using SinglePlayer;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -107,7 +108,8 @@ namespace MultiPlayer {
 		public Spawner spawner;
 		public GameObject gameUnitPrefab;
 		public Transform unitParent;
-        public bool reachedMaxUnitCount;
+		public int maxUnitCount;
+		public GlobalManager globalManagerObject;
 
 		//Split Manager is designed to streamline the creation of new game units.
 		//To achieve this, there needs to be two different array list that keeps track of all the creations, called Split Groups.
@@ -163,7 +165,6 @@ namespace MultiPlayer {
 			if (this.unitParent == null) {
 				Debug.LogError("Check to make sure this is created in the spawner.");
 			}
-			this.reachedMaxUnitCount = false;
 		}
 
 		public void Update() {
@@ -174,6 +175,10 @@ namespace MultiPlayer {
 			//When the player starts the action to split a game unit into two, it takes in all the selected game units
 			//one by one, and splits them individually.
 			if (Input.GetKeyDown(KeyCode.S)) {
+				this.maxUnitCount = 50;
+				if (this.globalManagerObject != null) {
+					this.maxUnitCount = this.globalManagerObject.playerMaxUnitCount;
+				}
 				if (this.selectionManager != null) {
 					AddingNewSplitGroup();
 				}
@@ -223,7 +228,7 @@ namespace MultiPlayer {
 					continue;
 				}
 				GameUnit objUnit = obj.GetComponent<GameUnit>();
-				if (objUnit.level == 1 && this.unitParent.transform.childCount < 50) {
+				if (objUnit.level == 1 && this.unitParent.transform.childCount < this.maxUnitCount) {
 					CmdSplit(obj, objUnit.hasAuthority);
 				}
 			}
