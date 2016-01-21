@@ -114,7 +114,6 @@ namespace SinglePlayer {
 		public Difficulty difficulty;
 		public FSMState currentFiniteState;
 		public GameObject AIUnitPrefab;
-		private GlobalManager globalManager;
 		[Range(1, 50)]
 		public int maxUnitCount;
 		[Range(0f, 1f)]
@@ -159,7 +158,6 @@ namespace SinglePlayer {
 			this.splitPercentage = 0f;
 			this.mergePercentage = 0f;
 			this.scoutPercentage = 0f;
-			this.globalManager = GameObject.FindObjectOfType<GlobalManager>();
 		}
 
 		public void Update() {
@@ -342,9 +340,6 @@ namespace SinglePlayer {
 					this.currentFiniteState = FSMState.Merge;
 					break;
 				case FSMState.Split:
-					if (this.globalManager != null) {
-						this.maxUnitCount = this.globalManager.playerMaxUnitCount;
-					}
 					if (this.spawnList.Count > 0) {
 						foreach (AIUnit unit in this.spawnList) {
 							if (unit != null && unit.currentState != State.Split) {
