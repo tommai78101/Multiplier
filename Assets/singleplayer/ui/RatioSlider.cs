@@ -29,26 +29,22 @@ namespace SinglePlayer {
 		}
 
 		public void OnSliderChangeMergeRatioValue(Slider slider) {
-			this.previousMergeRatio = slider.value;
 			this.aiManager.mergeRatio = slider.value;
 			this.counter.text = slider.value.ToString("0.000");
 		}
 
 		public void OnSliderChangeScoutRatioValue(Slider slider) {
-			this.previousScoutRatio = slider.value;
 			this.aiManager.scoutRatio = slider.value;
 			this.counter.text = slider.value.ToString("0.000");
 		}
 
 		public void OnSliderChangeSplitRatioValue(Slider slider) {
-			this.previousSplitRatio = slider.value;
 			this.aiManager.splitRatio = slider.value;
 			this.counter.text = slider.value.ToString("0.000");
 		}
 
 		public void OnSliderChangeMaxUnitLimit(Slider slider) {
 			int value = (int) slider.value;
-			this.previousMaxUnitLimit = value;
 			this.aiManager.maxUnitCount = value;
 			this.counter.text = value.ToString();
 		}
@@ -60,16 +56,32 @@ namespace SinglePlayer {
 			}
 		}
 
-		public void RevertToDefaultValues() {
+		public void RevertToDefaultMaxUnitLimit(Slider slider) {
 			this.previousMaxUnitLimit = this.aiManager.maxUnitCount;
-			this.previousMergeRatio = this.aiManager.mergeRatio;
-			this.previousScoutRatio = this.aiManager.scoutRatio;
-			this.previousSplitRatio = this.aiManager.splitRatio;
-
+			slider.value = 50;
 			this.aiManager.maxUnitCount = 50;
+			this.counter.text = "50";
+		}
+
+		public void RevertToDefaultMergeRatio(Slider slider) {
+			this.previousMergeRatio = this.aiManager.mergeRatio;
+			slider.value = 0.1532644f;
 			this.aiManager.mergeRatio = 0.1532644f;
+			this.counter.text = "0.153";
+		}
+
+		public void RevertToDefaultScoutRatio(Slider slider) {
+			this.previousScoutRatio = this.aiManager.scoutRatio;
+			slider.value = 0.3040901f;
 			this.aiManager.scoutRatio = 0.3040901f;
+			this.counter.text = "0.304";
+		}
+
+		public void RevertToDefaultSplitRatio(Slider slider) {
+			this.previousSplitRatio = this.aiManager.splitRatio;
+			slider.value = 0.5426455f;
 			this.aiManager.splitRatio = 0.5426455f;
+			this.counter.text = "0.543";
 		}
 
 		public void RevertToCustomMaxUnitLimit(Slider slider) {
