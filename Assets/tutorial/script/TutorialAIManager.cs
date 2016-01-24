@@ -246,5 +246,27 @@ namespace Tutorial {
 		private void DelayShowSelectionRing() {
 			this.tutorialUnit.ToggleSelectionRing(true);
 		}
+
+		private void DelayShowAllSelectionRings() {
+			foreach (Transform child in this.tutorialUnitParent.transform) {
+				NewTutorialAIUnit unit = child.GetComponent<NewTutorialAIUnit>();
+				if (unit != null) {
+					unit.ToggleSelectionRing(true);
+				}
+			}
+		}
+
+		private void DelayHideSelectionRing() {
+			this.tutorialUnit.ToggleSelectionRing(false);
+		}
+
+		private void DelayHideAllSelectionRings() {
+			foreach (Transform child in this.tutorialUnitParent.transform) {
+				NewTutorialAIUnit unit = child.GetComponent<NewTutorialAIUnit>();
+				if (unit != null) {
+					unit.ToggleSelectionRing(false);
+				}
+			}
+		}
 	}
 }
