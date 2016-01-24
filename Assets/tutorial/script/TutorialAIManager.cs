@@ -191,22 +191,25 @@ namespace Tutorial {
 						this.dialogueSectionCounter = 0;
 						break;
 					}
-					if (this.dialogueSectionCounter == 0) {
-						this.tutorialUnit.gameObject.SetActive(true);
-					}
-					else if (this.dialogueSectionCounter == 3) {
-						//TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
-						this.mainCamera.transform.position = this.cameraOrigin;
-						//Selecting with cursor
-						this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
-					}
-					else if (this.dialogueSectionCounter == 5) {
-						//Splitting
-						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
-						clone.SetActive(true);
-						clone.transform.SetParent(this.tutorialUnitParent);
-						this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
-					}
+                    if (this.dialogueSectionCounter == 0) {
+                        this.tutorialUnit.gameObject.SetActive(true);
+                    }
+                    else if (this.dialogueSectionCounter == 3) {
+                        //TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
+                        this.mainCamera.transform.position = this.cameraOrigin;
+                        //Selecting with cursor
+                        this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
+                    }
+                    else if (this.dialogueSectionCounter == 5) {
+                        //Splitting
+                        GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
+                        clone.SetActive(true);
+                        clone.transform.SetParent(this.tutorialUnitParent);
+                        this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
+                    }
+                    else if (this.dialogueSectionCounter == 6) {
+
+                    }
 					this.dialogueSectionCounter++;
 					break;
 			}

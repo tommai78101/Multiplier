@@ -359,7 +359,7 @@ namespace SinglePlayer {
 						customMaterial.SetColor("_TeamColor", Color.gray);
 						break;
 					case 0:
-						customMaterial.SetColor("_TeamColor", Color.red);
+						customMaterial.SetColor("_TeamColor", new Color(220f/255f, 220f/255f, 0f));
 						break;
 					case 1:
 						customMaterial.SetColor("_TeamColor", Color.blue);

@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/menu.unity
+    path: Assets/simulation.unity
   - enabled: 1
     path: Assets/multiplayer.unity
   - enabled: 1
