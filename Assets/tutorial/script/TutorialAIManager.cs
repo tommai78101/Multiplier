@@ -208,7 +208,8 @@ namespace Tutorial {
                         this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
                     }
                     else if (this.dialogueSectionCounter == 6) {
-
+                        //TODO(Thompson): Continue with selecting units and merging.
+                        //TODO(Thompson): Disable camera panning during Unit Controls section.
                     }
 					this.dialogueSectionCounter++;
 					break;
