@@ -224,7 +224,7 @@ namespace MultiPlayer {
 						customMaterial.SetColor("_TeamColor", Color.gray);
 						break;
 					case 0:
-						customMaterial.SetColor("_TeamColor", Color.red);
+						customMaterial.SetColor("_TeamColor", Color.yellow);
 						break;
 					case 1:
 						customMaterial.SetColor("_TeamColor", Color.blue);

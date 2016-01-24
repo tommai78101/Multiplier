@@ -49,11 +49,13 @@ namespace Tutorial {
 						case 2:
 							return "The following animation shows what happens when the player controls the mouse, and left clicks on the Capsule. (Blue marker is left mouse button click.)";
 						case 3:
-							return "The Capsule will indicate that it has been selected.";
+							return "The Capsule will indicate that it has been selected. ";
 						case 4:
-							return "Test 5";
+							return "Once the Capsule is selected, you may press the S key on your keyboard to initiate the \"Split\" command. This is what happens.";
 						case 5:
-							return "Test 6";
+							return "When a Capsule is split, it retains all of the unit attributes the Capsule had before the split. The Capsule cannot fight and be controlled while splitting.";
+                        case 6:
+                            return "After the Capsule has split, you can box select Capsules by pressing and holding down the left mouse button";
 					}
 					break;
 			}
@@ -189,22 +191,26 @@ namespace Tutorial {
 						this.dialogueSectionCounter = 0;
 						break;
 					}
-					if (this.dialogueSectionCounter == 0) {
-						this.tutorialUnit.gameObject.SetActive(true);
-					}
-					else if (this.dialogueSectionCounter == 2) {
-						//TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
-						this.mainCamera.transform.position = this.cameraOrigin;
-						//Selecting with cursor
-						this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
-					}
-					else if (this.dialogueSectionCounter == 5) {
-						//Splitting
-						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
-						clone.SetActive(true);
-						clone.transform.SetParent(this.tutorialUnitParent);
-						this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
-					}
+                    if (this.dialogueSectionCounter == 0) {
+                        this.tutorialUnit.gameObject.SetActive(true);
+                    }
+                    else if (this.dialogueSectionCounter == 3) {
+                        //TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
+                        this.mainCamera.transform.position = this.cameraOrigin;
+                        //Selecting with cursor
+                        this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
+                    }
+                    else if (this.dialogueSectionCounter == 5) {
+                        //Splitting
+                        GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
+                        clone.SetActive(true);
+                        clone.transform.SetParent(this.tutorialUnitParent);
+                        this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
+                    }
+                    else if (this.dialogueSectionCounter == 6) {
+                        //TODO(Thompson): Continue with selecting units and merging.
+                        //TODO(Thompson): Disable camera panning during Unit Controls section.
+                    }
 					this.dialogueSectionCounter++;
 					break;
 			}

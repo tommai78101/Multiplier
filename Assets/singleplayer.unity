@@ -41,7 +41,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -66,7 +66,8 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightmapSnapshot: {fileID: 0}
+  m_LightmapSnapshot: {fileID: 112000002, guid: d40886023737b944f9af30697118c9fa,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -782,8 +783,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 6.10351562e-05, y: 6}
-  m_SizeDelta: {x: 759, y: 531}
+  m_AnchoredPosition: {x: 6.10351562e-05, y: -3.05175781e-05}
+  m_SizeDelta: {x: 759, y: 566}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &77646445
 MonoBehaviour:
@@ -1066,8 +1067,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 785861156}
   m_HandleRect: {fileID: 785861155}
   m_Direction: 0
-  m_Value: 1
-  m_Size: .999999881
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2018,7 +2019,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -6.10351562e-05, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -2265,7 +2266,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.05175781e-05, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 109.459999}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &217337298
@@ -5897,7 +5898,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 650740513}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1.72119999e-05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1792113231}
@@ -5905,10 +5906,10 @@ RectTransform:
   - {fileID: 1651734936}
   m_Father: {fileID: 495379237}
   m_RootOrder: 1
-  m_AnchorMin: {x: .0732432827, y: .342886806}
-  m_AnchorMax: {x: .928000033, y: .929886818}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: .135325581, y: .341355294}
+  m_AnchorMax: {x: .856224835, y: .93646574}
+  m_AnchoredPosition: {x: -5.7220459e-06, y: -2.28881836e-05}
+  m_SizeDelta: {x: 0, y: 3.05180001e-05}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &650740515
 MonoBehaviour:
@@ -6883,7 +6884,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1446372195}
   m_Direction: 0
   m_Value: 0
-  m_Size: .99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8506,7 +8507,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1982096129}
   m_Direction: 0
   m_Value: 0
-  m_Size: .99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10049,7 +10050,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.05175781e-05, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1356498879
@@ -10454,7 +10455,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: 'Example: y=2*x+4'
 --- !u!222 &1399612502
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11864,8 +11865,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 59301638}
   m_HandleRect: {fileID: 59301637}
   m_Direction: 2
-  m_Value: .974489152
-  m_Size: .557073474
+  m_Value: 1
+  m_Size: .603935003
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13786,7 +13787,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2067481515}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -3.13839996e-06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1066905403}
@@ -13799,8 +13800,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchoredPosition: {x: 0, y: 3.05175781e-05}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &2067481517
 MonoBehaviour:
@@ -13994,7 +13995,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: 'Example: y=(3-x*(x^2))'
 --- !u!222 &2075833232
 CanvasRenderer:
   m_ObjectHideFlags: 0
