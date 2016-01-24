@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using Common;
 using SinglePlayer;
@@ -197,8 +198,11 @@ namespace Tutorial {
                     else if (this.dialogueSectionCounter == 3) {
                         //TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
                         this.mainCamera.transform.position = this.cameraOrigin;
-                        //Selecting with cursor
-                        this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
+						//Selecting with cursor
+						//this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
+
+						//Show selection ring after action
+						this.mainCursor.PanCursorWithAction(this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
                     }
                     else if (this.dialogueSectionCounter == 5) {
                         //Splitting
@@ -237,6 +241,10 @@ namespace Tutorial {
 			Debug.Log("Adding new cursor pan group.");
 			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(10f, -20f)));
 			//this.groupList.Add(new CursorPanGroup());
+		}
+
+		private void DelayShowSelectionRing() {
+			this.tutorialUnit.ToggleSelectionRing(true);
 		}
 	}
 }

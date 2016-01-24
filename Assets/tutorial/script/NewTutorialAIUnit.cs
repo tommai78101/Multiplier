@@ -12,5 +12,9 @@ namespace Tutorial {
 				this.selectionRingRenderer.enabled = false;
 			}
 		}
+
+		public void ToggleSelectionRing(bool value) {
+			this.selectionRingRenderer.enabled = value;
+		}
 	}
 }

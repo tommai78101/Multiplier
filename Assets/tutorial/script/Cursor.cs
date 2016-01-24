@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Tutorial {
 	[System.Serializable]
@@ -167,5 +168,32 @@ namespace Tutorial {
 			return true;
 		}
 
+
+		public bool PanCursorWithAction(CursorPanGroup group, CursorButton button, TutorialAIManager manager, float delayTime, string methodName) {
+			if (this.isPanning) {
+				return false;
+			}
+
+			this.startingPosition = group.start;
+			this.endingPosition = group.end;
+			this.rectTransform.localPosition = group.start;
+			this.panningElapsedTime = 0f;
+			this.isAppearing = true;
+
+
+			ObtainStartingPosition s = this.GetComponentInChildren<ObtainStartingPosition>();
+			s.rectTransform.localPosition = group.start;
+			ObtainEndingPosition e = this.GetComponentInChildren<ObtainEndingPosition>();
+			e.rectTransform.localPosition = group.end;
+
+			if (!button.Equals(CursorButton.Nothing)) {
+				this.icon.SetButton(button);
+				this.buttonPressedElapsedTime = 0f;
+				this.isButtonPressed = true;
+			}
+
+			manager.Invoke(methodName, delayTime);
+			return true;
+		}
 	}
 }
