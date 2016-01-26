@@ -6,6 +6,7 @@ using Common;
 using SinglePlayer;
 using System;
 
+
 namespace Tutorial {
 	public enum Parts {
 		Introduction, Camera_Controls, Unit_Controls, Splitting, Merging, Invalid, Error
@@ -38,7 +39,7 @@ namespace Tutorial {
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
 						case 5:
-							return "Now, let's move onwards to learn about Game Unit Controls.";
+							return "Now, let's move onwards to learn about Game Unit Controls. We'll focus on the units and not on the camera.";
 					}
 					break;
 				case Parts.Unit_Controls:
@@ -57,6 +58,14 @@ namespace Tutorial {
 							return "When a Capsule is split, it retains all of the unit attributes the Capsule had before the split. The Capsule cannot fight and be controlled while splitting.";
                         case 6:
                             return "After the Capsule has split, you can box select Capsules by pressing and holding down the left mouse button";
+						case 7:
+							return "";
+						case 8:
+							return "";
+						case 9:
+							return "";
+						case 10:
+							return "";
 					}
 					break;
 			}
@@ -65,18 +74,21 @@ namespace Tutorial {
 	}
 
 	public class TutorialAIManager : MonoBehaviour {
+		public bool isInitialized;
 		public Parts currentTutorialStage;
 		public Text dialogueText;
 		public int stringLetterCounter;
 		public string dialogue;
 		public bool startTextRollingFlag;
 		public float delay;
-		[Range(0.01f, 2f)]
+		[Range(0.0001f, 1f)]
 		public float delayInterval;
 		public int dialogueSectionCounter;
 		public Camera mainCamera;
 		public Vector3 cameraOrigin;
 		public MinimapStuffs minimap;
+		public Camera minimapCamera;
+		public CameraPanning mainCameraPanning;
 		public NewTutorialAIUnit tutorialUnit;
 		public SplitMergeManager splitMergeManager;
 		public Transform tutorialUnitParent;
@@ -84,12 +96,15 @@ namespace Tutorial {
 		public Cursor mainCursor;
 		public Canvas mainCanvas;
 
+		public Button nextStepButton;
+
 		public List<CursorPanGroup> groupList = new List<CursorPanGroup>();
 		public int groupListCounter = 0;
 
 		public void Start() {
+			this.isInitialized = false;
 			this.delay = 0f;
-			this.delayInterval = 0.01f;
+			this.delayInterval = 0.0001f;
 			this.dialogueSectionCounter = 0;
 			this.currentTutorialStage = Parts.Introduction;
 			this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
@@ -104,13 +119,16 @@ namespace Tutorial {
 			}
 			this.cameraOrigin = this.mainCamera.transform.position;
 
-			CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
-			if (panning != null) {
-				panning.enabled = false;
+			this.mainCameraPanning = this.mainCamera.GetComponent<CameraPanning>();
+			if (this.mainCameraPanning != null) {
+				this.mainCameraPanning.enabled = false;
 			}
-			Camera minimapCamera = this.minimap.GetComponent<Camera>();
-			if (minimapCamera != null) {
-				minimapCamera.enabled = false;
+			this.minimapCamera = this.minimap.GetComponent<Camera>();
+			if (this.minimapCamera != null) {
+				this.minimapCamera.enabled = false;
+			}
+			if (this.minimap == null) {
+				Debug.LogError("Couldn't obtain minimap stuffs. Please check.");
 			}
 
 			//Cursor setup
@@ -132,14 +150,23 @@ namespace Tutorial {
 				}
 				else {
 					if (this.stringLetterCounter < this.dialogue.Length) {
+						//#DEBUG
+						//this.nextStepButton.interactable = false;
+						this.nextStepButton.interactable = true;
 						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
 						this.stringLetterCounter++;
 					}
 					else {
 						this.startTextRollingFlag = false;
+						this.nextStepButton.interactable = true;
 					}
 					this.delay = 0f;
 				}
+			}
+
+			if (!this.isInitialized) {
+				this.minimap.enabled = false;
+				this.isInitialized = true;
 			}
 		}
 
@@ -172,37 +199,35 @@ namespace Tutorial {
 						break;
 					}
 					if (this.dialogueSectionCounter == 1) {
-						CameraPanning panning = this.mainCamera.GetComponent<CameraPanning>();
-						if (panning != null) {
-							panning.enabled = true;
-						}
+						this.mainCameraPanning.enabled = true;
 					}
 					else if (this.dialogueSectionCounter == 3) {
-						Camera minimapCamera = this.minimap.GetComponent<Camera>();
-						if (minimapCamera != null) {
-							minimapCamera.enabled = true;
-						}
+						this.minimapCamera.enabled = true;
+						this.minimap.enabled = true;
 					}
 					this.dialogueSectionCounter++;
 					break;
 				case Parts.Unit_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= 5) {
+					if (this.dialogueSectionCounter >= 10) {
 						this.currentTutorialStage = Parts.Unit_Controls;
 						this.dialogueSectionCounter = 0;
 						break;
 					}
                     if (this.dialogueSectionCounter == 0) {
                         this.tutorialUnit.gameObject.SetActive(true);
-                    }
+						this.minimap.enabled = false;
+						this.minimapCamera.enabled = false;
+						this.mainCamera.transform.position = this.cameraOrigin;
+						this.Invoke("DelayTurnOffCameraPanning", 0.1f);
+					}
                     else if (this.dialogueSectionCounter == 3) {
-                        //TODO(Thompson): Make the camera panning automatic and have it pan smoothly.
-                        this.mainCamera.transform.position = this.cameraOrigin;
 						//Selecting with cursor
 						//this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
 
 						//Show selection ring after action
 						this.mainCursor.PanCursorWithAction(this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
+						
                     }
                     else if (this.dialogueSectionCounter == 5) {
                         //Splitting
@@ -210,7 +235,10 @@ namespace Tutorial {
                         clone.SetActive(true);
                         clone.transform.SetParent(this.tutorialUnitParent);
                         this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
-                    }
+
+						//Stop selecting the unit.
+						this.Invoke("DelayHideSelectionRing", 0.1f);
+					}
                     else if (this.dialogueSectionCounter == 6) {
                         //TODO(Thompson): Continue with selecting units and merging.
                         //TODO(Thompson): Disable camera panning during Unit Controls section.
@@ -241,6 +269,10 @@ namespace Tutorial {
 			Debug.Log("Adding new cursor pan group.");
 			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(10f, -20f)));
 			//this.groupList.Add(new CursorPanGroup());
+		}
+
+		private void DelayTurnOffCameraPanning() {
+			this.mainCameraPanning.enabled = false;
 		}
 
 		private void DelayShowSelectionRing() {

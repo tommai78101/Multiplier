@@ -298,6 +298,7 @@ GameObject:
   - 124: {fileID: 349166313}
   - 81: {fileID: 349166312}
   - 114: {fileID: 349166317}
+  - 114: {fileID: 349166318}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -392,6 +393,25 @@ MonoBehaviour:
   useDebugSceneCameraBorder: 1
   cameraSpeed: .0500000007
   zoomLevel: 3
+--- !u!114 &349166318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 349166311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e099aa20694d1bf438d4d1608ee7ce7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  borderMaterial: {fileID: 0}
+  viewport_startVertex: {x: 0, y: 0, z: 0}
+  viewport_endVertex: {x: 0, y: 0, z: 0}
+  viewport_startVertexBegin: {x: 0, y: 0, z: 0}
+  viewport_startVertexEnd: {x: 0, y: 0, z: 0}
+  panningElapsedTime: 0
+  beforeVertex: {x: -1.13999999, y: 0, z: 0}
+  afterVertex: {x: 0, y: 5.91099977, z: 0}
 --- !u!1 &355831151
 GameObject:
   m_ObjectHideFlags: 0
@@ -720,6 +740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6fc2cce52d53ba4ba947782c303ac26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInitialized: 0
   currentTutorialStage: 0
   dialogueText: {fileID: 745488187}
   stringLetterCounter: 0
@@ -731,12 +752,15 @@ MonoBehaviour:
   mainCamera: {fileID: 349166315}
   cameraOrigin: {x: 0, y: 0, z: 0}
   minimap: {fileID: 410210397}
+  minimapCamera: {fileID: 0}
+  mainCameraPanning: {fileID: 0}
   tutorialUnit: {fileID: 1349744853}
   splitMergeManager: {fileID: 2008479187}
   tutorialUnitParent: {fileID: 422345667}
   cursorPrefab: {fileID: 141028, guid: e6f940a2a15857d4a96fb11a285386e9, type: 2}
   mainCursor: {fileID: 0}
   mainCanvas: {fileID: 1748574722}
+  nextStepButton: {fileID: 576093790}
   groupList: []
   groupListCounter: 0
 --- !u!1 &521248647
