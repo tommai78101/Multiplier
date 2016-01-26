@@ -747,7 +747,7 @@ MonoBehaviour:
   dialogue: 
   startTextRollingFlag: 0
   delay: 0
-  delayInterval: 0
+  delayInterval: .00999999978
   dialogueSectionCounter: 0
   mainCamera: {fileID: 349166315}
   cameraOrigin: {x: 0, y: 0, z: 0}
