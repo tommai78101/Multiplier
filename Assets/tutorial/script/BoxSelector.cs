@@ -25,21 +25,23 @@ namespace Tutorial {
 				this.viewport_vertexIterator = Vector3.Lerp(this.viewport_startVertex, this.viewport_endVertex, this.panningElapsedTime);
 			}
 
+
+
 			if (Input.GetKeyUp(KeyCode.G)) {
 				ObtainStartingPosition startPos = this.mainCursor.GetComponentInChildren<ObtainStartingPosition>();
 				ObtainEndingPosition endPos = this.mainCursor.GetComponentInChildren<ObtainEndingPosition>();
-				RectTransform start = startPos.GetComponent<RectTransform>();
-				RectTransform end = endPos.GetComponent<RectTransform>();
+				float startX = startPos.rectTransform.position.x / Screen.width;
+				float startY = startPos.rectTransform.position.y / Screen.height;
+				float endX = endPos.rectTransform.position.x / Screen.width;
+				float endY = endPos.rectTransform.position.y / Screen.height;
 
-				Vector3 result;
-				RectTransformUtility.ScreenPointToWorldPointInRectangle(start, start.localPosition, Camera.main, out result);
-				this.viewport_startVertex = result;
-				RectTransformUtility.ScreenPointToWorldPointInRectangle(end, end.localPosition, Camera.main, out result);
-				this.viewport_endVertex = result;
+				this.viewport_startVertex.x = startX;
+				this.viewport_startVertex.y = startY;
+				this.viewport_startVertex.z = 0f;
 
-
-
-
+				this.viewport_endVertex.x = endX;
+				this.viewport_endVertex.y = endY;
+				this.viewport_endVertex.z = 0f;
 
 				this.panningElapsedTime = 0f;
 			}
