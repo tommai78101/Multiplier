@@ -407,11 +407,9 @@ MonoBehaviour:
   borderMaterial: {fileID: 0}
   viewport_startVertex: {x: 0, y: 0, z: 0}
   viewport_endVertex: {x: 0, y: 0, z: 0}
-  viewport_startVertexBegin: {x: 0, y: 0, z: 0}
-  viewport_startVertexEnd: {x: 0, y: 0, z: 0}
+  viewport_vertexIterator: {x: 0, y: 0, z: 0}
   panningElapsedTime: 0
-  beforeVertex: {x: -1.13999999, y: 0, z: 0}
-  afterVertex: {x: 0, y: 5.91099977, z: 0}
+  mainCursor: {fileID: 0}
 --- !u!1 &355831151
 GameObject:
   m_ObjectHideFlags: 0

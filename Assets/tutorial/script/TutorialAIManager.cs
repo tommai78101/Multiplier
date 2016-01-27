@@ -56,8 +56,8 @@ namespace Tutorial {
 							return "Once the Capsule is selected, you may press the S key on your keyboard to initiate the \"Split\" command. This is what happens.";
 						case 5:
 							return "When a Capsule is split, it retains all of the unit attributes the Capsule had before the split. The Capsule cannot fight and be controlled while splitting.";
-                        case 6:
-                            return "After the Capsule has split, you can box select Capsules by pressing and holding down the left mouse button";
+						case 6:
+							return "After the Capsule has split, you can box select Capsules by pressing and holding down the left mouse button";
 						case 7:
 							return "";
 						case 8:
@@ -138,6 +138,12 @@ namespace Tutorial {
 			if (this.mainCursor == null) {
 				Debug.LogError("Cursor isn't obtained. Please check.");
 			}
+			else {
+				BoxSelector selector = Camera.main.GetComponent<BoxSelector>();
+				if (selector != null) {
+					selector.mainCursor = this.mainCursor;
+				}
+			}
 
 			InitializeCursorPanGroups();
 		}
@@ -214,35 +220,35 @@ namespace Tutorial {
 						this.dialogueSectionCounter = 0;
 						break;
 					}
-                    if (this.dialogueSectionCounter == 0) {
-                        this.tutorialUnit.gameObject.SetActive(true);
+					if (this.dialogueSectionCounter == 0) {
+						this.tutorialUnit.gameObject.SetActive(true);
 						this.minimap.enabled = false;
 						this.minimapCamera.enabled = false;
 						this.mainCamera.transform.position = this.cameraOrigin;
 						this.Invoke("DelayTurnOffCameraPanning", 0.1f);
 					}
-                    else if (this.dialogueSectionCounter == 3) {
+					else if (this.dialogueSectionCounter == 3) {
 						//Selecting with cursor
 						//this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
 
 						//Show selection ring after action
 						this.mainCursor.PanCursorWithAction(this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
-						
-                    }
-                    else if (this.dialogueSectionCounter == 5) {
-                        //Splitting
-                        GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
-                        clone.SetActive(true);
-                        clone.transform.SetParent(this.tutorialUnitParent);
-                        this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
+
+					}
+					else if (this.dialogueSectionCounter == 5) {
+						//Splitting
+						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
+						clone.SetActive(true);
+						clone.transform.SetParent(this.tutorialUnitParent);
+						this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
 
 						//Stop selecting the unit.
 						this.Invoke("DelayHideSelectionRing", 0.1f);
 					}
-                    else if (this.dialogueSectionCounter == 6) {
-                        //TODO(Thompson): Continue with selecting units and merging.
-                        //TODO(Thompson): Disable camera panning during Unit Controls section.
-                    }
+					else if (this.dialogueSectionCounter == 6) {
+						//TODO(Thompson): Continue with selecting units and merging.
+						//TODO(Thompson): Disable camera panning during Unit Controls section.
+					}
 					this.dialogueSectionCounter++;
 					break;
 			}
