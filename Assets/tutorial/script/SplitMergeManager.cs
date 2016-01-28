@@ -12,6 +12,8 @@ namespace Tutorial {
 		public Vector3 mergeOrigin;
 		public Vector3 ownerOriginalPosition;
 		public Vector3 cloneOriginalPosition;
+		public Vector3 ownerOriginalScale;
+		public Vector3 ownerNewScale;
 
 		public Group(GameObject owner, GameObject clone) {
 			this.owner = owner;
@@ -24,6 +26,8 @@ namespace Tutorial {
 			this.splitOrigin = owner.transform.position;
 			this.ownerOriginalPosition = this.splitOrigin;
 			this.cloneOriginalPosition = clone.transform.position;
+			this.ownerOriginalScale = owner.transform.localScale;
+			this.ownerNewScale = this.ownerOriginalScale * 2f;
 			this.mergeOrigin = (this.ownerOriginalPosition + this.cloneOriginalPosition) / 2f;
 
 		}
@@ -38,6 +42,14 @@ namespace Tutorial {
 
 		public void SetClonePosition(Vector3 position) {
 			this.clone.transform.position = position;
+		}
+
+		public void SetOwnerScale(Vector3 scale) {
+			this.owner.transform.localScale = scale;
+		}
+
+		public void SetCloneScale(Vector3 scale) {
+			this.clone.transform.localScale = scale;
 		}
 	}
 
@@ -81,6 +93,8 @@ namespace Tutorial {
 			else {
 				group.SetOwnerPosition(Vector3.Lerp(group.ownerOriginalPosition, group.mergeOrigin, group.elapsedTime));
 				group.SetClonePosition(Vector3.Lerp(group.cloneOriginalPosition, group.mergeOrigin, group.elapsedTime));
+				group.SetOwnerScale(Vector3.Lerp(group.ownerOriginalScale, group.ownerNewScale, group.elapsedTime));
+				group.SetCloneScale(Vector3.Lerp(group.ownerOriginalScale, group.ownerNewScale, group.elapsedTime));
 				group.UpdateTime(1f);
 			}
 		}
