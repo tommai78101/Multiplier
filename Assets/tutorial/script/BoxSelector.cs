@@ -3,47 +3,23 @@ using System.Collections;
 
 namespace Tutorial {
 	public class BoxSelector : MonoBehaviour {
-		public Material borderMaterial;
 		public Vector3 viewport_startVertex;
 		public Vector3 viewport_endVertex;
-		public Vector3 viewport_vertexIterator;
 		public float panningElapsedTime;
-		public Cursor mainCursor;
+		public Vector3 viewport_vertexIterator;
+
+		private Material borderMaterial;
 
 		public void Start() {
 			this.panningElapsedTime = 2f;
 			this.borderMaterial = (Material) Resources.Load("Border");
 			this.viewport_endVertex = this.viewport_startVertex = -Vector3.one;
-			if (this.mainCursor == null) {
-				Debug.LogError("Cursor object is not set.");
-			}
 		}
 
 		public void Update() {
 			if (this.panningElapsedTime < 1f) {
-				this.panningElapsedTime += Time.deltaTime;
+				this.panningElapsedTime += Time.deltaTime / 2f;
 				this.viewport_vertexIterator = Vector3.Lerp(this.viewport_startVertex, this.viewport_endVertex, this.panningElapsedTime);
-			}
-
-
-
-			if (Input.GetKeyUp(KeyCode.G)) {
-				ObtainStartingPosition startPos = this.mainCursor.GetComponentInChildren<ObtainStartingPosition>();
-				ObtainEndingPosition endPos = this.mainCursor.GetComponentInChildren<ObtainEndingPosition>();
-				float startX = startPos.rectTransform.position.x / Screen.width;
-				float startY = startPos.rectTransform.position.y / Screen.height;
-				float endX = endPos.rectTransform.position.x / Screen.width;
-				float endY = endPos.rectTransform.position.y / Screen.height;
-
-				this.viewport_startVertex.x = startX;
-				this.viewport_startVertex.y = startY;
-				this.viewport_startVertex.z = 0f;
-
-				this.viewport_endVertex.x = endX;
-				this.viewport_endVertex.y = endY;
-				this.viewport_endVertex.z = 0f;
-
-				this.panningElapsedTime = 0f;
 			}
 		}
 
@@ -54,6 +30,10 @@ namespace Tutorial {
 			}
 
 			if (this.viewport_startVertex == -Vector3.one || this.viewport_endVertex == -Vector3.one) {
+				return;
+			}
+
+			if (this.panningElapsedTime >= 1f) {
 				return;
 			}
 
@@ -81,6 +61,23 @@ namespace Tutorial {
 				}
 			}
 			GL.PopMatrix();
+		}
+
+		public void StartBoxSelection(CursorPanGroup group, float extraTime) {
+			float startX = group.start.x / Screen.width;
+			float startY = group.start.y / Screen.height;
+			float endX = group.end.x / Screen.width;
+			float endY = group.end.y / Screen.height;
+
+			this.viewport_startVertex.x = startX;
+			this.viewport_startVertex.y = startY;
+			this.viewport_startVertex.z = 0f;
+
+			this.viewport_endVertex.x = endX;
+			this.viewport_endVertex.y = endY;
+			this.viewport_endVertex.z = 0f;
+
+			this.panningElapsedTime = 0f - extraTime;
 		}
 	}
 }

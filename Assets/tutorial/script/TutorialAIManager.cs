@@ -138,12 +138,6 @@ namespace Tutorial {
 			if (this.mainCursor == null) {
 				Debug.LogError("Cursor isn't obtained. Please check.");
 			}
-			else {
-				BoxSelector selector = Camera.main.GetComponent<BoxSelector>();
-				if (selector != null) {
-					selector.mainCursor = this.mainCursor;
-				}
-			}
 
 			InitializeCursorPanGroups();
 		}
@@ -232,8 +226,9 @@ namespace Tutorial {
 						//this.mainCursor.PanCursor(this.GetNextPanning(), CursorButton.Left_Click);
 
 						//Show selection ring after action
-						this.mainCursor.PanCursorWithAction(this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
+						//this.mainCursor.PanCursorWithAction(this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
 
+						this.mainCursor.DragSelectionBox(this.mainCamera, this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
 					}
 					else if (this.dialogueSectionCounter == 5) {
 						//Splitting
@@ -273,7 +268,7 @@ namespace Tutorial {
 		private void InitializeCursorPanGroups() {
 			//Initialize panning groups here. Crude way, not elegant in readability, but it gets the job done faster.
 			Debug.Log("Adding new cursor pan group.");
-			this.groupList.Add(new CursorPanGroup(new Vector3(130f, -150f), new Vector3(10f, -20f)));
+			this.groupList.Add(new CursorPanGroup(new Vector3(642.5f, 145f), new Vector3(508.5f, 329f)));
 			//this.groupList.Add(new CursorPanGroup());
 		}
 
@@ -304,6 +299,12 @@ namespace Tutorial {
 				if (unit != null) {
 					unit.ToggleSelectionRing(false);
 				}
+			}
+		}
+
+		private void DragSelectionBox() {
+			BoxSelector selector = this.mainCamera.GetComponent<BoxSelector>();
+			if (selector != null) {
 			}
 		}
 	}

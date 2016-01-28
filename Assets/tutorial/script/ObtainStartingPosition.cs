@@ -5,6 +5,7 @@ namespace Tutorial {
 	public class ObtainStartingPosition : MonoBehaviour {
 		public Cursor parentCursor;
 		public RectTransform rectTransform;
+		public Vector3 startingPosition;
 
 		public void Start() {
 			this.rectTransform = this.GetComponent<RectTransform>();
@@ -14,7 +15,7 @@ namespace Tutorial {
 		}
 
 		public void Update() {
-			this.parentCursor.startingPosition = this.rectTransform.localPosition;
+			this.startingPosition = this.rectTransform.position;
 	    }
 	}
 }

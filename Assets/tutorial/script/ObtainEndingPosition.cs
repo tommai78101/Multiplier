@@ -5,6 +5,7 @@ namespace Tutorial {
 	public class ObtainEndingPosition : MonoBehaviour {
 		public Cursor parentCursor;
 		public RectTransform rectTransform;
+		public Vector3 endingPosition;
 
 		public void Start() {
 			this.rectTransform = this.GetComponent<RectTransform>();
@@ -14,7 +15,7 @@ namespace Tutorial {
 		}
 
 		public void Update() {
-			this.parentCursor.endingPosition = this.rectTransform.localPosition;
+			this.endingPosition = this.rectTransform.position;
 	    }
 	}
 }

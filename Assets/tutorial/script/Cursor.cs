@@ -61,39 +61,7 @@ namespace Tutorial {
 		}
 
 		public void Update() {
-			if (this.isAppearing) {
-				if (this.cursorGroup.alpha < 1f) {
-					this.cursorGroup.alpha += Time.deltaTime;
-				}
-				else {
-					this.rectTransform.localPosition = Vector3.Lerp(this.startingPosition, this.endingPosition, this.panningElapsedTime);
-					if (this.panningElapsedTime < 1f) {
-						this.panningElapsedTime += Time.deltaTime / 2f;
-					}
-					else {
-						CanvasGroup mouseButtonGroup = this.icon.GetComponent<CanvasGroup>();
-						if (this.isButtonPressed) {
-							mouseButtonGroup.alpha += Time.deltaTime * 2.5f;
-							if (mouseButtonGroup.alpha >= 1f) {
-								mouseButtonGroup.alpha = 1f;
-								this.isButtonPressed = false;
-							}
-						}
-						if (!this.isButtonPressed) {
-							mouseButtonGroup.alpha -= Time.deltaTime * 2.5f;
-							if (mouseButtonGroup.alpha <= 0) {
-								mouseButtonGroup.alpha = 0;
-								this.isAppearing = false;
-							}
-						}
-					}
-				}
-			}
-			if (!this.isAppearing) {
-				if (this.cursorGroup.alpha > 0f) {
-					this.cursorGroup.alpha -= Time.deltaTime;
-				}
-			}
+			this.CursorDragAnimation();
 		}
 
 		public void Appear() {
@@ -163,6 +131,7 @@ namespace Tutorial {
 				this.icon.SetButton(button);
 				this.buttonPressedElapsedTime = 0f;
 				this.isButtonPressed = true;
+				this.isButtonHeld = false;
 			}
 
 			return true;
@@ -194,6 +163,145 @@ namespace Tutorial {
 
 			manager.Invoke(methodName, delayTime);
 			return true;
+		}
+
+		public bool PanCursorWithHeldAction(CursorPanGroup group, CursorButton button, TutorialAIManager manager, float delayTime, string methodName, bool heldFlag) {
+			if (this.isPanning) {
+				return false;
+			}
+
+			this.startingPosition = group.start;
+			this.endingPosition = group.end;
+			this.rectTransform.localPosition = group.start;
+			this.panningElapsedTime = 0f;
+			this.isAppearing = true;
+
+
+			//NOTE(Thompson): I have no idea what the codes below are doing. CursorPanGroup should already have the coordinates set before this.
+			ObtainStartingPosition s = this.GetComponentInChildren<ObtainStartingPosition>();
+			s.rectTransform.localPosition = group.start;
+			ObtainEndingPosition e = this.GetComponentInChildren<ObtainEndingPosition>();
+			e.rectTransform.localPosition = group.end;
+
+			if (!button.Equals(CursorButton.Nothing)) {
+				this.icon.SetButton(button);
+				this.buttonPressedElapsedTime = 0f;
+				this.isButtonPressed = true;
+				this.isButtonHeld = heldFlag;
+			}
+
+			manager.Invoke(methodName, delayTime);
+			return true;
+		}
+
+		public void DragSelectionBox(Camera main, CursorPanGroup group, CursorButton button, TutorialAIManager manager, float delayTime, string methodName) {
+			BoxSelector selector = main.GetComponent<BoxSelector>();
+			if (selector == null) {
+				Debug.LogError("Cannot find Box Selector component from camera, " + main.ToString() + ".");
+				return;
+			}
+
+			if (button != CursorButton.Left_Click) {
+				Debug.LogError("Selection box only works with left mouse button.");
+				return;
+			}
+
+			selector.StartBoxSelection(group, 0.5f);
+			this.icon.SetButton(button);
+			this.buttonPressedElapsedTime = 0f;
+			this.isButtonPressed = true;
+			this.isButtonHeld = true;
+			this.isAppearing = true;
+			this.panningElapsedTime = 0f;
+			this.startingPosition = group.start;
+			this.endingPosition = group.end;
+			this.rectTransform.position = group.start;
+
+			manager.Invoke(methodName, delayTime);
+			this.Invoke("HeldButtonRelease", delayTime);
+		}
+
+
+		//   -----------------------------------   PRIVATE METHODS   ---------------------------------------
+
+		private void CursorClickAnimation() {
+			if (this.isAppearing) {
+				if (this.cursorGroup.alpha < 1f) {
+					this.cursorGroup.alpha += Time.deltaTime;
+				}
+				else {
+					this.rectTransform.position = Vector3.Lerp(this.startingPosition, this.endingPosition, this.panningElapsedTime);
+					if (this.panningElapsedTime < 1f) {
+						this.panningElapsedTime += Time.deltaTime / 2f;
+					}
+					else {
+						CanvasGroup mouseButtonGroup = this.icon.GetComponent<CanvasGroup>();
+						if (this.isButtonPressed) {
+							mouseButtonGroup.alpha += Time.deltaTime * 2.5f;
+							if (mouseButtonGroup.alpha >= 1f) {
+								mouseButtonGroup.alpha = 1f;
+								this.isButtonPressed = false;
+							}
+						}
+						if (!this.isButtonPressed) {
+							mouseButtonGroup.alpha -= Time.deltaTime * 2.5f;
+							if (mouseButtonGroup.alpha <= 0) {
+								mouseButtonGroup.alpha = 0;
+								this.isAppearing = false;
+							}
+						}
+					}
+				}
+			}
+			if (!this.isAppearing) {
+				if (this.cursorGroup.alpha > 0f) {
+					this.cursorGroup.alpha -= Time.deltaTime;
+				}
+			}
+		}
+
+		private void CursorDragAnimation() {
+			if (this.isAppearing) {
+				CanvasGroup mouseButtonGroup = this.icon.GetComponent<CanvasGroup>();
+				if (this.cursorGroup.alpha < 1f) {
+					this.cursorGroup.alpha += Time.deltaTime;
+					if (this.cursorGroup.alpha > 0.5f && mouseButtonGroup.alpha < 1f) {
+						mouseButtonGroup.alpha += Time.deltaTime * 2.5f;
+					}
+				}
+				else {
+					this.rectTransform.position = Vector3.Lerp(this.startingPosition, this.endingPosition, this.panningElapsedTime);
+					if (this.panningElapsedTime < 1f) {
+						this.panningElapsedTime += Time.deltaTime / 2f;
+					}
+					else {
+						if (this.isButtonPressed) {
+							if (mouseButtonGroup.alpha >= 1f && !this.isButtonHeld) {
+								mouseButtonGroup.alpha = 1f;
+								this.isButtonPressed = false;
+							}
+						}
+						if (!this.isButtonPressed) {
+							mouseButtonGroup.alpha -= Time.deltaTime * 2.5f;
+							if (mouseButtonGroup.alpha <= 0) {
+								mouseButtonGroup.alpha = 0;
+								this.isAppearing = false;
+							}
+						}
+					}
+				}
+			}
+			if (!this.isAppearing) {
+				if (this.cursorGroup.alpha > 0f) {
+					this.cursorGroup.alpha -= Time.deltaTime;
+				}
+			}
+		}
+
+		private void HeldButtonRelease() {
+			if (this.isButtonHeld) {
+				this.isButtonHeld = false;
+			}
 		}
 	}
 }
