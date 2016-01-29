@@ -19,9 +19,9 @@ namespace Tutorial {
 				case Parts.Introduction:
 					switch (section) {
 						case 0:
-							return "Hello there. Welcome to the tutorial for Multiplier (working title). To begin, please press the \"Next Step\" button on the left. You may exit the tutorial at anytime by pressing the \"Return to Main Menu\" button on the left.";
+							return "Hello there. Welcome to the tutorial for Multiplier. To begin, please press the \"Next Step\" button on the left. You may exit the tutorial at any time by pressing the \"Return to Main Menu\" button on the left.";
 						case 1:
-							return "In this tutorial, you will learn how the game is to be played, as well as how this game can be used as a tool for you to play around with.";
+							return "In this tutorial, you will learn how the game is played, as well as how this game can be used as a tool.";
 						case 2:
 							return "Let's begin, shall we?";
 					}
@@ -55,21 +55,21 @@ namespace Tutorial {
 						case 4:
 							return "Once the Capsule is selected, you may press the \"S\" key on your keyboard to initiate the \"Split\" command. This is what happens.";
 						case 5:
-							return "When a Capsule is split, it retains all of the unit attributes the Capsule had before the split. The Capsule cannot fight and be controlled while splitting.";
+							return "When a Capsule is split, each new capsule retains all of the unit attributes of the original capsule. The Capsule cannot fight and be controlled while splitting.";
 						case 6:
-							return "The next interaction the Capsule can do is merging together with other split Capsules. This can be done using the \"D\" key.";
+							return "The Capsule can also merge with other split Capsules. This can be done using the \"D\" key.";
 						case 7:
-							return "The following animation show that Capsules can merge to form a stronger unit by selecting and commanding the units with the \"D\" key. This is essentially \"upgrading\" the 2 Capsules to 1 higher-tiered Capsule.";
+							return "The following animation shows that Capsules can merge to form a stronger unit by selecting and commanding the units with the \"D\" key. This is essentially \"upgrading\" the 2 Capsules to 1 higher-tiered Capsule.";
 						case 8:
-							return "Do note that merged Capsules can no longer be split again. This is the only game rule you must understand!";
+							return "Note that merged Capsules can no longer be split.";
 						case 9:
-							return "As you can see, the properties of a higher-tiered Capsule shows it is bigger than what it was before the merge.";
+							return "As you can see, a higher-tiered Capsule is bigger than it was before the merge.";
 						case 10:
 							return "However, be aware that unit attributes may not correlate with the tiers, since the game allows you to customize your unit attributes. Your customizations may not always give a net positive upgrade.";
 						case 11:
-							return "For attacking, Capsules attack automatically if a nearby enemy Capsule is close enough. There is no need for interactions to attack.";
+							return "Capsules attack automatically if a nearby enemy Capsule is close enough. There is no need for interactions to attack.";
 						case 12:
-							return "And that is it for the tutorial! Go and experiment with the game!";
+							return "Thank you for watching! Go and experiment!";
 					}
 					break;
 			}
