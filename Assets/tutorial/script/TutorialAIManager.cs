@@ -51,7 +51,7 @@ namespace Tutorial {
 						case 2:
 							return "The following animation shows what happens when the player controls the mouse, and drag a selection box on the Capsule. (Blue marker is left mouse button click.)";
 						case 3:
-							return "The Capsule will indicate that it has been selected. ";
+							return "The Capsule will indicate that it has been selected. You can tell by seeing a green selection ring surrounding your selected unit.";
 						case 4:
 							return "Once the Capsule is selected, you may press the \"S\" key on your keyboard to initiate the \"Split\" command. This is what happens.";
 						case 5:
