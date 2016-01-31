@@ -67,8 +67,20 @@ namespace Tutorial {
 						case 10:
 							return "However, be aware that unit attributes may not correlate with the tiers, since the game allows you to customize your unit attributes. Your customizations may not always give a net positive upgrade.";
 						case 11:
-							return "Capsules attack automatically if a nearby enemy Capsule is close enough. There is no need for interactions to attack.";
+							return "The following animation sequence shows what a non-positive upgrade will look like for the unit attribute, \"Speed\", according to the given mathematical equation. You will normally see this when customizing your unit attributes.";
 						case 12:
+							return "The higher the tier level of a Capsule, the less speed it moves from one side to the other.";
+						case 13:
+							return "The speeds of the Capsules are inversely proportional to their tier levels. This is called a non-positive upgrade, in which your unit attributes are nerfed the higher up the tier levels.";
+						case 14:
+							return "Capsules attack automatically if a nearby enemy Capsule is close enough. There is no need for interactions to attack.";
+						case 15:
+							return "How close enough is \"close enough\"? Imagine the diameter of your selected Capsule is 1 unit. You will need 3 units to detect an enemy nearby, and 1 unit to attack the enemy. The following animation will explain this more clearly.";
+						case 16:
+							return "The red colored Capsules are your units. The gray colored Capsules are used to measure the distance. By lining up the gray colored Capsules, you can see how long \"close enough\" really is. Also, the higher the tier level, the longer the distance will be.";
+						case 17:
+							return "Remember, 1 unit away is your attacking range, and 3 units away is how close your unit should be at your enemy in order to engage in battle. Utilize this knowledge when facing an upcoming battle and win!";
+						case 18:
 							return "Thank you for watching! Go and experiment!";
 					}
 					break;
@@ -78,39 +90,55 @@ namespace Tutorial {
 	}
 
 	public class TutorialAIManager : MonoBehaviour {
-		public bool isInitialized;
-		public bool isTutorialFinished;
-		public Parts currentTutorialStage;
-		public Text dialogueText;
-		public int stringLetterCounter;
-		public string dialogue;
-		public bool startTextRollingFlag;
-		public float delay;
-		[Range(0.0001f, 1f)]
-		public float delayInterval;
-		public int dialogueSectionCounter;
 		public Camera mainCamera;
-		public Vector3 cameraOrigin;
-		public MinimapStuffs minimap;
 		public Camera minimapCamera;
 		public CameraPanning mainCameraPanning;
-		public NewTutorialAIUnit tutorialUnit;
-		public SplitMergeManager splitMergeManager;
+		public MinimapStuffs minimap;
+
 		public Transform tutorialUnitParent;
+		public Transform nonPositiveUnitParent;
+		public Transform distanceUnitParent;
+		public NewTutorialAIUnit tutorialUnit;
+
+		public SplitMergeManager splitMergeManager;
+
 		public GameObject cursorPrefab;
 		public Cursor mainCursor;
+
 		public Canvas mainCanvas;
-
 		public Button nextStepButton;
+		public Text dialogueText;
 
-		public List<CursorPanGroup> groupList = new List<CursorPanGroup>();
-		public int groupListCounter = 0;
+		[SerializeField]
+		private bool isInitialized;
+		[SerializeField]
+		private bool isTutorialFinished;
+		[SerializeField]
+		private bool startTextRollingFlag;
+		[SerializeField]
+		private int stringLetterCounter;
+		[SerializeField]
+		private int groupListCounter = 0;
+		[SerializeField]
+		private int dialogueSectionCounter;
+		[Range(0f, 1f)]
+		private float delay;
+		[SerializeField]
+		private float delayInterval;
+		[SerializeField]
+		private string dialogue;
+		[SerializeField]
+		private List<CursorPanGroup> groupList = new List<CursorPanGroup>();
+		[SerializeField]
+		private Vector3 cameraOrigin;
+		[SerializeField]
+		private Parts currentTutorialStage;
 
 		public void Start() {
 			this.isInitialized = false;
 			this.isTutorialFinished = false;
 			this.delay = 0f;
-			this.delayInterval = 0.0001f;
+			this.delayInterval = 0f;
 			this.dialogueSectionCounter = 0;
 			this.currentTutorialStage = Parts.Introduction;
 			this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
@@ -136,6 +164,12 @@ namespace Tutorial {
 			if (this.minimap == null) {
 				Debug.LogError("Couldn't obtain minimap stuffs. Please check.");
 			}
+			if (this.nextStepButton == null) {
+				Debug.LogError("The next button isn't set.");
+			}
+			if (this.dialogueText == null) {
+				Debug.LogError("Dialogue text field is not bind to this variable.");
+			}
 
 			//Cursor setup
 			GameObject obj = MonoBehaviour.Instantiate(this.cursorPrefab) as GameObject;
@@ -157,9 +191,9 @@ namespace Tutorial {
 				else {
 					if (this.stringLetterCounter < this.dialogue.Length) {
 						//#DEBUG
-						//this.nextStepButton.interactable = true;
+						this.nextStepButton.interactable = true;
+						//this.nextStepButton.interactable = false;
 
-						this.nextStepButton.interactable = false;
 						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
 						this.stringLetterCounter++;
 					}
@@ -181,9 +215,6 @@ namespace Tutorial {
 
 		//This code layout aims to have the highest readability level possible. Dialogues are broken into tutorial stages and sections. Magic numbers correspond to the total sections listed above
 		//in the StringConstants class.
-
-		//Also, I would like to point out that I did not use switch..case within switch..case, because there may be moments where the action needs to span more than a few sections without
-		//being re-triggered again.
 		public void OnClickAction() {
 			switch (this.currentTutorialStage) {
 				default:
@@ -210,49 +241,82 @@ namespace Tutorial {
 						this.dialogueSectionCounter = 0;
 						break;
 					}
-					if (this.dialogueSectionCounter == 1) {
-						this.mainCameraPanning.enabled = true;
-					}
-					else if (this.dialogueSectionCounter == 3) {
-						this.minimapCamera.enabled = true;
-						this.minimap.enabled = true;
+					switch (this.dialogueSectionCounter) {
+						case 1:
+							this.mainCameraPanning.enabled = true;
+							break;
+						case 3:
+							this.minimapCamera.enabled = true;
+							this.minimap.enabled = true;
+							break;
+						default:
+							break;
 					}
 					this.dialogueSectionCounter++;
 					break;
 				case Parts.Unit_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= 12) {
+					if (this.dialogueSectionCounter >= 18) {
 						this.currentTutorialStage = Parts.Unit_Controls;
-						this.dialogueSectionCounter = 12;
+						this.dialogueSectionCounter = 18;
 						this.isTutorialFinished = true;
 						this.nextStepButton.interactable = false;
 						break;
 					}
-					if (this.dialogueSectionCounter == 0) {
-						this.tutorialUnit.gameObject.SetActive(true);
-						this.minimap.enabled = false;
-						this.minimapCamera.enabled = false;
-						this.mainCamera.transform.position = this.cameraOrigin;
-						this.Invoke("DelayTurnOffCameraPanning", 0.1f);
-					}
-					else if (this.dialogueSectionCounter == 3) {
-						//Dragging selection box.
-						this.mainCursor.DragSelectionBox(this.mainCamera, this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
-					}
-					else if (this.dialogueSectionCounter == 5) {
-						//Splitting
-						GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
-						clone.SetActive(true);
-						clone.transform.SetParent(this.tutorialUnitParent);
-						this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
+					switch (this.dialogueSectionCounter) {
+						case 0:
+							this.tutorialUnit.gameObject.SetActive(true);
+							this.minimap.enabled = false;
+							this.minimapCamera.enabled = false;
+							this.mainCamera.transform.position = this.cameraOrigin;
+							this.Invoke("DelayTurnOffCameraPanning", 0.1f);
+							break;
+						case 3:
+							//Dragging selection box.
+							this.mainCursor.DragSelectionBox(this.mainCamera, this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowSelectionRing");
+							break;
+						case 5:
+							//Splitting
+							GameObject clone = MonoBehaviour.Instantiate(this.tutorialUnit.gameObject) as GameObject;
+							clone.SetActive(true);
+							clone.transform.SetParent(this.tutorialUnitParent);
+							this.splitMergeManager.splitGroupList.Add(new Group(this.tutorialUnit.gameObject, clone));
 
-						//Stop selecting the unit.
-						this.Invoke("DelayHideSelectionRing", 0.1f);
-					}
-					else if (this.dialogueSectionCounter == 8) {
-						//Dragging selection box.
-						this.mainCursor.DragSelectionBox(this.mainCamera, this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowAllSelectionRings");
-						this.Invoke("DelayMergeUnits", 4f);
+							//Stop selecting the unit.
+							this.Invoke("DelayHideSelectionRing", 0.1f);
+							break;
+						case 8:
+							//Dragging selection box.
+							this.mainCursor.DragSelectionBox(this.mainCamera, this.GetNextPanning(), CursorButton.Left_Click, this, 3f, "DelayShowAllSelectionRings");
+							this.Invoke("DelayMergeUnits", 4f);
+							break;
+						case 12:
+							//TODO(Thompson): Show what a non-positive upgrade is for unit customization, via animation.
+							if (this.tutorialUnitParent != null) {
+								this.tutorialUnitParent.gameObject.SetActive(false);
+							}
+							if (this.nonPositiveUnitParent != null) {
+								this.nonPositiveUnitParent.gameObject.SetActive(true);
+							}
+							break;
+						case 14:
+							if (this.nonPositiveUnitParent != null) {
+								this.nonPositiveUnitParent.gameObject.SetActive(false);
+							}
+							break;
+						case 16:
+							//TODO(Thompson): Show how long the line of sight distance will be for LV1 unit and LV2 unit. Compare them via animation.
+							if (this.distanceUnitParent != null) {
+								this.distanceUnitParent.gameObject.SetActive(true);
+							}
+							break;
+						case 18:
+							if (this.distanceUnitParent != null) {
+								this.distanceUnitParent.gameObject.SetActive(false);
+							}
+							break;
+						default:
+							break;
 					}
 					this.dialogueSectionCounter++;
 					break;
