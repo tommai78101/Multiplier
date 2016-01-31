@@ -20,6 +20,7 @@ namespace SinglePlayer {
 			}
 			if (this.aiAttributeManager != null && this.dropdown != null) {
 				int itemValue = this.dropdown.value;
+				string attackCooldownExpression = "y=0.9*x";
 				switch (itemValue) {
 					default:
 					case 0:
@@ -31,7 +32,7 @@ namespace SinglePlayer {
 						string expression = this.dropdown.options[itemValue].text;
 						this.aiAttributeManager.SetHealthAttribute(expression);
 						this.aiAttributeManager.SetAttackAttribute(expression);
-						this.aiAttributeManager.SetAttackCooldownAttribute(expression);
+						this.aiAttributeManager.SetAttackCooldownAttribute(attackCooldownExpression);
 						this.aiAttributeManager.SetSpeedAttribute(expression);
 						this.aiAttributeManager.SetSplitAttribute(expression);
 						this.aiAttributeManager.SetMergeAttribute(expression);
@@ -44,7 +45,7 @@ namespace SinglePlayer {
 						this.aiAttributeManager.SetSpeedAttribute(otherExpression);
 						this.aiAttributeManager.SetSplitAttribute(otherExpression);
 						this.aiAttributeManager.SetMergeAttribute(otherExpression);
-						this.aiAttributeManager.SetAttackCooldownAttribute(otherExpression);
+						this.aiAttributeManager.SetAttackCooldownAttribute(attackCooldownExpression);
 						this.aiEnableDisableUI.DisableCustomEquations();
 						break;
 					case 5:
