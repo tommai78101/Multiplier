@@ -191,8 +191,8 @@ namespace Tutorial {
 				else {
 					if (this.stringLetterCounter < this.dialogue.Length) {
 						//#DEBUG
-						this.nextStepButton.interactable = true;
-						//this.nextStepButton.interactable = false;
+						//this.nextStepButton.interactable = true;
+						this.nextStepButton.interactable = false;
 
 						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
 						this.stringLetterCounter++;
