@@ -11,6 +11,9 @@ namespace MultiPlayer {
 		public GameObject splitManagerPrefab;
 		public GameObject mergeManagerPrefab;
 		public GameObject unitAttributesPrefab;
+
+		public GameObject remotePrefab;
+
 		[SerializeField]
 		public NetworkConnection owner;
 
@@ -188,6 +191,8 @@ namespace MultiPlayer {
 				Spawner.colorCode = 0;
 			}
 			RpcUnitAttributesSetup(manager, playerObject, colorValue);
+
+			NetworkServer.SpawnWithClientAuthority(this.remotePrefab, this.connectionToClient);
 		}
 
 		[ClientRpc]

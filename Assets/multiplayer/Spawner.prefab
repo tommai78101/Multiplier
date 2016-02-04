@@ -78,6 +78,7 @@ MonoBehaviour:
   splitManagerPrefab: {fileID: 182220, guid: d4b291cc42cbe484191ea29cc3173a99, type: 2}
   mergeManagerPrefab: {fileID: 140176, guid: e43c4850328d79f4aa42e0dfe2a41c8e, type: 2}
   unitAttributesPrefab: {fileID: 152948, guid: 245a9013c6afd7441a7419eef1df05f6, type: 2}
+  remotePrefab: {fileID: 170476, guid: da60fc42648138345a1458676a3af5dd, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -117,6 +118,10 @@ Prefab:
       propertyPath: unitCleanerPrefab
       value: 
       objectReference: {fileID: 133640, guid: 9eb5d907f0168aa4c98321c688b84c7f, type: 2}
+    - target: {fileID: 0}
+      propertyPath: remotePrefab
+      value: 
+      objectReference: {fileID: 170476, guid: da60fc42648138345a1458676a3af5dd, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 106330}
