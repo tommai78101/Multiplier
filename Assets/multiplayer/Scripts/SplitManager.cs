@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
 using Common;
+using SinglePlayer;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -23,6 +24,7 @@ namespace MultiPlayer {
 
 			SpawnRange range = this.ownerUnit.GetComponentInChildren<SpawnRange>();
 			this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
+			this.rotationVector.y = 0f;
 
 			NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
@@ -105,6 +107,9 @@ namespace MultiPlayer {
 		[SerializeField]
 		public Spawner spawner;
 		public GameObject gameUnitPrefab;
+		public Transform unitParent;
+		public int maxUnitCount;
+		public GlobalManager globalManagerObject;
 
 		//Split Manager is designed to streamline the creation of new game units.
 		//To achieve this, there needs to be two different array list that keeps track of all the creations, called Split Groups.
@@ -157,6 +162,9 @@ namespace MultiPlayer {
 					Debug.LogError("Spawner is never set. Please check.");
 				}
 			}
+			if (this.unitParent == null) {
+				Debug.LogError("Check to make sure this is created in the spawner.");
+			}
 		}
 
 		public void Update() {
@@ -167,6 +175,10 @@ namespace MultiPlayer {
 			//When the player starts the action to split a game unit into two, it takes in all the selected game units
 			//one by one, and splits them individually.
 			if (Input.GetKeyDown(KeyCode.S)) {
+				this.maxUnitCount = 50;
+				if (this.globalManagerObject != null) {
+					this.maxUnitCount = this.globalManagerObject.playerMaxUnitCount;
+				}
 				if (this.selectionManager != null) {
 					AddingNewSplitGroup();
 				}
@@ -216,7 +228,7 @@ namespace MultiPlayer {
 					continue;
 				}
 				GameUnit objUnit = obj.GetComponent<GameUnit>();
-				if (objUnit.level == 1) {
+				if (objUnit.level == 1 && this.unitParent.transform.childCount < this.maxUnitCount) {
 					CmdSplit(obj, objUnit.hasAuthority);
 				}
 			}
@@ -246,6 +258,9 @@ namespace MultiPlayer {
 			//In Spawner, you would called on NetworkServer.SpawnWithClientAuthority() in the [ClientRpc]. Here, it's in [Command].
 			//I am guessing it has to do with how player objects and non-player objects interact with UNET.
 			GameObject split = MonoBehaviour.Instantiate(unit.gameObject) as GameObject;
+
+			//Setting the newly split game unit's name to something else.
+			split.name = "GameUnit " + this.unitParent.transform.childCount.ToString();
 
 			//Setting owner's parent as the same for splits.
 			split.transform.SetParent(obj.transform.parent);
@@ -341,7 +356,7 @@ namespace MultiPlayer {
 				original.currentHealth = original.maxHealth;
 			}
 			//copy.recoverCooldown = original.recoverCooldown;
-			copy.recoverCounter = original.recoverCounter = 0;
+			copy.recoverCounter = original.recoverCounter = 1f;
 			copy.speed = original.speed;
 			copy.attackCooldown = original.attackCooldown;
 			copy.attackCooldownCounter = original.attackCooldownCounter = 0;

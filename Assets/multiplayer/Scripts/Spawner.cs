@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using Common;
+using SinglePlayer;
 
 namespace MultiPlayer {
 	public class Spawner : NetworkBehaviour {
@@ -15,6 +16,8 @@ namespace MultiPlayer {
 
 		public static int colorCode = 0;
 
+		private bool doesGlobalManagerExist;
+
 		public override void OnStartLocalPlayer() {
 			//I kept this part in, because I don't know if this is the function that sets isLocalPlayer to true, 
 			//or this function triggers after isLocalPlayer is set to true.
@@ -27,6 +30,9 @@ namespace MultiPlayer {
 			else {
 				this.owner = identity.connectionToServer;
 			}
+
+			//Initializing remaining variables
+			this.doesGlobalManagerExist = false;
 
 			//On initialization, make the client (local client and remote clients) tell the server to call on an [ClientRpc] method.
 			CmdCall();
@@ -94,6 +100,15 @@ namespace MultiPlayer {
 			//This is run for spawning new non-player objects. Since it is a server calling to all clients (local and remote), it needs to pass in a
 			//NetworkConnection that connects from server to THAT PARTICULAR client, who is going to own client authority on the spawned object.
 
+			//Checking if global manager exists;
+			GlobalManager globalManagerObject = GameObject.FindObjectOfType<GlobalManager>();
+			if (globalManagerObject != null) {
+				this.doesGlobalManagerExist = true;
+			}
+			else {
+				this.doesGlobalManagerExist = false;
+			}
+
 			//Setting up Player
 			GameObject playerUmbrellaObject = new GameObject("Player");
 			GameObject playerUnitUmbrellaObject = new GameObject("Units");
@@ -123,7 +138,12 @@ namespace MultiPlayer {
 			SplitManager splitManager = manager.GetComponent<SplitManager>();
 			if (splitManager != null) {
 				splitManager.selectionManager = selectionManager;
-			}
+				splitManager.unitParent = playerUnitUmbrellaObject.transform;
+				if (this.doesGlobalManagerExist && globalManagerObject != null) {
+					splitManager.globalManagerObject = globalManagerObject;
+					splitManager.maxUnitCount = globalManagerObject.playerMaxUnitCount;
+				}
+            }
 			NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 			//Player merge manager

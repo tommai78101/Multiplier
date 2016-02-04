@@ -136,6 +136,7 @@ namespace SinglePlayer {
 			if (this.maxUnitCount <= 0) {
 				this.maxUnitCount = 50;
 			}
+
 			switch (this.difficulty) {
 				case Difficulty.Easy:
 					tickIntervals = 2f;
