@@ -177,7 +177,9 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdSpawn(GameObject obj) {
-			NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+			if (obj != null) {
+				NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+			}
 		}
 
 		public void Update() {
