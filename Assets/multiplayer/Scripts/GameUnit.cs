@@ -174,7 +174,7 @@ namespace MultiPlayer {
 					else if (sightGameUnit == null && attackGameUnit != null) {
 						CmdSetTargetEnemy(this.gameObject, attackGameUnit.gameObject, attackGameUnit.gameObject);
 					}
-					else {
+					else if (this.gameObject != null) {
 						CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 
@@ -187,7 +187,7 @@ namespace MultiPlayer {
 					else if (sightAiUnit == null && attackAiUnit != null) {
 						SetTargetAIEnemy(this.gameObject, attackAiUnit.gameObject, attackAiUnit.gameObject);
 					}
-					else {
+					else if (this.gameObject != null) {
 						SetTargetAIEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 				}
@@ -473,7 +473,9 @@ namespace MultiPlayer {
 		[Command]
 		public void CmdUpdateStatus(bool targetEnemyIsGone, Color recoveryColor) {
 			if (this.currentHealth <= 0) {
-				RpcUnitDestroy(this.gameObject);
+				if (this.gameObject != null) {
+					RpcUnitDestroy(this.gameObject);
+				}
 			}
 			else {
 				RpcUpdateStatus(targetEnemyIsGone, recoveryColor);
