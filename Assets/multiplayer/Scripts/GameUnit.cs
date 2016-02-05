@@ -174,7 +174,7 @@ namespace MultiPlayer {
 					else if (sightGameUnit == null && attackGameUnit != null) {
 						CmdSetTargetEnemy(this.gameObject, attackGameUnit.gameObject, attackGameUnit.gameObject);
 					}
-					else if (this.gameObject != null) {
+					else {
 						CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 
@@ -187,7 +187,7 @@ namespace MultiPlayer {
 					else if (sightAiUnit == null && attackAiUnit != null) {
 						SetTargetAIEnemy(this.gameObject, attackAiUnit.gameObject, attackAiUnit.gameObject);
 					}
-					else if (this.gameObject != null) {
+					else {
 						SetTargetAIEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 				}
