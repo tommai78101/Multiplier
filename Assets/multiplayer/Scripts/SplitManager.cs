@@ -224,6 +224,12 @@ namespace MultiPlayer {
 						if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
 							this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
 						}
+						if (group.ownerUnit.transform.parent != this.unitParent) {
+							group.ownerUnit.transform.SetParent(this.unitParent);
+						}
+						if (group.splitUnit.transform.parent != this.unitParent) {
+							group.splitUnit.transform.SetParent(this.unitParent);
+						}
 						this.removeList.Add(group);
 					}
 					else {
