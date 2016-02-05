@@ -164,7 +164,20 @@ namespace MultiPlayer {
 			}
 			if (this.unitParent == null) {
 				Debug.LogError("Check to make sure this is created in the spawner.");
+				this.unitParent = new GameObject("Units Parent").transform;
+				this.unitParent.SetParent(this.transform);
+				NetworkIdentity ident = this.GetComponent<NetworkIdentity>();
+				if (ident != null) {
+					ident.localPlayerAuthority = true;
+					CmdSpawn(this.unitParent.gameObject);
+					Debug.Log("Spawning a new unit parent with client authority owner."); 
+				}
 			}
+		}
+
+		[Command]
+		public void CmdSpawn(GameObject obj) {
+			NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
 		}
 
 		public void Update() {
