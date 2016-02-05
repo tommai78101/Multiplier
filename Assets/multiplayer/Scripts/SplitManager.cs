@@ -207,7 +207,7 @@ namespace MultiPlayer {
 			}
 			UpdateSplitGroup();
 		}
-
+		 
 		public void UpdateSplitGroup() {
 			if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
@@ -224,10 +224,10 @@ namespace MultiPlayer {
 						if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
 							this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
 						}
-						if (group.ownerUnit.transform.parent != this.unitParent) {
+						if (!group.ownerUnit.transform.parent.Equals(this.unitParent)) {
 							group.ownerUnit.transform.SetParent(this.unitParent);
 						}
-						if (group.splitUnit.transform.parent != this.unitParent) {
+						if (!group.splitUnit.transform.parent.Equals(this.unitParent)) {
 							group.splitUnit.transform.SetParent(this.unitParent);
 						}
 						this.removeList.Add(group);
