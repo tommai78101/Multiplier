@@ -166,15 +166,19 @@ namespace MultiPlayer {
 					}
 
 					if (sightGameUnit != null && attackGameUnit != null) {
-						CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, attackGameUnit.gameObject);
+						SetTargetEnemy(this.gameObject, sightGameUnit.gameObject, attackGameUnit.gameObject);
+                        CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, attackGameUnit.gameObject);
 					}
 					else if (sightGameUnit != null && attackGameUnit == null) {
-						CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, sightGameUnit.gameObject);
+						SetTargetEnemy(this.gameObject, sightGameUnit.gameObject, sightGameUnit.gameObject);
+                        CmdSetTargetEnemy(this.gameObject, sightGameUnit.gameObject, sightGameUnit.gameObject);
 					}
 					else if (sightGameUnit == null && attackGameUnit != null) {
+						SetTargetEnemy(this.gameObject, attackGameUnit.gameObject, attackGameUnit.gameObject);
 						CmdSetTargetEnemy(this.gameObject, attackGameUnit.gameObject, attackGameUnit.gameObject);
 					}
 					else {
+						SetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 						CmdSetTargetEnemy(this.gameObject, this.gameObject, this.gameObject);
 					}
 
@@ -473,10 +477,36 @@ namespace MultiPlayer {
 		[Command]
 		public void CmdUpdateStatus(bool targetEnemyIsGone, Color recoveryColor) {
 			if (this.currentHealth <= 0) {
-				RpcUnitDestroy(this.gameObject);
+				if (this.gameObject != null) {
+					RpcUnitDestroy(this.gameObject);
+				}
 			}
 			else {
 				RpcUpdateStatus(targetEnemyIsGone, recoveryColor);
+			}
+		}
+
+		private void SetTargetEnemy(GameObject attacker, GameObject enemy, GameObject victim) {
+			if (attacker != null && (enemy != null || victim != null)) {
+				GameUnit unit = attacker.GetComponent<GameUnit>();
+				if (unit != null) {
+					if (victim != null && attacker.Equals(enemy) && attacker.Equals(victim)) {
+						unit.targetEnemy = null;
+					}
+					else {
+						if (victim != null) {
+							unit.targetEnemy = victim.GetComponent<GameUnit>();
+							MoveToTarget(attacker);
+						}
+						else if (enemy != null) {
+							unit.targetEnemy = enemy.GetComponent<GameUnit>();
+							MoveToTarget(attacker);
+						}
+						else {
+							unit.targetEnemy = null;
+						}
+					}
+				}
 			}
 		}
 
@@ -510,7 +540,7 @@ namespace MultiPlayer {
 			}
 		}
 
-		public void SetTargetAIEnemy(GameObject attacker, GameObject enemyInLineOfSight, GameObject victimInAttackRange) {
+		private void SetTargetAIEnemy(GameObject attacker, GameObject enemyInLineOfSight, GameObject victimInAttackRange) {
 			if (enemyInLineOfSight == null && victimInAttackRange == null) {
 				return;
 			}
