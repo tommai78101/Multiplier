@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 
-public class ReadOnlyInputField : MonoBehaviour {
+public class FetchIPAddress : MonoBehaviour {
 	public NetworkManager networkManager;
 	public InputField inputField;
 
