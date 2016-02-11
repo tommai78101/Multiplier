@@ -5,8 +5,10 @@ using System.Collections;
 
 public class NetworkManagerActions : MonoBehaviour {
 	public NetworkManager networkManager;
+	public GameObject initialMenu;
+	public GameObject LANHost;
 
-	public void Start() {
+	public void Awake() {
 		if (this.networkManager == null) {
 			GameObject obj = GameObject.FindGameObjectWithTag("NetworkManager");
 			this.networkManager = obj.GetComponent<NetworkManager>();
@@ -16,8 +18,18 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 	}
 
+	public void Start() {
+		this.initialMenu.SetActive(true);
+		this.LANHost.SetActive(false);
+	}
+
+	//Start functions
+
 	public void StartLANHost() {
 		this.networkManager.StartHost();
+		this.LANHost.SetActive(true);
+		this.initialMenu.SetActive(false);
+
 	}
 	public void StartLANClient() {
 		this.networkManager.StartHost();
@@ -25,4 +37,14 @@ public class NetworkManagerActions : MonoBehaviour {
 	public void StartMatchMaker() {
 		this.networkManager.StartHost();
 	}
+
+	//Stop functions
+
+	public void StopLANHost() {
+		this.networkManager.StopHost();
+		this.LANHost.SetActive(false);
+		this.initialMenu.SetActive(true);
+	}
+
+
 }

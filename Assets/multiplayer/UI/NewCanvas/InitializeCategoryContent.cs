@@ -6,8 +6,9 @@ using Common;
 
 public class InitializeCategoryContent : MonoBehaviour {
 	public GameObject categoryContentPrefab;
+	public Transform levelingRatesContent;
 
-	public void Start() {
+	public void Awake() {
 		if (this.categoryContentPrefab == null) {
 			Debug.LogError("Category content prefab is not initialized.");
 		}
@@ -20,7 +21,7 @@ public class InitializeCategoryContent : MonoBehaviour {
 			texts[1].text = "0.0";
 			//Relation
 			texts[2].text = "N/A";
-			obj.transform.SetParent(this.transform);
+			obj.transform.SetParent(this.levelingRatesContent);
 			
 			//Always set the local scale AFTER setting it as a child Transform.
 			RectTransform rect = obj.GetComponent<RectTransform>();
