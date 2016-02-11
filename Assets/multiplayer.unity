@@ -10045,6 +10045,7 @@ MonoBehaviour:
   initialMenu: {fileID: 1366616927}
   LANHost: {fileID: 387373742}
   optionsMenu: {fileID: 283038291}
+  unitAttributeEditor: {fileID: 935349465}
 --- !u!1 &1795639249
 GameObject:
   m_ObjectHideFlags: 0

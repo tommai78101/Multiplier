@@ -8,6 +8,7 @@ public class NetworkManagerActions : MonoBehaviour {
 	public GameObject initialMenu;
 	public GameObject LANHost;
 	public GameObject optionsMenu;
+	public GameObject unitAttributeEditor;
 
 	public void Awake() {
 		if (this.networkManager == null) {
@@ -26,12 +27,16 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (this.optionsMenu == null) {
 			Debug.LogError("Unassigned context menu for changing unit attributes before connection.");
 		}
+		if (this.unitAttributeEditor == null) {
+			Debug.LogError("Unassigned context menu for unit attributes editor.");
+		}
 	}
 
 	public void Start() {
 		this.initialMenu.SetActive(true);
 		this.optionsMenu.SetActive(true);
 		this.LANHost.SetActive(false);
+		this.unitAttributeEditor.SetActive(false);
 	}
 
 	//Start functions
@@ -41,9 +46,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.networkManager.StartHost();
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
-		if (!(this.LANHost.activeSelf || this.LANHost.activeInHierarchy)){
-			this.LANHost.SetActive(true);
-		}
+		this.unitAttributeEditor.SetActive(false);
+		this.LANHost.SetActive(true);
 	}
 	public void StartLANClient() {
 		this.networkManager.StartHost();
@@ -59,6 +63,15 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.networkManager.StopHost();
 		this.initialMenu.SetActive(true);
 		this.optionsMenu.SetActive(true);
+		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		if (enableEditorObj != null) {
+			if (enableEditorObj.isCustomOptionSelected) {
+				this.unitAttributeEditor.SetActive(true);
+			}
+			else {
+				this.unitAttributeEditor.SetActive(false);
+			}
+		}
 		this.LANHost.SetActive(false);
 	}
 
