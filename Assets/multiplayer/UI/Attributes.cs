@@ -20,8 +20,15 @@ public class Attributes : MonoBehaviour {
 	public Toggle splitToggle;
 	public AttributeProperty oldProperty;
 	public AttributeProperty newProperty;
-	public const int MAX_NUM_OF_LEVELS = 10;
 	public UnitAttributes unitAttributes;
+
+	public const int MAX_NUM_OF_LEVELS = 10;
+	public const string NAME_HEALTH = "Health";
+	public const string NAME_ATTACK = "Attack";
+	public const string NAME_ATTACK_COOLDOWN = "Attack Cooldown";
+	public const string NAME_SPEED = "Speed";
+	public const string NAME_SPLIT = "Split";
+	public const string NAME_MERGE = "Merge";
 
 	public void Start() {
 		if (this.panelPrefab == null) {
