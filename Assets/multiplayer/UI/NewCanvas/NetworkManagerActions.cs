@@ -251,9 +251,17 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
 			}
+			else {
+				this.LANClientReady.SetActive(false);
+				this.LANClientNotReady.SetActive(true);
+			}
 			if (ClientScene.localPlayers.Count == 0) {
 				ClientScene.AddPlayer(0);
 			}
+		}
+		else {
+			this.LANClientReady.SetActive(false);
+			this.LANClientNotReady.SetActive(false);
 		}
 	}
 }
