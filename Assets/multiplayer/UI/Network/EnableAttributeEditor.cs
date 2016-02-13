@@ -3,25 +3,36 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class EnableAttributeEditor : MonoBehaviour {
-	public GameObject unitAttributesEditor;
+	public CanvasGroup canvasGroupUnitAttributeEditor;
 	public bool isCustomOptionSelected;
 
 	public void Start() {
-		if (this.unitAttributesEditor == null) {
+		if (this.canvasGroupUnitAttributeEditor == null) {
 			Debug.LogError("Unassigned unit attribute editor.");
 		}
-		this.unitAttributesEditor.SetActive(false);
-		this.isCustomOptionSelected = false;
+		this.TurnOffCanvasGroup();
 	}
 
 	public void OnCustomOptionSelected(Dropdown dropdown) {
 		if (dropdown.value == 3) {
-			this.unitAttributesEditor.SetActive(true);
-			this.isCustomOptionSelected = true;
+			TurnOnCanvasGroup();
 		}
 		else {
-			this.unitAttributesEditor.SetActive(false);
-			this.isCustomOptionSelected = false;
+			TurnOnCanvasGroup();
 		}
+	}
+
+	public void TurnOnCanvasGroup() {
+		this.isCustomOptionSelected = true;
+		this.canvasGroupUnitAttributeEditor.alpha = 1f;
+		this.canvasGroupUnitAttributeEditor.interactable = true;
+		this.canvasGroupUnitAttributeEditor.blocksRaycasts = true;
+	}
+
+	public void TurnOffCanvasGroup() {
+		this.isCustomOptionSelected = false;
+		this.canvasGroupUnitAttributeEditor.alpha = 0f;
+		this.canvasGroupUnitAttributeEditor.interactable = false;
+		this.canvasGroupUnitAttributeEditor.blocksRaycasts = false;
 	}
 }

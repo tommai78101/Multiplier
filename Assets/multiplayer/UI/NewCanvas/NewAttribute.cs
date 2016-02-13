@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-namespace Multiplayer {
+namespace MultiPlayer {
 	public struct LevelingRate {
 		public int level;
 		public float health;

@@ -85,86 +85,7 @@ public class Attributes : MonoBehaviour {
 				}
 
 				try {
-					for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
-						float answer = (float) MathParser.ProcessEquation(inputText.inputText.text, property, level + 1);
-
-						if (this.debugFlag) {
-							Debug.Log("DEBUG 8");
-						}
-
-						GameObject panel = this.prefabList[level];
-						Title titlePanel = panel.GetComponentInChildren<Title>();
-
-						if (this.debugFlag) {
-							Debug.Log("DEBUG 9");
-						}
-
-						if (titlePanel != null) {
-							titlePanel.titleText.text = "Level " + (level + 1).ToString();
-						}
-
-						if (this.debugFlag) {
-							Debug.Log("DEBUG 10");
-						}
-
-						int propertyValue = 0;
-						Number numberPanel = panel.GetComponentInChildren<Number>();
-						if (numberPanel != null) {
-							if (this.unitAttributes != null) {
-								switch (property) {
-									case AttributeProperty.Health:
-										this.unitAttributes.healthPrefabList[level] = answer;
-										numberPanel.numberText.text = answer.ToString();
-										propertyValue = 0;
-										break;
-									case AttributeProperty.Attack:
-										this.unitAttributes.attackPrefabList[level] = answer;
-										numberPanel.numberText.text = answer.ToString();
-										propertyValue = 1;
-										break;
-									case AttributeProperty.Speed:
-										this.unitAttributes.speedPrefabList[level] = answer;
-										numberPanel.numberText.text = answer.ToString();
-										propertyValue = 2;
-										break;
-									case AttributeProperty.Merge:
-										this.unitAttributes.mergePrefabList[level] = answer;
-										numberPanel.numberText.text = answer.ToString();
-										propertyValue = 3;
-										break;
-									case AttributeProperty.AttackCooldown:
-										this.unitAttributes.attackCooldownPrefabList[level] = answer;
-										numberPanel.numberText.text = answer.ToString();
-										propertyValue = 4;
-										break;
-									case AttributeProperty.Split:
-										if (level <= 0) {
-											this.unitAttributes.splitPrefabFactor = answer;
-											numberPanel.numberText.text = answer.ToString();
-										}
-										else {
-											numberPanel.numberText.text = "N/A";
-										}
-										level = 10;
-										propertyValue = 5;
-										break;
-									default:
-									case AttributeProperty.Invalid:
-										throw new ArgumentException("Attribute property is invalid.");
-								}
-							}
-						}
-
-						if (this.debugFlag) {
-							Debug.Log("DEBUG 11");
-						}
-
-						this.unitAttributes.CmdUpdateAnswer(answer, level, propertyValue);
-
-						if (this.debugFlag) {
-							Debug.Log("DEBUG 12");
-						}
-					}
+					UpdateAttributes(property);
 				}
 				catch (Exception e) {
 					Debug.LogError(e.Message.ToString());
@@ -261,5 +182,162 @@ public class Attributes : MonoBehaviour {
 
 	public void ChangeProperty() {
 		this.newProperty = ProcessToggle();
+	}
+
+	public void UpdateOnlineAttributes(UnitAttributes unitAttributes, AttributeProperty property) {
+		for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
+			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1);
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 8");
+			}
+
+			GameObject panel = this.prefabList[level];
+			Title titlePanel = panel.GetComponentInChildren<Title>();
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 9");
+			}
+
+			if (titlePanel != null) {
+				titlePanel.titleText.text = "Level " + (level + 1).ToString();
+			}
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 10");
+			}
+
+			int propertyValue = 0;
+			Number numberPanel = panel.GetComponentInChildren<Number>();
+			if (numberPanel != null) {
+				if (this.unitAttributes != null) {
+					switch (property) {
+						case AttributeProperty.Health:
+							unitAttributes.healthPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							propertyValue = 0;
+							break;
+						case AttributeProperty.Attack:
+							unitAttributes.attackPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							propertyValue = 1;
+							break;
+						case AttributeProperty.Speed:
+							unitAttributes.speedPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							propertyValue = 2;
+							break;
+						case AttributeProperty.Merge:
+							unitAttributes.mergePrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							propertyValue = 3;
+							break;
+						case AttributeProperty.AttackCooldown:
+							unitAttributes.attackCooldownPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							propertyValue = 4;
+							break;
+						case AttributeProperty.Split:
+							if (level <= 0) {
+								unitAttributes.splitPrefabFactor = answer;
+								numberPanel.numberText.text = answer.ToString();
+							}
+							else {
+								numberPanel.numberText.text = "N/A";
+							}
+							level = 10;
+							propertyValue = 5;
+							break;
+						default:
+						case AttributeProperty.Invalid:
+							throw new ArgumentException("Attribute property is invalid.");
+					}
+				}
+			}
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 11");
+			}
+
+			unitAttributes.CmdUpdateAnswer(answer, level, propertyValue);
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 12");
+			}
+		}
+	}
+
+	public void UpdateAttributes(AttributeProperty property) {
+		for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
+			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1);
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 8");
+			}
+
+			GameObject panel = this.prefabList[level];
+			Title titlePanel = panel.GetComponentInChildren<Title>();
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 9");
+			}
+
+			if (titlePanel != null) {
+				titlePanel.titleText.text = "Level " + (level + 1).ToString();
+			}
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 10");
+			}
+
+			Number numberPanel = panel.GetComponentInChildren<Number>();
+			if (numberPanel != null) {
+				if (this.unitAttributes != null) {
+					switch (property) {
+						case AttributeProperty.Health:
+							this.unitAttributes.healthPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							break;
+						case AttributeProperty.Attack:
+							this.unitAttributes.attackPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							break;
+						case AttributeProperty.Speed:
+							this.unitAttributes.speedPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							break;
+						case AttributeProperty.Merge:
+							this.unitAttributes.mergePrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							break;
+						case AttributeProperty.AttackCooldown:
+							this.unitAttributes.attackCooldownPrefabList[level] = answer;
+							numberPanel.numberText.text = answer.ToString();
+							break;
+						case AttributeProperty.Split:
+							if (level <= 0) {
+								this.unitAttributes.splitPrefabFactor = answer;
+								numberPanel.numberText.text = answer.ToString();
+							}
+							else {
+								numberPanel.numberText.text = "N/A";
+							}
+							level = 10;
+							break;
+						default:
+						case AttributeProperty.Invalid:
+							throw new ArgumentException("Attribute property is invalid.");
+					}
+				}
+			}
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 11");
+			}
+
+			if (this.debugFlag) {
+				Debug.Log("DEBUG 12");
+			}
+		}
 	}
 }

@@ -53,7 +53,11 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 			this.LANClientNotConnected.SetActive(false);
-			this.unitAttributeEditor.SetActive(false);
+			EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+			if (enableEditorObj != null) {
+				enableEditorObj.TurnOffCanvasGroup();
+			}
+
 		}
 		else {
 			if (NetworkServer.active) {
@@ -62,8 +66,11 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.optionsMenu.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
 				this.LANClientReady.SetActive(false);
-				this.unitAttributeEditor.SetActive(false);
 				this.LANHost.SetActive(true);
+				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+				if (enableEditorObj != null) {
+					enableEditorObj.TurnOffCanvasGroup();
+				}
 			}
 			else if (NetworkClient.active) {
 				this.initialMenu.SetActive(false);
@@ -71,6 +78,10 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANHost.SetActive(false);
 				this.unitAttributeEditor.SetActive(false);
 				this.LANClientNotConnected.SetActive(false);
+				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+				if (enableEditorObj != null) {
+					enableEditorObj.TurnOffCanvasGroup();
+				}
 				if (ClientScene.ready) {
 					this.LANClientReady.SetActive(true);
 				}
@@ -125,9 +136,12 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.optionsMenu.SetActive(false);
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotReady.SetActive(false);
-		this.unitAttributeEditor.SetActive(false);
 		this.LANHost.SetActive(true);
 		this.LANClientNotConnected.SetActive(false);
+		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		if (enableEditorObj != null) {
+			enableEditorObj.TurnOffCanvasGroup();
+		}
 	}
 
 	public void StopLANHost() {
@@ -140,13 +154,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.initialMenu.SetActive(true);
 		this.optionsMenu.SetActive(true);
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
-		if (enableEditorObj != null) {
-			if (enableEditorObj.isCustomOptionSelected) {
-				this.unitAttributeEditor.SetActive(true);
-			}
-			else {
-				this.unitAttributeEditor.SetActive(false);
-			}
+		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
+			enableEditorObj.TurnOnCanvasGroup();
 		}
 	}
 
@@ -192,12 +201,6 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.unitAttributeEditor.SetActive(false);
 		this.LANHost.SetActive(false);
 		this.LANClientNotConnected.SetActive(true);
-		//if (ClientScene.ready) {
-		//	this.LANClientReady.SetActive(true);
-		//}
-		//else {
-		//	this.LANClientNotReady.SetActive(true);
-		//}
 	}
 
 	public void TurnOffLANClientMenu() {
@@ -209,6 +212,10 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotReady.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
+		//EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		//if (enableEditorObj != null) {
+		//	enableEditorObj.TurnOffCanvasGroup();
+		//}
 	}
 
 	public void StartLANClient(InputField inputField) {
@@ -221,6 +228,10 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
 		this.LANClientNotReady.SetActive(true);
+		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		if (enableEditorObj != null) {
+			enableEditorObj.TurnOffCanvasGroup();
+		}
 	}
 
 	public void StopLANClient() {
@@ -234,13 +245,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.initialMenu.SetActive(true);
 		this.optionsMenu.SetActive(true);
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
-		if (enableEditorObj != null) {
-			if (enableEditorObj.isCustomOptionSelected) {
-				this.unitAttributeEditor.SetActive(true);
-			}
-			else {
-				this.unitAttributeEditor.SetActive(false);
-			}
+		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
+			enableEditorObj.TurnOnCanvasGroup();
 		}
 	}
 
