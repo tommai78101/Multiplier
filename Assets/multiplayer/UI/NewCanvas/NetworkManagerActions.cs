@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
+using MultiPlayer;
 
 public class NetworkManagerActions : MonoBehaviour {
 	public NetworkManager networkManager;
@@ -9,6 +10,7 @@ public class NetworkManagerActions : MonoBehaviour {
 	public GameObject LANHost;
 	public GameObject optionsMenu;
 	public GameObject unitAttributeEditor;
+	public GameObject temporaryUnitAttributesObject;
 
 	public GameObject LANClientNotConnected;
 	public GameObject LANClientNotReady;
@@ -130,6 +132,8 @@ public class NetworkManagerActions : MonoBehaviour {
 	*/
 
 	public void StartLANHost() {
+		this.PreInitialization();
+
 		Debug.Log("Starting LAN Host.");
 		this.networkManager.StartHost();
 		this.initialMenu.SetActive(false);
@@ -142,6 +146,9 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (enableEditorObj != null) {
 			enableEditorObj.TurnOffCanvasGroup();
 		}
+
+		this.PreUnitAttributesInitialization();
+
 	}
 
 	public void StopLANHost() {
@@ -219,6 +226,8 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void StartLANClient(InputField inputField) {
+		this.PreInitialization();
+
 		Debug.Log("Starting LAN client.");
 		this.networkManager.networkAddress = "localhost";
 		if (inputField.text.Length > 0) {
@@ -232,6 +241,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (enableEditorObj != null) {
 			enableEditorObj.TurnOffCanvasGroup();
 		}
+
+		this.PreUnitAttributesInitialization();
 	}
 
 	public void StopLANClient() {
@@ -269,5 +280,66 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 		}
+	}
+
+	private void PreInitialization() {
+		Debug.Log("Fetching equations from options.");
+		string equation = "";
+		Dropdown[] difficultyOptions = this.optionsMenu.GetComponentsInChildren<Dropdown>(true);
+		foreach (Dropdown dropdown in difficultyOptions) {
+			Dropdown.OptionData data;
+			switch (dropdown.value) {
+				default:
+				case 0:
+					data = dropdown.options[dropdown.value];
+					equation = data.text.Substring(0, data.text.Length - "(Easy)".Length);
+					break;
+				case 1:
+					data = dropdown.options[dropdown.value];
+					equation = data.text.Substring(0, data.text.Length - "(Normal)".Length);
+					break;
+				case 2:
+					data = dropdown.options[dropdown.value];
+					equation = data.text.Substring(0, data.text.Length - "(Hard)".Length);
+					break;
+				case 3:
+					break;
+			}
+		}
+
+		if (equation.Length <= 0) {
+			Debug.Log("Fetching equations from unit attributes editor.");
+		}
+		else {
+			Debug.Log("Setting new equations from options to unit attributes editor.");
+			InputField[] equationsFields = this.unitAttributeEditor.GetComponentsInChildren<InputField>(true);
+			foreach (InputField field in equationsFields) {
+				Debug.Log("Setting the equations to the input field.");
+				field.text = equation;
+				field.textComponent.text = equation;
+			}
+		}
+	}
+
+	private void PreUnitAttributesInitialization() {
+		GameObject obj = GameObject.Find("Temporary Unit Attributes");
+		if (obj == null) {
+			Debug.Log("The object is inactive.");
+			obj = this.temporaryUnitAttributesObject;
+		}
+		if (obj != null) {
+			Debug.Log("Fetching temporary unit attributes.");
+			GameObject[] playerUnitAttributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
+			for (int i = 0; i < playerUnitAttributes.Length; i++) {
+				NetworkIdentity identity = playerUnitAttributes[i].GetComponent<NetworkIdentity>();
+				if (identity.hasAuthority) {
+					UnitAttributes attr = playerUnitAttributes[i].GetComponent<UnitAttributes>();
+					UnitAttributes tempAttr = obj.GetComponent<UnitAttributes>();
+					attr.CopyFrom(tempAttr);
+					break;
+				}
+			}
+		}
+
 	}
 }
