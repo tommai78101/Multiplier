@@ -12,6 +12,7 @@ namespace MultiPlayer {
 
 	public delegate void UpdateProperties(int damage, Vector3 position);
 
+	[System.Serializable]
 	public class NewGameUnit : NetworkBehaviour {
 		[SyncVar(hook = "OnPropertiesChanged")]
 		public UnitProperties properties;
