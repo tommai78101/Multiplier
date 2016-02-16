@@ -6,6 +6,10 @@ namespace MultiPlayer {
 
 	public struct NewUnitStruct {
 		public GameObject unit;
+
+		public NewUnitStruct(GameObject unit) {
+			this.unit = unit;
+		}
 	}
 
 	public struct Split {
@@ -37,6 +41,8 @@ namespace MultiPlayer {
 				return;
 			}
 			this.split.position = pos;
+
+			this.elapsedTime += Time.deltaTime;
 		}
 	}
 
@@ -80,6 +86,8 @@ namespace MultiPlayer {
 			scale.y = this.ownerScale.y;
 			this.owner.localScale = scale;
 			this.merge.localScale = scale;
+
+			this.elapsedTime += Time.deltaTime;
 		}
 	}
 
@@ -89,7 +97,6 @@ namespace MultiPlayer {
 
 	public class MergeGroupSyncList : SyncListStruct<Merge> {
 	}
-
 
 	public class UnitsSyncList : SyncListStruct<NewUnitStruct> {
 	}
@@ -101,15 +108,19 @@ namespace MultiPlayer {
 		public SplitGroupSyncList splitList = new SplitGroupSyncList();
 		public MergeGroupSyncList mergeList = new MergeGroupSyncList();
 		public UnitsSyncList unitList = new UnitsSyncList();
+		public UnitsSyncList removeList = new UnitsSyncList();
 		public bool isPaused;
+
+		private bool moveCommandFlag;
 
 		public void Start() {
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
 			this.owner = this.isServer ? spawnerIdentity.connectionToClient : spawnerIdentity.connectionToServer;
 			Debug.Log("This is " + (this.isServer ? " Server." : " Client."));
 			this.isPaused = false;
+			this.moveCommandFlag = false;
 
-			ServerInitialize(); 
+			ServerInitialize();
 		}
 
 		[ServerCallback]
@@ -137,7 +148,7 @@ namespace MultiPlayer {
 							this.unitList.Add(unitStruct);
 						}
 					}
-				} 
+				}
 				else {
 					foreach (NewGameUnit unit in units) {
 						if (!unit.hasAuthority) {
@@ -145,6 +156,122 @@ namespace MultiPlayer {
 						}
 					}
 				}
+			}
+		}
+
+		[ClientRpc]
+		public void RpcOrganizeUnit(GameObject obj) {
+			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			foreach (NewSpawner spawner in spawners) {
+				if (spawner.hasAuthority) {
+					if (unit.hasAuthority) {
+						unit.transform.SetParent(spawner.transform);
+						continue;
+					}
+				}
+				else {
+					if (!unit.hasAuthority) {
+						unit.transform.SetParent(spawner.transform);
+						continue;
+					}
+				}
+			}
+		}
+
+		public void Update() {
+			HandleInputs();
+			ManageLists();
+		}
+
+		[Command]
+		public void CmdDestroy(GameObject obj) {
+			NetworkServer.Destroy(obj);
+		}
+
+		[Command]
+		public void CmdSpawn(GameObject obj) {
+			NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+			RpcOrganizeUnit(obj);
+		}
+
+		private void HandleInputs() {
+			if (Input.GetKeyUp(KeyCode.S)) {
+				foreach (NewUnitStruct temp in this.unitList) {
+					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
+					if (!newUnit.properties.isSplitting && this.unitList.Count < 50) {
+						GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp.unit);
+						unit.name = "NewGameUnit";
+						unit.transform.SetParent(this.transform);
+						CmdSpawn(unit);
+						this.splitList.Add(new Split(temp.unit.transform, unit.transform));
+					}
+				}
+			}
+			//if (Input.GetKeyUp(KeyCode.L)) {
+			//	Debug.Log("Damage time!");
+			//	CmdTakeDamage(1);
+			//}
+
+			if (Input.GetMouseButtonUp(0)) {
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit hit;
+				if (Physics.Raycast(ray, out hit)) {
+					Debug.Log("Moving time!");
+					foreach (NewUnitStruct temp in this.unitList) {
+						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+						unit.properties.targetPosition = hit.point;
+					}
+				}
+			}
+
+			//if (this.properties.targetPosition != -9999 * Vector3.one) {
+			//	NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+			//	agent.SetDestination(this.properties.targetPosition);
+			//}
+		}
+
+		private void ManageLists() {
+			if (this.splitList.Count > 0) {
+				for (int i = 0; i < this.splitList.Count; i++) {
+					Split splitGroup = this.splitList[i];
+					if (splitGroup.elapsedTime > 1f) {
+						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
+						this.splitList.RemoveAt(i);
+						i--;
+					}
+					else {
+						splitGroup.Update();
+						this.splitList[i] = splitGroup;
+					}
+				}
+			}
+			if (this.mergeList.Count > 0) {
+				for (int i = 0; i < this.mergeList.Count; i++) {
+					Merge mergeGroup = this.mergeList[i];
+					if (mergeGroup.elapsedTime > 1f) {
+						if (mergeGroup.owner != null) {
+							Debug.LogWarning("TODO: Do something about merging.");
+						}
+						if (mergeGroup.merge != null) {
+							NewUnitStruct temp = new NewUnitStruct();
+							temp.unit = mergeGroup.merge.gameObject;
+							this.removeList.Add(temp);
+						}
+						this.mergeList.RemoveAt(i);
+						i--;
+					}
+					else {
+						mergeGroup.Update();
+						this.mergeList[i] = mergeGroup;
+					}
+				}
+			}
+			if (this.removeList.Count > 0) {
+				foreach (NewUnitStruct temp in this.removeList) {
+					CmdDestroy(temp.unit);
+				}
+				this.removeList.Clear();
 			}
 		}
 	}

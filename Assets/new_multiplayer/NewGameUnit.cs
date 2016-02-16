@@ -7,10 +7,28 @@ namespace MultiPlayer {
 	public struct UnitProperties {
 		public int currentHealth;
 		public int maxHealth;
+		public bool isSplitting;
+		public bool isMerging;
 		public Vector3 targetPosition;
 	}
 
-	public delegate void UpdateProperties(int damage, Vector3 position);
+	[System.Serializable]
+	public struct NewChanges {
+		public int damage;
+		public Vector3 position;
+		public bool isSplitting;
+		public bool isMerging;
+
+		public NewChanges Clear() {
+			this.damage = -1;
+			this.position = Vector3.one * -9999;
+			this.isMerging = false;
+			this.isSplitting = false;
+			return this;
+		}
+	}
+
+	public delegate void UpdateProperties(NewChanges changes);
 
 	[System.Serializable]
 	public class NewGameUnit : NetworkBehaviour {
@@ -40,7 +58,9 @@ namespace MultiPlayer {
 			}
 			if (this.properties.currentHealth > 1) {
 				Debug.Log("Unit is taking damage.");
-				updateProperties(attackDamage, Vector3.one * -9999);
+				NewChanges changes = new NewChanges().Clear();
+				changes.damage = attackDamage;
+				updateProperties(changes);
 			}
 			else {
 				Debug.Log("Destroying myself.");
@@ -53,19 +73,21 @@ namespace MultiPlayer {
 				return;
 			}
 
-			if (Input.GetKeyUp(KeyCode.L)) {
-				Debug.Log("Damage time!");
-				CmdTakeDamage(1);
-			}
+			//if (Input.GetKeyUp(KeyCode.L)) {
+			//	Debug.Log("Damage time!");
+			//	CmdTakeDamage(1);
+			//}
 
-			if (Input.GetMouseButtonUp(0)) {
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit)) {
-					Debug.Log("Moving time!");
-					updateProperties(0, hit.point);
-				}
-			}
+			//if (Input.GetMouseButtonUp(0)) {
+			//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			//	RaycastHit hit;
+			//	if (Physics.Raycast(ray, out hit)) {
+			//		Debug.Log("Moving time!");
+			//		NewChanges changes = new NewChanges().Clear();
+			//		changes.position = hit.point;
+			//		updateProperties(changes);
+			//	}
+			//}
 
 			if (this.properties.targetPosition != -9999 * Vector3.one) {
 				NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
@@ -73,16 +95,16 @@ namespace MultiPlayer {
 			}
 		}
 
-		public void NewProperty(int damage, Vector3 newPosition) {
+		public void NewProperty(NewChanges changes) {
 			Debug.Log("Updating properties with new values.");
 			UnitProperties pro = new UnitProperties();
 			pro = this.properties;
-			if (damage > 0) {
-				pro.currentHealth -= damage;
+			if (changes.damage > 0) {
+				pro.currentHealth -= changes.damage;
 			}
-			if (newPosition != Vector3.one * -9999) {
-				pro.targetPosition = newPosition;
-			} 
+			if (changes.position != Vector3.one * -9999) {
+				pro.targetPosition = changes.position;
+			}
 			this.properties = pro;
 		}
 
@@ -95,6 +117,10 @@ namespace MultiPlayer {
 		public void CmdDestroy(GameObject obj) {
 			Debug.Log("Destroying object.");
 			NetworkServer.Destroy(obj);
+		}
+
+		public void AddNewChange(NewChanges changes) {
+			updateProperties(changes);
 		}
 	}
 }
