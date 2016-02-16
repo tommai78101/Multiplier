@@ -178,6 +178,18 @@ namespace MultiPlayer {
 				this.attackCooldownPrefabList.Add(answer);
 			}
 		}
+
+		public void CopyFrom(UnitAttributes tempAttr) {
+			this.maxLevelCount = tempAttr.maxLevelCount;
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				this.healthPrefabList.Add(tempAttr.healthPrefabList[i]);
+				this.attackPrefabList.Add(tempAttr.attackPrefabList[i]);
+				this.attackCooldownPrefabList.Add(tempAttr.attackCooldownPrefabList[i]);
+				this.speedPrefabList.Add(tempAttr.speedPrefabList[i]);
+				this.mergePrefabList.Add(tempAttr.mergePrefabList[i]);
+			}
+			this.splitPrefabFactor = tempAttr.splitPrefabFactor;
+		}
 	}
 }
 

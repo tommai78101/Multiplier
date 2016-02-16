@@ -163,7 +163,29 @@ namespace MultiPlayer {
 				}
 			}
 			if (this.unitParent == null) {
-				Debug.LogError("Check to make sure this is created in the spawner.");
+				this.unitParent = new GameObject("Units Parent").transform;
+				this.unitParent.SetParent(this.transform);
+				if (this.selectionManager != null) {
+					foreach (GameObject obj in this.selectionManager.allObjects) {
+						obj.transform.SetParent(this.unitParent);
+					}
+				}
+				NetworkIdentity ident = this.GetComponent<NetworkIdentity>();
+				if (ident != null) {
+					ident.localPlayerAuthority = true;
+					CmdSpawn(this.unitParent.gameObject);
+					Debug.Log("Spawning a new unit parent with client authority owner.");
+				}
+				else {
+					Debug.LogError("Check to make sure this is created in the spawner.");
+				}
+			}
+		}
+
+		[Command]
+		public void CmdSpawn(GameObject obj) {
+			if (obj != null) {
+				NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
 			}
 		}
 
@@ -185,7 +207,7 @@ namespace MultiPlayer {
 			}
 			UpdateSplitGroup();
 		}
-
+		 
 		public void UpdateSplitGroup() {
 			if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
@@ -201,6 +223,12 @@ namespace MultiPlayer {
 						}
 						if (!this.selectionManager.allObjects.Contains(group.ownerUnit.gameObject)) {
 							this.selectionManager.allObjects.Add(group.ownerUnit.gameObject);
+						}
+						if (group.ownerUnit.transform.parent == null || !group.ownerUnit.transform.parent.Equals(this.unitParent)) {
+							group.ownerUnit.transform.SetParent(this.unitParent);
+						}
+						if (group.splitUnit.transform.parent == null || !group.splitUnit.transform.parent.Equals(this.unitParent)) {
+							group.splitUnit.transform.SetParent(this.unitParent);
 						}
 						this.removeList.Add(group);
 					}

@@ -14,8 +14,10 @@ public class SingleHost : NetworkManager {
 	public GameObject HumanPlayer;
 	public GameObject HumanUnits;
 	public GameObject AIUnitPrefab;
+	public GameObject playerUmbrellaObject;
 
 	private GameObject playerObject;
+	
 
 	public void Start() {
 		this.notReady = true;
@@ -91,10 +93,22 @@ public class SingleHost : NetworkManager {
 			}
 		}
 
-		GameObject playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
-		if (playerUmbrellaObject != null) {
-			this.HumanPlayer = playerUmbrellaObject;
-			Transform unitUmbrellaTransform = playerUmbrellaObject.transform.GetChild(0);
+		this.playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
+		if (this.playerUmbrellaObject != null) {
+			this.HumanPlayer = this.playerUmbrellaObject;
+			Transform unitUmbrellaTransform = this.playerUmbrellaObject.transform.GetChild(0);
+			this.HumanUnits = unitUmbrellaTransform.gameObject;
+		}
+
+		if (!this.isNetworkActive) {
+			this.StartHost();
+		}
+
+		this.enablePauseGameMenu = true;
+		this.playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
+		if (this.playerUmbrellaObject != null) {
+			this.HumanPlayer = this.playerUmbrellaObject;
+			Transform unitUmbrellaTransform = this.playerUmbrellaObject.transform.GetChild(0);
 			this.HumanUnits = unitUmbrellaTransform.gameObject;
 		}
 
