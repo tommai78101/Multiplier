@@ -5,10 +5,11 @@ using System.Collections;
 namespace MultiPlayer {
 	[System.Serializable]
 	public struct UnitProperties {
-		public int currentHealth;
-		public int maxHealth;
 		public bool isSplitting;
 		public bool isMerging;
+		public bool isSelected;
+		public int currentHealth;
+		public int maxHealth;
 		public Vector3 targetPosition;
 	}
 

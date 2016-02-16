@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using Common;
 
 namespace MultiPlayer {
 
@@ -103,13 +104,21 @@ namespace MultiPlayer {
 
 
 	public class NewSpawner : NetworkBehaviour {
+		public bool isPaused;
 		public GameObject newGameUnitPrefab;
 		public NetworkConnection owner;
 		public SplitGroupSyncList splitList = new SplitGroupSyncList();
 		public MergeGroupSyncList mergeList = new MergeGroupSyncList();
 		public UnitsSyncList unitList = new UnitsSyncList();
 		public UnitsSyncList removeList = new UnitsSyncList();
-		public bool isPaused;
+		public UnitsSyncList selectedList = new UnitsSyncList();
+		public Rect selectionBox;
+		public Camera minimapCamera;
+
+		public bool isSelecting;
+		public bool isBoxSelecting;
+		private Vector3 initialClick;
+		private Vector3 screenPoint;
 
 		private bool moveCommandFlag;
 
@@ -119,6 +128,24 @@ namespace MultiPlayer {
 			Debug.Log("This is " + (this.isServer ? " Server." : " Client."));
 			this.isPaused = false;
 			this.moveCommandFlag = false;
+
+			if (this.minimapCamera == null) {
+				GameObject obj = GameObject.FindGameObjectWithTag("Minimap");
+				if (obj != null) {
+					this.minimapCamera = obj.GetComponent<Camera>();
+					if (this.minimapCamera == null) {
+						Debug.LogError("Failure to obtain minimap camera.");
+					}
+				}
+			}
+
+			if (Camera.main.gameObject.GetComponent<PostRenderer>() == null) {
+				PostRenderer renderer = Camera.main.gameObject.AddComponent<PostRenderer>();
+				renderer.minimapCamera = this.minimapCamera;
+			}
+
+			this.selectionBox = new Rect();
+
 
 			ServerInitialize();
 		}
@@ -179,9 +206,10 @@ namespace MultiPlayer {
 			}
 		}
 
-		public void Update() {
+		public void Update() { 
 			HandleInputs();
 			ManageLists();
+			HandleSelection();
 		}
 
 		[Command]
@@ -213,15 +241,15 @@ namespace MultiPlayer {
 			//	CmdTakeDamage(1);
 			//}
 
-			if (Input.GetMouseButtonUp(0)) {
+			if (Input.GetMouseButtonUp(1)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit)) {
 					Debug.Log("Moving time!");
-					foreach (NewUnitStruct temp in this.unitList) {
-						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-						unit.properties.targetPosition = hit.point;
-					}
+					//foreach (NewUnitStruct temp in this.unitList) {
+					//	NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+					//	unit.properties.targetPosition = hit.point;
+					//}
 				}
 			}
 
@@ -281,6 +309,196 @@ namespace MultiPlayer {
 					CmdDestroy(temp.unit);
 				}
 				this.removeList.Clear();
+			}
+		}
+
+		private void HandleSelection() {
+			if (this.minimapCamera == null) {
+				return;
+			}
+
+			//This handles all the input actions the player has done in the minimap.
+			this.screenPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			if (this.minimapCamera.rect.Contains(this.screenPoint) && Input.GetMouseButtonDown(1)) {
+				if (this.selectedList.Count > 0) {
+					float mainX = (this.screenPoint.x - this.minimapCamera.rect.xMin) / (1.0f - this.minimapCamera.rect.xMin);
+					float mainY = (this.screenPoint.y) / (this.minimapCamera.rect.yMax);
+					Vector3 minimapScreenPoint = new Vector3(mainX, mainY, 0f);
+					foreach (NewUnitStruct temp in this.selectedList) {
+						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+						if (unit != null) {
+							CastRay(unit, true, minimapScreenPoint, this.minimapCamera);
+						}
+					}
+				}
+			}
+			else {
+				//This handles all the input actions the player has done to box select in the game.
+				//Currently, it doesn't handle clicking to select.
+				if (Input.GetMouseButtonDown(0)) {
+					if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+						ClearSelectObjects();
+					}
+					this.isSelecting = true;
+					this.initialClick = Input.mousePosition;
+				}
+				else if (Input.GetMouseButtonUp(0)) {
+					if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
+						ClearSelectObjects();
+					}
+					SelectObjectAtPoint();
+					SelectObjectsInRect();
+					SelectObjects();
+					this.isSelecting = false;
+					this.isBoxSelecting = false;
+					this.initialClick = -Vector3.one * 9999f;
+				}
+			}
+
+			if (this.isSelecting && Input.GetMouseButton(0)) {
+				if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
+					this.isBoxSelecting = true;
+				}
+				this.selectionBox.Set(this.initialClick.x, Screen.height - this.initialClick.y, Input.mousePosition.x - this.initialClick.x, (Screen.height - Input.mousePosition.y) - (Screen.height - this.initialClick.y));
+				if (this.selectionBox.width < 0) {
+					this.selectionBox.x += this.selectionBox.width;
+					this.selectionBox.width *= -1f;
+				}
+				if (this.selectionBox.height < 0) {
+					this.selectionBox.y += this.selectionBox.height;
+					this.selectionBox.height *= -1f;
+				}
+				TempRectSelectObjects();
+			}
+		}
+
+		//-----------   Private class methods may all need refactoring   --------------------
+
+		private void TempRectSelectObjects() {
+			foreach (NewUnitStruct temp in this.unitList) {
+				GameObject obj = temp.unit.gameObject;
+				if (obj == null) {
+					//Because merging units will actually destroy units (as a resource), we now added a check to make sure
+					//we don't call on NULL referenced objects, and remove them from the list.
+					this.unitList.Remove(temp);
+					continue;
+				}
+				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+				projectedPosition.y = Screen.height - projectedPosition.y;
+				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+				if (this.selectionBox.Contains(projectedPosition)) {
+					unit.properties.isSelected = true;
+				}
+			}
+		}
+
+		private void SelectObjects() {
+			foreach (NewUnitStruct temp in this.unitList) {
+				GameObject obj = temp.unit.gameObject;
+				if (obj == null) {
+					this.unitList.Remove(temp);
+					continue;
+				}
+				if (this.selectedList.Contains(temp)) {
+					NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+					if (unit != null) {
+						unit.properties.isSelected = true;
+					}
+				}
+			}
+		}
+
+		private void SelectObjectsInRect() {
+			foreach (NewUnitStruct temp in this.unitList) {
+				GameObject obj = temp.unit.gameObject;
+				if (obj == null) {
+					this.unitList.Remove(temp);
+					continue;
+				}
+				GameUnit unit = obj.GetComponent<GameUnit>();
+				if (unit != null) {
+					if (this.isBoxSelecting) {
+						Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+						projectedPosition.y = Screen.height - projectedPosition.y;
+						if (this.selectionBox.Contains(projectedPosition)) {
+							if (this.selectedList.Contains(temp)) {
+								unit.isSelected = false;
+								this.selectedList.Remove(temp);
+							}
+							else {
+								unit.isSelected = true;
+								this.selectedList.Add(temp);
+							}
+						}
+					}
+					else {
+						if (unit.isSelected) {
+							if (!this.selectedList.Contains(temp)) {
+								this.selectedList.Add(temp);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private void ClearSelectObjects() {
+			foreach (NewUnitStruct temp in this.unitList) {
+				GameObject obj = temp.unit.gameObject;
+				if (obj == null) {
+					this.unitList.Remove(temp);
+					continue;
+				}
+				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+				unit.properties.isSelected = false;
+			}
+			this.selectedList.Clear();
+		}
+
+		private void SelectObjectAtPoint() {
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			RaycastHit[] hits = Physics.RaycastAll(ray);
+			foreach (RaycastHit hit in hits) {
+				GameObject obj = hit.collider.gameObject;
+				if (obj.tag.Equals("Unit")) {
+					NewUnitStruct temp = new NewUnitStruct(obj);
+					NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
+						if (this.unitList.Contains(temp)) {
+							if (!this.selectedList.Contains(temp)) {
+								unit.properties.isSelected = true;
+								this.selectedList.Add(temp);
+							}
+							else if (this.selectedList.Contains(temp)) {
+								unit.properties.isSelected = false;
+								this.selectedList.Remove(temp);
+							}
+						}
+					}
+					else {
+						if (unit != null) {
+							unit.properties.isSelected = true;
+							this.selectedList.Add(temp);
+						}
+					}
+				}
+			}
+		}
+
+		private void CastRay(NewGameUnit unit, bool isMinimap, Vector3 mousePosition, Camera minimapCamera) {
+			Ray ray;
+			if (isMinimap) {
+				ray = minimapCamera.ViewportPointToRay(mousePosition);
+			}
+			else {
+				ray = Camera.main.ScreenPointToRay(mousePosition);
+			}
+			RaycastHit[] hits = Physics.RaycastAll(ray, 500f);
+			foreach (RaycastHit hit in hits) {
+				if (hit.collider.gameObject.tag.Equals("Floor")) {
+					unit.properties.targetPosition = hit.point;
+					break;
+				}
 			}
 		}
 	}
