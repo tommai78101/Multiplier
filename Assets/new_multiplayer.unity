@@ -66,7 +66,8 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: 6956741c5e9d63a40b9f15b76bedbc7c,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -4747,6 +4748,7 @@ MonoBehaviour:
   - {fileID: 164400, guid: c65ec9e083681414b9e959a32cc23663, type: 2}
   - {fileID: 152948, guid: 245a9013c6afd7441a7419eef1df05f6, type: 2}
   - {fileID: 148424, guid: 845724a5339b2e748a0e4acd450a854e, type: 2}
+  - {fileID: 138902, guid: 3fa594446faaba942aa80caafa3e509f, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:

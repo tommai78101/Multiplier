@@ -232,13 +232,23 @@ namespace MultiPlayer {
 		}
 
 		private void ManageLists() {
+			if (this.unitList.Count > 0) {
+				for (int i = 0; i < this.unitList.Count; i++) {
+					NewUnitStruct temp = this.unitList[i];
+					if (temp.unit == null) {
+						this.unitList.RemoveAt(i);
+					}
+				}
+			}
 			if (this.splitList.Count > 0) {
 				for (int i = 0; i < this.splitList.Count; i++) {
 					Split splitGroup = this.splitList[i];
+					if (splitGroup.owner == null || splitGroup.split == null) {
+						this.splitList.RemoveAt(i);
+					}
 					if (splitGroup.elapsedTime > 1f) {
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.RemoveAt(i);
-						i--;
 					}
 					else {
 						splitGroup.Update();
@@ -259,7 +269,6 @@ namespace MultiPlayer {
 							this.removeList.Add(temp);
 						}
 						this.mergeList.RemoveAt(i);
-						i--;
 					}
 					else {
 						mergeGroup.Update();
