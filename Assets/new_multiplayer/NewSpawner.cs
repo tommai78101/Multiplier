@@ -120,14 +120,12 @@ namespace MultiPlayer {
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 
-		private bool moveCommandFlag;
 
 		public void Start() {
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
 			this.owner = this.isServer ? spawnerIdentity.connectionToClient : spawnerIdentity.connectionToServer;
 			Debug.Log("This is " + (this.isServer ? " Server." : " Client."));
 			this.isPaused = false;
-			this.moveCommandFlag = false;
 
 			if (this.minimapCamera == null) {
 				GameObject obj = GameObject.FindGameObjectWithTag("Minimap");
@@ -145,6 +143,9 @@ namespace MultiPlayer {
 			}
 
 			this.selectionBox = new Rect();
+			this.initialClick = Vector3.one * -9999f;
+			this.screenPoint = this.initialClick;
+
 
 
 			ServerInitialize();
@@ -207,9 +208,9 @@ namespace MultiPlayer {
 		}
 
 		public void Update() { 
+			HandleSelection();
 			HandleInputs();
 			ManageLists();
-			HandleSelection();
 		}
 
 		[Command]
@@ -246,10 +247,10 @@ namespace MultiPlayer {
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit)) {
 					Debug.Log("Moving time!");
-					//foreach (NewUnitStruct temp in this.unitList) {
-					//	NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-					//	unit.properties.targetPosition = hit.point;
-					//}
+					foreach (NewUnitStruct temp in this.selectedList) {
+						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+						unit.properties.targetPosition = hit.point;
+					}
 				}
 			}
 
@@ -333,8 +334,6 @@ namespace MultiPlayer {
 				}
 			}
 			else {
-				//This handles all the input actions the player has done to box select in the game.
-				//Currently, it doesn't handle clicking to select.
 				if (Input.GetMouseButtonDown(0)) {
 					if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
 						ClearSelectObjects();
@@ -387,7 +386,9 @@ namespace MultiPlayer {
 				projectedPosition.y = Screen.height - projectedPosition.y;
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				if (this.selectionBox.Contains(projectedPosition)) {
-					unit.properties.isSelected = true;
+					NewChanges changes = new NewChanges().Clear();
+					changes.isSelected = true;
+					unit.NewProperty(changes);
 				}
 			}
 		}
@@ -402,7 +403,9 @@ namespace MultiPlayer {
 				if (this.selectedList.Contains(temp)) {
 					NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 					if (unit != null) {
-						unit.properties.isSelected = true;
+						NewChanges changes = new NewChanges().Clear();
+						changes.isSelected = true;
+						unit.NewProperty(changes);
 					}
 				}
 			}
@@ -415,26 +418,48 @@ namespace MultiPlayer {
 					this.unitList.Remove(temp);
 					continue;
 				}
-				GameUnit unit = obj.GetComponent<GameUnit>();
+				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				if (unit != null) {
 					if (this.isBoxSelecting) {
 						Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 						projectedPosition.y = Screen.height - projectedPosition.y;
 						if (this.selectionBox.Contains(projectedPosition)) {
 							if (this.selectedList.Contains(temp)) {
-								unit.isSelected = false;
+								NewChanges changes = new NewChanges().Clear();
+								unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 							else {
-								unit.isSelected = true;
+								NewChanges changes = new NewChanges().Clear();
+								changes.isSelected = true;
+								unit.NewProperty(changes);
 								this.selectedList.Add(temp);
 							}
 						}
 					}
 					else {
-						if (unit.isSelected) {
+						if (unit.properties.isSelected) {
 							if (!this.selectedList.Contains(temp)) {
 								this.selectedList.Add(temp);
+							}
+						}
+						else {
+							Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+							projectedPosition.y = Screen.height - projectedPosition.y;
+							if (!this.selectionBox.Contains(projectedPosition)) {
+								if (this.selectedList.Contains(temp)) {
+									NewChanges changes = new NewChanges().Clear();
+									unit.NewProperty(changes);
+									this.selectedList.Remove(temp);
+								}
+							}
+							else {
+								if (!this.selectedList.Contains(temp)) {
+									NewChanges changes = new NewChanges().Clear();
+									changes.isSelected = true;
+									unit.NewProperty(changes);
+									this.selectedList.Add(temp);
+								}
 							}
 						}
 					}
@@ -450,7 +475,8 @@ namespace MultiPlayer {
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-				unit.properties.isSelected = false;
+				NewChanges changes = new NewChanges().Clear();
+				unit.NewProperty(changes);
 			}
 			this.selectedList.Clear();
 		}
@@ -466,18 +492,23 @@ namespace MultiPlayer {
 					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
 						if (this.unitList.Contains(temp)) {
 							if (!this.selectedList.Contains(temp)) {
-								unit.properties.isSelected = true;
+								NewChanges changes = new NewChanges().Clear();
+								changes.isSelected = true;
+								unit.NewProperty(changes);
 								this.selectedList.Add(temp);
 							}
 							else if (this.selectedList.Contains(temp)) {
-								unit.properties.isSelected = false;
+								NewChanges changes = new NewChanges().Clear();
+								unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 						}
 					}
 					else {
 						if (unit != null) {
-							unit.properties.isSelected = true;
+							NewChanges changes = new NewChanges().Clear();
+							changes.isSelected = true;
+							unit.NewProperty(changes);
 							this.selectedList.Add(temp);
 						}
 					}

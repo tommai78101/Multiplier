@@ -72,8 +72,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 513ee0eaf43987144baf009b39e548a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGameUnitPrefab: {fileID: 148424, guid: 845724a5339b2e748a0e4acd450a854e, type: 2}
   isPaused: 0
+  newGameUnitPrefab: {fileID: 148424, guid: 845724a5339b2e748a0e4acd450a854e, type: 2}
+  selectionBox:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  minimapCamera: {fileID: 0}
+  isSelecting: 0
+  isBoxSelecting: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -27,10 +27,12 @@ namespace Common {
 
 		public void OnPostRender() {
 			if (this.borderMaterial == null) {
-				Debug.LogWarning("Border material is not set. Trying to fix it.");
 				Material border = Resources.Load<Material>("Border");
 				if (border != null) {
 					this.borderMaterial = border;
+				}
+				else {
+					Debug.LogError("Cannot find Border Material for Selection Box.");
 				}
 				return;
 			}

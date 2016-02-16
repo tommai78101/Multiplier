@@ -19,24 +19,28 @@ namespace MultiPlayer {
 		public Vector3 position;
 		public bool isSplitting;
 		public bool isMerging;
+		public bool isSelected;
 
 		public NewChanges Clear() {
 			this.damage = -1;
 			this.position = Vector3.one * -9999;
 			this.isMerging = false;
 			this.isSplitting = false;
+			this.isSelected = false;
 			return this;
 		}
 	}
 
-	public delegate void UpdateProperties(NewChanges changes);
 
 	[System.Serializable]
 	public class NewGameUnit : NetworkBehaviour {
 		[SyncVar(hook = "OnPropertiesChanged")]
 		public UnitProperties properties;
 
-		public event UpdateProperties updateProperties;
+		public delegate void UpdateProperties(NewChanges changes);
+		public UpdateProperties updateProperties;
+		//public event UpdateProperties updateProperties;
+
 
 		public void Start() {
 			Debug.Log("Setting up properties.");
@@ -44,7 +48,7 @@ namespace MultiPlayer {
 			this.properties.currentHealth = 3;
 			this.properties.maxHealth = 3;
 			this.properties.targetPosition = -9999 * Vector3.one;
-			this.updateProperties += new UpdateProperties(NewProperty);
+			this.updateProperties += NewProperty;
 		}
 
 		[Command]
@@ -91,8 +95,7 @@ namespace MultiPlayer {
 			//}
 
 			if (this.properties.targetPosition != -9999 * Vector3.one) {
-				NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-				agent.SetDestination(this.properties.targetPosition);
+				CmdSetDestination(this.properties.targetPosition);
 			}
 		}
 
@@ -106,7 +109,8 @@ namespace MultiPlayer {
 			if (changes.position != Vector3.one * -9999) {
 				pro.targetPosition = changes.position;
 			}
-			this.properties = pro;
+			pro.isSelected = changes.isSelected;
+			OnPropertiesChanged(pro);
 		}
 
 		public void OnPropertiesChanged(UnitProperties pro) {
@@ -120,8 +124,15 @@ namespace MultiPlayer {
 			NetworkServer.Destroy(obj);
 		}
 
-		public void AddNewChange(NewChanges changes) {
-			updateProperties(changes);
+		[Command]
+		public void CmdSetDestination(Vector3 target) {
+			RpcSetDestination(target);
+		}
+
+		[ClientRpc]
+		public void RpcSetDestination(Vector3 target) {
+			NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+			agent.SetDestination(target);
 		}
 	}
 }
