@@ -242,7 +242,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			enableEditorObj.TurnOffCanvasGroup();
 		}
 
-		this.PreUnitAttributesInitialization();
+		this.Invoke("PreUnitAttributesInitialization", 1f);
 	}
 
 	public void StopLANClient() {
@@ -330,6 +330,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (obj != null) {
 			Debug.Log("Fetching temporary unit attributes.");
 			GameObject[] playerUnitAttributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
+            Debug.Log("Length: " + playerUnitAttributes.Length);
 			for (int i = 0; i < playerUnitAttributes.Length; i++) {
 				NetworkIdentity identity = playerUnitAttributes[i].GetComponent<NetworkIdentity>();
 				if (identity.hasAuthority) {

@@ -164,6 +164,9 @@ namespace MultiPlayer {
 			}
 			if (this.unitParent == null) {
 				this.unitParent = new GameObject("Units Parent").transform;
+                NetworkIdentity identity = this.unitParent.gameObject.AddComponent<NetworkIdentity>();
+                identity.localPlayerAuthority = true;
+                ClientScene.RegisterPrefab(this.unitParent.gameObject);
 				this.unitParent.SetParent(this.transform);
 				if (this.selectionManager != null) {
 					foreach (GameObject obj in this.selectionManager.allObjects) {

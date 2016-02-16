@@ -8,7 +8,7 @@ public class InitializeUnitAttributes : NetworkBehaviour {
 	public Attributes attributes;
 
 	public void Start() {
-		this.Invoke("FetchUnitAttributes", 0.5f);
+		this.Invoke("FetchUnitAttributes", 1f);
 	}
 
 	public void FetchUnitAttributes() {
