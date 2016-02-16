@@ -24,14 +24,8 @@ namespace MultiPlayer {
 			NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
 			unitIdentity.localPlayerAuthority = true;
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.owner);
-			//RpcOrganize(this.gameObject, gameUnit);
 			RpcOrganize();
 		}
-
-		//[ClientRpc]
-		//public void RpcOrganize(GameObject parent, GameObject child) {
-		//	child.transform.SetParent(parent.transform);
-		//}
 
 		[ClientRpc]
 		public void RpcOrganize() {
