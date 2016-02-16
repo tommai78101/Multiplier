@@ -328,16 +328,27 @@ public class NetworkManagerActions : MonoBehaviour {
 			obj = this.temporaryUnitAttributesObject;
 		}
 		if (obj != null) {
+			UnitAttributes myAttributes = null;
 			Debug.Log("Fetching temporary unit attributes.");
 			GameObject[] playerUnitAttributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
-            Debug.Log("Length: " + playerUnitAttributes.Length);
+			Debug.Log("Length: " + playerUnitAttributes.Length);
 			for (int i = 0; i < playerUnitAttributes.Length; i++) {
 				NetworkIdentity identity = playerUnitAttributes[i].GetComponent<NetworkIdentity>();
 				if (identity.hasAuthority) {
-					UnitAttributes attr = playerUnitAttributes[i].GetComponent<UnitAttributes>();
+					myAttributes = playerUnitAttributes[i].GetComponent<UnitAttributes>();
 					UnitAttributes tempAttr = obj.GetComponent<UnitAttributes>();
-					attr.CopyFrom(tempAttr);
+					myAttributes.CopyFrom(tempAttr);
 					break;
+				}
+			}
+			if (myAttributes != null) {
+				GameObject[] gameUnits = GameObject.FindGameObjectsWithTag("Unit");
+				foreach (GameObject unit in gameUnits) {
+					NetworkIdentity identity = unit.GetComponent<NetworkIdentity>();
+					if (identity != null && identity.hasAuthority) {
+						GameUnit gameUnit = unit.GetComponent<GameUnit>();
+						gameUnit.attributes = myAttributes;
+					}
 				}
 			}
 		}
