@@ -119,6 +119,7 @@ namespace MultiPlayer {
 		public bool isBoxSelecting;
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
+		private NewChanges changes;
 
 
 		public void Start() {
@@ -145,6 +146,7 @@ namespace MultiPlayer {
 			this.selectionBox = new Rect();
 			this.initialClick = Vector3.one * -9999f;
 			this.screenPoint = this.initialClick;
+			this.changes.Clear();
 
 
 
@@ -207,7 +209,7 @@ namespace MultiPlayer {
 			}
 		}
 
-		public void Update() { 
+		public void Update() {
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
@@ -226,17 +228,47 @@ namespace MultiPlayer {
 
 		private void HandleInputs() {
 			if (Input.GetKeyUp(KeyCode.S)) {
-				foreach (NewUnitStruct temp in this.unitList) {
+				foreach (NewUnitStruct temp in this.selectedList) {
 					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
 					if (!newUnit.properties.isSplitting && this.unitList.Count < 50) {
+						this.changes.Clear();
+						changes.isSelected = false;
+						changes.isSplitting = true;
+						newUnit.NewProperty(changes);
 						GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp.unit);
 						unit.name = "NewGameUnit";
 						unit.transform.SetParent(this.transform);
+						newUnit = unit.GetComponent<NewGameUnit>();
+						newUnit.NewProperty(changes);
 						CmdSpawn(unit);
 						this.splitList.Add(new Split(temp.unit.transform, unit.transform));
 					}
 				}
+				this.selectedList.Clear();
 			}
+			else if (Input.GetKeyUp(KeyCode.D)) {
+				NewGameUnit owner = null, merge = null;
+				for (int i = 0; i < this.selectedList.Count - 1; i++) {
+					owner = this.selectedList[i].unit.GetComponent<NewGameUnit>();
+					if (owner != null && !owner.properties.isMerging && owner.properties.level == 1) {
+						for (int j = i + 1; j < this.selectedList.Count; j++) {
+							merge = this.selectedList[j].unit.GetComponent<NewGameUnit>();
+							if (merge != null && !merge.properties.isMerging && merge.properties.level == 1) {
+								this.changes.Clear();
+								changes.isMerging = true;
+								changes.isSelected = false;
+								owner.NewProperty(changes);
+								merge.NewProperty(changes);
+								this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
+								this.selectedList.RemoveAt(i);
+								this.selectedList.RemoveAt(j);
+								break;
+							}
+						}
+					}
+				}
+			}
+
 			//if (Input.GetKeyUp(KeyCode.L)) {
 			//	Debug.Log("Damage time!");
 			//	CmdTakeDamage(1);
@@ -246,19 +278,15 @@ namespace MultiPlayer {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit)) {
-					Debug.Log("Moving time!");
 					foreach (NewUnitStruct temp in this.selectedList) {
 						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 						unit.properties.targetPosition = hit.point;
 					}
 				}
 			}
-
-			//if (this.properties.targetPosition != -9999 * Vector3.one) {
-			//	NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-			//	agent.SetDestination(this.properties.targetPosition);
-			//}
 		}
+
+		//-----------   Private class methods may all need refactoring   --------------------
 
 		private void ManageLists() {
 			if (this.unitList.Count > 0) {
@@ -276,6 +304,11 @@ namespace MultiPlayer {
 						this.splitList.RemoveAt(i);
 					}
 					if (splitGroup.elapsedTime > 1f) {
+						this.changes.Clear();
+						NewGameUnit unit = splitGroup.owner.GetComponent<NewGameUnit>();
+						unit.NewProperty(changes);
+						unit = splitGroup.split.GetComponent<NewGameUnit>();
+						unit.NewProperty(changes);
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.RemoveAt(i);
 					}
@@ -290,7 +323,10 @@ namespace MultiPlayer {
 					Merge mergeGroup = this.mergeList[i];
 					if (mergeGroup.elapsedTime > 1f) {
 						if (mergeGroup.owner != null) {
-							Debug.LogWarning("TODO: Do something about merging.");
+							NewGameUnit unit = mergeGroup.owner.GetComponent<NewGameUnit>();
+							this.changes.Clear();
+							changes.newLevel = unit.properties.level + 1;
+							unit.NewProperty(changes);
 						}
 						if (mergeGroup.merge != null) {
 							NewUnitStruct temp = new NewUnitStruct();
@@ -371,24 +407,25 @@ namespace MultiPlayer {
 			}
 		}
 
-		//-----------   Private class methods may all need refactoring   --------------------
-
 		private void TempRectSelectObjects() {
+			this.changes.Clear();
+			changes.isSelected = true;
 			foreach (NewUnitStruct temp in this.unitList) {
-				GameObject obj = temp.unit.gameObject;
-				if (obj == null) {
-					//Because merging units will actually destroy units (as a resource), we now added a check to make sure
-					//we don't call on NULL referenced objects, and remove them from the list.
-					this.unitList.Remove(temp);
-					continue;
-				}
-				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(temp.unit.transform.position);
 				projectedPosition.y = Screen.height - projectedPosition.y;
-				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				if (this.selectionBox.Contains(projectedPosition)) {
-					NewChanges changes = new NewChanges().Clear();
-					changes.isSelected = true;
+					NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+					if (unit.properties.isSelected) {
+						continue;
+					}
+					if (temp.unit == null) {
+						this.unitList.Remove(temp);
+						continue;
+					}
 					unit.NewProperty(changes);
+				}
+				else {
+					continue;
 				}
 			}
 		}
@@ -403,7 +440,7 @@ namespace MultiPlayer {
 				if (this.selectedList.Contains(temp)) {
 					NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 					if (unit != null) {
-						NewChanges changes = new NewChanges().Clear();
+						this.changes.Clear();
 						changes.isSelected = true;
 						unit.NewProperty(changes);
 					}
@@ -419,18 +456,18 @@ namespace MultiPlayer {
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
+				projectedPosition.y = Screen.height - projectedPosition.y;
 				if (unit != null) {
 					if (this.isBoxSelecting) {
-						Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-						projectedPosition.y = Screen.height - projectedPosition.y;
 						if (this.selectionBox.Contains(projectedPosition)) {
 							if (this.selectedList.Contains(temp)) {
-								NewChanges changes = new NewChanges().Clear();
+								this.changes.Clear();
 								unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 							else {
-								NewChanges changes = new NewChanges().Clear();
+								this.changes.Clear();
 								changes.isSelected = true;
 								unit.NewProperty(changes);
 								this.selectedList.Add(temp);
@@ -444,18 +481,16 @@ namespace MultiPlayer {
 							}
 						}
 						else {
-							Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
-							projectedPosition.y = Screen.height - projectedPosition.y;
 							if (!this.selectionBox.Contains(projectedPosition)) {
 								if (this.selectedList.Contains(temp)) {
-									NewChanges changes = new NewChanges().Clear();
+									this.changes.Clear();
 									unit.NewProperty(changes);
 									this.selectedList.Remove(temp);
 								}
 							}
 							else {
 								if (!this.selectedList.Contains(temp)) {
-									NewChanges changes = new NewChanges().Clear();
+									this.changes.Clear();
 									changes.isSelected = true;
 									unit.NewProperty(changes);
 									this.selectedList.Add(temp);
@@ -475,7 +510,7 @@ namespace MultiPlayer {
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-				NewChanges changes = new NewChanges().Clear();
+				this.changes.Clear();
 				unit.NewProperty(changes);
 			}
 			this.selectedList.Clear();
@@ -492,13 +527,13 @@ namespace MultiPlayer {
 					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
 						if (this.unitList.Contains(temp)) {
 							if (!this.selectedList.Contains(temp)) {
-								NewChanges changes = new NewChanges().Clear();
+								this.changes.Clear();
 								changes.isSelected = true;
 								unit.NewProperty(changes);
 								this.selectedList.Add(temp);
 							}
 							else if (this.selectedList.Contains(temp)) {
-								NewChanges changes = new NewChanges().Clear();
+								this.changes.Clear();
 								unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
@@ -506,7 +541,7 @@ namespace MultiPlayer {
 					}
 					else {
 						if (unit != null) {
-							NewChanges changes = new NewChanges().Clear();
+							this.changes.Clear();
 							changes.isSelected = true;
 							unit.NewProperty(changes);
 							this.selectedList.Add(temp);

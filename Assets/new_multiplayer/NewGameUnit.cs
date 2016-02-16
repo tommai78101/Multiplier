@@ -10,23 +10,27 @@ namespace MultiPlayer {
 		public bool isSelected;
 		public int currentHealth;
 		public int maxHealth;
+		public int level;
+		public float scalingFactor;
 		public Vector3 targetPosition;
 	}
 
 	[System.Serializable]
 	public struct NewChanges {
-		public int damage;
-		public Vector3 position;
 		public bool isSplitting;
 		public bool isMerging;
 		public bool isSelected;
+		public int damage;
+		public int newLevel;
+		public Vector3 position;
 
 		public NewChanges Clear() {
-			this.damage = -1;
-			this.position = Vector3.one * -9999;
 			this.isMerging = false;
 			this.isSplitting = false;
 			this.isSelected = false;
+			this.damage = -1;
+			this.newLevel = 2;
+			this.position = Vector3.one * -9999;
 			return this;
 		}
 	}
@@ -39,16 +43,27 @@ namespace MultiPlayer {
 
 		public delegate void UpdateProperties(NewChanges changes);
 		public UpdateProperties updateProperties;
-		//public event UpdateProperties updateProperties;
 
+		public GameObject selectionRing;
 
 		public void Start() {
-			Debug.Log("Setting up properties.");
 			this.properties = new UnitProperties();
 			this.properties.currentHealth = 3;
 			this.properties.maxHealth = 3;
 			this.properties.targetPosition = -9999 * Vector3.one;
+			this.properties.isSelected = false;
+			this.properties.scalingFactor = 1.4f;
+			this.properties.level = 1;
 			this.updateProperties += NewProperty;
+			NewSelectionRing[] selectionRings = this.GetComponentsInChildren<NewSelectionRing>(true);
+			foreach (NewSelectionRing ring in selectionRings) {
+				if (ring != null) {
+					this.selectionRing = ring.gameObject;
+				}
+				else{
+					Debug.LogError("Cannot find mesh filter and/or mesh renderer for unit's selection ring.");
+				}
+			}
 		}
 
 		[Command]
@@ -62,13 +77,11 @@ namespace MultiPlayer {
 				return;
 			}
 			if (this.properties.currentHealth > 1) {
-				Debug.Log("Unit is taking damage.");
 				NewChanges changes = new NewChanges().Clear();
 				changes.damage = attackDamage;
 				updateProperties(changes);
 			}
 			else {
-				Debug.Log("Destroying myself.");
 				CmdDestroy(this.gameObject);
 			}
 		}
@@ -97,10 +110,16 @@ namespace MultiPlayer {
 			if (this.properties.targetPosition != -9999 * Vector3.one) {
 				CmdSetDestination(this.properties.targetPosition);
 			}
+
+			if (this.properties.isSelected) {
+				this.selectionRing.SetActive(true);
+			}
+			else {
+				this.selectionRing.SetActive(false);
+			}
 		}
 
 		public void NewProperty(NewChanges changes) {
-			Debug.Log("Updating properties with new values.");
 			UnitProperties pro = new UnitProperties();
 			pro = this.properties;
 			if (changes.damage > 0) {
@@ -114,13 +133,11 @@ namespace MultiPlayer {
 		}
 
 		public void OnPropertiesChanged(UnitProperties pro) {
-			Debug.Log("Unit properties have changed.");
 			this.properties = pro;
 		}
 
 		[Command]
 		public void CmdDestroy(GameObject obj) {
-			Debug.Log("Destroying object.");
 			NetworkServer.Destroy(obj);
 		}
 
