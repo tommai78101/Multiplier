@@ -256,7 +256,7 @@ namespace MultiPlayer {
 			if (Input.GetKeyUp(KeyCode.S)) {
 				foreach (NewUnitStruct temp in this.selectedList) {
 					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
-					if (!newUnit.properties.isSplitting && this.unitList.Count < 50) {
+					if (!newUnit.properties.isSplitting && this.unitList.Count < 50 && newUnit.properties.level == 1) {
 						CmdSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
 					}
 				}
