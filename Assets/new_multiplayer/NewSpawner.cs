@@ -252,6 +252,19 @@ namespace MultiPlayer {
 			this.splitList.Add(new Split(temp.transform, unit.transform));
 		}
 
+		[Command]
+		public void CmdUpdateUnitProperty(GameObject unit, NewChanges changes) {
+			RpcUpdateUnitProperty(unit, changes);
+		}
+
+		[ClientRpc]
+		public void RpcUpdateUnitProperty(GameObject unit, NewChanges changes) {
+			NewGameUnit temp = unit.GetComponent<NewGameUnit>();
+			if (temp != null) {
+				temp.NewProperty(changes);
+			}
+		}
+
 		private void HandleInputs() {
 			if (Input.GetKeyUp(KeyCode.S)) {
 				foreach (NewUnitStruct temp in this.selectedList) {
@@ -273,8 +286,10 @@ namespace MultiPlayer {
 								this.changes = owner.CurrentProperty();
 								changes.isMerging = true;
 								changes.isSelected = false;
-								owner.NewProperty(changes);
-								merge.NewProperty(changes);
+								CmdUpdateUnitProperty(owner.gameObject, changes);
+								CmdUpdateUnitProperty(merge.gameObject, changes);
+								//owner.NewProperty(changes);
+								//merge.NewProperty(changes);
 								this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
 								this.selectedList.RemoveAt(i);
 								i--;
@@ -300,7 +315,8 @@ namespace MultiPlayer {
 						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 						this.changes = unit.CurrentProperty();;
 						this.changes.position = hit.point;
-						unit.NewProperty(this.changes); 
+						CmdUpdateUnitProperty(temp.unit, changes);
+						//unit.NewProperty(this.changes); 
 					}
 				}
 			}
@@ -320,11 +336,12 @@ namespace MultiPlayer {
 						this.changes = unit.CurrentProperty();
 						this.changes.isSelected = false;
 						this.changes.isSplitting = false;
-						unit.NewProperty(this.changes);
+						CmdUpdateUnitProperty(splitGroup.owner.gameObject, this.changes);
+						//unit.NewProperty(this.changes);
 						unit = splitGroup.split.GetComponent<NewGameUnit>();
-						unit.NewProperty(this.changes);
+						CmdUpdateUnitProperty(splitGroup.split.gameObject, this.changes);
+						//unit.NewProperty(this.changes);
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
-						//this.removeSplitList.Add(splitGroup);
 						this.splitList.Remove(splitGroup);
 					}
 					else {
@@ -332,12 +349,6 @@ namespace MultiPlayer {
 						this.splitList[i] = splitGroup;
 					}
 				}
-				//if (this.removeSplitList.Count > 0) {
-				//	for (int i = 0; i < this.removeSplitList.Count; i++) {
-				//		this.splitList.Remove(this.removeSplitList[i]);
-				//	}
-				//	this.removeSplitList.Clear();
-				//}
 			}
 			if (this.mergeList.Count > 0) {
 				for (int i = this.mergeList.Count - 1; i >= 0; i--) {
@@ -349,7 +360,8 @@ namespace MultiPlayer {
 							this.changes.isMerging = false;
 							this.changes.isSelected = false;
 							changes.newLevel = unit.properties.level + 1;
-							unit.NewProperty(changes);
+							CmdUpdateUnitProperty(mergeGroup.owner.gameObject, this.changes);
+							//unit.NewProperty(changes);
 						}
 						if (mergeGroup.merge != null) {
 							NewUnitStruct temp = new NewUnitStruct();
@@ -358,7 +370,6 @@ namespace MultiPlayer {
 							this.unitList.Remove(temp);
 							CmdDestroy(temp.unit);
 						}
-						//this.removeMergeList.Add(mergeGroup);
 						this.mergeList.RemoveAt(i);
 					}
 					else {
@@ -366,12 +377,6 @@ namespace MultiPlayer {
 						this.mergeList[i] = mergeGroup;
 					}
 				}
-				//if (this.removeMergeList.Count > 0) {
-				//	foreach (Merge temp in this.removeMergeList) {
-				//		this.mergeList.Remove(temp);
-				//	}
-				//	this.removeMergeList.Clear();
-				//}
 			}
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
@@ -386,17 +391,9 @@ namespace MultiPlayer {
 					}
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
-						//this.removeUnitList.Add(temp);
 						this.unitList.RemoveAt(i);
 					}
 				}
-				//if (this.removeUnitList.Count > 0) {
-				//	for (int i = this.removeUnitList.Count - 1;i >= 0 ; i--) {
-				//		this.unitList.Remove(this.removeUnitList[i]);
-				//		CmdDestroy(this.removeUnitList[i].unit);
-				//	}
-				//	this.removeUnitList.Clear();
-				//}
 			}
 		}
 
@@ -477,9 +474,10 @@ namespace MultiPlayer {
 						this.unitList.RemoveAt(i);
 						continue;
 					}
-					changes = unit.CurrentProperty();
-					changes.isSelected = true;
-					unit.NewProperty(changes);
+					this.changes = unit.CurrentProperty();
+					this.changes.isSelected = true;
+					CmdUpdateUnitProperty(unit.gameObject, this.changes);
+					//unit.NewProperty(changes);
 				}
 				else {
 					continue;
@@ -500,7 +498,8 @@ namespace MultiPlayer {
 					if (unit != null && unit.hasAuthority) {
 						this.changes = unit.CurrentProperty();
 						changes.isSelected = true;
-						unit.NewProperty(changes);
+						//unit.NewProperty(changes);
+						CmdUpdateUnitProperty(unit.gameObject, this.changes);
 					}
 				}
 			}
@@ -523,13 +522,15 @@ namespace MultiPlayer {
 							if (this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();
 								this.changes.isSelected = false;
-								unit.NewProperty(changes);
+								//unit.NewProperty(changes);
+								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Remove(temp);
 							}
 							else {
 								this.changes = unit.CurrentProperty();
 								changes.isSelected = true;
-								unit.NewProperty(changes);
+								//unit.NewProperty(changes);
+								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
 						}
@@ -545,7 +546,8 @@ namespace MultiPlayer {
 								if (this.selectedList.Contains(temp)) {
 									this.changes = unit.CurrentProperty();
 									this.changes.isSelected = false;
-									unit.NewProperty(changes);
+									CmdUpdateUnitProperty(unit.gameObject, this.changes);
+									//unit.NewProperty(changes);
 									this.selectedList.Remove(temp);
 								}
 							}
@@ -553,7 +555,8 @@ namespace MultiPlayer {
 								if (!this.selectedList.Contains(temp)) {
 									this.changes = unit.CurrentProperty();;
 									changes.isSelected = true;
-									unit.NewProperty(changes);
+									//unit.NewProperty(changes);
+									CmdUpdateUnitProperty(unit.gameObject, this.changes);
 									this.selectedList.Add(temp);
 								}
 							}
@@ -580,7 +583,8 @@ namespace MultiPlayer {
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				changes = unit.CurrentProperty();
 				changes.isSelected = false;
-				unit.NewProperty(changes);
+				//unit.NewProperty(changes);
+				CmdUpdateUnitProperty(unit.gameObject, this.changes);
 			}
 			this.selectedList.Clear();
 		}
@@ -598,13 +602,15 @@ namespace MultiPlayer {
 							if (!this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();;
 								changes.isSelected = true;
-								unit.NewProperty(changes);
+								//unit.NewProperty(changes);
+								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
 							else if (this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();;
-								unit.NewProperty(changes);
 								this.changes.isSelected = false;
+								CmdUpdateUnitProperty(unit.gameObject, this.changes);
+								//unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 						}
@@ -613,7 +619,8 @@ namespace MultiPlayer {
 						if (unit != null && unit.hasAuthority) {
 							this.changes = unit.CurrentProperty();;
 							changes.isSelected = true;
-							unit.NewProperty(changes);
+							//unit.NewProperty(changes);
+							CmdUpdateUnitProperty(unit.gameObject, this.changes);
 							this.selectedList.Add(temp);
 						}
 					}
@@ -632,7 +639,10 @@ namespace MultiPlayer {
 			RaycastHit[] hits = Physics.RaycastAll(ray, 500f);
 			foreach (RaycastHit hit in hits) {
 				if (hit.collider.gameObject.tag.Equals("Floor")) {
-					unit.properties.targetPosition = hit.point;
+					this.changes = unit.CurrentProperty();
+					this.changes.position = hit.point;
+					CmdUpdateUnitProperty(unit.gameObject, this.changes);
+					//unit.properties.targetPosition = hit.point;
 					break;
 				}
 			}
