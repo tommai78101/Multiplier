@@ -164,6 +164,11 @@ namespace MultiPlayer {
 			RpcOrganize();
 		}
 
+		[Command]
+		public void CmdOrganize() {
+			RpcOrganize();
+		}
+
 		[ClientRpc]
 		public void RpcOrganize() {
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
@@ -182,11 +187,19 @@ namespace MultiPlayer {
 				else {
 					foreach (NewGameUnit unit in units) {
 						if (!unit.hasAuthority) {
+							unit.NewProperty(this.changes.Clear());
 							unit.transform.SetParent(spawner.transform);
+							NewSelectionRing selectionRing = unit.GetComponentInChildren<NewSelectionRing>();
+							selectionRing.gameObject.SetActive(false);
 						}
 					}
 				}
 			}
+		}
+
+		[Command]
+		public void CmdOrganizeUnit(GameObject obj) {
+			RpcOrganizeUnit(obj);
 		}
 
 		[ClientRpc]
@@ -222,7 +235,7 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdSpawn(GameObject obj) {
-			NetworkServer.SpawnWithClientAuthority(obj, this.connectionToClient);
+			NetworkServer.SpawnWithClientAuthority(obj, this.owner);
 			RpcOrganizeUnit(obj);
 		}
 
@@ -241,6 +254,7 @@ namespace MultiPlayer {
 						newUnit = unit.GetComponent<NewGameUnit>();
 						newUnit.NewProperty(changes);
 						CmdSpawn(unit);
+						CmdOrganizeUnit(unit);
 						this.splitList.Add(new Split(temp.unit.transform, unit.transform));
 					}
 				}
@@ -415,7 +429,7 @@ namespace MultiPlayer {
 				projectedPosition.y = Screen.height - projectedPosition.y;
 				if (this.selectionBox.Contains(projectedPosition)) {
 					NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-					if (unit.properties.isSelected) {
+					if (unit.properties.isSelected || !unit.hasAuthority) {
 						continue;
 					}
 					if (temp.unit == null) {
@@ -439,7 +453,7 @@ namespace MultiPlayer {
 				}
 				if (this.selectedList.Contains(temp)) {
 					NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-					if (unit != null) {
+					if (unit != null && unit.hasAuthority) {
 						this.changes.Clear();
 						changes.isSelected = true;
 						unit.NewProperty(changes);
@@ -458,7 +472,7 @@ namespace MultiPlayer {
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(obj.transform.position);
 				projectedPosition.y = Screen.height - projectedPosition.y;
-				if (unit != null) {
+				if (unit != null && unit.hasAuthority) {
 					if (this.isBoxSelecting) {
 						if (this.selectionBox.Contains(projectedPosition)) {
 							if (this.selectedList.Contains(temp)) {
@@ -525,7 +539,7 @@ namespace MultiPlayer {
 					NewUnitStruct temp = new NewUnitStruct(obj);
 					NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
-						if (this.unitList.Contains(temp)) {
+						if (this.unitList.Contains(temp) && unit.hasAuthority) {
 							if (!this.selectedList.Contains(temp)) {
 								this.changes.Clear();
 								changes.isSelected = true;
@@ -540,7 +554,7 @@ namespace MultiPlayer {
 						}
 					}
 					else {
-						if (unit != null) {
+						if (unit != null && unit.hasAuthority) {
 							this.changes.Clear();
 							changes.isSelected = true;
 							unit.NewProperty(changes);

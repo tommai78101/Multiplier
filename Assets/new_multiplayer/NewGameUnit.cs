@@ -59,6 +59,7 @@ namespace MultiPlayer {
 			foreach (NewSelectionRing ring in selectionRings) {
 				if (ring != null) {
 					this.selectionRing = ring.gameObject;
+					break;
 				}
 				else{
 					Debug.LogError("Cannot find mesh filter and/or mesh renderer for unit's selection ring.");
