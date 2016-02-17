@@ -493,7 +493,8 @@ namespace MultiPlayer {
 		}
 
 		private void SelectObjectsInRect() {
-			foreach (NewUnitStruct temp in this.unitList) {
+			for (int i = this.unitList.Count - 1; i > 0; i--) {
+				NewUnitStruct temp = this.unitList[i];
 				GameObject obj = temp.unit.gameObject;
 				if (obj == null) {
 					this.unitList.Remove(temp);
