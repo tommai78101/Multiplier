@@ -108,12 +108,12 @@ namespace MultiPlayer {
 		public GameObject newGameUnitPrefab;
 		public NetworkConnection owner;
 		public SplitGroupSyncList splitList = new SplitGroupSyncList();
-		public SplitGroupSyncList removeSplitList = new SplitGroupSyncList();
+		//public SplitGroupSyncList removeSplitList = new SplitGroupSyncList();
 		public MergeGroupSyncList mergeList = new MergeGroupSyncList();
-		public MergeGroupSyncList removeMergeList = new MergeGroupSyncList();
+		//public MergeGroupSyncList removeMergeList = new MergeGroupSyncList();
 		public UnitsSyncList unitList = new UnitsSyncList();
 		public UnitsSyncList selectedList = new UnitsSyncList();
-		public UnitsSyncList removeUnitList = new UnitsSyncList();
+		//public UnitsSyncList removeUnitList = new UnitsSyncList();
 		public Rect selectionBox;
 		public Camera minimapCamera;
 
@@ -306,7 +306,7 @@ namespace MultiPlayer {
 
 		private void ManageLists() {
 			if (this.splitList.Count > 0) {
-				for (int i = 0; i < this.splitList.Count; i++) {
+				for (int i = this.splitList.Count - 1; i > 0 ; i--) {
 					Split splitGroup = this.splitList[i];
 					if (splitGroup.owner == null || splitGroup.split == null) {
 						this.splitList.Remove(splitGroup);
@@ -318,22 +318,23 @@ namespace MultiPlayer {
 						unit = splitGroup.split.GetComponent<NewGameUnit>();
 						unit.NewProperty(changes);
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
-						this.removeSplitList.Add(splitGroup);
+						//this.removeSplitList.Add(splitGroup);
+						this.splitList.Remove(splitGroup);
 					}
 					else {
 						splitGroup.Update();
 						this.splitList[i] = splitGroup;
 					}
 				}
-				if (this.removeSplitList.Count > 0) {
-					for (int i = 0; i < this.removeSplitList.Count; i++) {
-						this.splitList.Remove(this.removeSplitList[i]);
-					}
-					this.removeSplitList.Clear();
-				}
+				//if (this.removeSplitList.Count > 0) {
+				//	for (int i = 0; i < this.removeSplitList.Count; i++) {
+				//		this.splitList.Remove(this.removeSplitList[i]);
+				//	}
+				//	this.removeSplitList.Clear();
+				//}
 			}
 			if (this.mergeList.Count > 0) {
-				for (int i = 0; i < this.mergeList.Count; i++) {
+				for (int i = this.mergeList.Count - 1; i > 0 ; i--) {
 					Merge mergeGroup = this.mergeList[i];
 					if (mergeGroup.elapsedTime > 1f) {
 						if (mergeGroup.owner != null) {
@@ -345,36 +346,44 @@ namespace MultiPlayer {
 						if (mergeGroup.merge != null) {
 							NewUnitStruct temp = new NewUnitStruct();
 							temp.unit = mergeGroup.merge.gameObject;
-							this.removeUnitList.Add(temp);
+							//this.removeUnitList.Add(temp);
+							this.unitList.Remove(temp);
 						}
-						this.removeMergeList.Add(mergeGroup);
+						//this.removeMergeList.Add(mergeGroup);
+						this.mergeList.RemoveAt(i); 
 					}
 					else {
 						mergeGroup.Update();
 						this.mergeList[i] = mergeGroup;
 					}
 				}
-				if (this.removeMergeList.Count > 0) {
-					foreach (Merge temp in this.removeMergeList) {
-						this.mergeList.Remove(temp);
-					}
-					this.removeMergeList.Clear();
-				}
+				//if (this.removeMergeList.Count > 0) {
+				//	foreach (Merge temp in this.removeMergeList) {
+				//		this.mergeList.Remove(temp);
+				//	}
+				//	this.removeMergeList.Clear();
+				//}
 			}
 			if (this.unitList.Count > 0) {
-				for (int i = 0; i < this.unitList.Count; i++) {
+				for (int i = this.unitList.Count - 1; i > 0 ; i--) {
+					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
+					if (!id.hasAuthority) {
+						this.unitList.RemoveAt(i);
+						continue;
+					}
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
-						this.removeUnitList.Add(temp);
+						//this.removeUnitList.Add(temp);
+						this.unitList.RemoveAt(i);
 					}
 				}
-				if (this.removeUnitList.Count > 0) {
-					for (int i = this.removeUnitList.Count - 1; i > 0 ; i--) {
-						this.unitList.Remove(this.removeUnitList[i]);
-						CmdDestroy(this.removeUnitList[i].unit);
-					}
-					this.removeUnitList.Clear();
-				}
+				//if (this.removeUnitList.Count > 0) {
+				//	for (int i = this.removeUnitList.Count - 1; i > 0 ; i--) {
+				//		this.unitList.Remove(this.removeUnitList[i]);
+				//		CmdDestroy(this.removeUnitList[i].unit);
+				//	}
+				//	this.removeUnitList.Clear();
+				//}
 			}
 		}
 
@@ -439,9 +448,11 @@ namespace MultiPlayer {
 		private void TempRectSelectObjects() {
 			this.changes.Clear();
 			changes.isSelected = true;
-			foreach (NewUnitStruct temp in this.unitList) {
+			for (int i = this.unitList.Count - 1; i > 0; i--) {
+				NewUnitStruct temp = this.unitList[i];
 				if (temp.unit == null) {
-					this.removeUnitList.Add(temp);
+					//this.removeUnitList.Add(temp);
+					this.unitList.RemoveAt(i);
 					continue;
 				}
 				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(temp.unit.transform.position);
@@ -452,7 +463,7 @@ namespace MultiPlayer {
 						continue;
 					}
 					if (temp.unit == null) {
-						this.unitList.Remove(temp);
+						this.unitList.RemoveAt(i);
 						continue;
 					}
 					unit.NewProperty(changes);
@@ -536,14 +547,17 @@ namespace MultiPlayer {
 		}
 
 		private void ClearSelectObjects() {
-			foreach (NewUnitStruct temp in this.unitList) {
+			for (int i = this.unitList.Count - 1; i > 0; i--) {
+				NewUnitStruct temp = this.unitList[i];
 				if (temp.unit == null) {
-					this.removeUnitList.Add(temp);
+					//this.removeUnitList.Add(temp);
+					this.unitList.RemoveAt(i);
 					continue;
 				}
 				GameObject obj = temp.unit.gameObject;
 				if (obj == null) {
-					this.removeUnitList.Add(temp);
+					//this.removeUnitList.Add(temp);
+					this.unitList.RemoveAt(i);
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
