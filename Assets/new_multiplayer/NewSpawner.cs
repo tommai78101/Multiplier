@@ -300,7 +300,7 @@ namespace MultiPlayer {
 						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 						this.changes.Clear();
 						this.changes.position = hit.point;
-						unit.NewProperty(this.changes);
+						unit.NewProperty(this.changes); 
 					}
 				}
 			}
