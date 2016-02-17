@@ -264,10 +264,10 @@ namespace MultiPlayer {
 			}
 			else if (Input.GetKeyUp(KeyCode.D)) {
 				NewGameUnit owner = null, merge = null;
-				for (int i = 0; i < this.selectedList.Count - 1; i++) {
+				for (int i = this.selectedList.Count - 1; i >= 1; i--) {
 					owner = this.selectedList[i].unit.GetComponent<NewGameUnit>();
 					if (owner != null && !owner.properties.isMerging && owner.properties.level == 1) {
-						for (int j = i + 1; j < this.selectedList.Count; j++) {
+						for (int j = i - 1; j >= 0 ; j--) {
 							merge = this.selectedList[j].unit.GetComponent<NewGameUnit>();
 							if (merge != null && !merge.properties.isMerging && merge.properties.level == 1) {
 								this.changes.Clear();
