@@ -342,7 +342,7 @@ namespace MultiPlayer {
 					Merge mergeGroup = this.mergeList[i];
 					if (mergeGroup.elapsedTime > 1f) {
 						if (mergeGroup.owner != null) {
-							NewGameUnit unit = mergeGroup.owner.GetComponent<NewGameUnit>();
+							NewGameUnit unit = mergeGroup.owner.gameObject.GetComponent<NewGameUnit>();
 							this.changes.Clear();
 							changes.newLevel = unit.properties.level + 1;
 							unit.NewProperty(changes);
