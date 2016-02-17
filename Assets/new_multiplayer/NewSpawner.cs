@@ -234,9 +234,20 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdSpawn(GameObject obj) {
-			NetworkServer.SpawnWithClientAuthority(obj, this.owner);
-			RpcOrganizeUnit(obj);
+		public void CmdSpawn(GameObject temp, NetworkIdentity identity) {
+			NewChanges changes = new NewChanges().Clear();
+			NewGameUnit newUnit = temp.GetComponent<NewGameUnit>();
+			changes.isSelected = false;
+			changes.isSplitting = true;
+			newUnit.NewProperty(changes);
+			GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp);
+			unit.name = "NewGameUnit";
+			unit.transform.SetParent(this.transform);
+			newUnit = unit.GetComponent<NewGameUnit>();
+			newUnit.NewProperty(changes);
+			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
+			RpcOrganizeUnit(unit);
+			this.splitList.Add(new Split(temp.transform, unit.transform));
 		}
 
 		private void HandleInputs() {
@@ -244,18 +255,7 @@ namespace MultiPlayer {
 				foreach (NewUnitStruct temp in this.selectedList) {
 					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
 					if (!newUnit.properties.isSplitting && this.unitList.Count < 50) {
-						this.changes.Clear();
-						changes.isSelected = false;
-						changes.isSplitting = true;
-						newUnit.NewProperty(changes);
-						GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp.unit);
-						unit.name = "NewGameUnit";
-						unit.transform.SetParent(this.transform);
-						newUnit = unit.GetComponent<NewGameUnit>();
-						newUnit.NewProperty(changes);
-						CmdSpawn(unit);
-						CmdOrganizeUnit(unit);
-						this.splitList.Add(new Split(temp.unit.transform, unit.transform));
+						CmdSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
 					}
 				}
 				this.selectedList.Clear();
