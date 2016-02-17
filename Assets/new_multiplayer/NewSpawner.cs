@@ -298,7 +298,9 @@ namespace MultiPlayer {
 				if (Physics.Raycast(ray, out hit)) {
 					foreach (NewUnitStruct temp in this.selectedList) {
 						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-						unit.properties.targetPosition = hit.point;
+						this.changes.Clear();
+						this.changes.position = hit.point;
+						unit.NewProperty(this.changes);
 					}
 				}
 			}
