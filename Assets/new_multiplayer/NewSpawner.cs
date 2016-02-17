@@ -498,7 +498,7 @@ namespace MultiPlayer {
 				if (this.selectedList.Contains(temp)) {
 					NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 					if (unit != null && unit.hasAuthority) {
-						this.changes = unit.CurrentProperty();;
+						this.changes = unit.CurrentProperty();
 						changes.isSelected = true;
 						unit.NewProperty(changes);
 					}
@@ -521,12 +521,13 @@ namespace MultiPlayer {
 					if (this.isBoxSelecting) {
 						if (this.selectionBox.Contains(projectedPosition)) {
 							if (this.selectedList.Contains(temp)) {
-								this.changes = unit.CurrentProperty();;
+								this.changes = unit.CurrentProperty();
+								this.changes.isSelected = false;
 								unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 							else {
-								this.changes = unit.CurrentProperty();;
+								this.changes = unit.CurrentProperty();
 								changes.isSelected = true;
 								unit.NewProperty(changes);
 								this.selectedList.Add(temp);
@@ -542,7 +543,8 @@ namespace MultiPlayer {
 						else {
 							if (!this.selectionBox.Contains(projectedPosition)) {
 								if (this.selectedList.Contains(temp)) {
-									this.changes = unit.CurrentProperty();;
+									this.changes = unit.CurrentProperty();
+									this.changes.isSelected = false;
 									unit.NewProperty(changes);
 									this.selectedList.Remove(temp);
 								}
@@ -602,6 +604,7 @@ namespace MultiPlayer {
 							else if (this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();;
 								unit.NewProperty(changes);
+								this.changes.isSelected = false;
 								this.selectedList.Remove(temp);
 							}
 						}
