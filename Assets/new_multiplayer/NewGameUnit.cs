@@ -61,7 +61,7 @@ namespace MultiPlayer {
 					this.selectionRing = ring.gameObject;
 					break;
 				}
-				else{
+				else {
 					Debug.LogError("Cannot find mesh filter and/or mesh renderer for unit's selection ring.");
 				}
 			}
@@ -130,8 +130,21 @@ namespace MultiPlayer {
 				pro.targetPosition = changes.position;
 			}
 			pro.isSelected = changes.isSelected;
+			pro.isSplitting = changes.isSplitting;
+			pro.isMerging = changes.isMerging;
 			pro.level = changes.newLevel;
 			OnPropertiesChanged(pro);
+		}
+
+		public NewChanges CurrentProperty() {
+			NewChanges changes = new NewChanges().Clear();
+			changes.isSelected = this.properties.isSelected;
+			changes.isMerging = this.properties.isMerging;
+			changes.isSplitting = this.properties.isSplitting;
+			changes.newLevel = this.properties.level;
+			changes.position = this.properties.targetPosition;
+			changes.damage = 0;
+			return changes;
 		}
 
 		public void OnPropertiesChanged(UnitProperties pro) {
