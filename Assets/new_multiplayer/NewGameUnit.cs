@@ -29,7 +29,7 @@ namespace MultiPlayer {
 			this.isSplitting = false;
 			this.isSelected = false;
 			this.damage = -1;
-			this.newLevel = 2;
+			this.newLevel = 1;
 			this.position = Vector3.one * -9999;
 			return this;
 		}
@@ -130,6 +130,7 @@ namespace MultiPlayer {
 				pro.targetPosition = changes.position;
 			}
 			pro.isSelected = changes.isSelected;
+			pro.level = changes.newLevel;
 			OnPropertiesChanged(pro);
 		}
 
