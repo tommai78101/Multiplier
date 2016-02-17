@@ -277,7 +277,9 @@ namespace MultiPlayer {
 								merge.NewProperty(changes);
 								this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
 								this.selectedList.RemoveAt(i);
+								i--;
 								this.selectedList.RemoveAt(j);
+								j--;
 								break;
 							}
 						}
