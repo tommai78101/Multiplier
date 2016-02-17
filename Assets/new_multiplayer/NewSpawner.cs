@@ -440,6 +440,10 @@ namespace MultiPlayer {
 			this.changes.Clear();
 			changes.isSelected = true;
 			foreach (NewUnitStruct temp in this.unitList) {
+				if (temp.unit == null) {
+					this.removeUnitList.Add(temp);
+					continue;
+				}
 				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(temp.unit.transform.position);
 				projectedPosition.y = Screen.height - projectedPosition.y;
 				if (this.selectionBox.Contains(projectedPosition)) {
