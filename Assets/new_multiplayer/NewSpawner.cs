@@ -533,9 +533,13 @@ namespace MultiPlayer {
 
 		private void ClearSelectObjects() {
 			foreach (NewUnitStruct temp in this.unitList) {
+				if (temp.unit == null) {
+					this.removeUnitList.Add(temp);
+					continue;
+				}
 				GameObject obj = temp.unit.gameObject;
 				if (obj == null) {
-					this.unitList.Remove(temp);
+					this.removeUnitList.Add(temp);
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
