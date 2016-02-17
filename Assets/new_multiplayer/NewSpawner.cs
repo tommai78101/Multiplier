@@ -348,6 +348,7 @@ namespace MultiPlayer {
 							temp.unit = mergeGroup.merge.gameObject;
 							//this.removeUnitList.Add(temp);
 							this.unitList.Remove(temp);
+							CmdDestroy(temp.unit);
 						}
 						//this.removeMergeList.Add(mergeGroup);
 						this.mergeList.RemoveAt(i);
