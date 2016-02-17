@@ -366,6 +366,10 @@ namespace MultiPlayer {
 			}
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
+					if (this.unitList[i].unit == null) {
+						this.unitList.RemoveAt(i);
+						continue;
+					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
 					if (!id.hasAuthority) {
 						this.unitList.RemoveAt(i);
