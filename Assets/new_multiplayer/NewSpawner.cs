@@ -439,20 +439,22 @@ namespace MultiPlayer {
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
-						//this.unitList.RemoveAt(i);
+						//      CmdRemoveUnitList(this.unitList[i].unit);
 						CmdRemoveUnitList(this.unitList[i].unit);
 						continue;
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
 					if (!id.hasAuthority) {
 						if (this.unitList != null) {
-							this.unitList.RemoveAt(i);
+							//      CmdRemoveUnitList(this.unitList[i].unit);
+							CmdRemoveUnitList(this.unitList[i].unit);
 						}
 						continue;
 					}
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
-						this.unitList.RemoveAt(i);
+						CmdRemoveUnitList(this.unitList[i].unit);
+						//      CmdRemoveUnitList(this.unitList[i].unit);
 					}
 				}
 			}
@@ -520,8 +522,7 @@ namespace MultiPlayer {
 			for (int i = this.unitList.Count - 1; i >= 0; i--) {
 				NewUnitStruct temp = this.unitList[i];
 				if (temp.unit == null) {
-					//this.removeUnitList.Add(temp);
-					this.unitList.RemoveAt(i);
+					CmdRemoveUnitList(this.unitList[i].unit);
 					continue;
 				}
 				Vector3 projectedPosition = Camera.main.WorldToScreenPoint(temp.unit.transform.position);
@@ -532,7 +533,7 @@ namespace MultiPlayer {
 						continue;
 					}
 					if (temp.unit == null) {
-						this.unitList.RemoveAt(i);
+						CmdRemoveUnitList(this.unitList[i].unit);
 						continue;
 					}
 					this.changes = unit.CurrentProperty();
@@ -633,13 +634,13 @@ namespace MultiPlayer {
 				NewUnitStruct temp = this.unitList[i];
 				if (temp.unit == null) {
 					//this.removeUnitList.Add(temp);
-					this.unitList.RemoveAt(i);
+					CmdRemoveUnitList(this.unitList[i].unit);
 					continue;
 				}
 				GameObject obj = temp.unit.gameObject;
 				if (obj == null) {
 					//this.removeUnitList.Add(temp);
-					this.unitList.RemoveAt(i);
+					CmdRemoveUnitList(this.unitList[i].unit);
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
