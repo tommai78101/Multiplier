@@ -281,6 +281,11 @@ namespace MultiPlayer {
 			}
 		}
 
+		[Command]
+		public void CmdRemoveUnitList(GameObject obj) {
+			this.unitList.Remove(new NewUnitStruct(obj));
+		}
+
 		private void HandleInputs() {
 			if (Input.GetKeyUp(KeyCode.S)) {
 				foreach (NewUnitStruct temp in this.selectedList) {
@@ -434,7 +439,8 @@ namespace MultiPlayer {
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
-						this.unitList.RemoveAt(i);
+						//this.unitList.RemoveAt(i);
+						CmdRemoveUnitList(this.unitList[i].unit);
 						continue;
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
