@@ -107,22 +107,28 @@ namespace MultiPlayer {
 		public bool isPaused;
 		public GameObject newGameUnitPrefab;
 		public NetworkConnection owner;
-		public SplitGroupSyncList splitList = new SplitGroupSyncList();
-		//public SplitGroupSyncList removeSplitList = new SplitGroupSyncList();
-		public MergeGroupSyncList mergeList = new MergeGroupSyncList();
-		//public MergeGroupSyncList removeMergeList = new MergeGroupSyncList();
-		public UnitsSyncList unitList = new UnitsSyncList();
-		public UnitsSyncList selectedList = new UnitsSyncList();
-		//public UnitsSyncList removeUnitList = new UnitsSyncList();
+		public SplitGroupSyncList splitList;
+		public MergeGroupSyncList mergeList;
+		public UnitsSyncList unitList;
+		public UnitsSyncList selectedList;
 		public Rect selectionBox;
 		public Camera minimapCamera;
 
 		public bool isSelecting;
 		public bool isBoxSelecting;
+
+		private bool isInitialized;
+		private bool isComplete;
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
 
+		public void Awake() {
+			this.splitList = new SplitGroupSyncList();
+			this.mergeList = new MergeGroupSyncList();
+			this.unitList = new UnitsSyncList();
+			this.selectedList = new UnitsSyncList();
+		}
 
 		public void Start() {
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
@@ -149,8 +155,8 @@ namespace MultiPlayer {
 			this.initialClick = Vector3.one * -9999f;
 			this.screenPoint = this.initialClick;
 			this.changes.Clear();
-
-
+			this.isInitialized = false;
+			this.isComplete = false;
 
 			ServerInitialize();
 		}
@@ -163,7 +169,6 @@ namespace MultiPlayer {
 			NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
 			unitIdentity.localPlayerAuthority = true;
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.owner);
-			RpcOrganize();
 		}
 
 		[Command]
@@ -180,9 +185,10 @@ namespace MultiPlayer {
 					foreach (NewGameUnit unit in units) {
 						if (unit.hasAuthority) {
 							unit.transform.SetParent(spawner.transform);
-							NewUnitStruct unitStruct = new NewUnitStruct();
-							unitStruct.unit = unit.gameObject;
-							this.unitList.Add(unitStruct);
+							if (this.unitList != null) {
+								NewUnitStruct unitStruct = new NewUnitStruct(unit.gameObject);
+								this.unitList.Add(unitStruct);
+							}
 						}
 					}
 				}
@@ -191,12 +197,15 @@ namespace MultiPlayer {
 						if (!unit.hasAuthority) {
 							unit.NewProperty(unit.CurrentProperty());
 							unit.transform.SetParent(spawner.transform);
-							NewSelectionRing selectionRing = unit.GetComponentInChildren<NewSelectionRing>();
-							selectionRing.gameObject.SetActive(false);
+							NewSelectionRing[] selectionRings = unit.GetComponentsInChildren<NewSelectionRing>(true);
+							for (int i = 0; i > selectionRings.Length; i++) {
+								selectionRings[i].gameObject.SetActive(false);
+							}
 						}
 					}
 				}
 			}
+			this.isComplete = true;
 		}
 
 		[Command]
@@ -225,6 +234,14 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			if (!this.isInitialized) {
+				CmdOrganize();
+				this.isInitialized = true;
+				return;
+			}
+			if (!this.isComplete) {
+				return;
+			}
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
@@ -423,7 +440,9 @@ namespace MultiPlayer {
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
 					if (!id.hasAuthority) {
-						this.unitList.RemoveAt(i);
+						if (this.unitList != null) {
+							this.unitList.RemoveAt(i);
+						}
 						continue;
 					}
 					NewUnitStruct temp = this.unitList[i];

@@ -13,6 +13,7 @@ namespace MultiPlayer {
 		public int level;
 		public float scalingFactor;
 		public Vector3 targetPosition;
+		public GameObject targetUnit;
 	}
 
 	[System.Serializable]
@@ -23,6 +24,7 @@ namespace MultiPlayer {
 		public int damage;
 		public int newLevel;
 		public Vector3 position;
+		public GameObject targetUnit;
 
 		public NewChanges Clear() {
 			this.isMerging = false;
@@ -31,6 +33,7 @@ namespace MultiPlayer {
 			this.damage = -1;
 			this.newLevel = 1;
 			this.position = Vector3.one * -9999;
+			this.targetUnit = null;
 			return this;
 		}
 	}
