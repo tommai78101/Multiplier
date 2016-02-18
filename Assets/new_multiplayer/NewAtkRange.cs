@@ -9,11 +9,13 @@ namespace MultiPlayer {
 		public Rigidbody colliderBody;
 		public NewGameUnit parent;
 
-		public void Start() {
+		public void Awake() {
 			NetworkIdentity id = this.gameObject.AddComponent<NetworkIdentity>();
 			id.localPlayerAuthority = true;
 			ClientScene.RegisterPrefab(this.gameObject);
+		}
 
+		public void Start() {
 			this.colliderBody = this.GetComponent<Rigidbody>();
 			if (this.colliderBody == null) {
 				Debug.LogError("Attack Range: Cannot detect Rigidbody.");

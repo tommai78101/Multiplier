@@ -167,8 +167,12 @@ namespace MultiPlayer {
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 			NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
-			unitIdentity.localPlayerAuthority = true;
+			if (!unitIdentity.localPlayerAuthority) {
+				unitIdentity.localPlayerAuthority = true;
+			}
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.owner);
+
+			RpcOrganize();
 		}
 
 		[Command]
@@ -234,11 +238,6 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
-			if (!this.isInitialized) {
-				CmdOrganize();
-				this.isInitialized = true;
-				return;
-			}
 			if (!this.isComplete) {
 				return;
 			}
