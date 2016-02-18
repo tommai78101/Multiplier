@@ -212,7 +212,9 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcFilter() {
-			CmdOrganizeUnit(this.unitList[0].unit);
+			for (int i = 0; i < this.unitList.Count; i++) {
+				CmdOrganizeUnit(this.unitList[i].unit);
+			}
 		}
 
 		[Command]
