@@ -132,6 +132,9 @@ namespace MultiPlayer {
 
 		public void Start() {
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
+			if (!spawnerIdentity.localPlayerAuthority) {
+				spawnerIdentity.localPlayerAuthority = true;
+			}
 			this.owner = this.isServer ? spawnerIdentity.connectionToClient : spawnerIdentity.connectionToServer;
 			Debug.Log("This is " + (this.isServer ? " Server." : " Client."));
 			this.isPaused = false;

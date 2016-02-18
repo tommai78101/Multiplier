@@ -26,13 +26,18 @@ namespace MultiPlayer {
 			}
 		}
 
+		[Command]
+		public void CmdAddUnit(GameObject obj) {
+			NewUnitStruct temp = new NewUnitStruct(obj);
+			if (!this.detectedUnits.Contains(temp)) {
+				this.detectedUnits.Add(temp);
+			}
+		}
+
 		public void OnTriggerEnter(Collider other) {
 			NewGameUnit unit = other.gameObject.GetComponent<NewGameUnit>();
 			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
-				NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
-				if (!this.detectedUnits.Contains(temp)) {
-					this.detectedUnits.Add(temp);
-				}
+				CmdAddUnit(unit.gameObject);
 			}
 		}
 
