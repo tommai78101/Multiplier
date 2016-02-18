@@ -272,31 +272,67 @@ namespace MultiPlayer {
 					if (!newUnit.properties.isSplitting && this.unitList.Count < 50 && newUnit.properties.level == 1) {
 						CmdSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
 					}
+					else {
+						if (newUnit != null) {
+							this.changes = newUnit.CurrentProperty();
+							this.changes.isSelected = false;
+							this.changes.isSplitting = false;
+							newUnit.NewProperty(this.changes);
+						}
+					}
 				}
 				this.selectedList.Clear();
 			}
 			else if (Input.GetKeyUp(KeyCode.D)) {
 				NewGameUnit owner = null, merge = null;
-				for (int i = this.selectedList.Count - 1; i >= 1; i--) {
-					owner = this.selectedList[i].unit.GetComponent<NewGameUnit>();
-					if (owner != null && !owner.properties.isMerging && owner.properties.level == 1) {
-						for (int j = i - 1; j >= 0 ; j--) {
-							merge = this.selectedList[j].unit.GetComponent<NewGameUnit>();
-							if (merge != null && !merge.properties.isMerging && merge.properties.level == 1) {
-								this.changes = owner.CurrentProperty();
-								changes.isMerging = true;
-								changes.isSelected = false;
-								CmdUpdateUnitProperty(owner.gameObject, changes);
-								CmdUpdateUnitProperty(merge.gameObject, changes);
-								//owner.NewProperty(changes);
-								//merge.NewProperty(changes);
-								this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
-								this.selectedList.RemoveAt(i);
-								i--;
-								this.selectedList.RemoveAt(j);
-								j--;
-								break;
+				if (this.selectedList.Count == 1) {
+					owner = this.selectedList[0].unit.GetComponent<NewGameUnit>();
+					this.changes = owner.CurrentProperty();
+					this.changes.isSelected = false;
+					owner.NewProperty(this.changes);
+				}
+				else {
+					for (int i = this.selectedList.Count - 1; i >= 1; i--) {
+						owner = this.selectedList[i].unit.GetComponent<NewGameUnit>();
+						if (owner != null && !owner.properties.isMerging) {
+							for (int j = i - 1; j >= 0; j--) {
+								merge = this.selectedList[j].unit.GetComponent<NewGameUnit>();
+								if (merge != null && !merge.properties.isMerging && merge.properties.level == owner.properties.level) {
+									this.changes = owner.CurrentProperty();
+									changes.isMerging = true;
+									changes.isSelected = false;
+									CmdUpdateUnitProperty(owner.gameObject, changes);
+									CmdUpdateUnitProperty(merge.gameObject, changes);
+									//owner.NewProperty(changes);
+									//merge.NewProperty(changes);
+									this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
+									this.selectedList.RemoveAt(i);
+									i--;
+									this.selectedList.RemoveAt(j);
+									j--;
+									break;
+								}
+								else {
+									if (merge != null) {
+										this.changes = merge.CurrentProperty();
+										this.changes.isSelected = false;
+										this.changes.isMerging = false;
+										merge.NewProperty(this.changes);
+									}
+								}
 							}
+							if (merge == null) {
+								this.changes = owner.CurrentProperty();
+								this.changes.isSelected = false;
+								this.changes.isMerging = false;
+								owner.NewProperty(this.changes);
+							}
+						}
+						else if (owner != null) {
+							this.changes = owner.CurrentProperty();
+							this.changes.isSelected = false;
+							this.changes.isMerging = false;
+							owner.NewProperty(this.changes);
 						}
 					}
 				}
@@ -313,7 +349,8 @@ namespace MultiPlayer {
 				if (Physics.Raycast(ray, out hit)) {
 					foreach (NewUnitStruct temp in this.selectedList) {
 						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-						this.changes = unit.CurrentProperty();;
+						this.changes = unit.CurrentProperty();
+						;
 						this.changes.position = hit.point;
 						CmdUpdateUnitProperty(temp.unit, changes);
 						//unit.NewProperty(this.changes); 
@@ -553,7 +590,8 @@ namespace MultiPlayer {
 							}
 							else {
 								if (!this.selectedList.Contains(temp)) {
-									this.changes = unit.CurrentProperty();;
+									this.changes = unit.CurrentProperty();
+									;
 									changes.isSelected = true;
 									//unit.NewProperty(changes);
 									CmdUpdateUnitProperty(unit.gameObject, this.changes);
@@ -600,14 +638,16 @@ namespace MultiPlayer {
 					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
 						if (this.unitList.Contains(temp) && unit.hasAuthority) {
 							if (!this.selectedList.Contains(temp)) {
-								this.changes = unit.CurrentProperty();;
+								this.changes = unit.CurrentProperty();
+								;
 								changes.isSelected = true;
 								//unit.NewProperty(changes);
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
 							else if (this.selectedList.Contains(temp)) {
-								this.changes = unit.CurrentProperty();;
+								this.changes = unit.CurrentProperty();
+								;
 								this.changes.isSelected = false;
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								//unit.NewProperty(changes);
@@ -617,7 +657,8 @@ namespace MultiPlayer {
 					}
 					else {
 						if (unit != null && unit.hasAuthority) {
-							this.changes = unit.CurrentProperty();;
+							this.changes = unit.CurrentProperty();
+							;
 							changes.isSelected = true;
 							//unit.NewProperty(changes);
 							CmdUpdateUnitProperty(unit.gameObject, this.changes);
