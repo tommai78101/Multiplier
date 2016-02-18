@@ -173,7 +173,7 @@ namespace MultiPlayer {
 			if (!unitIdentity.localPlayerAuthority) {
 				unitIdentity.localPlayerAuthority = true;
 			}
-			NetworkServer.SpawnWithClientAuthority(gameUnit, this.owner);
+			NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
 
 			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
