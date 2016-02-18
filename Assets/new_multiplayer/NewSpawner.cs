@@ -117,8 +117,6 @@ namespace MultiPlayer {
 		public bool isSelecting;
 		public bool isBoxSelecting;
 
-		private bool isInitialized;
-		private bool isComplete;
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
@@ -158,8 +156,6 @@ namespace MultiPlayer {
 			this.initialClick = Vector3.one * -9999f;
 			this.screenPoint = this.initialClick;
 			this.changes.Clear();
-			this.isInitialized = false;
-			this.isComplete = false;
 
 			CmdInitialize();
 		}
@@ -204,7 +200,8 @@ namespace MultiPlayer {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			foreach (NewGameUnit unit in units) {
 				if (unit.selectionRing != null) {
-					unit.selectionRing.SetActive(false);
+					this.changes = new NewChanges().Clear();
+					unit.NewProperty(this.changes);
 				}
 				NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
 				this.unitList.Add(temp);
