@@ -319,6 +319,10 @@ public class NetworkManagerActions : MonoBehaviour {
 				field.textComponent.text = equation;
 			}
 		}
+
+		Debug.Log("Adding camera panning when game starts.");
+		CameraPanning panning = Camera.main.gameObject.AddComponent<CameraPanning>();
+		panning.zoomLevel = 5;
 	}
 
 	private void PreUnitAttributesInitialization() {
