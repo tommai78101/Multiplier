@@ -191,6 +191,7 @@ namespace MultiPlayer {
 							unit.transform.SetParent(spawner.transform);
 							if (this.unitList != null) {
 								NewUnitStruct unitStruct = new NewUnitStruct(unit.gameObject);
+								this.unitList.InitializeBehaviour(this, this.unitList.GetHashCode());
 								this.unitList.Add(unitStruct);
 							}
 						}
