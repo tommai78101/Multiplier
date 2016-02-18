@@ -158,11 +158,11 @@ namespace MultiPlayer {
 			this.isInitialized = false;
 			this.isComplete = false;
 
-			ServerInitialize();
+			CmdInitialize();
 		}
 
-		[ServerCallback]
-		public void ServerInitialize() {
+		[Command]
+		public void CmdInitialize() {
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
@@ -172,45 +172,47 @@ namespace MultiPlayer {
 			}
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.owner);
 
-			RpcOrganize();
-		}
+			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			//foreach (NewSpawner spawner in spawners) {
+			//	if (spawner.hasAuthority) {
+			//		foreach (NewGameUnit unit in units) {
+			//			if (unit.hasAuthority) {
+			//				unit.transform.SetParent(spawner.transform);
+			//				NewUnitStruct unitStruct = new NewUnitStruct(unit.gameObject);
+			//				this.unitList.Add(unitStruct);
+			//			}
+			//		}
+			//	}
+			//	else {
+			//		foreach (NewGameUnit unit in units) {
+			//			if (!unit.hasAuthority) {
+			//				unit.NewProperty(unit.CurrentProperty());
+			//				unit.transform.SetParent(spawner.transform);
+			//				NewSelectionRing[] selectionRings = unit.GetComponentsInChildren<NewSelectionRing>(true);
+			//				for (int i = 0; i > selectionRings.Length; i++) {
+			//					selectionRings[i].gameObject.SetActive(false);
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
 
-		[Command]
-		public void CmdOrganize() {
-			RpcOrganize();
+			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			foreach (NewGameUnit unit in units) {
+				if (unit.selectionRing != null) {
+					unit.selectionRing.SetActive(false);
+				}
+				NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
+				this.unitList.Add(temp);
+			}
+
+			RpcFilter();
 		}
 
 		[ClientRpc]
-		public void RpcOrganize() {
-			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
-			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			foreach (NewSpawner spawner in spawners) {
-				if (spawner.hasAuthority) {
-					foreach (NewGameUnit unit in units) {
-						if (unit.hasAuthority) {
-							unit.transform.SetParent(spawner.transform);
-							if (this.unitList != null) {
-								NewUnitStruct unitStruct = new NewUnitStruct(unit.gameObject);
-								this.unitList.InitializeBehaviour(this, this.unitList.GetHashCode());
-								this.unitList.Add(unitStruct);
-							}
-						}
-					}
-				}
-				else {
-					foreach (NewGameUnit unit in units) {
-						if (!unit.hasAuthority) {
-							unit.NewProperty(unit.CurrentProperty());
-							unit.transform.SetParent(spawner.transform);
-							NewSelectionRing[] selectionRings = unit.GetComponentsInChildren<NewSelectionRing>(true);
-							for (int i = 0; i > selectionRings.Length; i++) {
-								selectionRings[i].gameObject.SetActive(false);
-							}
-						}
-					}
-				}
-			}
-			this.isComplete = true;
+		public void RpcFilter() {
+			CmdOrganizeUnit(this.unitList[0].unit);
 		}
 
 		[Command]
@@ -239,9 +241,6 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
-			if (!this.isComplete) {
-				return;
-			}
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
