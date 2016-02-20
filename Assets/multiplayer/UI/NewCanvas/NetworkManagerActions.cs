@@ -99,22 +99,18 @@ public class NetworkManagerActions : MonoBehaviour {
 			if (NetworkClient.active && ClientScene.ready && !NetworkServer.active) {
 				if (this.LANClientReady.activeSelf || this.LANClientReady.activeInHierarchy) {
 					if (this.LANClientReady.activeSelf || this.LANClientReady.activeInHierarchy) {
-						Debug.Log("Closing LAN client Ready state menu.");
 						this.LANClientReady.SetActive(false);
 					}
 					else {
-						Debug.Log("Bringing up LAN client Ready state menu.");
 						this.LANClientReady.SetActive(true);
 					}
 				}
 			}
 			else if (NetworkServer.active) {
 				if (this.LANHost.activeSelf || this.LANHost.activeInHierarchy) {
-					Debug.Log("Closing LAN Host menu.");
 					this.LANHost.SetActive(false);
 				}
 				else {
-					Debug.Log("Bringing up LAN Host menu.");
 					this.LANHost.SetActive(true);
 				}
 			}
@@ -134,7 +130,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	public void StartLANHost() {
 		this.PreInitialization();
 
-		Debug.Log("Starting LAN Host.");
 		this.networkManager.StartHost();
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
@@ -152,7 +147,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void StopLANHost() {
-		Debug.Log("Stopping LAN Host.");
 		this.networkManager.StopHost();
 		this.LANHost.SetActive(false);
 		this.LANClientReady.SetActive(false);
@@ -167,7 +161,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void TurnOffLANHost() {
-		Debug.Log("Turning off LAN Host menu.");
 		this.LANHost.SetActive(false);
 	}
 
@@ -184,7 +177,6 @@ public class NetworkManagerActions : MonoBehaviour {
 
 
 	public void StartMatchMaker() {
-		Debug.Log("Starting match maker.");
 	}
 
 
@@ -202,7 +194,6 @@ public class NetworkManagerActions : MonoBehaviour {
 
 	//Turning on/off menu
 	public void TurnOnLANClientMenu() {
-		Debug.Log("Turning on LAN Client menu.");
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
 		this.unitAttributeEditor.SetActive(false);
@@ -211,7 +202,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void TurnOffLANClientMenu() {
-		Debug.Log("Turning off LAN Client menu.");
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
 		this.unitAttributeEditor.SetActive(false);
@@ -228,7 +218,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	public void StartLANClient(InputField inputField) {
 		this.PreInitialization();
 
-		Debug.Log("Starting LAN client.");
 		this.networkManager.networkAddress = "localhost";
 		if (inputField.text.Length > 0) {
 			this.networkManager.networkAddress = inputField.text;
@@ -262,7 +251,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void SetClientReady() {
-		Debug.Log("Setting LAN client as 'ready' state.");
 		if (!ClientScene.ready) {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
 				this.LANClientReady.SetActive(false);
@@ -283,7 +271,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	private void PreInitialization() {
-		Debug.Log("Fetching equations from options.");
 		string equation = "";
 		Dropdown[] difficultyOptions = this.optionsMenu.GetComponentsInChildren<Dropdown>(true);
 		foreach (Dropdown dropdown in difficultyOptions) {
@@ -307,20 +294,14 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 		}
 
-		if (equation.Length <= 0) {
-			Debug.Log("Fetching equations from unit attributes editor.");
-		}
-		else {
-			Debug.Log("Setting new equations from options to unit attributes editor.");
+		if (equation.Length > 0) {
 			InputField[] equationsFields = this.unitAttributeEditor.GetComponentsInChildren<InputField>(true);
 			foreach (InputField field in equationsFields) {
-				Debug.Log("Setting the equations to the input field.");
-				field.text = equation;
+					field.text = equation;
 				field.textComponent.text = equation;
 			}
 		}
 
-		Debug.Log("Adding camera panning when game starts.");
 		CameraPanning panning = Camera.main.gameObject.AddComponent<CameraPanning>();
 		panning.zoomLevel = 5;
 	}
@@ -328,14 +309,11 @@ public class NetworkManagerActions : MonoBehaviour {
 	private void PreUnitAttributesInitialization() {
 		GameObject obj = GameObject.Find("Temporary Unit Attributes");
 		if (obj == null) {
-			Debug.Log("The object is inactive.");
 			obj = this.temporaryUnitAttributesObject;
 		}
 		if (obj != null) {
 			UnitAttributes myAttributes = null;
-			Debug.Log("Fetching temporary unit attributes.");
 			GameObject[] playerUnitAttributes = GameObject.FindGameObjectsWithTag("UnitAttributes");
-			Debug.Log("Length: " + playerUnitAttributes.Length);
 			for (int i = 0; i < playerUnitAttributes.Length; i++) {
 				NetworkIdentity identity = playerUnitAttributes[i].GetComponent<NetworkIdentity>();
 				if (identity.hasAuthority) {
