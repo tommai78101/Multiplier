@@ -216,8 +216,21 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcFilter() {
-			for (int i = 0; i < this.unitList.Count; i++) {
-				CmdOrganizeUnit(this.unitList[i].unit);
+			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			for (int i = 0; i < spawners.Length; i++) {
+				if (spawners[i].hasAuthority) {
+					if (units[i].hasAuthority) {
+						units[i].transform.SetParent(spawners[i].transform);
+						continue;
+					}
+				}
+				else {
+					if (!units[i].hasAuthority) {
+						units[i].transform.SetParent(spawners[i].transform);
+						continue;
+					}
+				}
 			}
 		}
 
