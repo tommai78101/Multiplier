@@ -169,6 +169,7 @@ namespace MultiPlayer {
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
+			Debug.Log("Does game unit have New Game Unit component? :" + gameUnit.GetComponent<NewGameUnit>() != null);
 			NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
 			if (!unitIdentity.localPlayerAuthority) {
 				unitIdentity.localPlayerAuthority = true;
@@ -202,6 +203,7 @@ namespace MultiPlayer {
 			//}
 
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			Debug.Log("New Game Unit Count: " + units.Length);
 			foreach (NewGameUnit unit in units) {
 				if (unit.selectionRing != null) {
 					this.changes = new NewChanges().Clear();
@@ -222,15 +224,14 @@ namespace MultiPlayer {
 				if (spawners[i].hasAuthority) {
 					if (units[i].hasAuthority) {
 						units[i].transform.SetParent(spawners[i].transform);
-						continue;
 					}
 				}
 				else {
 					if (!units[i].hasAuthority) {
 						units[i].transform.SetParent(spawners[i].transform);
-						continue;
 					}
 				}
+				continue;
 			}
 		}
 
