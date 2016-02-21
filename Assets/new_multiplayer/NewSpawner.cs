@@ -162,7 +162,6 @@ namespace MultiPlayer {
 			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
 			if (newSpawner != null) {
 				newSpawner.unitList.Add(new NewUnitStruct(obj));
-				Debug.Log("Finished adding a new item to UnitList.");
 			}
 		}
 
@@ -177,18 +176,13 @@ namespace MultiPlayer {
 		public void CmdInitialize(GameObject obj) {
 			NetworkIdentity spawnerID = obj.GetComponent<NetworkIdentity>();
 
-			Debug.Log("Creating a new game object.");
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
-			Debug.Log("Setting the game object to the parent, NewSpawner.");
+			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
-			Debug.Log("Setting the game object position to be at NewSpawner.");
 			gameUnit.transform.position = this.transform.position;
-
-			Debug.Log("Network spawning the game object.");
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
 			RpcAdd(gameUnit, obj);
-
 			RpcFilter();
 		}
 
@@ -237,7 +231,6 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
-			return;
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
@@ -437,6 +430,7 @@ namespace MultiPlayer {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
 						//      CmdRemoveUnitList(this.unitList[i].unit);
+						Debug.Log("Deleting game unit from UnitSyncList.");
 						CmdRemoveUnitList(this.unitList[i].unit);
 						continue;
 					}
