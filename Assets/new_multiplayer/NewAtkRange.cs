@@ -1,19 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace MultiPlayer {
-	public class NewAtkRange : NetworkBehaviour {
-		public UnitsSyncList detectedUnits = new UnitsSyncList();
+	public class NewAtkRange : MonoBehaviour {
+		public List<NewGameUnit> detectedUnits = new List<NewGameUnit>();
 		public SphereCollider attackRange;
 		public Rigidbody colliderBody;
 		public NewGameUnit parent;
-
-		public void Awake() {
-			NetworkIdentity id = this.gameObject.AddComponent<NetworkIdentity>();
-			id.localPlayerAuthority = true;
-			ClientScene.RegisterPrefab(this.gameObject);
-		}
 
 		public void Start() {
 			this.colliderBody = this.GetComponent<Rigidbody>();
@@ -26,28 +19,17 @@ namespace MultiPlayer {
 			}
 		}
 
-		[Command]
-		public void CmdAddUnit(GameObject obj) {
-			NewUnitStruct temp = new NewUnitStruct(obj);
-			if (!this.detectedUnits.Contains(temp)) {
-				this.detectedUnits.Add(temp);
-			}
-		}
-
 		public void OnTriggerEnter(Collider other) {
 			NewGameUnit unit = other.gameObject.GetComponent<NewGameUnit>();
 			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
-				CmdAddUnit(unit.gameObject);
+				this.detectedUnits.Add(unit);
 			}
 		}
 
 		public void OnTriggerExit(Collider other) {
 			NewGameUnit unit = other.GetComponent<NewGameUnit>();
 			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
-				NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
-				if (this.detectedUnits.Contains(temp)) {
-					this.detectedUnits.Remove(temp);
-				}
+				this.detectedUnits.Remove(unit);
 			}
 		}
 
@@ -55,7 +37,8 @@ namespace MultiPlayer {
 			this.colliderBody.WakeUp();
 			if (this.detectedUnits.Count > 0) {
 				NewChanges changes = this.parent.CurrentProperty();
-				changes.targetUnit = this.detectedUnits[0].unit;
+				changes.targetUnit = this.detectedUnits[0].gameObject;
+				changes.position = this.detectedUnits[0].transform.position;
 				this.parent.NewProperty(changes);
 			}
 		}
