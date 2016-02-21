@@ -157,6 +157,17 @@ namespace MultiPlayer {
 			CmdInitialize(this.gameObject);
 		}
 
+		[ClientRpc]
+		public void RpcAdd(GameObject obj, GameObject spawner) {
+			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
+			if (newSpawner != null) {
+				newSpawner.unitList.Add(new NewUnitStruct(obj));
+			}
+			else {
+				Debug.LogError("Warning!");
+			}
+		}
+
 		[Command]
 		public void CmdInitialize(GameObject spawner) {
 			Debug.Log("Creating a new game object.");
@@ -169,13 +180,7 @@ namespace MultiPlayer {
 			Debug.Log("Network spawning the game object.");
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
 
-			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
-			if (newSpawner != null) {
-				newSpawner.unitList.Add(new NewUnitStruct(gameUnit));
-			}
-			else {
-				Debug.LogError("Warning!");
-			}
+			RpcAdd(gameUnit, spawner);
 
 
 
