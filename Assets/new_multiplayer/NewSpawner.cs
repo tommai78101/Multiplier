@@ -174,7 +174,9 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdInitialize(GameObject spawner) {
+		public void CmdInitialize(GameObject obj) {
+			NetworkIdentity spawnerID = obj.GetComponent<NetworkIdentity>();
+
 			Debug.Log("Creating a new game object.");
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			Debug.Log("Setting the game object to the parent, NewSpawner.");
@@ -183,60 +185,11 @@ namespace MultiPlayer {
 			gameUnit.transform.position = this.transform.position;
 
 			Debug.Log("Network spawning the game object.");
-			NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
+			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
-			RpcAdd(gameUnit, spawner);
+			RpcAdd(gameUnit, obj);
 
 			RpcFilter();
-
-
-			//NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
-			//if (!unitIdentity.localPlayerAuthority) {
-			//	unitIdentity.localPlayerAuthority = true;
-			//}
-			//NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
-
-			//Debug.Log("Is Unit SyncList initialized? " + (this.unitList != null).ToString());
-
-			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			//Debug.Log("New Game Unit Count: " + units.Length);
-			//foreach (NewGameUnit unit in units) {
-			//	if (unit.selectionRing != null) {
-			//		this.changes = new NewChanges().Clear();
-			//		unit.NewProperty(this.changes);
-			//	}
-			//	NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
-			//	this.unitList.Add(temp);
-			//	Debug.Log("Length of Unit SyncList after adding item: " + this.unitList.Count);
-			//}
-
-
-
-			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
-			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			//foreach (NewSpawner spawner in spawners) {
-			//	if (spawner.hasAuthority) {
-			//		foreach (NewGameUnit unit in units) {
-			//			if (unit.hasAuthority) {
-			//				unit.transform.SetParent(spawner.transform);
-			//				NewUnitStruct unitStruct = new NewUnitStruct(unit.gameObject);
-			//				this.unitList.Add(unitStruct);
-			//			}
-			//		}
-			//	}
-			//	else {
-			//		foreach (NewGameUnit unit in units) {
-			//			if (!unit.hasAuthority) {
-			//				unit.NewProperty(unit.CurrentProperty());
-			//				unit.transform.SetParent(spawner.transform);
-			//				NewSelectionRing[] selectionRings = unit.GetComponentsInChildren<NewSelectionRing>(true);
-			//				for (int i = 0; i > selectionRings.Length; i++) {
-			//					selectionRings[i].gameObject.SetActive(false);
-			//				}
-			//			}
-			//		}
-			//	}
-			//}
 		}
 
 		[ClientRpc]
@@ -284,6 +237,7 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			return;
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
