@@ -4,7 +4,6 @@ using System.Collections;
 using Common;
 
 namespace MultiPlayer {
-
 	public struct NewUnitStruct {
 		public GameObject unit;
 
