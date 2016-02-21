@@ -182,7 +182,7 @@ namespace MultiPlayer {
 
 			RpcAdd(gameUnit, spawner);
 
-
+			RpcFilter();
 
 			//NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
 			//if (!unitIdentity.localPlayerAuthority) {
@@ -204,7 +204,7 @@ namespace MultiPlayer {
 			//	Debug.Log("Length of Unit SyncList after adding item: " + this.unitList.Count);
 			//}
 
-			//RpcFilter();
+
 
 			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
