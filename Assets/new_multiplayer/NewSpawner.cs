@@ -157,8 +157,21 @@ namespace MultiPlayer {
 			CmdInitialize(this.gameObject);
 		}
 
+		[Command]
+		public void CmdAddUnit(GameObject obj, GameObject spawner) {
+			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
+			if (newSpawner != null) {
+				newSpawner.unitList.Add(new NewUnitStruct(obj));
+				Debug.Log("Finished adding a new item to UnitList.");
+			}
+		}
+
 		[ClientRpc]
 		public void RpcAdd(GameObject obj, GameObject spawner) {
+			if (!this.hasAuthority) {
+				CmdAddUnit(obj, spawner);
+				return;
+			}
 			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
 			if (newSpawner != null) {
 				newSpawner.unitList.Add(new NewUnitStruct(obj));
@@ -183,6 +196,7 @@ namespace MultiPlayer {
 			RpcAdd(gameUnit, spawner);
 
 			RpcFilter();
+
 
 			//NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
 			//if (!unitIdentity.localPlayerAuthority) {
