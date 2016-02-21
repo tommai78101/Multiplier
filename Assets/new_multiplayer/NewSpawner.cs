@@ -159,6 +159,7 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdAddUnit(GameObject obj, GameObject spawner) {
+			Debug.Log("CmdAddUnit: Is obj null? " + (obj == null).ToString());
 			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
 			if (newSpawner != null) {
 				newSpawner.unitList.Add(new NewUnitStruct(obj));
@@ -168,6 +169,7 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcAdd(GameObject obj, GameObject spawner) {
 			if (this.hasAuthority) {
+				Debug.Log("RpcAdd: Is obj null? " + (obj == null).ToString());
 				CmdAddUnit(obj, spawner);
 			}
 		}
