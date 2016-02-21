@@ -233,6 +233,9 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			if (!this.hasAuthority) {
+				return;
+			}
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
