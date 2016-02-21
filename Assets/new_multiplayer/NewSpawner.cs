@@ -159,15 +159,40 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdInitialize() {
+			Debug.Log("Creating a new game object.");
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
+			Debug.Log("Setting the game object to the parent, NewSpawner.");
 			gameUnit.transform.SetParent(this.transform);
+			Debug.Log("Setting the game object position to be at NewSpawner.");
 			gameUnit.transform.position = this.transform.position;
-			Debug.Log("Does game unit have New Game Unit component? : " + (gameUnit.GetComponent<NewGameUnit>() != null).ToString());
-			NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
-			if (!unitIdentity.localPlayerAuthority) {
-				unitIdentity.localPlayerAuthority = true;
-			}
+
+			Debug.Log("Network spawning the game object.");
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
+
+
+
+
+			//NetworkIdentity unitIdentity = gameUnit.GetComponent<NetworkIdentity>();
+			//if (!unitIdentity.localPlayerAuthority) {
+			//	unitIdentity.localPlayerAuthority = true;
+			//}
+			//NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
+
+			//Debug.Log("Is Unit SyncList initialized? " + (this.unitList != null).ToString());
+
+			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			//Debug.Log("New Game Unit Count: " + units.Length);
+			//foreach (NewGameUnit unit in units) {
+			//	if (unit.selectionRing != null) {
+			//		this.changes = new NewChanges().Clear();
+			//		unit.NewProperty(this.changes);
+			//	}
+			//	NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
+			//	this.unitList.Add(temp);
+			//	Debug.Log("Length of Unit SyncList after adding item: " + this.unitList.Count);
+			//}
+
+			RpcFilter();
 
 			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
@@ -194,22 +219,6 @@ namespace MultiPlayer {
 			//		}
 			//	}
 			//}
-
-			Debug.Log("Is Unit SyncList initialized? " + (this.unitList != null).ToString());
-
-			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			Debug.Log("New Game Unit Count: " + units.Length);
-			foreach (NewGameUnit unit in units) {
-				if (unit.selectionRing != null) {
-					this.changes = new NewChanges().Clear();
-					unit.NewProperty(this.changes);
-				}
-				NewUnitStruct temp = new NewUnitStruct(unit.gameObject);
-				this.unitList.Add(temp);
-				Debug.Log("Length of Unit SyncList after adding item: " + this.unitList.Count);
-			}
-
-			RpcFilter();
 		}
 
 		[ClientRpc]
