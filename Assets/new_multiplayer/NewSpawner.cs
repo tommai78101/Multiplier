@@ -204,7 +204,7 @@ namespace MultiPlayer {
 			//	Debug.Log("Length of Unit SyncList after adding item: " + this.unitList.Count);
 			//}
 
-			RpcFilter();
+			//RpcFilter();
 
 			//NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
@@ -278,6 +278,7 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			return;
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
