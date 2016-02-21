@@ -168,16 +168,8 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcAdd(GameObject obj, GameObject spawner) {
-			if (!this.hasAuthority) {
+			if (this.hasAuthority) {
 				CmdAddUnit(obj, spawner);
-				return;
-			}
-			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
-			if (newSpawner != null) {
-				newSpawner.unitList.Add(new NewUnitStruct(obj));
-			}
-			else {
-				Debug.LogError("Warning!");
 			}
 		}
 
