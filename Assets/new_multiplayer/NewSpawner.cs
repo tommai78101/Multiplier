@@ -107,10 +107,10 @@ namespace MultiPlayer {
 		public bool isPaused;
 		public GameObject newGameUnitPrefab;
 		public NetworkConnection owner;
-		public SplitGroupSyncList splitList;
-		public MergeGroupSyncList mergeList;
-		public UnitsSyncList unitList;
-		public UnitsSyncList selectedList;
+		public SplitGroupSyncList splitList = new SplitGroupSyncList();
+		public MergeGroupSyncList mergeList = new MergeGroupSyncList();
+		public UnitsSyncList unitList = new UnitsSyncList();
+		public UnitsSyncList selectedList = new UnitsSyncList();
 		public Rect selectionBox;
 		public Camera minimapCamera;
 
@@ -120,13 +120,6 @@ namespace MultiPlayer {
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
-
-		public void Awake() {
-			this.splitList = new SplitGroupSyncList();
-			this.mergeList = new MergeGroupSyncList();
-			this.unitList = new UnitsSyncList();
-			this.selectedList = new UnitsSyncList();
-		}
 
 		public void Start() {
 			if (!this.hasAuthority) {
