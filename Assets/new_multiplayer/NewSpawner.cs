@@ -154,11 +154,11 @@ namespace MultiPlayer {
 			this.screenPoint = this.initialClick;
 			this.changes.Clear();
 
-			CmdInitialize();
+			CmdInitialize(this.gameObject);
 		}
 
 		[Command]
-		public void CmdInitialize() {
+		public void CmdInitialize(GameObject spawner) {
 			Debug.Log("Creating a new game object.");
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			Debug.Log("Setting the game object to the parent, NewSpawner.");
@@ -169,6 +169,13 @@ namespace MultiPlayer {
 			Debug.Log("Network spawning the game object.");
 			NetworkServer.SpawnWithClientAuthority(gameUnit, this.connectionToClient);
 
+			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
+			if (newSpawner != null) {
+				newSpawner.unitList.Add(new NewUnitStruct(gameUnit));
+			}
+			else {
+				Debug.LogError("Warning!");
+			}
 
 
 
