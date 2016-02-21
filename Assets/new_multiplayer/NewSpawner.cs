@@ -284,7 +284,6 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
-			return;
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
