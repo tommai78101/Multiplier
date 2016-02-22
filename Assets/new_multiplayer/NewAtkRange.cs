@@ -31,6 +31,11 @@ namespace MultiPlayer {
 			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
 				this.detectedUnits.Remove(unit);
 			}
+			if (this.detectedUnits.Count <= 0) {
+				NewChanges changes = this.parent.CurrentProperty();
+				changes.enemyPosition = changes.mousePosition;
+				this.parent.CallCmdupdateProperty(changes);
+			}
 		}
 
 		public void FixedUpdate() {
@@ -39,7 +44,7 @@ namespace MultiPlayer {
 				NewChanges changes = this.parent.CurrentProperty();
 				changes.targetUnit = this.detectedUnits[0].gameObject;
 				changes.enemyPosition = this.detectedUnits[0].transform.position;
-				this.parent.CmdUpdateProperty(this.parent.gameObject, changes);
+				this.parent.CallCmdupdateProperty(changes);
 			}
 		}
 	}

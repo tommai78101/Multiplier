@@ -186,6 +186,10 @@ namespace MultiPlayer {
 			this.properties = pro;
 		}
 
+		public void CallCmdupdateProperty(NewChanges changes) {
+			this.CmdUpdateProperty(this.gameObject, changes);
+		}
+
 		[Command]
 		public void CmdDestroy(GameObject obj) {
 			NetworkServer.Destroy(obj);
