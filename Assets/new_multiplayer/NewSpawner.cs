@@ -316,8 +316,6 @@ namespace MultiPlayer {
 									changes.isSelected = false;
 									CmdUpdateUnitProperty(owner.gameObject, this.changes);
 									CmdUpdateUnitProperty(merge.gameObject, this.changes);
-									//owner.NewProperty(changes);
-									//merge.NewProperty(changes);
 									this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
 									this.selectedList.RemoveAt(i);
 									i--;
@@ -367,7 +365,6 @@ namespace MultiPlayer {
 							this.changes.mousePosition = hit.point;
 							this.changes.isCommanded = true;
 							CmdUpdateUnitProperty(temp.unit, this.changes);
-							//unit.NewProperty(this.changes); 
 						}
 					}
 				}
@@ -387,10 +384,8 @@ namespace MultiPlayer {
 						this.changes.isSelected = false;
 						this.changes.isSplitting = false;
 						CmdUpdateUnitProperty(splitGroup.owner.gameObject, this.changes);
-						//unit.NewProperty(this.changes);
 						unit = splitGroup.split.GetComponent<NewGameUnit>();
 						CmdUpdateUnitProperty(splitGroup.split.gameObject, this.changes);
-						//unit.NewProperty(this.changes);
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.Remove(splitGroup);
 					}
@@ -411,12 +406,10 @@ namespace MultiPlayer {
 							this.changes.isSelected = false;
 							changes.newLevel = unit.properties.level + 1;
 							CmdUpdateUnitProperty(mergeGroup.owner.gameObject, this.changes);
-							//unit.NewProperty(changes);
 						}
 						if (mergeGroup.merge != null) {
 							NewUnitStruct temp = new NewUnitStruct();
 							temp.unit = mergeGroup.merge.gameObject;
-							//this.removeUnitList.Add(temp);
 							this.unitList.Remove(temp);
 							CmdDestroy(temp.unit);
 						}
@@ -431,15 +424,12 @@ namespace MultiPlayer {
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
-						//      CmdRemoveUnitList(this.unitList[i].unit);
-						Debug.Log("Deleting game unit from UnitSyncList.");
 						CmdRemoveUnitList(this.unitList[i].unit);
 						continue;
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
 					if (!id.hasAuthority) {
 						if (this.unitList != null) {
-							//      CmdRemoveUnitList(this.unitList[i].unit);
 							CmdRemoveUnitList(this.unitList[i].unit);
 						}
 						continue;
@@ -447,7 +437,6 @@ namespace MultiPlayer {
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
 						CmdRemoveUnitList(this.unitList[i].unit);
-						//      CmdRemoveUnitList(this.unitList[i].unit);
 					}
 				}
 			}
@@ -532,7 +521,6 @@ namespace MultiPlayer {
 					this.changes = unit.CurrentProperty();
 					this.changes.isSelected = true;
 					CmdUpdateUnitProperty(unit.gameObject, this.changes);
-					//unit.NewProperty(changes);
 				}
 				else {
 					continue;
@@ -553,7 +541,6 @@ namespace MultiPlayer {
 					if (unit != null && unit.hasAuthority) {
 						this.changes = unit.CurrentProperty();
 						changes.isSelected = true;
-						//unit.NewProperty(changes);
 						CmdUpdateUnitProperty(unit.gameObject, this.changes);
 					}
 				}
@@ -577,14 +564,12 @@ namespace MultiPlayer {
 							if (this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();
 								this.changes.isSelected = false;
-								//unit.NewProperty(changes);
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Remove(temp);
 							}
 							else {
 								this.changes = unit.CurrentProperty();
 								changes.isSelected = true;
-								//unit.NewProperty(changes);
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
@@ -602,7 +587,6 @@ namespace MultiPlayer {
 									this.changes = unit.CurrentProperty();
 									this.changes.isSelected = false;
 									CmdUpdateUnitProperty(unit.gameObject, this.changes);
-									//unit.NewProperty(changes);
 									this.selectedList.Remove(temp);
 								}
 							}
@@ -611,7 +595,6 @@ namespace MultiPlayer {
 									this.changes = unit.CurrentProperty();
 									;
 									changes.isSelected = true;
-									//unit.NewProperty(changes);
 									CmdUpdateUnitProperty(unit.gameObject, this.changes);
 									this.selectedList.Add(temp);
 								}
@@ -626,20 +609,17 @@ namespace MultiPlayer {
 			for (int i = this.unitList.Count - 1; i >= 0; i--) {
 				NewUnitStruct temp = this.unitList[i];
 				if (temp.unit == null) {
-					//this.removeUnitList.Add(temp);
 					CmdRemoveUnitList(this.unitList[i].unit);
 					continue;
 				}
 				GameObject obj = temp.unit.gameObject;
 				if (obj == null) {
-					//this.removeUnitList.Add(temp);
 					CmdRemoveUnitList(this.unitList[i].unit);
 					continue;
 				}
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 				changes = unit.CurrentProperty();
 				changes.isSelected = false;
-				//unit.NewProperty(changes);
 				CmdUpdateUnitProperty(unit.gameObject, this.changes);
 			}
 			this.selectedList.Clear();
@@ -659,7 +639,6 @@ namespace MultiPlayer {
 								this.changes = unit.CurrentProperty();
 								;
 								changes.isSelected = true;
-								//unit.NewProperty(changes);
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
@@ -668,7 +647,6 @@ namespace MultiPlayer {
 								;
 								this.changes.isSelected = false;
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
-								//unit.NewProperty(changes);
 								this.selectedList.Remove(temp);
 							}
 						}
@@ -678,7 +656,6 @@ namespace MultiPlayer {
 							this.changes = unit.CurrentProperty();
 							;
 							changes.isSelected = true;
-							//unit.NewProperty(changes);
 							CmdUpdateUnitProperty(unit.gameObject, this.changes);
 							this.selectedList.Add(temp);
 						}
@@ -701,7 +678,6 @@ namespace MultiPlayer {
 					this.changes = unit.CurrentProperty();
 					this.changes.mousePosition = hit.point;
 					CmdUpdateUnitProperty(unit.gameObject, this.changes);
-					//unit.properties.targetPosition = hit.point;
 					break;
 				}
 			}

@@ -120,20 +120,17 @@ namespace MultiPlayer {
 
 			if (this.properties.isCommanded) {
 				if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
-					//this.agent.SetDestination(this.properties.targetPosition);
 					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
 				}
 			}
 			else {
 				if (this.agent.ReachedDestination()) {
 					if (this.properties.isCommanded) {
-						Debug.Log("Game Unit is at destination.");
 						NewChanges changes = this.CurrentProperty();
 						changes.isCommanded = false;
 						this.CmdUpdateProperty(this.gameObject, changes);
 					}
 					if (!this.properties.isCommanded) {
-						Debug.Log("Game unit is checking if it remembers an old enemy position.");
 						CmdSetDestination(this.gameObject, this.properties.enemyTargetPosition);
 					}
 				}

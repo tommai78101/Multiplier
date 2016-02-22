@@ -40,6 +40,7 @@ namespace MultiPlayer {
 
 		public void FixedUpdate() {
 			this.colliderBody.WakeUp();
+
 			if (this.detectedUnits.Count > 0) {
 				NewChanges changes = this.parent.CurrentProperty();
 				changes.targetUnit = this.detectedUnits[0].gameObject;
