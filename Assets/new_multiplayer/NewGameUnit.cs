@@ -132,7 +132,7 @@ namespace MultiPlayer {
 				}
 			}
 			else {
-				Debug.Log("Game Unit is moving towards the destination.");
+				Debug.Log("Agent is moving? + " + this.agent.ReachedDestination().ToString());
 			}
 
 			if (this.properties.isSelected) {
