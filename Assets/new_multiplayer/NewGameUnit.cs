@@ -238,28 +238,31 @@ namespace MultiPlayer {
 
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0) {
-				CmdDestroy(this.gameObject, this.properties.targetUnit);
+				CmdDestroy(this.properties.targetUnit);
 			}
 		}
 
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
 
 		[Command]
-		public void CmdDestroy(GameObject obj, GameObject targetUnit) {
-			if (obj != null) {
-				if (targetUnit != null) {
-					NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
-					NewChanges changes = unit.CurrentProperty();
-					if (changes.targetUnit != null && changes.targetUnit.Equals(obj)) {
-						changes.targetUnit = null;
-						unit.NewProperty(changes);
-					}
+		public void CmdDestroy(GameObject targetUnit) {
+			if (targetUnit != null) {
+				NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
+				NewChanges changes = unit.CurrentProperty();
+				if (changes.targetUnit != null && changes.targetUnit.Equals(this.gameObject)) {
+					changes.targetUnit = null;
+					unit.NewProperty(changes);
 				}
-				NetworkServer.Destroy(obj);
 			}
-			else {
-				Debug.Log("Cannot destroy game unit with health less than zero.");
+			NewLOS los = this.GetComponentInChildren<NewLOS>();
+			if (los != null) {
+				los.parent = null;
 			}
+			NewAtkRange range = this.GetComponentInChildren<NewAtkRange>();
+			if (range != null) {
+				range.parent = null;
+			}
+			NetworkServer.Destroy(this.gameObject);
 		}
 
 		[Command]
