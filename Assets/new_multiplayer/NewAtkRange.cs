@@ -41,11 +41,13 @@ namespace MultiPlayer {
 		public void FixedUpdate() {
 			this.colliderBody.WakeUp();
 
-			if (this.detectedUnits.Count > 0) {
-				NewChanges changes = this.parent.CurrentProperty();
-				changes.targetUnit = this.detectedUnits[0].gameObject;
-				changes.enemyPosition = this.detectedUnits[0].transform.position;
-				this.parent.CallCmdupdateProperty(changes);
+			if (this.parent != null) {
+				if (this.detectedUnits.Count > 0) {
+					NewChanges changes = this.parent.CurrentProperty();
+					changes.targetUnit = this.detectedUnits[0].gameObject;
+					changes.enemyPosition = this.detectedUnits[0].transform.position;
+					this.parent.CallCmdupdateProperty(changes);
+				}
 			}
 		}
 	}
