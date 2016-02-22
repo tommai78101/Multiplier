@@ -15,6 +15,7 @@ namespace MultiPlayer {
 		public int level;
 		public float scalingFactor;
 		public Vector3 targetPosition;
+		public Vector3 oldTargetPosition;
 		public GameObject targetUnit;
 	}
 
@@ -59,9 +60,11 @@ namespace MultiPlayer {
 			this.properties.currentHealth = 3;
 			this.properties.maxHealth = 3;
 			this.properties.targetPosition = -9999 * Vector3.one;
+			this.properties.oldTargetPosition = this.properties.targetPosition;
 			this.properties.isSelected = false;
 			this.properties.scalingFactor = 1.4f;
 			this.properties.level = 1;
+			this.properties.isCommanded = false;
 			this.updateProperties += NewProperty;
 			NewSelectionRing[] selectionRings = this.GetComponentsInChildren<NewSelectionRing>(true);
 			foreach (NewSelectionRing ring in selectionRings) {
@@ -120,7 +123,12 @@ namespace MultiPlayer {
 			//	}
 			//}
 
-			if (this.agent.ReachedDestination()) {
+			if (this.properties.isCommanded) {
+				if (this.properties.targetPosition != this.properties.oldTargetPosition) {
+					this.agent.SetDestination(this.properties.targetPosition);
+				}
+			}
+			else if (this.agent.ReachedDestination()) {
 				if (this.properties.isCommanded) {
 					Debug.Log("Game Unit is at destination.");
 					NewChanges changes = this.CurrentProperty();
@@ -147,6 +155,7 @@ namespace MultiPlayer {
 				pro.currentHealth -= changes.damage;
 			}
 			if (changes.position != Vector3.one * -9999) {
+				pro.oldTargetPosition = pro.targetPosition;
 				pro.targetPosition = changes.position;
 			}
 			pro.isSelected = changes.isSelected;
