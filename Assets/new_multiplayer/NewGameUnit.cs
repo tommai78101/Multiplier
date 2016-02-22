@@ -125,16 +125,14 @@ namespace MultiPlayer {
 					CmdSetDestination(this.properties.targetPosition);
 				}
 				if (this.agent.ReachedDestination()) {
-					if (Vector3.Distance(this.transform.position, this.agent.destination) < 5f) {
-						Debug.Log("Game Unit is very close to destination.");
-						NewChanges changes = this.CurrentProperty();
-						changes.isCommanded = false;
-						this.NewProperty(changes);
-					}
+					Debug.Log("Game Unit is at destination.");
+					NewChanges changes = this.CurrentProperty();
+					changes.isCommanded = false;
+					this.NewProperty(changes);
 				}
 			}
 			else {
-				Debug.Log("Game Unit is at destination.");
+				Debug.Log("Game Unit is moving towards the destination.");
 			}
 
 			if (this.properties.isSelected) {
