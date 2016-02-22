@@ -112,20 +112,10 @@ namespace MultiPlayer {
 			//	CmdTakeDamage(1);
 			//}
 
-			//if (Input.GetMouseButtonUp(0)) {
-			//	Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			//	RaycastHit hit;
-			//	if (Physics.Raycast(ray, out hit)) {
-			//		Debug.Log("Moving time!");
-			//		NewChanges changes = new NewChanges().Clear();
-			//		changes.position = hit.point;
-			//		updateProperties(changes);
-			//	}
-			//}
-
 			if (this.properties.isCommanded) {
 				if (this.properties.targetPosition != this.properties.oldTargetPosition) {
-					this.agent.SetDestination(this.properties.targetPosition);
+					//this.agent.SetDestination(this.properties.targetPosition);
+					CmdSetDestination(this.gameObject, this.properties.targetPosition);
 				}
 			}
 			else if (this.agent.ReachedDestination()) {
@@ -192,6 +182,20 @@ namespace MultiPlayer {
 			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 			if (unit != null) {
 				unit.NewProperty(changes);
+			}
+		}
+
+		//Do not remove. This is required.
+		[Command]
+		public void CmdSetDestination(GameObject obj, Vector3 pos) {
+			RpcSetDestination(obj, pos);
+		}
+
+		[ClientRpc]
+		public void RpcSetDestination(GameObject obj, Vector3 pos) {
+			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+			if (unit != null) {
+				unit.agent.SetDestination(pos); 
 			}
 		}
 	}
