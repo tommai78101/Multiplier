@@ -158,6 +158,7 @@ namespace MultiPlayer {
 			pro.isSplitting = changes.isSplitting;
 			pro.isMerging = changes.isMerging;
 			pro.level = changes.newLevel;
+			pro.isCommanded = changes.isCommanded;
 			OnPropertiesChanged(pro);
 		}
 

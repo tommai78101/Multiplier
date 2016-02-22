@@ -264,7 +264,7 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdUpdateUnitProperty(GameObject unit, NewChanges changes) {
-			Debug.Log("NewChanges value: " + changes.ToString());
+			Debug.Log("isCommanded value: " + changes.isCommanded);
 			NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
 			if (gameUnit != null) {
 				gameUnit.NewProperty(changes);
@@ -312,8 +312,8 @@ namespace MultiPlayer {
 									this.changes = owner.CurrentProperty();
 									changes.isMerging = true;
 									changes.isSelected = false;
-									CmdUpdateUnitProperty(owner.gameObject, changes);
-									CmdUpdateUnitProperty(merge.gameObject, changes);
+									CmdUpdateUnitProperty(owner.gameObject, this.changes);
+									CmdUpdateUnitProperty(merge.gameObject, this.changes);
 									//owner.NewProperty(changes);
 									//merge.NewProperty(changes);
 									this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
