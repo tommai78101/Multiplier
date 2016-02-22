@@ -366,8 +366,8 @@ namespace MultiPlayer {
 						foreach (NewUnitStruct temp in this.selectedList) {
 							NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 							this.changes = unit.CurrentProperty();
-							;
 							this.changes.position = hit.point;
+							this.changes.isCommanded = true;
 							CmdUpdateUnitProperty(temp.unit, changes);
 							//unit.NewProperty(this.changes); 
 						}

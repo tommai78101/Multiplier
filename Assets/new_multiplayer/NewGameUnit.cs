@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using Extension;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -8,6 +9,7 @@ namespace MultiPlayer {
 		public bool isSplitting;
 		public bool isMerging;
 		public bool isSelected;
+		public bool isCommanded;
 		public int currentHealth;
 		public int maxHealth;
 		public int level;
@@ -21,6 +23,7 @@ namespace MultiPlayer {
 		public bool isSplitting;
 		public bool isMerging;
 		public bool isSelected;
+		public bool isCommanded;
 		public int damage;
 		public int newLevel;
 		public Vector3 position;
@@ -30,6 +33,7 @@ namespace MultiPlayer {
 			this.isMerging = false;
 			this.isSplitting = false;
 			this.isSelected = false;
+			this.isCommanded = false;
 			this.damage = -1;
 			this.newLevel = 1;
 			this.position = Vector3.one * -9999;
@@ -46,6 +50,7 @@ namespace MultiPlayer {
 
 		public delegate void UpdateProperties(NewChanges changes);
 		public UpdateProperties updateProperties;
+		public NavMeshAgent agent;
 
 		public GameObject selectionRing;
 
@@ -67,6 +72,10 @@ namespace MultiPlayer {
 				else {
 					Debug.LogError("Cannot find mesh filter and/or mesh renderer for unit's selection ring.");
 				}
+			}
+			this.agent = this.GetComponent<NavMeshAgent>();
+			if (this.agent == null) {
+				Debug.LogError("Cannot obtain nav mesh agent from game unit.");
 			}
 		}
 
@@ -111,8 +120,15 @@ namespace MultiPlayer {
 			//	}
 			//}
 
-			if (this.properties.targetPosition != -9999 * Vector3.one) {
+			if (this.properties.targetPosition != -9999 * Vector3.one && this.properties.isCommanded) {
 				CmdSetDestination(this.properties.targetPosition);
+			}
+			else {
+				if (this.agent.ReachedDestination()) {
+					if (Vector3.Distance(this.transform.position, this.agent.destination) < 5f) {
+						Debug.Log("Game Unit is very close to destination.");
+					}
+				}
 			}
 
 			if (this.properties.isSelected) {
@@ -144,6 +160,7 @@ namespace MultiPlayer {
 			changes.isSelected = this.properties.isSelected;
 			changes.isMerging = this.properties.isMerging;
 			changes.isSplitting = this.properties.isSplitting;
+			changes.isCommanded = this.properties.isCommanded;
 			changes.newLevel = this.properties.level;
 			changes.position = this.properties.targetPosition;
 			changes.damage = 0;
