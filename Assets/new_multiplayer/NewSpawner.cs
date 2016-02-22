@@ -264,6 +264,7 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdUpdateUnitProperty(GameObject unit, NewChanges changes) {
+			Debug.Log("Changes: " + changes.ToString());
 			RpcUpdateUnitProperty(unit, changes);
 		}
 
