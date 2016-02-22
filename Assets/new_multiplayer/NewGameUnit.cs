@@ -208,7 +208,7 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcSetDestination(GameObject obj, Vector3 pos) {
 			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-			if (unit != null) {
+			if (unit != null && unit.agent != null) {
 				unit.agent.SetDestination(pos); 
 			}
 		}
