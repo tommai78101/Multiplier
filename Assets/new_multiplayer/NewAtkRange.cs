@@ -39,7 +39,7 @@ namespace MultiPlayer {
 				NewChanges changes = this.parent.CurrentProperty();
 				changes.targetUnit = this.detectedUnits[0].gameObject;
 				changes.enemyPosition = this.detectedUnits[0].transform.position;
-				this.parent.NewProperty(changes);
+				this.parent.CmdUpdateProperty(this.parent.gameObject, changes);
 			}
 		}
 	}

@@ -124,16 +124,19 @@ namespace MultiPlayer {
 					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
 				}
 			}
-			else if (this.agent.ReachedDestination()) {
-				if (this.properties.isCommanded) {
-					Debug.Log("Game Unit is at destination.");
-					NewChanges changes = this.CurrentProperty();
-					changes.isCommanded = false;
-					this.CmdUpdateProperty(this.gameObject, changes);
-				}
-			}
 			else {
-				Debug.Log("Agent is moving? + " + this.agent.ReachedDestination().ToString());
+				if (this.agent.ReachedDestination()) {
+					if (this.properties.isCommanded) {
+						Debug.Log("Game Unit is at destination.");
+						NewChanges changes = this.CurrentProperty();
+						changes.isCommanded = false;
+						this.CmdUpdateProperty(this.gameObject, changes);
+					}
+					if (!this.properties.isCommanded) {
+						Debug.Log("Game unit is checking if it remembers an old enemy position.");
+						CmdSetDestination(this.gameObject, this.properties.enemyTargetPosition);
+					}
+				}
 			}
 
 			if (this.properties.isSelected) {
@@ -150,11 +153,11 @@ namespace MultiPlayer {
 			if (changes.damage > 0) {
 				pro.currentHealth -= changes.damage;
 			}
-			if (changes.mousePosition != Vector3.one * -9999) {
+			if (pro.mouseTargetPosition != changes.mousePosition) {
 				pro.oldMouseTargetPosition = pro.mouseTargetPosition;
 				pro.mouseTargetPosition = changes.mousePosition;
 			}
-			if (changes.enemyPosition != Vector3.one * -9999) {
+			if (pro.enemyTargetPosition != changes.enemyPosition) {
 				pro.oldEnemyTargetPosition = pro.enemyTargetPosition;
 				pro.enemyTargetPosition = changes.enemyPosition;
 			}
