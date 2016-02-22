@@ -62,7 +62,9 @@ namespace MultiPlayer {
 		public NavMeshAgent agent;
 		public GameObject selectionRing;
 
+		[SerializeField]
 		private float recoveryCounter;
+		[SerializeField]
 		private float attackCooldownCounter;
 
 		public void Start() {
@@ -155,6 +157,7 @@ namespace MultiPlayer {
 					this.recoveryCounter = 1f;
 				}
 			}
+			pro.targetUnit = changes.targetUnit;
 			OnPropertiesChanged(pro);
 		}
 
@@ -167,6 +170,7 @@ namespace MultiPlayer {
 			changes.newLevel = this.properties.level;
 			changes.mousePosition = this.properties.mouseTargetPosition;
 			changes.enemyPosition = this.properties.enemyTargetPosition;
+			changes.targetUnit = this.properties.targetUnit;
 			changes.damage = 0;
 			return changes;
 		}
