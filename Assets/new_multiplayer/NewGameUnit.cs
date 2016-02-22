@@ -113,9 +113,6 @@ namespace MultiPlayer {
 				changes.damage = attackDamage;
 				updateProperties(changes);
 			}
-			else {
-				CmdDestroy(this.gameObject, this.properties.targetUnit);
-			}
 		}
 
 		public void Update() {
