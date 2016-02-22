@@ -114,7 +114,7 @@ namespace MultiPlayer {
 				updateProperties(changes);
 			}
 			else {
-				CmdDestroy(this.gameObject);
+				CmdDestroy(this.gameObject, this.properties.targetUnit);
 			}
 		}
 
