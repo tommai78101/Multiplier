@@ -198,7 +198,9 @@ namespace MultiPlayer {
 					}
 				}
 				else {
-					CmdSetDestination(this.gameObject, this.properties.enemyHitTargetPosition);
+					Vector3 agentDestination = this.properties.targetUnit.transform.position;
+					agentDestination.y = 0f;
+					CmdSetDestination(this.gameObject, agentDestination);
 				}
 			}
 		}
