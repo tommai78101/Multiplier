@@ -276,6 +276,8 @@ namespace MultiPlayer {
 			this.unitList.Remove(new NewUnitStruct(obj));
 		}
 
+		//-----------   Private class methods may all need refactoring   --------------------
+
 		private void HandleInputs() {
 			if (Input.GetKeyUp(KeyCode.S)) {
 				foreach (NewUnitStruct temp in this.selectedList) {
@@ -371,8 +373,6 @@ namespace MultiPlayer {
 				}
 			}
 		}
-
-		//-----------   Private class methods may all need refactoring   --------------------
 
 		private void ManageLists() {
 			if (this.splitList.Count > 0) {

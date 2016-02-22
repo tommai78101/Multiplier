@@ -120,15 +120,12 @@ namespace MultiPlayer {
 			//	}
 			//}
 
-			if (this.properties.isCommanded) {
-				if (this.properties.targetPosition != -9999 * Vector3.one) {
-					CmdSetDestination(this.properties.targetPosition);
-				}
-				if (this.agent.ReachedDestination()) {
+			if (this.agent.ReachedDestination()) {
+				if (this.properties.isCommanded) {
 					Debug.Log("Game Unit is at destination.");
 					NewChanges changes = this.CurrentProperty();
 					changes.isCommanded = false;
-					this.NewProperty(changes);
+					this.CmdUpdateProperty(this.gameObject, changes);
 				}
 			}
 			else {
@@ -182,14 +179,11 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdSetDestination(Vector3 target) {
-			RpcSetDestination(target);
-		}
-
-		[ClientRpc]
-		public void RpcSetDestination(Vector3 target) {
-			NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
-			agent.SetDestination(target);
+		public void CmdUpdateProperty(GameObject obj, NewChanges changes) {
+			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+			if (unit != null) {
+				unit.NewProperty(changes);
+			}
 		}
 	}
 }
