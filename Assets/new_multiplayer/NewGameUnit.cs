@@ -190,7 +190,12 @@ namespace MultiPlayer {
 			}
 			if (!this.properties.isCommanded) {
 				if (this.properties.targetUnit == null) {
-					CmdSetDestination(this.gameObject, this.properties.enemySeenTargetPosition);
+					if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
+						CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
+					}
+					else {
+						CmdSetDestination(this.gameObject, this.properties.enemySeenTargetPosition);
+					}
 				}
 				else {
 					CmdSetDestination(this.gameObject, this.properties.enemyHitTargetPosition);
