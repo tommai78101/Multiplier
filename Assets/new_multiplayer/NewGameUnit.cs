@@ -238,14 +238,20 @@ namespace MultiPlayer {
 
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0) {
-				CmdDestroy(this.gameObject);
+				CmdDestroy(this.gameObject, this.properties.targetUnit);
 			}
 		}
 
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
 
 		[Command]
-		public void CmdDestroy(GameObject obj) {
+		public void CmdDestroy(GameObject obj, GameObject targetUnit) {
+			NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
+			NewChanges changes = unit.CurrentProperty();
+			if (changes.targetUnit.Equals(obj)) {
+				changes.targetUnit = null;
+				unit.NewProperty(changes);
+			}
 			NetworkServer.Destroy(obj);
 		}
 
