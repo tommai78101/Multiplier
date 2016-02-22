@@ -134,7 +134,7 @@ namespace MultiPlayer {
 				}
 			}
 			else {
-				Debug.Log("Game Unit is atdestination.");
+				Debug.Log("Game Unit is at destination.");
 			}
 
 			if (this.properties.isSelected) {
