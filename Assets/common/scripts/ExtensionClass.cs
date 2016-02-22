@@ -16,7 +16,7 @@ namespace Extension {
 				}
 				else {
 					if (agent.remainingDistance <= float.Epsilon) {
-						if (!agent.hasPath || agent.velocity.sqrMagnitude <= float.Epsilon) {
+						if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) {
 							return true;
 						}
 					}
