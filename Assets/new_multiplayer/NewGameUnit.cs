@@ -246,11 +246,13 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdDestroy(GameObject obj, GameObject targetUnit) {
-			NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
-			NewChanges changes = unit.CurrentProperty();
-			if (changes.targetUnit.Equals(obj)) {
-				changes.targetUnit = null;
-				unit.NewProperty(changes);
+			if (targetUnit != null) {
+				NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
+				NewChanges changes = unit.CurrentProperty();
+				if (changes.targetUnit.Equals(obj)) {
+					changes.targetUnit = null;
+					unit.NewProperty(changes);
+				}
 			}
 			NetworkServer.Destroy(obj);
 		}
@@ -290,7 +292,7 @@ namespace MultiPlayer {
 		public void RpcSetDestination(GameObject obj, Vector3 pos) {
 			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
 			if (unit != null && unit.agent != null) {
-				unit.agent.SetDestination(pos); 
+				unit.agent.SetDestination(pos);
 			}
 		}
 	}
