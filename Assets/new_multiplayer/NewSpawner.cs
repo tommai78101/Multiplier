@@ -269,6 +269,10 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcUpdateUnitProperty(GameObject unit, NewChanges changes) {
+			if (!this.hasAuthority) {
+				return;
+			}
+			Debug.Log("Is game unit null? : " + (unit == null).ToString());
 			NewGameUnit temp = unit.GetComponent<NewGameUnit>();
 			if (temp != null) {
 				temp.NewProperty(changes);
@@ -368,7 +372,7 @@ namespace MultiPlayer {
 							this.changes = unit.CurrentProperty();
 							this.changes.position = hit.point;
 							this.changes.isCommanded = true;
-							CmdUpdateUnitProperty(temp.unit, changes);
+							CmdUpdateUnitProperty(temp.unit, this.changes);
 							//unit.NewProperty(this.changes); 
 						}
 					}
