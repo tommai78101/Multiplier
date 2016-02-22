@@ -79,6 +79,9 @@ namespace MultiPlayer {
 			this.properties.scalingFactor = 1.4f;
 			this.properties.level = 1;
 			this.properties.isCommanded = false;
+			this.properties.isAttackCooldownEnabled = false;
+			this.properties.isRecoveryEnabled = false;
+			this.properties.targetUnit = null;
 			this.updateProperties += NewProperty;
 			NewSelectionRing[] selectionRings = this.GetComponentsInChildren<NewSelectionRing>(true);
 			foreach (NewSelectionRing ring in selectionRings) {
@@ -96,23 +99,6 @@ namespace MultiPlayer {
 			}
 			this.recoveryCounter = 0f;
 			this.attackCooldownCounter = 0f;
-		}
-
-		[Command]
-		public void CmdTakeDamage(int attackDamage) {
-			RpcTakeDamage(attackDamage);
-		}
-
-		[ClientRpc]
-		public void RpcTakeDamage(int attackDamage) {
-			if (!this.hasAuthority) {
-				return;
-			}
-			if (this.properties.currentHealth > 1) {
-				NewChanges changes = new NewChanges().Clear();
-				changes.damage = attackDamage;
-				updateProperties(changes);
-			}
 		}
 
 		public void Update() {
@@ -164,6 +150,8 @@ namespace MultiPlayer {
 			changes.isMerging = this.properties.isMerging;
 			changes.isSplitting = this.properties.isSplitting;
 			changes.isCommanded = this.properties.isCommanded;
+			changes.isAttackCooldownEnabled = this.properties.isAttackCooldownEnabled;
+			changes.isRecoveryEnabled = this.properties.isRecoveryEnabled;
 			changes.newLevel = this.properties.level;
 			changes.mousePosition = this.properties.mouseTargetPosition;
 			changes.enemyPosition = this.properties.enemyTargetPosition;
