@@ -14,8 +14,10 @@ namespace MultiPlayer {
 		public int maxHealth;
 		public int level;
 		public float scalingFactor;
-		public Vector3 targetPosition;
-		public Vector3 oldTargetPosition;
+		public Vector3 mouseTargetPosition;
+		public Vector3 oldMouseTargetPosition;
+		public Vector3 enemyTargetPosition;
+		public Vector3 oldEnemyTargetPosition;
 		public GameObject targetUnit;
 	}
 
@@ -27,7 +29,8 @@ namespace MultiPlayer {
 		public bool isCommanded;
 		public int damage;
 		public int newLevel;
-		public Vector3 position;
+		public Vector3 mousePosition;
+		public Vector3 enemyPosition;
 		public GameObject targetUnit;
 
 		public NewChanges Clear() {
@@ -37,7 +40,8 @@ namespace MultiPlayer {
 			this.isCommanded = false;
 			this.damage = -1;
 			this.newLevel = 1;
-			this.position = Vector3.one * -9999;
+			this.mousePosition = Vector3.one * -9999;
+			this.enemyPosition = this.mousePosition;
 			this.targetUnit = null;
 			return this;
 		}
@@ -59,8 +63,10 @@ namespace MultiPlayer {
 			this.properties = new UnitProperties();
 			this.properties.currentHealth = 3;
 			this.properties.maxHealth = 3;
-			this.properties.targetPosition = -9999 * Vector3.one;
-			this.properties.oldTargetPosition = this.properties.targetPosition;
+			this.properties.mouseTargetPosition = -9999 * Vector3.one;
+			this.properties.oldMouseTargetPosition = this.properties.mouseTargetPosition;
+			this.properties.enemyTargetPosition = this.properties.mouseTargetPosition;
+			this.properties.oldEnemyTargetPosition = this.properties.mouseTargetPosition;
 			this.properties.isSelected = false;
 			this.properties.scalingFactor = 1.4f;
 			this.properties.level = 1;
@@ -113,9 +119,9 @@ namespace MultiPlayer {
 			//}
 
 			if (this.properties.isCommanded) {
-				if (this.properties.targetPosition != this.properties.oldTargetPosition) {
+				if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
 					//this.agent.SetDestination(this.properties.targetPosition);
-					CmdSetDestination(this.gameObject, this.properties.targetPosition);
+					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
 				}
 			}
 			else if (this.agent.ReachedDestination()) {
@@ -144,9 +150,13 @@ namespace MultiPlayer {
 			if (changes.damage > 0) {
 				pro.currentHealth -= changes.damage;
 			}
-			if (changes.position != Vector3.one * -9999) {
-				pro.oldTargetPosition = pro.targetPosition;
-				pro.targetPosition = changes.position;
+			if (changes.mousePosition != Vector3.one * -9999) {
+				pro.oldMouseTargetPosition = pro.mouseTargetPosition;
+				pro.mouseTargetPosition = changes.mousePosition;
+			}
+			if (changes.enemyPosition != Vector3.one * -9999) {
+				pro.oldEnemyTargetPosition = pro.enemyTargetPosition;
+				pro.enemyTargetPosition = changes.enemyPosition;
 			}
 			pro.isSelected = changes.isSelected;
 			pro.isSplitting = changes.isSplitting;
@@ -163,7 +173,8 @@ namespace MultiPlayer {
 			changes.isSplitting = this.properties.isSplitting;
 			changes.isCommanded = this.properties.isCommanded;
 			changes.newLevel = this.properties.level;
-			changes.position = this.properties.targetPosition;
+			changes.mousePosition = this.properties.mouseTargetPosition;
+			changes.enemyPosition = this.properties.enemyTargetPosition;
 			changes.damage = 0;
 			return changes;
 		}
