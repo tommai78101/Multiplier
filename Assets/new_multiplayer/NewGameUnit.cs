@@ -177,17 +177,18 @@ namespace MultiPlayer {
 			if (this.properties.isCommanded) {
 				if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
 					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
+					return;
+				}
+			}
+			if (this.agent.ReachedDestination()) {
+				if (this.properties.isCommanded) {
+					NewChanges changes = this.CurrentProperty();
+					changes.isCommanded = false;
+					this.CmdUpdateProperty(this.gameObject, changes);
 				}
 			}
 			else {
-				if (this.agent.ReachedDestination()) {
-					if (this.properties.isCommanded) {
-						NewChanges changes = this.CurrentProperty();
-						changes.isCommanded = false;
-						this.CmdUpdateProperty(this.gameObject, changes);
-					}
-				}
-				else {
+				if (!this.properties.isCommanded) {
 					if (this.properties.targetUnit == null) {
 						CmdSetDestination(this.gameObject, this.properties.enemySeenTargetPosition);
 					}
