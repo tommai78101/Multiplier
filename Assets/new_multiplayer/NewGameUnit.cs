@@ -36,6 +36,7 @@ namespace MultiPlayer {
 		public bool isRecoveryEnabled;
 		public int damage;
 		public int newLevel;
+		public int teamFactionID;
 		public Vector3 mousePosition;
 		public Vector3 enemySeenPosition;
 		public Vector3 enemyHitPosition;
@@ -121,6 +122,7 @@ namespace MultiPlayer {
 		public void NewProperty(NewChanges changes) {
 			UnitProperties pro = new UnitProperties();
 			pro = this.properties;
+			pro.teamFactionID = changes.teamFactionID;
 			if (changes.damage > 0 && this.attackCooldownCounter <= 0f) {
 				pro.currentHealth -= changes.damage;
 				pro.isAttackCooldownEnabled = true;
@@ -162,6 +164,7 @@ namespace MultiPlayer {
 			changes.enemySeenPosition = this.properties.enemySeenTargetPosition;
 			changes.targetUnit = this.properties.targetUnit;
 			changes.damage = 0;
+			changes.teamFactionID = this.properties.teamFactionID;
 			return changes;
 		}
 
