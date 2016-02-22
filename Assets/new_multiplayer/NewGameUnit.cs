@@ -250,7 +250,7 @@ namespace MultiPlayer {
 				if (targetUnit != null) {
 					NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
 					NewChanges changes = unit.CurrentProperty();
-					if (changes.targetUnit.Equals(obj)) {
+					if (changes.targetUnit != null && changes.targetUnit.Equals(obj)) {
 						changes.targetUnit = null;
 						unit.NewProperty(changes);
 					}
