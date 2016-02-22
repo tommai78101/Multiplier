@@ -190,14 +190,16 @@ namespace MultiPlayer {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			for (int i = 0; i < spawners.Length; i++) {
-				if (spawners[i].hasAuthority) {
-					if (units[i].hasAuthority) {
-						units[i].transform.SetParent(spawners[i].transform);
+				for (int j = 0; j < units.Length; j++) {
+					if (spawners[i].hasAuthority) {
+						if (units[j].hasAuthority) {
+							units[j].transform.SetParent(spawners[i].transform);
+						}
 					}
-				}
-				else {
-					if (!units[i].hasAuthority) {
-						units[i].transform.SetParent(spawners[i].transform);
+					else {
+						if (!units[j].hasAuthority) {
+							units[j].transform.SetParent(spawners[i].transform);
+						}
 					}
 				}
 				continue;

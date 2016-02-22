@@ -175,14 +175,15 @@ namespace MultiPlayer {
 
 		private void HandleMovement() {
 			if (this.properties.isCommanded) {
-				if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
-					//Client side nav mesh agent
-					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
-				}
 				if (this.agent.ReachedDestination() && Vector3.Distance(this.properties.mouseTargetPosition, this.transform.position) < float.Epsilon) {
 					NewChanges changes = this.CurrentProperty();
 					changes.isCommanded = false;
 					this.CmdUpdateProperty(this.gameObject, changes);
+					return;
+				}
+				if (this.properties.mouseTargetPosition != this.properties.oldMouseTargetPosition) {
+					//Client side nav mesh agent
+					CmdSetDestination(this.gameObject, this.properties.mouseTargetPosition);
 					return;
 				}
 			}
