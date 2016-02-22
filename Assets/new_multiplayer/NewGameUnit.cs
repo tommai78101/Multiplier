@@ -246,15 +246,20 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdDestroy(GameObject obj, GameObject targetUnit) {
-			if (targetUnit != null) {
-				NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
-				NewChanges changes = unit.CurrentProperty();
-				if (changes.targetUnit.Equals(obj)) {
-					changes.targetUnit = null;
-					unit.NewProperty(changes);
+			if (obj != null) {
+				if (targetUnit != null) {
+					NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
+					NewChanges changes = unit.CurrentProperty();
+					if (changes.targetUnit.Equals(obj)) {
+						changes.targetUnit = null;
+						unit.NewProperty(changes);
+					}
 				}
+				NetworkServer.Destroy(obj);
 			}
-			NetworkServer.Destroy(obj);
+			else {
+				Debug.Log("Cannot destroy game unit with health less than zero.");
+			}
 		}
 
 		[Command]
