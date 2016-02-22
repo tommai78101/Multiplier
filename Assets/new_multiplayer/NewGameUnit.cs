@@ -175,7 +175,7 @@ namespace MultiPlayer {
 
 		private void HandleMovement() {
 			if (this.properties.isCommanded) {
-				if (this.agent.ReachedDestination() && Vector3.Distance(this.properties.mouseTargetPosition, this.transform.position) < float.Epsilon) {
+				if (this.agent.ReachedDestination() && Vector3.Distance(this.properties.mouseTargetPosition, this.transform.position) < 3f) {
 					NewChanges changes = this.CurrentProperty();
 					changes.isCommanded = false;
 					this.CmdUpdateProperty(this.gameObject, changes);
