@@ -15,6 +15,7 @@ namespace MultiPlayer {
 		public int currentHealth;
 		public int maxHealth;
 		public int level;
+		public int teamFactionID;
 		public float scalingFactor;
 		public Vector3 mouseTargetPosition;
 		public Vector3 oldMouseTargetPosition;
@@ -85,6 +86,7 @@ namespace MultiPlayer {
 			this.properties.isAttackCooldownEnabled = false;
 			this.properties.isRecoveryEnabled = false;
 			this.properties.targetUnit = null;
+			this.properties.teamFactionID = (int)(Random.value); //This is never to be changed.
 			this.updateProperties += NewProperty;
 			NewSelectionRing[] selectionRings = this.GetComponentsInChildren<NewSelectionRing>(true);
 			foreach (NewSelectionRing ring in selectionRings) {

@@ -21,14 +21,14 @@ namespace MultiPlayer {
 
 		public void OnTriggerEnter(Collider other) {
 			NewGameUnit unit = other.gameObject.GetComponent<NewGameUnit>();
-			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
+			if (unit != null && !unit.hasAuthority && unit.properties.teamFactionID != this.parent.properties.teamFactionID) {
 				this.detectedUnits.Add(unit);
 			}
 		}
 
 		public void OnTriggerExit(Collider other) {
 			NewGameUnit unit = other.GetComponent<NewGameUnit>();
-			if (unit != null && !unit.hasAuthority && !unit.gameObject.Equals(this.transform.parent.gameObject)) {
+			if (unit != null && !unit.hasAuthority && unit.properties.teamFactionID != this.parent.properties.teamFactionID) {
 				this.detectedUnits.Remove(unit);
 			}
 			if (this.detectedUnits.Count <= 0) {
