@@ -264,19 +264,10 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdUpdateUnitProperty(GameObject unit, NewChanges changes) {
-			Debug.Log("Changes: " + changes.ToString());
-			RpcUpdateUnitProperty(unit, changes);
-		}
-
-		[ClientRpc]
-		public void RpcUpdateUnitProperty(GameObject unit, NewChanges changes) {
-			if (!this.hasAuthority) {
-				return;
-			}
-			Debug.Log("Is game unit null? : " + (unit == null).ToString());
-			NewGameUnit temp = unit.GetComponent<NewGameUnit>();
-			if (temp != null) {
-				temp.NewProperty(changes);
+			Debug.Log("NewChanges value: " + changes.ToString());
+			NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
+			if (gameUnit != null) {
+				gameUnit.NewProperty(changes);
 			}
 		}
 
