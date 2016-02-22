@@ -199,7 +199,7 @@ namespace MultiPlayer {
 				}
 				else {
 					Vector3 agentDestination = this.properties.targetUnit.transform.position;
-					agentDestination.y = 0f;
+					agentDestination.y = 0f; //May or may not need this.
 					CmdSetDestination(this.gameObject, agentDestination);
 				}
 			}
