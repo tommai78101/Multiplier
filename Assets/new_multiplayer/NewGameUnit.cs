@@ -120,15 +120,21 @@ namespace MultiPlayer {
 			//	}
 			//}
 
-			if (this.properties.targetPosition != -9999 * Vector3.one && this.properties.isCommanded) {
-				CmdSetDestination(this.properties.targetPosition);
-			}
-			else {
+			if (this.properties.isCommanded) {
+				if (this.properties.targetPosition != -9999 * Vector3.one) {
+					CmdSetDestination(this.properties.targetPosition);
+				}
 				if (this.agent.ReachedDestination()) {
 					if (Vector3.Distance(this.transform.position, this.agent.destination) < 5f) {
 						Debug.Log("Game Unit is very close to destination.");
+						NewChanges changes = this.CurrentProperty();
+						changes.isCommanded = false;
+						this.NewProperty(changes);
 					}
 				}
+			}
+			else {
+				Debug.Log("Game Unit is atdestination.");
 			}
 
 			if (this.properties.isSelected) {
