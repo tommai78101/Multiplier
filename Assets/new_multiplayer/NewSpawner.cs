@@ -360,15 +360,17 @@ namespace MultiPlayer {
 
 			if (Input.GetMouseButtonUp(1)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit)) {
-					foreach (NewUnitStruct temp in this.selectedList) {
-						NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-						this.changes = unit.CurrentProperty();
-						;
-						this.changes.position = hit.point;
-						CmdUpdateUnitProperty(temp.unit, changes);
-						//unit.NewProperty(this.changes); 
+				RaycastHit[] hits = Physics.RaycastAll(ray);
+				foreach (RaycastHit hit in hits) {
+					if (hit.collider.gameObject.tag.Equals("Floor")) {
+						foreach (NewUnitStruct temp in this.selectedList) {
+							NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+							this.changes = unit.CurrentProperty();
+							;
+							this.changes.position = hit.point;
+							CmdUpdateUnitProperty(temp.unit, changes);
+							//unit.NewProperty(this.changes); 
+						}
 					}
 				}
 			}
