@@ -44,9 +44,11 @@ namespace MultiPlayer {
 			if (this.parent != null) {
 				if (this.detectedUnits.Count > 0) {
 					NewChanges changes = this.parent.CurrentProperty();
-					changes.targetUnit = this.detectedUnits[0].gameObject;
-					changes.enemyPosition = this.detectedUnits[0].transform.position;
-					this.parent.CallCmdupdateProperty(changes);
+					if (this.detectedUnits[0] != null) {
+						changes.targetUnit = this.detectedUnits[0].gameObject;
+						changes.enemyPosition = this.detectedUnits[0].transform.position;
+						this.parent.CallCmdupdateProperty(changes);
+					}
 				}
 			}
 		}
