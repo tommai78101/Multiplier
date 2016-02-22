@@ -247,14 +247,15 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdSpawn(GameObject temp, NetworkIdentity identity) {
-			NewChanges changes = new NewChanges().Clear();
 			NewGameUnit newUnit = temp.GetComponent<NewGameUnit>();
+			NewChanges changes = newUnit.CurrentProperty();
 			changes.isSelected = false;
 			changes.isSplitting = true;
 			newUnit.NewProperty(changes);
 			GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp);
 			unit.name = "NewGameUnit";
 			unit.transform.SetParent(this.transform);
+			unit.transform.position = newUnit.transform.position;
 			newUnit = unit.GetComponent<NewGameUnit>();
 			newUnit.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
