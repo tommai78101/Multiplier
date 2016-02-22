@@ -33,7 +33,7 @@ namespace MultiPlayer {
 			}
 			if (this.detectedUnits.Count <= 0) {
 				NewChanges changes = this.parent.CurrentProperty();
-				changes.enemyPosition = changes.mousePosition;
+				changes.enemyHitPosition = changes.mousePosition;
 				this.parent.CallCmdupdateProperty(changes);
 			}
 		}
@@ -46,7 +46,7 @@ namespace MultiPlayer {
 					NewChanges changes = this.parent.CurrentProperty();
 					if (this.detectedUnits[0] != null) {
 						changes.targetUnit = this.detectedUnits[0].gameObject;
-						changes.enemyPosition = this.detectedUnits[0].transform.position;
+						changes.enemyHitPosition = this.detectedUnits[0].transform.position;
 						this.parent.CallCmdupdateProperty(changes);
 					}
 				}
