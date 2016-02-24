@@ -41,7 +41,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -66,7 +66,8 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000002, guid: 3097ba19a3f2ea541af1d504eada9d69,
+    type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
 NavMeshSettings:
@@ -4183,7 +4184,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2006691340}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.7305037
+  m_Size: 0.67407584
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5658,7 +5659,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000004902482, y: -0.000024795532}
+  m_AnchoredPosition: {x: 0.000007353723, y: -0.000024795532}
   m_SizeDelta: {x: 207, y: 108.99}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1113069362
@@ -8286,7 +8287,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000006854534, y: 0}
+  m_AnchoredPosition: {x: -0.0000039041042, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454

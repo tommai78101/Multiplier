@@ -66,7 +66,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
-  m_LightingDataAsset: {fileID: 112000002, guid: 240836a0b7d8cd94b9d89f10fce088a0,
+  m_LightingDataAsset: {fileID: 112000002, guid: 9671af8056fb3294ba23dbbfb507ea3d,
     type: 2}
   m_RuntimeCPUUsage: 25
 --- !u!196 &4
@@ -532,7 +532,7 @@ MonoBehaviour:
   aspectRatio: 0
   marginSize: 15
   useDebugSceneCameraBorder: 1
-  cameraSpeed: .0500000007
+  cameraSpeed: 0.05
   zoomLevel: 3
 --- !u!114 &349166318
 MonoBehaviour:
