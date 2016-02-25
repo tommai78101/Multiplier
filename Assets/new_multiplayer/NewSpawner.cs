@@ -215,6 +215,11 @@ namespace MultiPlayer {
 				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
 				gameUnit.SetTeamColor(color);
 			}
+			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			foreach (NewGameUnit obj in units) {
+				Debug.Log("Team Color: " + obj.properties.teamColor.ToString());
+				obj.SetTeamColor(obj.properties.teamColor);
+			}
 		}
 
 		[ClientRpc]
