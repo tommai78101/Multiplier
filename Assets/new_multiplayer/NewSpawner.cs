@@ -135,7 +135,6 @@ namespace MultiPlayer {
 				return;
 			}
 
-
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
 			if (!spawnerIdentity.localPlayerAuthority) {
 				spawnerIdentity.localPlayerAuthority = true;
