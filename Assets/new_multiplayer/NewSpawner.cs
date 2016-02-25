@@ -211,7 +211,9 @@ namespace MultiPlayer {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			for (int i = 0; i < units.Length; i++) {
 				NewGameUnit a = units[i];
-				RpcSetColor(a.gameObject);
+				if (a != null) {
+					RpcSetColor(a.gameObject);
+				}
 			}
 		}
 
