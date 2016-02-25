@@ -185,6 +185,8 @@ namespace MultiPlayer {
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
+			NewGameUnit unit = gameUnit.GetComponent<NewGameUnit>();
+			unit.SetTeamColor(colorValue);
 
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
