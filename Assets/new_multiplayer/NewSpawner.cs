@@ -180,35 +180,41 @@ namespace MultiPlayer {
 			//Only the server choose what color values to use. Client values do not matter.
 			int colorValue = NewSpawner.colorCode;
 			NewSpawner.colorCode = (++NewSpawner.colorCode) % 3;
-			int nextColorValue = NewSpawner.colorCode;
-			NewSpawner.colorCode = (++NewSpawner.colorCode) % 3;
 
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 
+			RpcSetColor(gameUnit, colorValue);
+
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
 			RpcAdd(gameUnit, obj);
-			RpcFilter(colorValue, nextColorValue);
+			RpcFilter();
 		}
 
 		[ClientRpc]
-		public void RpcFilter(int firstColor, int secondColor) {
+		public void RpcSetColor(GameObject unit, int value) {
+			if (unit != null) {
+				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
+				gameUnit.SetTeamColor(value);
+			}
+		}
+
+		[ClientRpc]
+		public void RpcFilter() {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			for (int i = 0; i < spawners.Length; i++) {
 				for (int j = 0; j < units.Length; j++) {
 					if (spawners[i].hasAuthority) {
 						if (units[j].hasAuthority) {
-							units[j].SetTeamColor(firstColor);
 							units[j].transform.SetParent(spawners[i].transform);
 						}
 					}
 					else {
 						if (!units[j].hasAuthority) {
-							units[j].SetTeamColor(secondColor);
 							units[j].transform.SetParent(spawners[i].transform);
 						}
 					}
