@@ -180,27 +180,43 @@ namespace MultiPlayer {
 			//Only the server choose what color values to use. Client values do not matter.
 			int colorValue = NewSpawner.colorCode;
 			NewSpawner.colorCode = (++NewSpawner.colorCode) % 3;
+			Color color;
+			switch (colorValue) {
+				default:
+					color = Color.gray;
+					break;
+				case 0:
+					color = Color.yellow;
+					break;
+				case 1:
+					color = Color.blue;
+					break;
+				case 2:
+					color = Color.green;
+					break;
+			}
+
 
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 			NewGameUnit unit = gameUnit.GetComponent<NewGameUnit>();
-			unit.SetTeamColor(colorValue);
+			unit.SetTeamColor(color);
 
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
-			RpcSetColor(gameUnit, colorValue);
+			RpcSetColor(gameUnit, color);
 
 			RpcAdd(gameUnit, obj);
 			RpcFilter();
 		}
 
 		[ClientRpc]
-		public void RpcSetColor(GameObject unit, int value) {
+		public void RpcSetColor(GameObject unit, Color color) {
 			if (unit != null) {
 				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
-				gameUnit.SetTeamColor(value);
+				gameUnit.SetTeamColor(color);
 			}
 		}
 

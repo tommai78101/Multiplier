@@ -17,6 +17,7 @@ namespace MultiPlayer {
 		public int level;
 		public int teamFactionID;
 		public float scalingFactor;
+		public Color teamColor;
 		public Vector3 mouseTargetPosition;
 		public Vector3 oldMouseTargetPosition;
 		public Vector3 enemySeenTargetPosition;
@@ -40,6 +41,7 @@ namespace MultiPlayer {
 		public Vector3 mousePosition;
 		public Vector3 enemySeenPosition;
 		public Vector3 enemyHitPosition;
+		public Color teamColor;
 		public GameObject targetUnit;
 
 		public NewChanges Clear() {
@@ -47,10 +49,14 @@ namespace MultiPlayer {
 			this.isSplitting = false;
 			this.isSelected = false;
 			this.isCommanded = false;
-			this.damage = -1;
+			this.isAttackCooldownEnabled = false;
+			this.isRecoveryEnabled = false;
+			this.damage = 0;
 			this.newLevel = 1;
 			this.mousePosition = Vector3.one * -9999;
+			this.teamColor = Color.gray;
 			this.enemySeenPosition = this.mousePosition;
+			this.enemyHitPosition = this.enemySeenPosition;
 			this.targetUnit = null;
 			return this;
 		}
@@ -86,6 +92,7 @@ namespace MultiPlayer {
 			this.properties.isCommanded = false;
 			this.properties.isAttackCooldownEnabled = false;
 			this.properties.isRecoveryEnabled = false;
+			this.properties.teamColor = Color.gray;
 			this.properties.targetUnit = null;
 			this.properties.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
 			this.updateProperties += NewProperty;
@@ -148,6 +155,7 @@ namespace MultiPlayer {
 				}
 			}
 			pro.targetUnit = changes.targetUnit;
+			pro.teamColor = changes.teamColor;
 			OnPropertiesChanged(pro);
 		}
 
@@ -165,35 +173,27 @@ namespace MultiPlayer {
 			changes.targetUnit = this.properties.targetUnit;
 			changes.damage = 0;
 			changes.teamFactionID = this.properties.teamFactionID;
+			changes.teamColor = this.properties.teamColor;
 			return changes;
 		}
 
 		public void OnPropertiesChanged(UnitProperties pro) {
 			this.properties = pro;
+			this.SetTeamColor(pro.teamColor);
 		}
 
 		public void CallCmdupdateProperty(NewChanges changes) {
 			this.CmdUpdateProperty(this.gameObject, changes);
 		}
 
-		public void SetTeamColor(int value) {
-			Color color;
-			switch (value) {
-				default:
-					color = Color.gray;
-					break;
-				case 0:
-					color = Color.yellow;
-					break;
-				case 1:
-					color = Color.blue;
-					break;
-				case 2:
-					color = Color.green;
-					break;
-			}
+		public Color SetTeamColor(Color color) {
+			NewChanges changes = this.CurrentProperty();
+			changes.teamColor = color;
+			this.NewProperty(changes);
+
 			Renderer renderer = this.GetComponent<Renderer>();
 			renderer.material.SetColor("_TeamColor", color);
+			return color;
 		}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
