@@ -176,6 +176,26 @@ namespace MultiPlayer {
 			this.CmdUpdateProperty(this.gameObject, changes);
 		}
 
+		public void SetTeamColor(int value) {
+			Color color;
+			switch (value) {
+				default:
+					color = Color.gray;
+					break;
+				case 0:
+					color = Color.yellow;
+					break;
+				case 1:
+					color = Color.blue;
+					break;
+				case 2:
+					color = Color.green;
+					break;
+			}
+			Renderer renderer = this.GetComponent<Renderer>();
+			renderer.material.SetColor("_TeamColor", color);
+		}
+
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
 		private void HandleMovement() {
