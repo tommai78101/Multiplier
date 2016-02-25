@@ -124,16 +124,17 @@ namespace MultiPlayer {
 		public static int colorCode = 0;
 
 		public void Start() {
-			if (!this.hasAuthority) {
-				return;
-			}
-
 			//This is used to obtain inactive start locations. Start locations can randomly
 			//be set to inactive, so I need a way to obtain these inactive game objects.
 			this.starterObjects = GameObject.FindGameObjectWithTag("Respawn");
 			if (this.starterObjects == null) {
 				Debug.LogError("Cannot find starter object in scene.");
 			}
+
+			if (!this.hasAuthority) {
+				return;
+			}
+
 
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
 			if (!spawnerIdentity.localPlayerAuthority) {
