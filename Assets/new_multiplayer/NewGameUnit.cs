@@ -179,7 +179,6 @@ namespace MultiPlayer {
 
 		public void OnPropertiesChanged(UnitProperties pro) {
 			this.properties = pro;
-			this.SetTeamColor(pro.teamColor);
 		}
 
 		public void CallCmdupdateProperty(NewChanges changes) {
