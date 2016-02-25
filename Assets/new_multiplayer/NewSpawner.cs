@@ -245,17 +245,20 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcOrganizeUnit(GameObject obj) {
 			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
-			foreach (NewSpawner spawner in spawners) {
-				if (spawner.hasAuthority) {
-					if (unit.hasAuthority) {
-						unit.transform.SetParent(spawner.transform);
-						continue;
-					}
+			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
+			int pickedSpot = Random.Range(0, starters.Length);
+			int otherSpot = pickedSpot;
+			while (otherSpot == pickedSpot) {
+				otherSpot = Random.Range(0, starters.Length);
+			}
+			foreach (NetworkStartPosition start in starters) {
+				if (unit.hasAuthority) {
+					unit.transform.SetParent(starters[pickedSpot].transform);
+					continue;
 				}
 				else {
 					if (!unit.hasAuthority) {
-						unit.transform.SetParent(spawner.transform);
+						unit.transform.SetParent(starters[otherSpot].transform);
 						continue;
 					}
 				}
