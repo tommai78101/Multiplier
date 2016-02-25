@@ -211,6 +211,7 @@ namespace MultiPlayer {
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
 
+			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
 			int pickedSpot = Random.Range(0, starters.Length);
 			int otherSpot = pickedSpot;
 			while (otherSpot == pickedSpot) {
