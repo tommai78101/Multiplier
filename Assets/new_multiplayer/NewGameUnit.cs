@@ -310,15 +310,14 @@ namespace MultiPlayer {
 		public void CmdAttack(GameObject attacker, GameObject victim, int damage) {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
-				if (victimUnit != null) {
+				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
+				if (victimUnit != null && attackerUnit != null && attackerUnit.attackCooldownCounter <= 0) {
 					NewChanges changes = victimUnit.CurrentProperty();
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-				}
-				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (attackerUnit != null) {
-					NewChanges changes = attackerUnit.CurrentProperty();
+
+					changes = attackerUnit.CurrentProperty();
 					changes.isAttackCooldownEnabled = true;
 					attackerUnit.NewProperty(changes);
 				}
