@@ -210,15 +210,15 @@ namespace MultiPlayer {
 			RpcFilter();
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			foreach (NewGameUnit a in units) {
-				RpcSetColor(a.gameObject, color);
+				RpcSetColor(a.gameObject);
 			}
 		}
 
 		[ClientRpc]
-		public void RpcSetColor(GameObject unit, Color color) {
+		public void RpcSetColor(GameObject unit) {
 			if (unit != null) {
 				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
-				gameUnit.SetTeamColor(color);
+				gameUnit.SetTeamColor(gameUnit.properties.teamColor);
 			}
 		}
 
