@@ -219,18 +219,19 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcFilter() {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
-			for (int i = 0; i < spawners.Length; i++) {
+			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
+			int pickedSpot = Random.Range(0, starters.Length);
+			int otherSpot = pickedSpot;
+			while (otherSpot == pickedSpot) {
+				otherSpot = Random.Range(0, starters.Length);
+			}
+			for (int i = 0; i < starters.Length; i++) {
 				for (int j = 0; j < units.Length; j++) {
-					if (spawners[i].hasAuthority) {
-						if (units[j].hasAuthority) {
-							units[j].transform.SetParent(spawners[i].transform);
-						}
+					if (units[j].hasAuthority) {
+						units[j].transform.SetParent(starters[pickedSpot].transform);
 					}
 					else {
-						if (!units[j].hasAuthority) {
-							units[j].transform.SetParent(spawners[i].transform);
-						}
+						units[j].transform.SetParent(starters[otherSpot].transform);
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
 				}
@@ -251,16 +252,12 @@ namespace MultiPlayer {
 			while (otherSpot == pickedSpot) {
 				otherSpot = Random.Range(0, starters.Length);
 			}
-			foreach (NetworkStartPosition start in starters) {
-				if (unit.hasAuthority) {
-					unit.transform.SetParent(starters[pickedSpot].transform);
-					continue;
-				}
-				else {
-					if (!unit.hasAuthority) {
-						unit.transform.SetParent(starters[otherSpot].transform);
-						continue;
-					}
+			if (unit.hasAuthority) {
+				unit.transform.SetParent(starters[pickedSpot].transform);
+			}
+			else {
+				if (!unit.hasAuthority) {
+					unit.transform.SetParent(starters[otherSpot].transform);
 				}
 			}
 		}
