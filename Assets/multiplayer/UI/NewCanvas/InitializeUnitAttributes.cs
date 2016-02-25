@@ -4,7 +4,7 @@ using System.Collections;
 using MultiPlayer;
 using Common;
 
-public class InitializeUnitAttributes : NetworkBehaviour {
+public class InitializeUnitAttributes : MonoBehaviour {
 	public Attributes attributes;
 
 	public void Start() {

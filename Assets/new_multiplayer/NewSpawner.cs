@@ -120,6 +120,8 @@ namespace MultiPlayer {
 		private Vector3 screenPoint;
 		private NewChanges changes;
 
+		public static int colorCode = 0;
+
 		public void Start() {
 			if (!this.hasAuthority) {
 				return;
@@ -153,7 +155,7 @@ namespace MultiPlayer {
 			this.screenPoint = this.initialClick;
 			this.changes.Clear();
 
-			CmdInitialize(this.gameObject);
+			CmdInitialize(this.gameObject, NewSpawner.colorCode);
 		}
 
 		[Command]
@@ -172,21 +174,44 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdInitialize(GameObject obj) {
+		public void CmdInitialize(GameObject obj, int colorValue) {
 			NetworkIdentity spawnerID = obj.GetComponent<NetworkIdentity>();
+			NewSpawner.colorCode = colorValue;
 
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
+
+			Renderer renderer = gameUnit.GetComponent<Renderer>();
+			Color color;
+			switch (NewSpawner.colorCode) {
+				default:
+					color = Color.gray;
+					break;
+				case 0:
+					color = Color.yellow;
+					break;
+				case 1:
+					color = Color.blue;
+					break;
+				case 2:
+					color = Color.green;
+					break;
+			}
+			renderer.material.SetColor("_TeamColor", color);
+			NewSpawner.colorCode = ++NewSpawner.colorCode % 3;
+
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
 			RpcAdd(gameUnit, obj);
-			RpcFilter();
+			RpcFilter(NewSpawner.colorCode);
 		}
 
 		[ClientRpc]
-		public void RpcFilter() {
+		public void RpcFilter(int newColorValue) {
+			NewSpawner.colorCode = newColorValue;
+
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			for (int i = 0; i < spawners.Length; i++) {

@@ -136,7 +136,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9be4c3725e791f3489fcd8bc0b042c5b, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -284,13 +284,25 @@ MonoBehaviour:
     isSplitting: 0
     isMerging: 0
     isSelected: 0
+    isCommanded: 0
+    isAttackCooldownEnabled: 0
+    isRecoveryEnabled: 0
     currentHealth: 0
     maxHealth: 0
     level: 0
+    teamFactionID: 0
     scalingFactor: 0
-    targetPosition: {x: 0, y: 0, z: 0}
+    mouseTargetPosition: {x: 0, y: 0, z: 0}
+    oldMouseTargetPosition: {x: 0, y: 0, z: 0}
+    enemySeenTargetPosition: {x: 0, y: 0, z: 0}
+    oldEnemySeenTargetPosition: {x: 0, y: 0, z: 0}
+    enemyHitTargetPosition: {x: 0, y: 0, z: 0}
+    oldEnemyHitTargetPosition: {x: 0, y: 0, z: 0}
     targetUnit: {fileID: 0}
+  agent: {fileID: 0}
   selectionRing: {fileID: 140182}
+  recoveryCounter: 0
+  attackCooldownCounter: 0
 --- !u!114 &11493256
 MonoBehaviour:
   m_ObjectHideFlags: 1
