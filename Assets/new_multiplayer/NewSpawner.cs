@@ -201,12 +201,17 @@ namespace MultiPlayer {
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
+			NewGameUnit b = gameUnit.GetComponent<NewGameUnit>();
+			b.SetTeamColor(color);
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
 
 			RpcAdd(gameUnit, obj);
 			RpcFilter();
-			RpcSetColor(gameUnit, color);
+			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			foreach (NewGameUnit a in units) {
+				RpcSetColor(a.gameObject, color);
+			}
 		}
 
 		[ClientRpc]
@@ -214,11 +219,6 @@ namespace MultiPlayer {
 			if (unit != null) {
 				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
 				gameUnit.SetTeamColor(color);
-			}
-			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			foreach (NewGameUnit obj in units) {
-				Debug.Log("Team Color: " + obj.properties.teamColor.ToString());
-				obj.SetTeamColor(obj.properties.teamColor);
 			}
 		}
 
