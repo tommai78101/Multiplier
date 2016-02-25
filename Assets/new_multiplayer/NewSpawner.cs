@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections;
+using System.Collections.Generic;
 using Common;
 
 namespace MultiPlayer {
@@ -112,6 +112,7 @@ namespace MultiPlayer {
 		public UnitsSyncList selectedList = new UnitsSyncList();
 		public Rect selectionBox;
 		public Camera minimapCamera;
+		public GameObject starterObjects;
 
 		public bool isSelecting;
 		public bool isBoxSelecting;
@@ -125,6 +126,13 @@ namespace MultiPlayer {
 		public void Start() {
 			if (!this.hasAuthority) {
 				return;
+			}
+
+			//This is used to obtain inactive start locations. Start locations can randomly
+			//be set to inactive, so I need a way to obtain these inactive game objects.
+			this.starterObjects = GameObject.FindGameObjectWithTag("Respawn");
+			if (this.starterObjects == null) {
+				Debug.LogError("Cannot find starter object in scene.");
 			}
 
 			NetworkIdentity spawnerIdentity = this.GetComponent<NetworkIdentity>();
@@ -226,23 +234,36 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcFilter(int pickedSpot, int otherSpot) {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
-			for (int j = 0; j < units.Length; j++) {
-				if (units[j].hasAuthority) {
-					units[j].transform.SetParent(starters[pickedSpot].transform);
-					Vector3 pos = starters[pickedSpot].transform.position;
-					pos.y = 1f;
-					units[j].transform.position = pos;
+			List<NetworkStartPosition> starters = new List<NetworkStartPosition>();
+			foreach (Transform child in this.starterObjects.transform) {
+				child.gameObject.SetActive(true);
+				NetworkStartPosition pos = child.GetComponent<NetworkStartPosition>();
+				if (pos != null) {
+					starters.Add(pos);
 				}
-				else {
-					units[j].transform.SetParent(starters[otherSpot].transform);
-					Vector3 pos = starters[otherSpot].transform.position;
-					pos.y = 1f;
-					units[j].transform.position = pos;
-				}
-				units[j].SetTeamColor(units[j].properties.teamColor);
 			}
-		}
+
+			try {
+				for (int j = 0; j < units.Length; j++) {
+					if (units[j].hasAuthority) {
+						units[j].transform.SetParent(starters[pickedSpot].transform);
+						Vector3 pos = starters[pickedSpot].transform.position;
+						pos.y = 1f;
+						units[j].transform.position = pos;
+					}
+					else {
+						units[j].transform.SetParent(starters[otherSpot].transform);
+						Vector3 pos = starters[otherSpot].transform.position;
+						pos.y = 1f;
+						units[j].transform.position = pos;
+					}
+					units[j].SetTeamColor(units[j].properties.teamColor);
+				}
+			}
+			catch (System.Exception e) {
+				Debug.LogError("Unable to obtain all start positions, or there's a missing start locations. Error message: " + e.ToString());
+			}
+        }
 
 		[Command]
 		public void CmdOrganizeUnit(GameObject obj) {
