@@ -233,7 +233,6 @@ namespace MultiPlayer {
 					}
 					else {
 						if (!units[j].hasAuthority) {
-							units[j].SetTeamColor(units[j].properties.teamColor);
 							units[j].transform.SetParent(spawners[i].transform);
 						}
 					}
