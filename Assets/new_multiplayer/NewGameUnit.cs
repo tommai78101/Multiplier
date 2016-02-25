@@ -92,7 +92,6 @@ namespace MultiPlayer {
 			this.properties.isCommanded = false;
 			this.properties.isAttackCooldownEnabled = false;
 			this.properties.isRecoveryEnabled = false;
-			this.properties.teamColor = Color.gray;
 			this.properties.targetUnit = null;
 			this.properties.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
 			this.updateProperties += NewProperty;
