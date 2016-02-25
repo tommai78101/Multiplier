@@ -227,7 +227,7 @@ namespace MultiPlayer {
 						}
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
-					units[j].name = units[j].name.Substring(0, units[j].name.Length - "(Clone)".Length);
+					//units[j].name = units[j].name.Substring(0, units[j].name.Length - "(Clone)".Length);
 				}
 			}
 		}
