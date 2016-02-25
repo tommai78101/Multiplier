@@ -125,6 +125,9 @@ namespace MultiPlayer {
 			if (!this.hasAuthority) {
 				return;
 			}
+			if (!this.properties.isInitialized) {
+				return;
+			}
 
 			HandleMovement();
 			HandleSelectionRing();
