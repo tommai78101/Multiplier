@@ -155,7 +155,7 @@ namespace MultiPlayer {
 			this.screenPoint = this.initialClick;
 			this.changes.Clear();
 
-			CmdInitialize(this.gameObject, NewSpawner.colorCode);
+			CmdInitialize(this.gameObject);
 		}
 
 		[Command]
@@ -174,28 +174,41 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdInitialize(GameObject obj, int colorValue) {
+		public void CmdInitialize(GameObject obj) {
 			NetworkIdentity spawnerID = obj.GetComponent<NetworkIdentity>();
-			//NewSpawner.colorCode = colorValue;
+
+			//Only the server choose what color values to use. Client values do not matter.
+			int colorValue = NewSpawner.colorCode;
+			NewSpawner.colorCode = ++NewSpawner.colorCode % 3;
 
 			GameObject gameUnit = MonoBehaviour.Instantiate<GameObject>(this.newGameUnitPrefab);
 			gameUnit.name = gameUnit.name.Substring(0, gameUnit.name.Length - "(Clone)".Length);
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 
-			NewSpawner.colorCode = ++NewSpawner.colorCode % 3;
-
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
 
 			RpcAdd(gameUnit, obj);
-			RpcFilter(NewSpawner.colorCode);
+			RpcFilter(colorValue);
 		}
 
 		[ClientRpc]
-		public void RpcFilter(int newColorValue) {
-			NewSpawner.colorCode = newColorValue;
-
-
+		public void RpcFilter(int colorCode) {
+			Color color;
+			switch (colorCode) {
+				default:
+					color = Color.gray;
+					break;
+				case 0:
+					color = Color.yellow;
+					break;
+				case 1:
+					color = Color.blue;
+					break;
+				case 2:
+					color = Color.green;
+					break;
+			}
 
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
@@ -205,21 +218,6 @@ namespace MultiPlayer {
 						if (units[j].hasAuthority) {
 
 							Renderer renderer = units[j].GetComponent<Renderer>();
-							Color color;
-							switch (NewSpawner.colorCode) {
-								default:
-									color = Color.gray;
-									break;
-								case 0:
-									color = Color.yellow;
-									break;
-								case 1:
-									color = Color.blue;
-									break;
-								case 2:
-									color = Color.green;
-									break;
-							}
 							renderer.material.SetColor("_TeamColor", color);
 
 							units[j].transform.SetParent(spawners[i].transform);
