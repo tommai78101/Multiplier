@@ -186,9 +186,9 @@ namespace MultiPlayer {
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 
-			RpcSetColor(gameUnit, colorValue);
-
 			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
+
+			RpcSetColor(gameUnit, colorValue);
 
 			RpcAdd(gameUnit, obj);
 			RpcFilter();
