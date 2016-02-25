@@ -229,9 +229,15 @@ namespace MultiPlayer {
 				for (int j = 0; j < units.Length; j++) {
 					if (units[j].hasAuthority) {
 						units[j].transform.SetParent(starters[pickedSpot].transform);
+						Vector3 pos = starters[pickedSpot].transform.position;
+						pos.y = 1f;
+						units[j].transform.position = pos;
 					}
 					else {
 						units[j].transform.SetParent(starters[otherSpot].transform);
+						Vector3 pos = starters[otherSpot].transform.position;
+						pos.y = 1f;
+						units[j].transform.position = pos;
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
 				}
