@@ -6,6 +6,7 @@ using Extension;
 namespace MultiPlayer {
 	[System.Serializable]
 	public struct UnitProperties {
+		public bool isInitialized;
 		public bool isSplitting;
 		public bool isMerging;
 		public bool isSelected;
@@ -29,6 +30,7 @@ namespace MultiPlayer {
 
 	[System.Serializable]
 	public struct NewChanges {
+		public bool isInitialized;
 		public bool isSplitting;
 		public bool isMerging;
 		public bool isSelected;
@@ -45,6 +47,7 @@ namespace MultiPlayer {
 		public GameObject targetUnit;
 
 		public NewChanges Clear() {
+			this.isInitialized = false;
 			this.isMerging = false;
 			this.isSplitting = false;
 			this.isSelected = false;
@@ -79,22 +82,26 @@ namespace MultiPlayer {
 		private float attackCooldownCounter;
 
 		public void Start() {
-			this.properties = new UnitProperties();
-			this.properties.currentHealth = 3;
-			this.properties.maxHealth = 3;
-			this.properties.mouseTargetPosition = -9999 * Vector3.one;
-			this.properties.oldMouseTargetPosition = this.properties.mouseTargetPosition;
-			this.properties.enemySeenTargetPosition = this.properties.mouseTargetPosition;
-			this.properties.oldEnemySeenTargetPosition = this.properties.mouseTargetPosition;
-			this.properties.isSelected = false;
-			this.properties.scalingFactor = 1.4f;
-			this.properties.level = 1;
-			this.properties.teamColor = Color.gray;
-			this.properties.isCommanded = false;
-			this.properties.isAttackCooldownEnabled = false;
-			this.properties.isRecoveryEnabled = false;
-			this.properties.targetUnit = null;
-			this.properties.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
+			if (!this.properties.isInitialized) {
+				this.properties.isInitialized = true;
+				this.properties.maxHealth = 3;
+				this.properties.currentHealth = this.properties.maxHealth;
+				this.properties.mouseTargetPosition = -9999 * Vector3.one;
+				this.properties.oldMouseTargetPosition = this.properties.mouseTargetPosition;
+				this.properties.enemyHitTargetPosition = this.properties.mouseTargetPosition;
+				this.properties.oldEnemyHitTargetPosition = this.properties.enemyHitTargetPosition;
+				this.properties.enemySeenTargetPosition = this.properties.mouseTargetPosition;
+				this.properties.oldEnemySeenTargetPosition = this.properties.enemySeenTargetPosition;
+				this.properties.scalingFactor = 1.4f;
+				this.properties.level = 1;
+				this.properties.isSelected = false;
+				this.properties.isCommanded = false;
+				this.properties.isAttackCooldownEnabled = false;
+				this.properties.isRecoveryEnabled = false;
+				this.properties.isMerging = false;
+				this.properties.isSplitting = false;
+				this.properties.targetUnit = null;
+			}
 			this.updateProperties += NewProperty;
 			NewSelectionRing[] selectionRings = this.GetComponentsInChildren<NewSelectionRing>(true);
 			foreach (NewSelectionRing ring in selectionRings) {
@@ -129,6 +136,7 @@ namespace MultiPlayer {
 		public void NewProperty(NewChanges changes) {
 			UnitProperties pro = new UnitProperties();
 			pro = this.properties;
+			pro.isInitialized = changes.isInitialized;
 			pro.teamFactionID = changes.teamFactionID;
 			if (changes.damage > 0 && this.attackCooldownCounter <= 0f) {
 				pro.currentHealth -= changes.damage;
@@ -161,6 +169,7 @@ namespace MultiPlayer {
 
 		public NewChanges CurrentProperty() {
 			NewChanges changes = new NewChanges().Clear();
+			changes.isInitialized = this.properties.isInitialized;
 			changes.isSelected = this.properties.isSelected;
 			changes.isMerging = this.properties.isMerging;
 			changes.isSplitting = this.properties.isSplitting;

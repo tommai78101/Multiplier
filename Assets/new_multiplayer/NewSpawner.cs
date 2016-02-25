@@ -202,8 +202,14 @@ namespace MultiPlayer {
 			gameUnit.transform.SetParent(this.transform);
 			gameUnit.transform.position = this.transform.position;
 			NewGameUnit b = gameUnit.GetComponent<NewGameUnit>();
-			b.properties.teamColor = color;
-			NetworkServer.SpawnWithClientAuthority(gameUnit, spawnerID.clientAuthorityOwner);
+			NewChanges changes = b.CurrentProperty();
+			if (!changes.isInitialized) {
+				changes.isInitialized = false;
+				changes.teamColor = color;
+				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
+			}
+			b.NewProperty(changes);
+			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
 
 
 			RpcAdd(gameUnit, obj);
@@ -227,7 +233,6 @@ namespace MultiPlayer {
 						}
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
-					//units[j].name = units[j].name.Substring(0, units[j].name.Length - "(Clone)".Length);
 				}
 			}
 		}
