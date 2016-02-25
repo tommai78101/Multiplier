@@ -209,7 +209,8 @@ namespace MultiPlayer {
 			RpcAdd(gameUnit, obj);
 			RpcFilter();
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			foreach (NewGameUnit a in units) {
+			for (int i = 0; i < units.Length; i++) {
+				NewGameUnit a = units[i];
 				RpcSetColor(a.gameObject);
 			}
 		}

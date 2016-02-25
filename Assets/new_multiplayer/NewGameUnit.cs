@@ -89,6 +89,7 @@ namespace MultiPlayer {
 			this.properties.isSelected = false;
 			this.properties.scalingFactor = 1.4f;
 			this.properties.level = 1;
+			this.properties.teamColor = Color.gray;
 			this.properties.isCommanded = false;
 			this.properties.isAttackCooldownEnabled = false;
 			this.properties.isRecoveryEnabled = false;
