@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using MultiPlayer;
 
@@ -158,6 +159,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
 			enableEditorObj.TurnOnCanvasGroup();
 		}
+
+		SceneManager.LoadScene("new_multiplayer");
 	}
 
 	public void TurnOffLANHost() {
@@ -248,6 +251,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
 			enableEditorObj.TurnOnCanvasGroup();
 		}
+
+		SceneManager.LoadScene("new_multiplayer");
 	}
 
 	public void SetClientReady() {
