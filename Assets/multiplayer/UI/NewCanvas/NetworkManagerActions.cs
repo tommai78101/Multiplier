@@ -99,12 +99,10 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (Input.GetKeyUp(KeyCode.Escape)) {
 			if (NetworkClient.active && ClientScene.ready && !NetworkServer.active) {
 				if (this.LANClientReady.activeSelf || this.LANClientReady.activeInHierarchy) {
-					if (this.LANClientReady.activeSelf || this.LANClientReady.activeInHierarchy) {
-						this.LANClientReady.SetActive(false);
-					}
-					else {
-						this.LANClientReady.SetActive(true);
-					}
+					this.LANClientReady.SetActive(false);
+				}
+				else {
+					this.LANClientReady.SetActive(true);
 				}
 			}
 			else if (NetworkServer.active) {
@@ -114,6 +112,20 @@ public class NetworkManagerActions : MonoBehaviour {
 				else {
 					this.LANHost.SetActive(true);
 				}
+			}
+			else {
+				//Because there's nothing going on. Would rather just stay opened.
+				Debug.Log("Client and host are not active. Resetting menus.");
+				if (NetworkClient.active || NetworkServer.active) {
+					if (NetworkClient.active) {
+						this.StopLANClient();
+					}
+					else if (NetworkServer.active) {
+						this.StopLANHost();
+					}
+				}
+				this.initialMenu.SetActive(true);
+				this.optionsMenu.SetActive(true);
 			}
 		}
 	}
@@ -302,7 +314,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (equation.Length > 0) {
 			InputField[] equationsFields = this.unitAttributeEditor.GetComponentsInChildren<InputField>(true);
 			foreach (InputField field in equationsFields) {
-					field.text = equation;
+				field.text = equation;
 				field.textComponent.text = equation;
 			}
 		}
