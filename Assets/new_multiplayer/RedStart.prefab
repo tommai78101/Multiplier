@@ -28,6 +28,7 @@ GameObject:
   - 4: {fileID: 446706}
   - 114: {fileID: 11416246}
   - 114: {fileID: 11414616}
+  - 114: {fileID: 11432438}
   m_Layer: 0
   m_Name: RedStart
   m_TagString: StartLocation
@@ -134,6 +135,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1050975500, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11432438
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 175106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b17169f9e7e034aa66b733bda5f7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!136 &13633670

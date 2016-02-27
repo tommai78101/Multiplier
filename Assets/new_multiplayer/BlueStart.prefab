@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 458902}
   - 114: {fileID: 11461972}
   - 114: {fileID: 11419858}
+  - 114: {fileID: 11424978}
   m_Layer: 0
   m_Name: BlueStart
   m_TagString: StartLocation
@@ -125,6 +126,17 @@ MonoBehaviour:
     i15: 222
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &11424978
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41b17169f9e7e034aa66b733bda5f7bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11461972
 MonoBehaviour:
   m_ObjectHideFlags: 1
