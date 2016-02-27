@@ -2,5 +2,13 @@
 using System.Collections;
 
 public class NewStarter : MonoBehaviour {
-	public static bool isTaken = false;
+	private bool isTaken = false;
+
+	public void SetIsTakenFlag(bool value) {
+		this.isTaken = value;
+	}
+
+	public bool GetIsTakenFlag() {
+		return this.isTaken;
+	}
 }

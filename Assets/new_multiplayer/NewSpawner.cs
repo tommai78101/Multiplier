@@ -214,25 +214,17 @@ namespace MultiPlayer {
 			if (!changes.isInitialized) {
 				changes.isInitialized = false;
 				changes.teamColor = color;
-				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
+				changes.teamFactionID = (int) (Random.value * 100f); //This is never to be changed.
 			}
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
 
-			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
-			int pickedSpot = Random.Range(0, starters.Length);
-			int otherSpot = pickedSpot;
-			while (otherSpot == pickedSpot) {
-				otherSpot = Random.Range(0, starters.Length);
-			}
-
-
 			RpcAdd(gameUnit, obj);
-			RpcFilter(pickedSpot, otherSpot);
+			RpcFilter();
 		}
 
 		[ClientRpc]
-		public void RpcFilter(int pickedSpot, int otherSpot) {
+		public void RpcFilter() {
 			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
 			List<NetworkStartPosition> starters = new List<NetworkStartPosition>();
 			foreach (Transform child in this.starterObjects.transform) {
@@ -246,16 +238,32 @@ namespace MultiPlayer {
 			try {
 				for (int j = 0; j < units.Length; j++) {
 					if (units[j].hasAuthority) {
-						units[j].transform.SetParent(starters[pickedSpot].transform);
-						Vector3 pos = starters[pickedSpot].transform.position;
-						pos.y = 1f;
-						units[j].transform.position = pos;
+						for (int i = 0; i < starters.Count; i++) {
+							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
+							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
+								units[j].transform.SetParent(starters[i].transform);
+								Debug.Log("Starter " + starters[i].name + " is taken.");
+								startFlag.SetIsTakenFlag(true);
+								break;
+							}
+						}
+						//Vector3 pos = starters[pickedSpot].transform.position;
+						//pos.y = 1f;
+						//units[j].transform.position = pos;
 					}
 					else {
-						units[j].transform.SetParent(starters[otherSpot].transform);
-						Vector3 pos = starters[otherSpot].transform.position;
-						pos.y = 1f;
-						units[j].transform.position = pos;
+						for (int i = 0; i < starters.Count; i++) {
+							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
+							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
+								units[j].transform.SetParent(starters[i].transform);
+								Debug.Log("Starter " + starters[i].name + " is taken.");
+								startFlag.SetIsTakenFlag(true);
+								break;
+							}
+						}
+						//Vector3 pos = starters[otherSpot].transform.position;
+						//pos.y = 1f;
+						//units[j].transform.position = pos;
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
 				}
@@ -263,7 +271,7 @@ namespace MultiPlayer {
 			catch (System.Exception e) {
 				Debug.LogError("Unable to obtain all start positions, or there's a missing start locations. Error message: " + e.ToString());
 			}
-        }
+		}
 
 		[Command]
 		public void CmdOrganizeUnit(GameObject obj) {
