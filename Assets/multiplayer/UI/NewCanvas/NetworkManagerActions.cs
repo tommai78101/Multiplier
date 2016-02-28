@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using MultiPlayer;
+using Analytics;
 
 public class NetworkManagerActions : MonoBehaviour {
 	public NetworkManager networkManager;
@@ -12,6 +13,7 @@ public class NetworkManagerActions : MonoBehaviour {
 	public GameObject optionsMenu;
 	public GameObject unitAttributeEditor;
 	public GameObject temporaryUnitAttributesObject;
+	public GameObject endGameMenu;
 
 	public GameObject LANClientNotConnected;
 	public GameObject LANClientNotReady;
@@ -27,6 +29,9 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 		if (this.initialMenu == null) {
 			Debug.LogError("Unassigned context menu for the first menu shown to the player.");
+		}
+		if (this.endGameMenu == null) {
+			Debug.LogError("Unassigned context menu shown to the player when the game has ended.");
 		}
 		if (this.LANHost == null) {
 			Debug.LogError("Unassigned context menu shown to the player when the game sets up a LAN server.");
@@ -56,6 +61,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 			this.LANClientNotConnected.SetActive(false);
+			this.endGameMenu.SetActive(false);
 			EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 			if (enableEditorObj != null) {
 				enableEditorObj.TurnOffCanvasGroup();
@@ -70,6 +76,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANClientNotReady.SetActive(false);
 				this.LANClientReady.SetActive(false);
 				this.LANHost.SetActive(true);
+				this.endGameMenu.SetActive(false);
 				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 				if (enableEditorObj != null) {
 					enableEditorObj.TurnOffCanvasGroup();
@@ -81,6 +88,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANHost.SetActive(false);
 				this.unitAttributeEditor.SetActive(false);
 				this.LANClientNotConnected.SetActive(false);
+				this.endGameMenu.SetActive(false);
 				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 				if (enableEditorObj != null) {
 					enableEditorObj.TurnOffCanvasGroup();
@@ -156,6 +164,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 
 		this.PreUnitAttributesInitialization();
+		Debug.Log("Starting up the game metrics logger.");
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 
 	}
 
@@ -264,7 +274,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			enableEditorObj.TurnOnCanvasGroup();
 		}
 
-		SceneManager.LoadScene("new_multiplayer");
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 	}
 
 	public void SetClientReady() {
@@ -272,6 +282,12 @@ public class NetworkManagerActions : MonoBehaviour {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
+				NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+				foreach (NewSpawner spawn in spawners) {
+					if (spawn != null && spawn.hasAuthority) {
+						NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
+					}
+				}
 			}
 			else {
 				this.LANClientReady.SetActive(false);
@@ -286,6 +302,47 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientNotReady.SetActive(false);
 		}
 	}
+
+/***
+ *    ███████╗███╗   ██╗██████╗      ██████╗  █████╗ ███╗   ███╗███████╗
+ *    ██╔════╝████╗  ██║██╔══██╗    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
+ *    █████╗  ██╔██╗ ██║██║  ██║    ██║  ███╗███████║██╔████╔██║█████╗  
+ *    ██╔══╝  ██║╚██╗██║██║  ██║    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
+ *    ███████╗██║ ╚████║██████╔╝    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
+ *    ╚══════╝╚═╝  ╚═══╝╚═════╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
+ *                                                                      
+ */
+
+	public void SetEndGameSession() {
+		if (!(this.endGameMenu.activeSelf || this.endGameMenu.activeInHierarchy)) {
+			this.endGameMenu.SetActive(true);
+		}
+
+		this.initialMenu.SetActive(false);
+		this.optionsMenu.SetActive(false);
+		this.LANClientNotConnected.SetActive(false);
+		this.LANClientNotReady.SetActive(false);
+		this.LANClientReady.SetActive(false);
+		this.LANHost.SetActive(false);
+		this.unitAttributeEditor.SetActive(false);
+
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
+		GameMetricLogger.ShowPrintLog();
+	}
+
+	public void EndGameSessionAction() {
+		SceneManager.LoadScene("new_multiplayer");
+	}
+
+/***
+ *    ██████╗ ██████╗ ██╗██╗   ██╗ █████╗ ████████╗███████╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
+ *    ██╔══██╗██╔══██╗██║██║   ██║██╔══██╗╚══██╔══╝██╔════╝    ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║
+ *    ██████╔╝██████╔╝██║██║   ██║███████║   ██║   █████╗      █████╗  ██║   ██║██╔██╗ ██║██║        ██║   ██║██║   ██║██╔██╗ ██║
+ *    ██╔═══╝ ██╔══██╗██║╚██╗ ██╔╝██╔══██║   ██║   ██╔══╝      ██╔══╝  ██║   ██║██║╚██╗██║██║        ██║   ██║██║   ██║██║╚██╗██║
+ *    ██║     ██║  ██║██║ ╚████╔╝ ██║  ██║   ██║   ███████╗    ██║     ╚██████╔╝██║ ╚████║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
+ *    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+ *                                                                                                                               
+ */
 
 	private void PreInitialization() {
 		string equation = "";
@@ -350,7 +407,7 @@ public class NetworkManagerActions : MonoBehaviour {
 					}
 				}
 			}
+			GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 		}
-
 	}
 }

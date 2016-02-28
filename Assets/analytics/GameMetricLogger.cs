@@ -55,9 +55,8 @@ namespace Analytics {
 			this.outputField.GetComponentInChildren<Text>().text = this.outputField.text.ToString();
 
 			if (Input.GetKeyUp(this.triggerKey)) {
-				this.gameMetricsLogGroup.alpha = this.gameMetricsLogGroup.alpha > 0f ? 0f : 1f;
-				this.gameMetricsLogGroup.interactable = !this.gameMetricsLogGroup.interactable;
-				this.gameMetricsLogGroup.blocksRaycasts = !this.gameMetricsLogGroup.blocksRaycasts;
+				Debug.Log("Log Toggle Key is pressed.");
+				ToggleCanvasGroup();
 				GameMetricLogger.PrintLog();
 			}
 
@@ -160,39 +159,19 @@ namespace Analytics {
 			GameMetricLogger.instance.Initialization();
 		}
 
+		public static void ShowPrintLog() {
+			GameMetricLogger.instance.ToggleCanvasGroup();
+			GameMetricLogger.instance.Print();
+		}
+
 		public static void PrintLog() {
-			GameMetricLogger log = GameMetricLogger.instance;
 			if (GameMetricLogger.instance.stringBuilder == null) {
+				GameMetricLogger log = GameMetricLogger.instance;
 				Debug.LogError("Print(): Game metrics logger cannot output anything. Please double check.");
 				log.outputField.text = "No game metrics report generated.";
 			}
 			else {
-				StringBuilder sB = log.stringBuilder;
-				sB.Length = 0;
-
-				sB.AppendLine("Game Metrics Report");
-				sB.AppendLine("(Please copy and paste this report somewhere else.)");
-				sB.AppendLine();
-				sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
-				sB.AppendLine();
-				sB.AppendLine("Player Name: " + log.playerName);
-				sB.AppendLine("Level Difficulty: " + GetLevelDifficulty());
-				sB.AppendLine("Unit Attribute Equation Used: " + log.difficultyEquations);
-				sB.AppendLine();
-				sB.AppendLine("Total Time Played: " + log.totalGameTime.ToString("0.000") + " seconds");
-				sB.AppendLine("Total Death: " + log.numberOfDeaths);
-				sB.AppendLine("Total Kills: " + log.numberOfKills);
-				sB.AppendLine("Total Attacks: " + log.numberOfAttacks);
-				sB.AppendLine("Total Splits: " + log.numberOfSplits);
-				sB.AppendLine("Total Merges: " + log.numberOfMerges);
-				sB.AppendLine();
-				sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
-				sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
-				sB.AppendLine();
-
-				log.outputField.text = sB.ToString();
-				log.outputField.Rebuild(CanvasUpdate.MaxUpdateValue);
-				Canvas.ForceUpdateCanvases();
+				GameMetricLogger.instance.Print();
 			}
 		}
 
@@ -240,6 +219,42 @@ namespace Analytics {
 			this.gameMetricsLogGroup.alpha = 0f;
 			this.gameMetricsLogGroup.interactable = false;
 			this.gameMetricsLogGroup.blocksRaycasts = false;
+		}
+
+		private void ToggleCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = this.gameMetricsLogGroup.alpha > 0f ? 0f : 1f;
+			this.gameMetricsLogGroup.interactable = !this.gameMetricsLogGroup.interactable;
+			this.gameMetricsLogGroup.blocksRaycasts = !this.gameMetricsLogGroup.blocksRaycasts;
+		}
+
+		private void Print() {
+			GameMetricLogger log = GameMetricLogger.instance;
+			StringBuilder sB = log.stringBuilder;
+			sB.Length = 0;
+
+			sB.AppendLine("Game Metrics Report");
+			sB.AppendLine("(Please copy and paste this report somewhere else. Press M to toggle.)");
+			sB.AppendLine();
+			sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
+			sB.AppendLine();
+			sB.AppendLine("Player Name: " + log.playerName);
+			sB.AppendLine("Level Difficulty: " + GetLevelDifficulty());
+			sB.AppendLine("Unit Attribute Equation Used: " + log.difficultyEquations);
+			sB.AppendLine();
+			sB.AppendLine("Total Time Played: " + log.totalGameTime.ToString("0.000") + " seconds");
+			sB.AppendLine("Total Death: " + log.numberOfDeaths);
+			sB.AppendLine("Total Kills: " + log.numberOfKills);
+			sB.AppendLine("Total Attacks: " + log.numberOfAttacks);
+			sB.AppendLine("Total Splits: " + log.numberOfSplits);
+			sB.AppendLine("Total Merges: " + log.numberOfMerges);
+			sB.AppendLine();
+			sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
+			sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
+			sB.AppendLine();
+
+			log.outputField.text = sB.ToString();
+			log.outputField.Rebuild(CanvasUpdate.MaxUpdateValue);
+			Canvas.ForceUpdateCanvases();
 		}
 	}
 }

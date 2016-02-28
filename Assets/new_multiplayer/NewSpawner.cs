@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using Common;
+using Analytics;
 
 namespace MultiPlayer {
 	public struct NewUnitStruct {
@@ -113,15 +114,21 @@ namespace MultiPlayer {
 		public Rect selectionBox;
 		public Camera minimapCamera;
 		public GameObject starterObjects;
+		public static NewSpawner Instance;
 
 		public bool isSelecting;
 		public bool isBoxSelecting;
+		public bool isGameStart = false;
 
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
 
 		public static int colorCode = 0;
+
+		public void Awake() {
+			NewSpawner.Instance = this;
+		}
 
 		public void Start() {
 			//This is used to obtain inactive start locations. Start locations can randomly
@@ -164,6 +171,18 @@ namespace MultiPlayer {
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
+		}
+
+		[Command]
+		public void CmdSetReadyFlag(bool value) {
+			if (value) {
+				RpcSetReadyFlag();
+			}
+		}
+
+		[ClientRpc]
+		public void RpcSetReadyFlag() {
+			this.isGameStart = true;
 		}
 
 		[Command]
@@ -503,6 +522,15 @@ namespace MultiPlayer {
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
 						CmdRemoveUnitList(this.unitList[i].unit);
+					}
+				}
+			}
+			else {
+				if (this.isGameStart) {
+					this.isGameStart = false;
+					NetworkManagerActions actions = GameObject.FindObjectOfType<NetworkManagerActions>();
+					if (actions != null) {
+						actions.SetEndGameSession();
 					}
 				}
 			}
