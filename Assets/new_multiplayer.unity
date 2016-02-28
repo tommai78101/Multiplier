@@ -2581,19 +2581,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0515000428d780342942fccf51e58099, type: 2}
@@ -4757,7 +4757,7 @@ MonoBehaviour:
     m_ReactorMaximumSentMessages: 1024
     m_MaxPacketSize: 2000
   m_Channels: 0500000005000000
-  m_UseWebSockets: 0
+  m_UseWebSockets: 1
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0
