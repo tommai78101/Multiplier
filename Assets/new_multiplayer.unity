@@ -2581,19 +2581,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.x
-      value: -20
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.0000076293945
+      objectReference: {fileID: 0}
+    - target: {fileID: 22402228, guid: 0515000428d780342942fccf51e58099, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0.00000011920929
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0515000428d780342942fccf51e58099, type: 2}
@@ -4757,7 +4765,7 @@ MonoBehaviour:
     m_ReactorMaximumSentMessages: 1024
     m_MaxPacketSize: 2000
   m_Channels: 0500000005000000
-  m_UseWebSockets: 1
+  m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
   m_PacketLossPercentage: 0
@@ -5649,7 +5657,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000013485551, y: -0.000024795532}
+  m_AnchoredPosition: {x: 0.000003799796, y: -0.000024795532}
   m_SizeDelta: {x: 207, y: 108.99}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1113069362
@@ -8438,7 +8446,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000003322959, y: 0}
+  m_AnchoredPosition: {x: 0.00000013411045, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454
