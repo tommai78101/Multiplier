@@ -124,16 +124,17 @@ public class NetworkManagerActions : MonoBehaviour {
 			else {
 				//Because there's nothing going on. Would rather just stay opened.
 				Debug.Log("Client and host are not active. Resetting menus.");
-				if (NetworkClient.active || NetworkServer.active) {
-					if (NetworkClient.active) {
-						this.StopLANClient();
-					}
-					else if (NetworkServer.active) {
-						this.StopLANHost();
-					}
-				}
-				this.initialMenu.SetActive(true);
-				this.optionsMenu.SetActive(true);
+				SceneManager.LoadScene("new_multiplayer");
+				//if (NetworkClient.active || NetworkServer.active) {
+				//	if (NetworkClient.active) {
+				//		this.StopLANClient();
+				//	}
+				//	else if (NetworkServer.active) {
+				//		this.StopLANHost();
+				//	}
+				//}
+				//this.initialMenu.SetActive(true);
+				//this.optionsMenu.SetActive(true);
 			}
 		}
 	}

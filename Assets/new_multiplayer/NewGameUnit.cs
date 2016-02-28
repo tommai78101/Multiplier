@@ -165,6 +165,7 @@ namespace MultiPlayer {
 			}
 			pro.targetUnit = changes.targetUnit;
 			pro.teamColor = changes.teamColor;
+			pro.isAttackCooldownEnabled = changes.isAttackCooldownEnabled;
 			OnPropertiesChanged(pro);
 		}
 
@@ -249,12 +250,15 @@ namespace MultiPlayer {
 		}
 
 		private void HandleAttacking() {
-			if (this.properties.targetUnit != null && !this.properties.isAttackCooldownEnabled) {
+			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0 && !this.properties.isAttackCooldownEnabled) {
+				Debug.Log("Striking the enemy!");
 				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+				Debug.Log("After striking the enemy, make sure to give the game unit a pause.");
 				this.attackCooldownCounter = 1f;
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
+				Debug.Log("Done giving a pause!");
 			}
 		}
 
@@ -278,13 +282,18 @@ namespace MultiPlayer {
 			}
 			if (this.properties.isAttackCooldownEnabled) {
 				if (this.attackCooldownCounter > 0) {
+					Debug.Log("Counting down the attack counter.");
 					this.attackCooldownCounter -= Time.deltaTime;
 				}
 				else {
+					Debug.Log("The game unit is now ready to fight.");
 					NewChanges changes = this.CurrentProperty();
 					changes.isAttackCooldownEnabled = false;
 					this.NewProperty(changes);
 				}
+			}
+			else {
+				Debug.Log("This unit should be ready to attack.");
 			}
 		}
 
