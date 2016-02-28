@@ -528,9 +528,10 @@ namespace MultiPlayer {
 			else {
 				if (this.isGameStart) {
 					this.isGameStart = false;
+					Debug.Log("Game is over!");
 					NetworkManagerActions actions = GameObject.FindObjectOfType<NetworkManagerActions>();
 					if (actions != null) {
-						actions.SetEndGameSession();
+						actions.SendMessageUpwards("SetEndGameSession");
 					}
 				}
 			}
