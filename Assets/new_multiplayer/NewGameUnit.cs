@@ -252,6 +252,9 @@ namespace MultiPlayer {
 			if (this.properties.targetUnit != null && !this.properties.isAttackCooldownEnabled) {
 				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
 				this.attackCooldownCounter = 1f;
+				NewChanges changes = this.CurrentProperty();
+				changes.isAttackCooldownEnabled = true;
+				this.NewProperty(changes);
 			}
 		}
 
@@ -261,6 +264,7 @@ namespace MultiPlayer {
 					recoveryCounter -= Time.deltaTime;
 				}
 				else {
+					//TODO: Work on the recovering health.
 					NewChanges changes = this.CurrentProperty();
 					changes.isRecoveryEnabled = false;
 					this.NewProperty(changes);
@@ -272,13 +276,15 @@ namespace MultiPlayer {
 			if (this.properties.currentHealth <= 0) {
 				CmdDestroy(this.properties.targetUnit);
 			}
-			if (this.attackCooldownCounter > 0) {
-				this.attackCooldownCounter -= Time.deltaTime;
-			}
-			if (this.properties.isAttackCooldownEnabled && this.attackCooldownCounter <= 0) {
-				NewChanges changes = this.CurrentProperty();
-				changes.isAttackCooldownEnabled = false;
-				this.NewProperty(changes);
+			if (this.properties.isAttackCooldownEnabled) {
+				if (this.attackCooldownCounter > 0) {
+					this.attackCooldownCounter -= Time.deltaTime;
+				}
+				else {
+					NewChanges changes = this.CurrentProperty();
+					changes.isAttackCooldownEnabled = false;
+					this.NewProperty(changes);
+				}
 			}
 		}
 
@@ -323,10 +329,6 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-
-					changes = attackerUnit.CurrentProperty();
-					changes.isAttackCooldownEnabled = true;
-					attackerUnit.NewProperty(changes);
 				}
 			}
 		}
