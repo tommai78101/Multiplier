@@ -328,7 +328,7 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (victimUnit != null && attackerUnit != null) {
+				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled) {
 					NewChanges changes = victimUnit.CurrentProperty();
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
