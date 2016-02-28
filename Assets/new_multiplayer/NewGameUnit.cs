@@ -249,7 +249,7 @@ namespace MultiPlayer {
 		}
 
 		private void HandleAttacking() {
-			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0f) {
+			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0f && !this.properties.isAttackCooldownEnabled) {
 				NewGameUnit unit = this.properties.targetUnit.GetComponent<NewGameUnit>();
 				if (unit.properties.currentHealth > 0) {
 					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
@@ -274,14 +274,15 @@ namespace MultiPlayer {
 			if (this.properties.currentHealth <= 0) {
 				CmdDestroy(this.properties.targetUnit);
 			}
-			if (this.attackCooldownCounter > 0) {
-				this.attackCooldownCounter -= Time.deltaTime;
-			}
 			if (this.properties.isAttackCooldownEnabled) {
-				NewChanges changes = this.CurrentProperty();
-				changes.isAttackCooldownEnabled = false;
-				this.NewProperty(changes);
-				this.attackCooldownCounter = 1f;
+				if (this.attackCooldownCounter > 0) {
+					this.attackCooldownCounter -= Time.deltaTime;
+				}
+				else {
+					NewChanges changes = this.CurrentProperty();
+					changes.isAttackCooldownEnabled = false;
+					this.NewProperty(changes);
+				}
 			}
 		}
 
@@ -321,7 +322,7 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (victimUnit != null && attackerUnit != null && attackerUnit.attackCooldownCounter <= 0) {
+				if (victimUnit != null && attackerUnit != null) {
 					NewChanges changes = victimUnit.CurrentProperty();
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
