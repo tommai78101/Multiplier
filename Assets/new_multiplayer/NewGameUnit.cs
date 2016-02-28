@@ -141,10 +141,8 @@ namespace MultiPlayer {
 			pro = this.properties;
 			pro.isInitialized = changes.isInitialized;
 			pro.teamFactionID = changes.teamFactionID;
-			if (changes.damage > 0 && this.attackCooldownCounter <= 0f) {
+			if (changes.damage > 0) {
 				pro.currentHealth -= changes.damage;
-				pro.isAttackCooldownEnabled = true;
-				this.attackCooldownCounter = 1f;
 			}
 			if (pro.mouseTargetPosition != changes.mousePosition) {
 				pro.oldMouseTargetPosition = pro.mouseTargetPosition;
@@ -257,9 +255,6 @@ namespace MultiPlayer {
 					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
 				}
 			}
-			else if (this.attackCooldownCounter > 0f) {
-				this.attackCooldownCounter -= Time.deltaTime;
-			}
 		}
 
 		private void HandleRecovering() {
@@ -278,6 +273,15 @@ namespace MultiPlayer {
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0) {
 				CmdDestroy(this.properties.targetUnit);
+			}
+			if (this.attackCooldownCounter > 0) {
+				this.attackCooldownCounter -= Time.deltaTime;
+			}
+			if (this.properties.isAttackCooldownEnabled) {
+				NewChanges changes = this.CurrentProperty();
+				changes.isAttackCooldownEnabled = false;
+				this.NewProperty(changes);
+				this.attackCooldownCounter = 1f;
 			}
 		}
 
