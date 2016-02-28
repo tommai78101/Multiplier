@@ -253,6 +253,7 @@ namespace MultiPlayer {
 				NewGameUnit unit = this.properties.targetUnit.GetComponent<NewGameUnit>();
 				if (unit.properties.currentHealth > 0) {
 					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+					this.attackCooldownCounter = 1f;
 				}
 			}
 		}
