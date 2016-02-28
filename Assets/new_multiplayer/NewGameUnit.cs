@@ -249,11 +249,9 @@ namespace MultiPlayer {
 		}
 
 		private void HandleAttacking() {
-			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0f && !this.properties.isAttackCooldownEnabled) {
-				if (this.attackCooldownCounter <= 0f) { 
-					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
-					this.attackCooldownCounter = 1f;
-				}
+			if (this.properties.targetUnit != null && !this.properties.isAttackCooldownEnabled) {
+				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+				this.attackCooldownCounter = 1f;
 			}
 		}
 
@@ -274,15 +272,13 @@ namespace MultiPlayer {
 			if (this.properties.currentHealth <= 0) {
 				CmdDestroy(this.properties.targetUnit);
 			}
-			if (this.properties.isAttackCooldownEnabled) {
-				if (this.attackCooldownCounter > 0) {
-					this.attackCooldownCounter -= Time.deltaTime;
-				}
-				else {
-					NewChanges changes = this.CurrentProperty();
-					changes.isAttackCooldownEnabled = false;
-					this.NewProperty(changes);
-				}
+			if (this.attackCooldownCounter > 0) {
+				this.attackCooldownCounter -= Time.deltaTime;
+			}
+			if (this.properties.isAttackCooldownEnabled && this.attackCooldownCounter <= 0) {
+				NewChanges changes = this.CurrentProperty();
+				changes.isAttackCooldownEnabled = false;
+				this.NewProperty(changes);
 			}
 		}
 
