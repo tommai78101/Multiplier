@@ -250,8 +250,7 @@ namespace MultiPlayer {
 
 		private void HandleAttacking() {
 			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0f && !this.properties.isAttackCooldownEnabled) {
-				NewGameUnit unit = this.properties.targetUnit.GetComponent<NewGameUnit>();
-				if (this.attackCooldownCounter <= 0f) {
+				if (this.attackCooldownCounter <= 0f) { 
 					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
 					this.attackCooldownCounter = 1f;
 				}
