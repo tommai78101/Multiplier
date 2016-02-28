@@ -252,7 +252,10 @@ namespace MultiPlayer {
 
 		private void HandleAttacking() {
 			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0f) {
-				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+				NewGameUnit unit = this.properties.targetUnit.GetComponent<NewGameUnit>();
+				if (unit.properties.currentHealth > 0) {
+					CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+				}
 			}
 			else if (this.attackCooldownCounter > 0f) {
 				this.attackCooldownCounter -= Time.deltaTime;
