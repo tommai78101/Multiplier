@@ -38,6 +38,7 @@ namespace MultiPlayer {
 		public bool isAttackCooldownEnabled;
 		public bool isRecoveryEnabled;
 		public int damage;
+		public int heal;
 		public int newLevel;
 		public int teamFactionID;
 		public Vector3 mousePosition;
@@ -55,6 +56,7 @@ namespace MultiPlayer {
 			this.isAttackCooldownEnabled = false;
 			this.isRecoveryEnabled = false;
 			this.damage = 0;
+			this.heal = 0;
 			this.newLevel = 1;
 			this.mousePosition = Vector3.one * -9999;
 			this.teamColor = Color.gray;
@@ -141,6 +143,9 @@ namespace MultiPlayer {
 			pro = this.properties;
 			pro.isInitialized = changes.isInitialized;
 			pro.teamFactionID = changes.teamFactionID;
+			if (changes.heal > 0) {
+				pro.currentHealth += changes.heal;
+			}
 			if (changes.damage > 0) {
 				pro.currentHealth -= changes.damage;
 			}
@@ -157,12 +162,7 @@ namespace MultiPlayer {
 			pro.isMerging = changes.isMerging;
 			pro.level = changes.newLevel;
 			pro.isCommanded = changes.isCommanded;
-			if (changes.isRecoveryEnabled) {
-				pro.isRecoveryEnabled = changes.isRecoveryEnabled;
-				if (this.recoveryCounter <= 0f) {
-					this.recoveryCounter = 1f;
-				}
-			}
+			pro.isRecoveryEnabled = changes.isRecoveryEnabled;
 			pro.targetUnit = changes.targetUnit;
 			pro.teamColor = changes.teamColor;
 			pro.isAttackCooldownEnabled = changes.isAttackCooldownEnabled;
@@ -183,6 +183,7 @@ namespace MultiPlayer {
 			changes.enemySeenPosition = this.properties.enemySeenTargetPosition;
 			changes.targetUnit = this.properties.targetUnit;
 			changes.damage = 0;
+			changes.heal = 0;
 			changes.teamFactionID = this.properties.teamFactionID;
 			changes.teamColor = this.properties.teamColor;
 			return changes;
@@ -260,12 +261,11 @@ namespace MultiPlayer {
 		}
 
 		private void HandleRecovering() {
-			if (this.properties.isRecoveryEnabled) {
-				if (recoveryCounter > 0f) {
-					recoveryCounter -= Time.deltaTime;
-				}
-				else {
-					//TODO: Work on the recovering health.
+			if (this.properties.isRecoveryEnabled && this.recoveryCounter <= 0) {
+				CmdRecover(this.gameObject, 1);
+				this.recoveryCounter = 1f;
+				if (this.properties.currentHealth >= this.properties.maxHealth) {
+					this.properties.currentHealth = this.properties.maxHealth;
 					NewChanges changes = this.CurrentProperty();
 					changes.isRecoveryEnabled = false;
 					this.NewProperty(changes);
@@ -287,9 +287,31 @@ namespace MultiPlayer {
 					this.NewProperty(changes);
 				}
 			}
+			if (this.properties.isRecoveryEnabled) {
+				if (recoveryCounter > 0f) {
+					recoveryCounter -= Time.deltaTime;
+				}
+				else {
+					NewChanges changes = this.CurrentProperty();
+					changes.isRecoveryEnabled = false;
+					this.NewProperty(changes);
+				}
+			}
 		}
 
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
+
+		[Command]
+		public void CmdRecover(GameObject recoveringObject, int healValue) {
+			if (recoveringObject != null) {
+				NewGameUnit unit = recoveringObject.GetComponent<NewGameUnit>();
+				if (unit != null && unit.properties.currentHealth < unit.properties.maxHealth && unit.properties.isRecoveryEnabled) {
+					NewChanges changes = unit.CurrentProperty();
+					changes.heal = healValue;
+					unit.NewProperty(changes);
+				}
+			}
+		}
 
 		[Command]
 		public void CmdDestroy(GameObject targetUnit) {
