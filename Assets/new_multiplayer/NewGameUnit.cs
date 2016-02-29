@@ -260,6 +260,11 @@ namespace MultiPlayer {
 				this.NewProperty(changes);
 				Debug.Log("The attack cooldown is now set to true. Should no longer attack.");
 			}
+			else if (this.attackCooldownCounter > 0f) {
+				NewChanges changes = this.CurrentProperty();
+				changes.isAttackCooldownEnabled = true;
+				this.NewProperty(changes);
+			}
 		}
 
 		private void HandleRecovering() {
