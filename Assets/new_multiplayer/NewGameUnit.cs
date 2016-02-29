@@ -252,11 +252,13 @@ namespace MultiPlayer {
 
 		private void HandleAttacking() {
 			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0 && !this.properties.isAttackCooldownEnabled) {
+				Debug.Log("It is attacking right now.");
 				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
 				this.attackCooldownCounter = 1f;
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
+				Debug.Log("The attack cooldown is now set to true. Should no longer attack.");
 			}
 		}
 
@@ -278,6 +280,7 @@ namespace MultiPlayer {
 				CmdDestroy(this.properties.targetUnit);
 			}
 			if (this.properties.isAttackCooldownEnabled) {
+				Debug.Log("The attack cooldown has started.");
 				if (this.attackCooldownCounter > 0) {
 					this.attackCooldownCounter -= Time.deltaTime;
 				}
@@ -285,6 +288,7 @@ namespace MultiPlayer {
 					NewChanges changes = this.CurrentProperty();
 					changes.isAttackCooldownEnabled = false;
 					this.NewProperty(changes);
+					Debug.Log("The attack cooldown is set to false.");
 				}
 			}
 			if (this.properties.isRecoveryEnabled) {
