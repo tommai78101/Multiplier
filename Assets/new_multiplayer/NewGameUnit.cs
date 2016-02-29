@@ -314,10 +314,12 @@ namespace MultiPlayer {
 		public void CmdRecover(GameObject recoveringObject, int healValue) {
 			if (recoveringObject != null) {
 				NewGameUnit unit = recoveringObject.GetComponent<NewGameUnit>();
-				if (unit != null && unit.properties.currentHealth < unit.properties.maxHealth && unit.properties.isRecoveryEnabled) {
-					NewChanges changes = unit.CurrentProperty();
-					changes.heal = healValue;
-					unit.NewProperty(changes);
+				if (unit != null && NetworkServer.FindLocalObject(unit.netId)) {
+					if (unit.properties.currentHealth < unit.properties.maxHealth && unit.properties.isRecoveryEnabled) {
+						NewChanges changes = unit.CurrentProperty();
+						changes.heal = healValue;
+						unit.NewProperty(changes);
+					}
 				}
 			}
 		}
