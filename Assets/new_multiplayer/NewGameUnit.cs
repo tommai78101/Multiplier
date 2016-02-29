@@ -324,24 +324,26 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdDestroy(GameObject targetUnit) {
-			NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
-			if (unit != null && NetworkServer.FindLocalObject(unit.netId)) {
-				if (targetUnit != null) {
-					NewChanges changes = unit.CurrentProperty();
-					if (changes.targetUnit != null && changes.targetUnit.Equals(this.gameObject)) {
-						changes.targetUnit = null;
-						unit.NewProperty(changes);
+			if (targetUnit != null) {
+				NewGameUnit unit = targetUnit.GetComponent<NewGameUnit>();
+				if (unit != null && NetworkServer.FindLocalObject(unit.netId)) {
+					if (targetUnit != null) {
+						NewChanges changes = unit.CurrentProperty();
+						if (changes.targetUnit != null && changes.targetUnit.Equals(this.gameObject)) {
+							changes.targetUnit = null;
+							unit.NewProperty(changes);
+						}
 					}
+					NewLOS los = this.GetComponentInChildren<NewLOS>();
+					if (los != null) {
+						los.parent = null;
+					}
+					NewAtkRange range = this.GetComponentInChildren<NewAtkRange>();
+					if (range != null) {
+						range.parent = null;
+					}
+					NetworkServer.Destroy(this.gameObject);
 				}
-				NewLOS los = this.GetComponentInChildren<NewLOS>();
-				if (los != null) {
-					los.parent = null;
-				}
-				NewAtkRange range = this.GetComponentInChildren<NewAtkRange>();
-				if (range != null) {
-					range.parent = null;
-				}
-				NetworkServer.Destroy(this.gameObject);
 			}
 		}
 
