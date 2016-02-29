@@ -351,9 +351,11 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdUpdateProperty(GameObject obj, NewChanges changes) {
-			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-			if (unit != null) {
-				unit.NewProperty(changes);
+			if (obj != null) {
+				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+				if (unit != null && NetworkServer.FindLocalObject(unit.netId)) {
+					unit.NewProperty(changes);
+				}
 			}
 		}
 
@@ -362,7 +364,7 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled) {
+				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled && NetworkServer.FindLocalObject(victimUnit.netId) != null && NetworkServer.FindLocalObject(attackerUnit.netId) != null) {
 					NewChanges changes = victimUnit.CurrentProperty();
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
@@ -374,7 +376,12 @@ namespace MultiPlayer {
 		//Do not remove. This is required.
 		[Command]
 		public void CmdSetDestination(GameObject obj, Vector3 pos) {
-			RpcSetDestination(obj, pos);
+			if (obj != null) {
+				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+				if (unit != null && NetworkServer.FindLocalObject(unit.netId) != null) {
+					RpcSetDestination(obj, pos);
+				}
+			}
 		}
 
 		[ClientRpc]
