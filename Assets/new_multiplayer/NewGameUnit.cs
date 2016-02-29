@@ -298,7 +298,7 @@ namespace MultiPlayer {
 			}
 			if (this.properties.isRecoveryEnabled) {
 				if (recoveryCounter > 0f) {
-					recoveryCounter -= Time.deltaTime;
+					recoveryCounter -= Time.deltaTime / 5f;
 				}
 				else {
 					NewChanges changes = this.CurrentProperty();
