@@ -353,7 +353,7 @@ namespace MultiPlayer {
 		public void CmdUpdateProperty(GameObject obj, NewChanges changes) {
 			if (obj != null) {
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-				if (unit != null && NetworkServer.FindLocalObject(unit.netId)) {
+				if (unit != null) {
 					unit.NewProperty(changes);
 				}
 			}
@@ -378,7 +378,7 @@ namespace MultiPlayer {
 		public void CmdSetDestination(GameObject obj, Vector3 pos) {
 			if (obj != null) {
 				NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-				if (unit != null && NetworkServer.FindLocalObject(unit.netId) != null) {
+				if (unit != null) {
 					RpcSetDestination(obj, pos);
 				}
 			}
