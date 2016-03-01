@@ -420,8 +420,11 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 		}
 
-		CameraPanning panning = Camera.main.gameObject.AddComponent<CameraPanning>();
-		panning.zoomLevel = 5;
+		//NOTE(Thompson): Check to make sure camera have camera panning, else do not add any more.
+		if (Camera.main.gameObject.GetComponent<CameraPanning>() == null) {
+			CameraPanning panning = Camera.main.gameObject.AddComponent<CameraPanning>();
+			panning.zoomLevel = 5;
+		}
 	}
 
 	private void PreUnitAttributesInitialization() {
