@@ -262,7 +262,6 @@ namespace MultiPlayer {
 							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
 							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
 								units[j].transform.SetParent(starters[i].transform);
-								Debug.Log("Starter " + starters[i].name + " is taken.");
 								startFlag.SetIsTakenFlag(true);
 								break;
 							}
@@ -276,7 +275,6 @@ namespace MultiPlayer {
 							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
 							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
 								units[j].transform.SetParent(starters[i].transform);
-								Debug.Log("Starter " + starters[i].name + " is taken.");
 								startFlag.SetIsTakenFlag(true);
 								break;
 							}
@@ -527,11 +525,12 @@ namespace MultiPlayer {
 				}
 			}
 			else {
+				Debug.Log("This is reached.");
 				if (this.isGameStart) {
 					Debug.Log("Game is start.");
 				}
 				else {
-					Debug.Log("[" + Time.timeSinceLevelLoad + "] Game should be over once. ");
+					Debug.Log("Game should be over once. ");
 				}
 			}
 		}
