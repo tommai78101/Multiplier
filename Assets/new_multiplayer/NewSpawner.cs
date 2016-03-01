@@ -539,7 +539,7 @@ namespace MultiPlayer {
 					}
 				}
 				else {
-					Debug.Log("Game should be over once.");
+					Debug.Log("[" + Time.timeSinceLevelLoad + "] Game should be over once. ");
 				}
 			}
 		}
