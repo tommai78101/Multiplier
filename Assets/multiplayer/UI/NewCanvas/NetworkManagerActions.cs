@@ -254,19 +254,24 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANClientNotConnected.SetActive(false);
 
 
-		Debug.Log("Disabling PostRenderer");
-		Camera cam = Camera.main.GetComponent<Camera>();
-		if (cam == null) {
-			Debug.Log("Camera variable 'cam' is actually null.");
+		bool testFlag = false;
+		do {
+			Debug.Log("Disabling PostRenderer");
+			Camera cam = Camera.main.GetComponent<Camera>();
+			if (cam == null) {
+				Debug.Log("Camera variable 'cam' is actually null.");
+			}
+			PostRenderer renderer = cam.GetComponent<PostRenderer>();
+			if (renderer != null) {
+				renderer.enabled = false;
+				Debug.Log("Disabling PostRenderer successful.");
+				testFlag = true;
+			}
+			else {
+				Debug.Log("Unable to disable PostRenderer.");
+			}
 		}
-		PostRenderer renderer = cam.GetComponent<PostRenderer>();
-		if (renderer != null) {
-			renderer.enabled = false;
-			Debug.Log("Disabling PostRenderer successful.");
-		}
-		else {
-			Debug.Log("Unable to disable PostRenderer.");
-		}
+		while (!testFlag);
 
 
 		if (!ClientScene.ready) {
