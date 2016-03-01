@@ -166,25 +166,30 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 
 		this.PreUnitAttributesInitialization();
+
 		Debug.Log("Starting up the game metrics logger.");
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 
 	}
 
 	public void StopLANHost() {
-		this.networkManager.StopHost();
-		this.LANHost.SetActive(false);
-		this.LANClientReady.SetActive(false);
-		this.LANClientNotReady.SetActive(false);
-		this.LANClientNotConnected.SetActive(false);
-		this.initialMenu.SetActive(true);
-		this.optionsMenu.SetActive(true);
-		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
-		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
-			enableEditorObj.TurnOnCanvasGroup();
-		}
-
+		//NOTE(Thompson): This is the official method of resetting the LAN session if the
+		//player wants to play a new LAN session after ending a previous LAN session.
 		SceneManager.LoadScene("new_multiplayer");
+
+		//NOTE(Thompson): When reloading a scene, I don't even think the following codes are 
+		//necessary.
+		//this.networkManager.StopHost();
+		//this.LANHost.SetActive(false);
+		//this.LANClientReady.SetActive(false);
+		//this.LANClientNotReady.SetActive(false);
+		//this.LANClientNotConnected.SetActive(false);
+		//this.initialMenu.SetActive(true);
+		//this.optionsMenu.SetActive(true);
+		//EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		//if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
+		//	enableEditorObj.TurnOnCanvasGroup();
+		//}
 	}
 
 	//NOTE(Thompson): This is equivalent to SetClientReady().
