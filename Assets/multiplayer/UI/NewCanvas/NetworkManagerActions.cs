@@ -326,6 +326,24 @@ public class NetworkManagerActions : MonoBehaviour {
 			Debug.Log("Client is already set to ready.");
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
+
+			Debug.Log("Client is now ready. (TEST 2)");
+			Debug.Log("Enabling PostRenderer. (TEST 2)");
+			Camera cam = Camera.main.GetComponent<Camera>();
+			PostRenderer renderer = cam.GetComponent<PostRenderer>();
+			if (renderer != null) {
+				renderer.enabled = true;
+				Debug.Log("Enabling PostRenderer successful. (TEST 2)");
+			}
+			this.LANClientReady.SetActive(false);
+			this.LANClientNotReady.SetActive(false);
+			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			foreach (NewSpawner spawn in spawners) {
+				if (spawn != null && spawn.hasAuthority) {
+					NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
+					Debug.Log("Setting the ready flag is successful for " + spawn.ToString() + ". (TEST 2)");
+				}
+			}
 		}
 	}
 
