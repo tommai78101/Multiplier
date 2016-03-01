@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Common;
 using MultiPlayer;
 using Analytics;
 
@@ -254,6 +255,10 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		if (!ClientScene.ready) {
 			this.LANClientNotReady.SetActive(true);
+			PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
+			if (renderer != null) {
+				renderer.enabled = false;
+			}
 		}
 		else {
 			Debug.Log("Client is ready.");
@@ -287,6 +292,10 @@ public class NetworkManagerActions : MonoBehaviour {
 	public void SetClientReady() {
 		if (!ClientScene.ready) {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
+				PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
+				if (renderer != null) {
+					renderer.enabled = true;
+				}
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
 				NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
