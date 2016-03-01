@@ -256,6 +256,9 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		Debug.Log("Disabling PostRenderer");
 		Camera cam = Camera.main.GetComponent<Camera>();
+		if (cam == null) {
+			Debug.Log("Camera variable 'cam' is actually null.");
+		}
 		PostRenderer renderer = cam.GetComponent<PostRenderer>();
 		if (renderer != null) {
 			renderer.enabled = false;
