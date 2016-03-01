@@ -124,6 +124,7 @@ namespace MultiPlayer {
 		private Vector3 screenPoint;
 		private NewChanges changes;
 		private PostRenderer selectionBoxRenderer;
+		private bool isUnitListEmpty;
 
 		public static int colorCode = 0;
 
@@ -177,6 +178,7 @@ namespace MultiPlayer {
 			this.initialClick = Vector3.one * -9999f;
 			this.screenPoint = this.initialClick;
 			this.isGameStart = false;
+			this.isUnitListEmpty = true;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
@@ -199,6 +201,7 @@ namespace MultiPlayer {
 			NewSpawner newSpawner = spawner.GetComponent<NewSpawner>();
 			if (newSpawner != null) {
 				newSpawner.unitList.Add(new NewUnitStruct(obj));
+				newSpawner.isUnitListEmpty = false;
 			}
 		}
 
@@ -533,12 +536,13 @@ namespace MultiPlayer {
 				}
 			}
 			else {
-				Debug.Log("This is reached.");
-				if (this.isGameStart) {
-					Debug.Log("Game is start.");
+				if (!this.isUnitListEmpty) {
+					this.isUnitListEmpty = true;
+					Debug.Log("This is reached.");
+					Debug.Log("Game should be over once. ");
 				}
 				else {
-					Debug.Log("Game should be over once. ");
+					Debug.Log("Constantly reaching this debug message.");
 				}
 			}
 		}
