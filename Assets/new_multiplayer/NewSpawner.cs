@@ -330,6 +330,10 @@ namespace MultiPlayer {
 			if (!this.hasAuthority) {
 				return;
 			}
+			if (!this.isGameStart && this.isUnitListEmpty) {
+				Debug.Log("This is game over.");
+				return;
+			}
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
@@ -369,6 +373,25 @@ namespace MultiPlayer {
 		[Command]
 		public void CmdRemoveUnitList(GameObject obj) {
 			this.unitList.Remove(new NewUnitStruct(obj));
+		}
+
+		[Command]
+		public void CmdShowReport() {
+			RpcShowReport();
+		}
+
+		[ClientRpc]
+		public void RpcShowReport() {
+			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			if (spawners.Length > 0) {
+				for (int i = 0; i < spawners.Length; i++) {
+					if (spawners[i].hasAuthority) {
+						spawners[i].isGameStart = false;
+						GameMetricLogger.ShowPrintLog();
+						break;
+					}
+				}
+			}
 		}
 
 		//-----------   Private class methods may all need refactoring   --------------------
@@ -540,6 +563,7 @@ namespace MultiPlayer {
 					this.isUnitListEmpty = true;
 					Debug.Log("This is reached.");
 					Debug.Log("Game should be over once. ");
+					CmdShowReport();
 				}
 				else {
 					Debug.Log("Constantly reaching this debug message.");

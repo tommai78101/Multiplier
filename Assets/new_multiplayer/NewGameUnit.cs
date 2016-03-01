@@ -121,6 +121,9 @@ namespace MultiPlayer {
 			}
 			this.recoveryCounter = 0f;
 			this.attackCooldownCounter = 0f;
+
+			//NOTE(Thompson): Changing the name here, so I can really get rid of (Clone).
+			this.name = "New Game Unit"; 
 		}
 
 		public void Update() {
