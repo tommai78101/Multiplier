@@ -168,6 +168,7 @@ namespace MultiPlayer {
 			this.selectionBox = new Rect();
 			this.initialClick = Vector3.one * -9999f;
 			this.screenPoint = this.initialClick;
+			this.isGameStart = false;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
@@ -527,16 +528,7 @@ namespace MultiPlayer {
 			}
 			else {
 				if (this.isGameStart) {
-					this.isGameStart = false;
-					Debug.Log("Game is over!");
-					NetworkManagerActions actions = GameObject.FindObjectOfType<NetworkManagerActions>();
-					if (actions != null) {
-						Debug.Log("Sending warnings.");
-						//actions.SendMessageUpwards("SetEndGameSession");
-					}
-					else {
-						Debug.Log("Cannot obtain network manager actions.");
-					}
+					Debug.Log("Game is start.");
 				}
 				else {
 					Debug.Log("[" + Time.timeSinceLevelLoad + "] Game should be over once. ");
