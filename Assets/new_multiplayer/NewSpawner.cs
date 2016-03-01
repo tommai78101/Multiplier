@@ -534,6 +534,9 @@ namespace MultiPlayer {
 						actions.SendMessageUpwards("SetEndGameSession");
 					}
 				}
+				else {
+					Debug.Log("Game should be over once.");
+				}
 			}
 		}
 
