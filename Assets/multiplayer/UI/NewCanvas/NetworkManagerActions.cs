@@ -256,8 +256,13 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (!ClientScene.ready) {
 			Debug.Log("Client is not ready at the moment, however, the LAN client is starting.");
 			this.LANClientNotReady.SetActive(true);
+
+
+
+
 			Debug.Log("Disabling PostRenderer");
-			PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
+			Camera cam = Camera.main.GetComponent<Camera>();
+			PostRenderer renderer = cam.GetComponent<PostRenderer>();
 			if (renderer != null) {
 				renderer.enabled = false;
 				Debug.Log("Disabling PostRenderer successful.");
@@ -297,7 +302,8 @@ public class NetworkManagerActions : MonoBehaviour {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
 				Debug.Log("Client is now ready.");
 				Debug.Log("Enabling PostRenderer.");
-				PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
+				Camera cam = Camera.main.GetComponent<Camera>();
+				PostRenderer renderer = cam.GetComponent<PostRenderer>();
 				if (renderer != null) {
 					renderer.enabled = true;
 					Debug.Log("Enabling PostRenderer successful.");
