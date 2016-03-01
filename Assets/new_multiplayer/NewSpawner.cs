@@ -531,7 +531,11 @@ namespace MultiPlayer {
 					Debug.Log("Game is over!");
 					NetworkManagerActions actions = GameObject.FindObjectOfType<NetworkManagerActions>();
 					if (actions != null) {
-						actions.SendMessageUpwards("SetEndGameSession");
+						Debug.Log("Sending warnings.");
+						//actions.SendMessageUpwards("SetEndGameSession");
+					}
+					else {
+						Debug.Log("Cannot obtain network manager actions.");
 					}
 				}
 				else {
