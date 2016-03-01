@@ -253,24 +253,26 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
 
+
+		Debug.Log("Disabling PostRenderer");
+		Camera cam = Camera.main.GetComponent<Camera>();
+		PostRenderer renderer = cam.GetComponent<PostRenderer>();
+		if (renderer != null) {
+			renderer.enabled = false;
+			Debug.Log("Disabling PostRenderer successful.");
+		}
+		else {
+			Debug.Log("Unable to disable PostRenderer.");
+		}
+
+
 		if (!ClientScene.ready) {
-			Debug.Log("Client is not ready at the moment, however, the LAN client is starting.");
 			this.LANClientNotReady.SetActive(true);
-
-
-
-
-			Debug.Log("Disabling PostRenderer");
-			Camera cam = Camera.main.GetComponent<Camera>();
-			PostRenderer renderer = cam.GetComponent<PostRenderer>();
-			if (renderer != null) {
-				renderer.enabled = false;
-				Debug.Log("Disabling PostRenderer successful.");
-			}
 		}
 		else {
 			Debug.Log("Client is ready.");
 		}
+
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 		if (enableEditorObj != null) {
 			enableEditorObj.TurnOffCanvasGroup();
