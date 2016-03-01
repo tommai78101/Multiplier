@@ -187,8 +187,16 @@ public class NetworkManagerActions : MonoBehaviour {
 		SceneManager.LoadScene("new_multiplayer");
 	}
 
+	//NOTE(Thompson): This is equivalent to SetClientReady().
 	public void TurnOffLANHost() {
 		this.LANHost.SetActive(false);
+
+		Debug.Log("Enabling PostRenderer for LAN Host.");
+		PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
+		if (renderer != null) {
+			renderer.enabled = true;
+			Debug.Log("Enabling PostRenderer for LAN Host successful.");
+		}
 	}
 
 
