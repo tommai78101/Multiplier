@@ -294,6 +294,7 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void SetClientReady() {
+		Debug.Log("Set Client Ready button is pressed.");
 		if (!ClientScene.ready) {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
 				Debug.Log("Client is now ready.");
@@ -322,6 +323,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 		}
 		else {
+			Debug.Log("Client is already set to ready.");
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 		}
