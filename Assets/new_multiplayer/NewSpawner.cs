@@ -123,6 +123,7 @@ namespace MultiPlayer {
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
+		private PostRenderer selectionBoxRenderer;
 
 		public static int colorCode = 0;
 
@@ -166,6 +167,10 @@ namespace MultiPlayer {
 
 				//NOTE(Thompson): See NOTE in NetworkManagerActions.StartLANClient().
 				renderer.enabled = false;
+
+				//NOTE(Thompson): Setting the renderer to a variable, so I can later on check to see
+				//if the renderer is disabled or not. If disabled, disallow unit selection.
+				this.selectionBoxRenderer = renderer;
 			}
 
 			this.selectionBox = new Rect();
@@ -539,7 +544,7 @@ namespace MultiPlayer {
 		}
 
 		private void HandleSelection() {
-			if (this.minimapCamera == null) {
+			if (this.minimapCamera == null || !this.selectionBoxRenderer.enabled) {
 				return;
 			}
 
