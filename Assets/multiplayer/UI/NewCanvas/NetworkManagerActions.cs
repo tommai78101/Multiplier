@@ -251,7 +251,13 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.networkManager.StartClient();
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
-		this.LANClientNotReady.SetActive(true);
+
+		if (!ClientScene.ready) {
+			this.LANClientNotReady.SetActive(true);
+		}
+		else {
+			Debug.Log("Client is ready.");
+		}
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 		if (enableEditorObj != null) {
 			enableEditorObj.TurnOffCanvasGroup();
