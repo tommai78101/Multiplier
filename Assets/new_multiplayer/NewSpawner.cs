@@ -163,6 +163,9 @@ namespace MultiPlayer {
 			if (Camera.main.gameObject.GetComponent<PostRenderer>() == null) {
 				PostRenderer renderer = Camera.main.gameObject.AddComponent<PostRenderer>();
 				renderer.minimapCamera = this.minimapCamera;
+
+				//NOTE(Thompson): See NOTE in NetworkManagerActions.StartLANClient().
+				renderer.enabled = false;
 			}
 
 			this.selectionBox = new Rect();

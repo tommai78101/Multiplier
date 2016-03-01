@@ -253,29 +253,15 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANClientReady.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
 
-
-		bool testFlag = false;
-		do {
-			Debug.Log("Disabling PostRenderer");
-			Camera cam = Camera.main.GetComponent<Camera>();
-			if (cam == null) {
-				Debug.Log("Camera variable 'cam' is actually null.");
-			}
-			PostRenderer renderer = cam.GetComponent<PostRenderer>();
-			if (renderer != null) {
-				renderer.enabled = false;
-				Debug.Log("Disabling PostRenderer successful.");
-				testFlag = true;
-			}
-			else {
-				Debug.Log("Unable to disable PostRenderer.");
-			}
-		}
-		while (!testFlag);
-
+		//NOTE(Thompson): If you want to know why we don't' check the main camera for PostRenderer,
+		//and disable it here, it is because only when the connection is established between server
+		//and client, the PostRenderer component will then be added to the main camera.
+		//That is when PostRenderer is available for us to enable/disable. So, for now, we do not do
+		//anything here, and disable the PostRenderer in the NewSpawner.Start().
 
 		if (!ClientScene.ready) {
 			this.LANClientNotReady.SetActive(true);
+			Debug.Log("Client scene is not ready. Turning on LANClientNotReady UI.");
 		}
 		else {
 			Debug.Log("Client is ready.");
