@@ -320,6 +320,10 @@ namespace MultiPlayer {
 			}
 		}
 
+		private void LogKill() {
+			GameMetricLogger.Increment(GameMetricOptions.Kills);
+		}
+
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
 
 		[Command]
@@ -384,6 +388,11 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
+
+					if (victimUnit.properties.currentHealth == 0) {
+						Debug.Log("Kill Count");
+						attackerUnit.LogKill();
+					}
 				}
 			}
 		}
