@@ -55,7 +55,6 @@ namespace Analytics {
 			this.outputField.GetComponentInChildren<Text>().text = this.outputField.text.ToString();
 
 			if (Input.GetKeyUp(this.triggerKey)) {
-				Debug.Log("Log Toggle Key is pressed.");
 				ToggleCanvasGroup();
 				GameMetricLogger.PrintLog();
 			}

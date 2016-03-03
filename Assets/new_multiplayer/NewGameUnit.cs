@@ -135,7 +135,6 @@ namespace MultiPlayer {
 				//NOTE(Thompson): Rare chance the game unit is not initialized correctly.
 				//Therefore the best way to fix this is to re-initialize the game unit again.
 				//Not sure if this fixes that rare issue.
-				Debug.Log("Detected the game unit is not initialized. Reinitializing game unit.");
 				this.Start();
 				return;
 			}

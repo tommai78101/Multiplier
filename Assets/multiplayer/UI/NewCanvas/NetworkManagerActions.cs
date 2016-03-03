@@ -124,7 +124,6 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 			else {
 				//Because there's nothing going on. Would rather just stay opened.
-				Debug.Log("Client and host are not active. Resetting menus.");
 				SceneManager.LoadScene("new_multiplayer");
 				//if (NetworkClient.active || NetworkServer.active) {
 				//	if (NetworkClient.active) {
@@ -196,11 +195,9 @@ public class NetworkManagerActions : MonoBehaviour {
 	public void TurnOffLANHost() {
 		this.LANHost.SetActive(false);
 
-		Debug.Log("Enabling PostRenderer for LAN Host.");
 		PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
 		if (renderer != null) {
 			renderer.enabled = true;
-			Debug.Log("Enabling PostRenderer for LAN Host successful.");
 		}
 	}
 
@@ -278,10 +275,6 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		if (!ClientScene.ready) {
 			this.LANClientNotReady.SetActive(true);
-			Debug.Log("Client scene is not ready. Turning on LANClientNotReady UI.");
-		}
-		else {
-			Debug.Log("Client is ready.");
 		}
 
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
@@ -293,7 +286,6 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void StopLANClient() {
-		Debug.Log("Stopping LAN client.");
 		if (NetworkClient.active) {
 			this.networkManager.StopClient();
 		}
@@ -311,16 +303,12 @@ public class NetworkManagerActions : MonoBehaviour {
 	}
 
 	public void SetClientReady() {
-		Debug.Log("Set Client Ready button is pressed.");
 		if (!ClientScene.ready) {
 			if (ClientScene.Ready(this.networkManager.client.connection)) {
-				Debug.Log("Client is now ready.");
-				Debug.Log("Enabling PostRenderer.");
 				Camera cam = Camera.main.GetComponent<Camera>();
 				PostRenderer renderer = cam.GetComponent<PostRenderer>();
 				if (renderer != null) {
 					renderer.enabled = true;
-					Debug.Log("Enabling PostRenderer successful.");
 				}
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
@@ -340,17 +328,13 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 		}
 		else {
-			Debug.Log("Client is already set to ready.");
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 
-			Debug.Log("Client is now ready. (TEST 2)");
-			Debug.Log("Enabling PostRenderer. (TEST 2)");
 			Camera cam = Camera.main.GetComponent<Camera>();
 			PostRenderer renderer = cam.GetComponent<PostRenderer>();
 			if (renderer != null) {
 				renderer.enabled = true;
-				Debug.Log("Enabling PostRenderer successful. (TEST 2)");
 			}
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
@@ -358,7 +342,6 @@ public class NetworkManagerActions : MonoBehaviour {
 			foreach (NewSpawner spawn in spawners) {
 				if (spawn != null && spawn.hasAuthority) {
 					NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
-					Debug.Log("Setting the ready flag is successful for " + spawn.ToString() + ". (TEST 2)");
 				}
 			}
 		}

@@ -149,7 +149,6 @@ namespace MultiPlayer {
 				spawnerIdentity.localPlayerAuthority = true;
 			}
 			this.owner = this.isServer ? spawnerIdentity.connectionToClient : spawnerIdentity.connectionToServer;
-			Debug.Log("This is " + (this.isServer ? " Server." : " Client."));
 			this.isPaused = false;
 
 			if (this.minimapCamera == null) {
@@ -374,13 +373,11 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdShowReport() {
-			Debug.Log("Server showing report.");
 			RpcShowReport();
 		}
 
 		[ClientRpc]
 		public void RpcShowReport() {
-			Debug.Log("Client showing report.");
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			if (spawners.Length > 0) {
 				for (int i = 0; i < spawners.Length; i++) {
@@ -564,12 +561,7 @@ namespace MultiPlayer {
 			else {
 				if (!this.isUnitListEmpty) {
 					this.isUnitListEmpty = true;
-					Debug.Log("This is reached.");
-					Debug.Log("Game should be over once. ");
 					CmdShowReport();
-				}
-				else {
-					Debug.Log("Constantly reaching this debug message.");
 				}
 			}
 		}
