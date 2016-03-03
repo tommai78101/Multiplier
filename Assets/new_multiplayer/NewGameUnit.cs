@@ -321,6 +321,7 @@ namespace MultiPlayer {
 		}
 
 		private void LogKill() {
+			Debug.Log("Kill Count.");
 			GameMetricLogger.Increment(GameMetricOptions.Kills);
 		}
 
@@ -390,7 +391,6 @@ namespace MultiPlayer {
 					victimUnit.NewProperty(changes);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
-						Debug.Log("Kill Count");
 						attackerUnit.LogKill();
 					}
 				}
