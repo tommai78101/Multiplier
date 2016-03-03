@@ -260,7 +260,7 @@ namespace MultiPlayer {
 
 		private void HandleAttacking() {
 			if (this.properties.targetUnit != null && this.attackCooldownCounter <= 0 && !this.properties.isAttackCooldownEnabled) {
-				CmdAttack(this.gameObject, this.properties.targetUnit, 1);
+				CmdAttack(this.hasAuthority, this.gameObject, this.properties.targetUnit, 1);
 				this.attackCooldownCounter = 1f;
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
@@ -376,7 +376,7 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdAttack(GameObject attacker, GameObject victim, int damage) {
+		public void CmdAttack(bool hasAuthority, GameObject attacker, GameObject victim, int damage) {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
@@ -389,7 +389,7 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
 
-					if (victimUnit.properties.currentHealth == 0) {
+					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
 						Debug.Log("Kill Count");
 						attackerUnit.LogKill();
 					}
