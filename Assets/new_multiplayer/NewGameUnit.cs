@@ -375,7 +375,7 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (!(NetworkServer.FindLocalObject(victimUnit.netId) || NetworkServer.FindLocalObject(attackerUnit.netId)){
+				if (!(NetworkServer.FindLocalObject(victimUnit.netId) || NetworkServer.FindLocalObject(attackerUnit.netId))){
 					return;
 				}
 				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled && NetworkServer.FindLocalObject(victimUnit.netId) != null && NetworkServer.FindLocalObject(attackerUnit.netId) != null) {
