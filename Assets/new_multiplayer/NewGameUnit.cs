@@ -392,7 +392,7 @@ namespace MultiPlayer {
 							Debug.Log("Kill should appear. TEST 1");
 							GameMetricLogger.Increment(GameMetricOptions.Kills);
 						}
-						if (this.hasAuthority) {
+						if (this.hasAuthority == victimUnit.hasAuthority) {
 							RpcIWasAttacked(victimUnit.hasAuthority);
 						}
 					}
