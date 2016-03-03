@@ -391,7 +391,7 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcIWasAttacked(bool hasAuthority) {
 			Debug.Log("Being attacked and the victim HP is 0 or less.");
-			if (hasAuthority) {
+			if (hasAuthority == this.hasAuthority) {
 				Debug.Log("Death should appear.");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 			}
