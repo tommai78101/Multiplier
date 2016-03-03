@@ -381,41 +381,14 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
 
-					if (victimUnit.properties.currentHealth == 0) {
-						if (victimUnit.hasAuthority != this.hasAuthority) {
-							//Victim's owner is not the attacker's owner.
-							Debug.Log("Death should appear.  TEST 1");
-							GameMetricLogger.Increment(GameMetricOptions.Death);
-						}
-						else {
-							//Victim's owner is the attacker's owner.
-							Debug.Log("Kill should appear. TEST 1");
-							GameMetricLogger.Increment(GameMetricOptions.Kills);
-						}
-						if (this.hasAuthority == victimUnit.hasAuthority) {
-							RpcIWasAttacked(victimUnit.hasAuthority);
-						}
-					}
+					RpcIWasAttacked(attackerUnit.hasAuthority, victimUnit.hasAuthority);
 				}
 			}
 		}
 
 		[ClientRpc]
-		public void RpcIWasAttacked(bool hasAuthority) {
-			if (!this.hasAuthority) {
-				return;
-			}
-			Debug.Log("Being attacked and the victim HP is 0. Never less.");
-			if (hasAuthority != this.hasAuthority) {
-				//Victim's owner is not the attacker's owner.
-				Debug.Log("Death should appear. TEST 2");
-				GameMetricLogger.Increment(GameMetricOptions.Death);
-			}
-			else {
-				//Victim's owner is the attacker's owner.
-				Debug.Log("Kill should appear. TEST 2");
-				GameMetricLogger.Increment(GameMetricOptions.Kills);
-			}
+		public void RpcIWasAttacked(bool attackAuthority, bool victimAuthority) {
+			Debug.Log((this.isServer ? " Server" : " Client") + (this.hasAuthority ? " authority" : " no authority") + (attackAuthority ? " AttackAuthority" : "") + (victimAuthority ? " VictimAuthority" : ""));
 		}
 
 		//Do not remove. This is required.
