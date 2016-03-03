@@ -83,7 +83,7 @@ namespace MultiPlayer {
 		private float recoveryCounter;
 		[SerializeField]
 		private float attackCooldownCounter;
-		[SerializedField]
+		[SerializeField]
 		private bool isDead;
 
 		public void Start() {
