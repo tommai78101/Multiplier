@@ -166,7 +166,6 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		this.PreUnitAttributesInitialization();
 
-		Debug.Log("Starting up the game metrics logger.");
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 
 	}

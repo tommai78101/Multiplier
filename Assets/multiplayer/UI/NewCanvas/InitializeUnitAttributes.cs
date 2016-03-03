@@ -13,7 +13,6 @@ public class InitializeUnitAttributes : MonoBehaviour {
 
 	public void FetchUnitAttributes() {
 		GameObject[] objs = GameObject.FindGameObjectsWithTag("UnitAttributes");
-		Debug.Log("There are " + objs.Length + " UnitAttribute objects.");
 		for (int i = 0; i < objs.Length; i++) {
 			UnitAttributes unitAttribute = objs[i].GetComponent<UnitAttributes>();
 			if (unitAttribute != null) {
