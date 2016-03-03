@@ -124,7 +124,7 @@ namespace MultiPlayer {
 			this.attackCooldownCounter = 0f;
 
 			//NOTE(Thompson): Changing the name here, so I can really get rid of (Clone).
-			this.name = "New Game Unit"; 
+			this.name = "New Game Unit";
 		}
 
 		public void Update() {
@@ -381,8 +381,20 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
 
-					if (victimUnit.properties.currentHealth <= 0) {
-						RpcIWasAttacked(victimUnit.hasAuthority);
+					if (victimUnit.properties.currentHealth == 0) {
+						if (victimUnit.hasAuthority != this.hasAuthority) {
+							//Victim's owner is not the attacker's owner.
+							Debug.Log("Death should appear.  TEST 1");
+							GameMetricLogger.Increment(GameMetricOptions.Death);
+						}
+						else {
+							//Victim's owner is the attacker's owner.
+							Debug.Log("Kill should appear. TEST 1");
+							GameMetricLogger.Increment(GameMetricOptions.Kills);
+						}
+						if (this.hasAuthority) {
+							RpcIWasAttacked(victimUnit.hasAuthority);
+						}
 					}
 				}
 			}
@@ -390,15 +402,18 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcIWasAttacked(bool hasAuthority) {
-			Debug.Log("Being attacked and the victim HP is 0 or less.");
+			if (!this.hasAuthority) {
+				return;
+			}
+			Debug.Log("Being attacked and the victim HP is 0. Never less.");
 			if (hasAuthority != this.hasAuthority) {
 				//Victim's owner is not the attacker's owner.
-				Debug.Log("Death should appear.");
+				Debug.Log("Death should appear. TEST 2");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 			}
 			else {
 				//Victim's owner is the attacker's owner.
-				Debug.Log("Kill should appear.");
+				Debug.Log("Kill should appear. TEST 2");
 				GameMetricLogger.Increment(GameMetricOptions.Kills);
 			}
 		}
