@@ -374,11 +374,13 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdShowReport() {
+			Debug.Log("Server showing report.");
 			RpcShowReport();
 		}
 
 		[ClientRpc]
 		public void RpcShowReport() {
+			Debug.Log("Client showing report.");
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			if (spawners.Length > 0) {
 				for (int i = 0; i < spawners.Length; i++) {
