@@ -277,9 +277,6 @@ namespace MultiPlayer {
 								break;
 							}
 						}
-						//Vector3 pos = starters[pickedSpot].transform.position;
-						//pos.y = 1f;
-						//units[j].transform.position = pos;
 					}
 					else {
 						for (int i = 0; i < starters.Count; i++) {
@@ -290,9 +287,6 @@ namespace MultiPlayer {
 								break;
 							}
 						}
-						//Vector3 pos = starters[otherSpot].transform.position;
-						//pos.y = 1f;
-						//units[j].transform.position = pos;
 					}
 					units[j].SetTeamColor(units[j].properties.teamColor);
 				}
@@ -506,6 +500,8 @@ namespace MultiPlayer {
 						CmdUpdateUnitProperty(splitGroup.split.gameObject, this.changes);
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.Remove(splitGroup);
+
+						GameMetricLogger.Increment(GameMetricOptions.Splits);
 					}
 					else {
 						splitGroup.Update();
@@ -532,6 +528,8 @@ namespace MultiPlayer {
 							CmdDestroy(temp.unit);
 						}
 						this.mergeList.RemoveAt(i);
+
+						GameMetricLogger.Increment(GameMetricOptions.Merges);
 					}
 					else {
 						mergeGroup.Update();

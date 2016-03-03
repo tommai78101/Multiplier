@@ -239,6 +239,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.unitAttributeEditor.SetActive(false);
 		this.LANHost.SetActive(false);
 		this.LANClientNotConnected.SetActive(true);
+
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 	}
 
 	public void TurnOffLANClientMenu() {
@@ -253,6 +255,8 @@ public class NetworkManagerActions : MonoBehaviour {
 		//if (enableEditorObj != null) {
 		//	enableEditorObj.TurnOffCanvasGroup();
 		//}
+
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 	}
 
 	public void StartLANClient(InputField inputField) {

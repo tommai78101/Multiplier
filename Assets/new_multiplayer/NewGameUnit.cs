@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using Extension;
+using Analytics;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -265,11 +266,15 @@ namespace MultiPlayer {
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
+
+				GameMetricLogger.Increment(GameMetricOptions.Attacks);
 			}
 			else if (this.attackCooldownCounter > 0f) {
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
+
+				GameMetricLogger.Increment(GameMetricOptions.AttackTime);
 			}
 		}
 
@@ -293,6 +298,8 @@ namespace MultiPlayer {
 			if (this.properties.isAttackCooldownEnabled) {
 				if (this.attackCooldownCounter > 0) {
 					this.attackCooldownCounter -= Time.deltaTime;
+
+					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
 				}
 				else {
 					NewChanges changes = this.CurrentProperty();
@@ -373,7 +380,21 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
+
+					if (victimUnit.properties.currentHealth <= 0) {
+						RpcIWasAttacked(victimUnit.hasAuthority);
+					}
 				}
+			}
+		}
+
+		[ClientRpc]
+		public void RpcIWasAttacked(bool hasAuthority) {
+			if (hasAuthority) {
+				GameMetricLogger.Increment(GameMetricOptions.Death);
+			}
+			else {
+				GameMetricLogger.Increment(GameMetricOptions.Kills);
 			}
 		}
 
