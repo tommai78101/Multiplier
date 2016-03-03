@@ -381,14 +381,53 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
 
-					RpcIWasAttacked(attackerUnit.hasAuthority, victimUnit.hasAuthority);
+					RpcIWasAttacked(attackerUnit.hasAuthority, victimUnit.hasAuthority, victimUnit.properties.currentHealth == 0);
 				}
 			}
 		}
 
 		[ClientRpc]
-		public void RpcIWasAttacked(bool attackAuthority, bool victimAuthority) {
+		public void RpcIWasAttacked(bool attackAuthority, bool victimAuthority, bool isDying) {
 			Debug.Log((this.isServer ? " Server" : " Client") + (this.hasAuthority ? " authority" : " no authority") + (attackAuthority ? " AttackAuthority" : "") + (victimAuthority ? " VictimAuthority" : ""));
+
+			bool attacking = (this.hasAuthority == attackAuthority);
+			bool hurting = (this.hasAuthority == victimAuthority);
+			if (isDying) {
+				if (attacking == this.isServer) {
+					Debug.Log("Attack");
+					GameMetricLogger.Increment(GameMetricOptions.Attacks);
+				}
+				else if (hurting == this.isServer) {
+					Debug.Log("Death");
+					GameMetricLogger.Increment(GameMetricOptions.Death);
+				}
+				else if (attacking == this.isClient) {
+					Debug.Log("Attack");
+					GameMetricLogger.Increment(GameMetricOptions.Attacks);
+				}
+				else if (hurting == this.isClient) {
+					Debug.Log("Death");
+					GameMetricLogger.Increment(GameMetricOptions.Death);
+				}
+			}
+			else {
+				if (attacking == this.isServer) {
+					Debug.Log("Attack");
+					GameMetricLogger.Increment(GameMetricOptions.Attacks);
+				}
+				else if (hurting == this.isServer) {
+					Debug.Log("Kill");
+					GameMetricLogger.Increment(GameMetricOptions.Kills);
+				}
+				else if (attacking == this.isClient) {
+					Debug.Log("Attack");
+					GameMetricLogger.Increment(GameMetricOptions.Attacks);
+				}
+				else if (hurting == this.isClient) {
+					Debug.Log("Kill");
+					GameMetricLogger.Increment(GameMetricOptions.Kills);
+				}
+			}
 		}
 
 		//Do not remove. This is required.
