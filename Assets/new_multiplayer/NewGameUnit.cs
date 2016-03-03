@@ -375,11 +375,15 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
+				if (!(NetworkServer.FindLocalObject(victimUnit.netId) || NetworkServer.FindLocalObject(attackerUnit.netId)){
+					return;
+				}
 				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled && NetworkServer.FindLocalObject(victimUnit.netId) != null && NetworkServer.FindLocalObject(attackerUnit.netId) != null) {
 					NewChanges changes = victimUnit.CurrentProperty();
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
+
 
 					if (victimUnit.properties.currentHealth > 0) {
 						RpcUnitInjures(attackerUnit.hasAuthority);
@@ -407,7 +411,7 @@ namespace MultiPlayer {
 			if (!this.hasAuthority) {
 				return;
 			}
-			if (this.hasAuthority == victimAuthority) {
+			if (this.hasAuthority != victimAuthority) {
 				Debug.Log("Unit is dying.");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 			}
