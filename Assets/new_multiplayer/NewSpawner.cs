@@ -357,15 +357,19 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdUpdateUnitProperty(GameObject unit, NewChanges changes) {
-			NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
-			if (gameUnit != null) {
-				gameUnit.NewProperty(changes);
+			if (unit != null) {
+				NewGameUnit gameUnit = unit.GetComponent<NewGameUnit>();
+				if (gameUnit != null) {
+					gameUnit.NewProperty(changes);
+				}
 			}
 		}
 
 		[Command]
 		public void CmdRemoveUnitList(GameObject obj) {
-			this.unitList.Remove(new NewUnitStruct(obj));
+			if (obj != null) {
+				this.unitList.Remove(new NewUnitStruct(obj));
+			}
 		}
 
 		[Command]
