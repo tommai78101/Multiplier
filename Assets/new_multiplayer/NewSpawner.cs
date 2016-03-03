@@ -325,7 +325,6 @@ namespace MultiPlayer {
 				return;
 			}
 			if (!this.isGameStart && this.isUnitListEmpty) {
-				Debug.Log("This is game over.");
 				return;
 			}
 			HandleSelection();
