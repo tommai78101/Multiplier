@@ -386,9 +386,11 @@ namespace MultiPlayer {
 
 					if (victimUnit.properties.currentHealth > 0) {
 						RpcUnitInjures(attackerUnit.hasAuthority);
+						RpcDebugLog(attackerUnit.properties.teamColor.ToString() + " - Unit is injured.");
 					}
 					else {
 						RpcUnitDies(victimUnit.hasAuthority);
+						RpcDebugLog(attackerUnit.properties.teamColor.ToString() + " - Unit is dying.");
 					}
 				}
 			}
@@ -414,6 +416,11 @@ namespace MultiPlayer {
 				Debug.Log("Unit is dying.");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 			}
+		}
+
+		[ClientRpc]
+		public void RpcDebugLog(string msg) {
+			Debug.Log(msg);
 		}
 
 
