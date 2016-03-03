@@ -381,38 +381,38 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
 
-					RpcIWasAttacked(victimUnit.hasAuthority, victimUnit.properties.currentHealth == 0);
+					if (victimUnit.properties.currentHealth > 0) {
+						RpcUnitInjures(attackerUnit.hasAuthority);
+					}
+					else {
+						RpcUnitDies(victimUnit.hasAuthority);
+					}
 				}
 			}
 		}
 
 		[ClientRpc]
-		public void RpcIWasAttacked(bool victimAuthority, bool isDying) {
+		public void RpcUnitInjures(bool attackAuthority) {
 			if (!this.hasAuthority) {
 				return;
 			}
-			bool hurting = (this.hasAuthority == victimAuthority);
-			if (isDying) {
-				if (hurting == this.isServer) {
-					Debug.Log("Death");
-					GameMetricLogger.Increment(GameMetricOptions.Death);
-				}
-				else if (hurting == this.isClient) {
-					Debug.Log("Death");
-					GameMetricLogger.Increment(GameMetricOptions.Death);
-				}
-			}
-			else {
-				if (hurting == this.isServer) {
-					Debug.Log("Kill");
-					GameMetricLogger.Increment(GameMetricOptions.Kills);
-				}
-				else if (hurting == this.isClient) {
-					Debug.Log("Kill");
-					GameMetricLogger.Increment(GameMetricOptions.Kills);
-				}
+			if (this.hasAuthority == attackAuthority) {
+				Debug.Log("Unit is attacked.");
+				GameMetricLogger.Increment(GameMetricOptions.Attacks);
 			}
 		}
+
+		[ClientRpc]
+		public void RpcUnitDies(bool victimAuthority) {
+			if (!this.hasAuthority) {
+				return;
+			}
+			if (this.hasAuthority == victimAuthority) {
+				Debug.Log("Unit is dying.");
+				GameMetricLogger.Increment(GameMetricOptions.Death);
+			}
+		}
+
 
 		//Do not remove. This is required.
 		[Command]
