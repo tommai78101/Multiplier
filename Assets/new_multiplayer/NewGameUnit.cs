@@ -83,6 +83,8 @@ namespace MultiPlayer {
 		private float recoveryCounter;
 		[SerializeField]
 		private float attackCooldownCounter;
+		[SerializedField]
+		private bool isDead;
 
 		public void Start() {
 			if (!this.properties.isInitialized) {
@@ -122,6 +124,7 @@ namespace MultiPlayer {
 			}
 			this.recoveryCounter = 0f;
 			this.attackCooldownCounter = 0f;
+			this.isDead = false;
 
 			//NOTE(Thompson): Changing the name here, so I can really get rid of (Clone).
 			this.name = "New Game Unit";
@@ -291,11 +294,13 @@ namespace MultiPlayer {
 		}
 
 		private void HandleStatus() {
-			if (this.properties.currentHealth <= 0) {
+			if (this.properties.currentHealth <= 0 && !this.isDead) {
+				this.isDead = true;
 				Debug.Log("Death Count");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 
 				CmdDestroy(this.properties.targetUnit);
+				return;
 			}
 			if (this.properties.isAttackCooldownEnabled) {
 				if (this.attackCooldownCounter > 0) {
