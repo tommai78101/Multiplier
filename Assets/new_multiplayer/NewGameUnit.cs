@@ -292,6 +292,8 @@ namespace MultiPlayer {
 
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0) {
+				GameMetricLogger.Increment(GameMetricOptions.Death);
+
 				CmdDestroy(this.properties.targetUnit);
 			}
 			if (this.properties.isAttackCooldownEnabled) {
@@ -374,7 +376,7 @@ namespace MultiPlayer {
 			if (victim != null && attacker != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				NewGameUnit attackerUnit = attacker.GetComponent<NewGameUnit>();
-				if (!(NetworkServer.FindLocalObject(victimUnit.netId) || NetworkServer.FindLocalObject(attackerUnit.netId))){
+				if (!(NetworkServer.FindLocalObject(victimUnit.netId) || NetworkServer.FindLocalObject(attackerUnit.netId))) {
 					return;
 				}
 				if (victimUnit != null && attackerUnit != null && !attackerUnit.properties.isAttackCooldownEnabled && NetworkServer.FindLocalObject(victimUnit.netId) != null && NetworkServer.FindLocalObject(attackerUnit.netId) != null) {
@@ -382,45 +384,8 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-
-
-					if (victimUnit.properties.currentHealth > 0) {
-						RpcUnitInjures(attackerUnit.hasAuthority);
-						RpcDebugLog(attackerUnit.properties.teamColor.ToString() + " - Unit is injured.");
-					}
-					else {
-						RpcUnitDies(victimUnit.hasAuthority);
-						RpcDebugLog(attackerUnit.properties.teamColor.ToString() + " - Unit is dying.");
-					}
 				}
 			}
-		}
-
-		[ClientRpc]
-		public void RpcUnitInjures(bool attackAuthority) {
-			if (!this.hasAuthority) {
-				return;
-			}
-			if (this.hasAuthority == attackAuthority) {
-				Debug.Log("Unit is attacked.");
-				GameMetricLogger.Increment(GameMetricOptions.Attacks);
-			}
-		}
-
-		[ClientRpc]
-		public void RpcUnitDies(bool victimAuthority) {
-			if (!this.hasAuthority) {
-				return;
-			}
-			if (this.hasAuthority != victimAuthority) {
-				Debug.Log("Unit is dying.");
-				GameMetricLogger.Increment(GameMetricOptions.Death);
-			}
-		}
-
-		[ClientRpc]
-		public void RpcDebugLog(string msg) {
-			Debug.Log(msg);
 		}
 
 
