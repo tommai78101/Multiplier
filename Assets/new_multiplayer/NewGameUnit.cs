@@ -388,7 +388,7 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcIWasAttacked(bool victimAuthority, bool isDying) {
-			Debug.Log((this.isServer ? " Server" : " Client") + (this.hasAuthority ? " authority" : " no authority") + (attackAuthority ? " AttackAuthority" : "") + (victimAuthority ? " VictimAuthority" : ""));
+			Debug.Log((this.isServer ? " Server" : " Client") + (victimAuthority ? " VictimAuthority" : ""));
 
 			bool hurting = (this.hasAuthority == victimAuthority);
 			if (isDying) {
