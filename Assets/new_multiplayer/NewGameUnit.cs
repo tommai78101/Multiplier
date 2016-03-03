@@ -292,6 +292,7 @@ namespace MultiPlayer {
 
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0) {
+				Debug.Log("Death Count");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 
 				CmdDestroy(this.properties.targetUnit);
@@ -321,7 +322,6 @@ namespace MultiPlayer {
 		}
 
 		private void LogKill() {
-			Debug.Log("Kill Count.");
 			GameMetricLogger.Increment(GameMetricOptions.Kills);
 		}
 
