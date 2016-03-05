@@ -18,7 +18,7 @@ public class EnableAttributeEditor : MonoBehaviour {
 			TurnOnCanvasGroup();
 		}
 		else {
-			TurnOnCanvasGroup();
+			TurnOffCanvasGroup();
 		}
 	}
 
