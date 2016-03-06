@@ -368,14 +368,16 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcAddSplit(GameObject owner, GameObject split, NewChanges changes, float angle) {
 			if (owner != null && split != null) {
-				Debug.Log("I am now splitting");
+				Debug.Log("Obtaining the game unit as component.");
 				NewGameUnit splitUnit = split.GetComponent<NewGameUnit>();
 				if (splitUnit != null) {
+					Debug.Log("I'm obtaining the changes.");
 					splitUnit.NewProperty(changes);
 				}
 				else {
 					Debug.LogWarning("SplitUnit does not exist.");
 				}
+				Debug.Log("I am now splitting");
 				this.splitList.Add(new Split(owner.transform, split.transform, angle));
 			}
 			else {
