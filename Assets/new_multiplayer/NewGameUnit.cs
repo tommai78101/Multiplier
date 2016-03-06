@@ -218,6 +218,10 @@ namespace MultiPlayer {
 			return color;
 		}
 
+		public Color GetTeamColor() {
+			return this.properties.teamColor;
+		}
+
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
 		private void HandleMovement() {

@@ -352,6 +352,7 @@ namespace MultiPlayer {
 			NewChanges changes = newUnit.CurrentProperty();
 			changes.isSelected = false;
 			changes.isSplitting = true;
+			changes.teamColor = newUnit.GetTeamColor();
 			newUnit.NewProperty(changes);
 			GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp);
 			unit.name = "NewGameUnit";
