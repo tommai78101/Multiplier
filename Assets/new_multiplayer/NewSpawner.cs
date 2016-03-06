@@ -330,6 +330,7 @@ namespace MultiPlayer {
 
 		public void Update() {
 			if (!this.hasAuthority) {
+				ManageNonAuthorityLists();
 				return;
 			}
 			if (!this.isGameStart && this.isUnitListEmpty) {
@@ -603,6 +604,36 @@ namespace MultiPlayer {
 				if (!this.isUnitListEmpty) {
 					this.isUnitListEmpty = true;
 					CmdShowReport();
+				}
+			}
+		}
+
+		private void ManageNonAuthorityLists() {
+			if (this.splitList.Count > 0) {
+				for (int i = this.splitList.Count - 1; i >= 0; i--) {
+					Split splitGroup = this.splitList[i];
+					if (splitGroup.owner == null || splitGroup.split == null) {
+						this.splitList.Remove(splitGroup);
+					}
+					if (splitGroup.elapsedTime > 1f) {
+						NewGameUnit unit = splitGroup.owner.GetComponent<NewGameUnit>();
+						NewChanges changes = unit.CurrentProperty();
+						changes.isSelected = false;
+						changes.isSplitting = false;
+						//CmdUpdateUnitProperty(splitGroup.owner.gameObject, changes);
+						unit.NewProperty(changes);
+						unit = splitGroup.split.GetComponent<NewGameUnit>();
+						unit.NewProperty(changes);
+						//CmdUpdateUnitProperty(splitGroup.split.gameObject, changes);
+						//this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
+						this.splitList.Remove(splitGroup);
+
+						//GameMetricLogger.Increment(GameMetricOptions.Splits);
+					}
+					else {
+						splitGroup.Update();
+						this.splitList[i] = splitGroup;
+					}
 				}
 			}
 		}
