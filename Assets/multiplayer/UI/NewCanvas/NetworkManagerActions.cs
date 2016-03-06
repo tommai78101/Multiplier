@@ -175,24 +175,28 @@ public class NetworkManagerActions : MonoBehaviour {
 		//player wants to play a new LAN session after ending a previous LAN session.
 		SceneManager.LoadScene("new_multiplayer");
 
-		//NOTE(Thompson): When reloading a scene, I don't even think the following codes are 
-		//necessary.
-		//this.networkManager.StopHost();
-		//this.LANHost.SetActive(false);
-		//this.LANClientReady.SetActive(false);
-		//this.LANClientNotReady.SetActive(false);
-		//this.LANClientNotConnected.SetActive(false);
-		//this.initialMenu.SetActive(true);
-		//this.optionsMenu.SetActive(true);
-		//EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
-		//if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
-		//	enableEditorObj.TurnOnCanvasGroup();
-		//}
+		//NOTE(Thompson): When reloading a scene, the GUIs are not reset to its initial states. Therefore
+		//the following reinitialization codes are necessary.
+		this.networkManager.StopHost();
+		this.LANHost.SetActive(false);
+		this.LANClientReady.SetActive(false);
+		this.LANClientNotReady.SetActive(false);
+		this.LANClientNotConnected.SetActive(false);
+		this.initialMenu.SetActive(true);
+		this.optionsMenu.SetActive(true);
+		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
+		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
+			enableEditorObj.TurnOnCanvasGroup();
+		}
+
+		GameMetricLogger.DisableLoggerHotkey();
 	}
 
 	//NOTE(Thompson): This is equivalent to SetClientReady().
-	public void TurnOffLANHost() {
+	public void SetLANHostReady() {
 		this.LANHost.SetActive(false);
+
+		GameMetricLogger.EnableLoggerHotkey();
 
 		PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
 		if (renderer != null) {
@@ -298,6 +302,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			enableEditorObj.TurnOnCanvasGroup();
 		}
 
+		GameMetricLogger.DisableLoggerHotkey();
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 	}
 
@@ -311,6 +316,9 @@ public class NetworkManagerActions : MonoBehaviour {
 				}
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
+
+				GameMetricLogger.EnableLoggerHotkey();
+
 				NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 				foreach (NewSpawner spawn in spawners) {
 					if (spawn != null && spawn.hasAuthority) {
@@ -337,6 +345,9 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
+
+			GameMetricLogger.EnableLoggerHotkey();
+
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			foreach (NewSpawner spawn in spawners) {
 				if (spawn != null && spawn.hasAuthority) {

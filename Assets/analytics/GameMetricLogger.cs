@@ -38,20 +38,24 @@ namespace Analytics {
 		public bool gameStartFlag {
 			get; set;
 		}
-		public bool gameMetricLoggerStop {
+		public bool gameMetricLoggerStart {
+			get; set;
+		}
+		public bool isInputEnabled {
 			get; set;
 		}
 
 		public void Start() {
-			this.outputField = this.GetComponentInChildren<InputField>();
-			this.outputField.readOnly = true;
-			this.stringBuilder = new StringBuilder();
-			this.gameMetricsLogGroup = this.GetComponent<CanvasGroup>();
 			Initialization();
+
 			GameMetricLogger.instance = this;
 		}
 
 		public void Update() {
+			if (!this.isInputEnabled) {
+				return;
+			}
+
 			this.outputField.GetComponentInChildren<Text>().text = this.outputField.text.ToString();
 
 			if (Input.GetKeyUp(this.triggerKey)) {
@@ -59,7 +63,7 @@ namespace Analytics {
 				GameMetricLogger.PrintLog();
 			}
 
-			if (!this.gameMetricLoggerStop) {
+			if (this.gameMetricLoggerStart) {
 				this.totalGameTimeSinceEpoch += Time.deltaTime;
 				if (this.gameStartFlag) {
 					this.totalGameTime += Time.deltaTime;
@@ -137,10 +141,10 @@ namespace Analytics {
 		public static void SetGameLogger(GameLoggerOptions options) {
 			switch (options) {
 				case GameLoggerOptions.StartGameMetrics:
-					GameMetricLogger.instance.gameMetricLoggerStop = false;
+					GameMetricLogger.instance.gameMetricLoggerStart = true;
 					break;
 				case GameLoggerOptions.StopGameMetrics:
-					GameMetricLogger.instance.gameMetricLoggerStop = true;
+					GameMetricLogger.instance.gameMetricLoggerStart = false;
 					break;
 				case GameLoggerOptions.GameIsPlaying:
 					GameMetricLogger.instance.gameStartFlag = true;
@@ -172,6 +176,14 @@ namespace Analytics {
 			else {
 				GameMetricLogger.instance.Print();
 			}
+		}
+
+		public static void EnableLoggerHotkey() {
+			GameMetricLogger.instance.isInputEnabled = true;
+		}
+
+		public static void DisableLoggerHotkey() {
+			GameMetricLogger.instance.isInputEnabled = false;
 		}
 
 		// ------------   Private variables  ------------------------------
@@ -210,9 +222,14 @@ namespace Analytics {
 			this.playerName = "Player";
 			this.difficultyEquations = "N/A (Not used.)";
 
-			//Flags
-			this.gameMetricLoggerStop = false;
+			//Flags and class members
+			this.outputField = this.GetComponentInChildren<InputField>();
+			this.outputField.readOnly = true;
+			this.stringBuilder = new StringBuilder();
+			this.gameMetricsLogGroup = this.GetComponent<CanvasGroup>();
+			this.gameMetricLoggerStart = false;
 			this.gameStartFlag = false;
+			this.isInputEnabled = false;
 
 			//Canvas Group
 			this.gameMetricsLogGroup.alpha = 0f;
