@@ -350,14 +350,16 @@ namespace MultiPlayer {
 			newUnit = unit.GetComponent<NewGameUnit>();
 			newUnit.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
-			RpcOrganizeUnit(unit);
-			//this.splitList.Add(new Split(temp.transform, unit.transform));
+			Debug.Log("Calling on splitting rpc.");
 			RpcAddSplit(temp, unit);
+			//this.splitList.Add(new Split(temp.transform, unit.transform));
+			RpcOrganizeUnit(unit);
 		}
 
 		[ClientRpc]
 		public void RpcAddSplit(GameObject owner, GameObject split) {
 			if (owner != null && split != null) {
+				Debug.Log("I am now splitting");
 				this.splitList.Add(new Split(owner.transform, split.transform));
 			}
 			else {
