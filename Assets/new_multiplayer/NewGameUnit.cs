@@ -175,7 +175,11 @@ namespace MultiPlayer {
 			pro.isCommanded = changes.isCommanded;
 			pro.isRecoveryEnabled = changes.isRecoveryEnabled;
 			pro.targetUnit = changes.targetUnit;
+
 			pro.teamColor = changes.teamColor;
+			Renderer renderer = this.GetComponent<Renderer>();
+			renderer.material.SetColor("_TeamColor", changes.teamColor);
+
 			pro.isAttackCooldownEnabled = changes.isAttackCooldownEnabled;
 			OnPropertiesChanged(pro);
 		}
