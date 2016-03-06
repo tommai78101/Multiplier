@@ -29,6 +29,15 @@ namespace MultiPlayer {
 			this.elapsedTime = 0f;
 		}
 
+		public Split(Transform owner, Transform split, float angle) {
+			this.owner = owner;
+			this.split = split;
+			this.origin = owner.position;
+			this.rotationVector = Quaternion.Euler(new Vector3(0f, angle, 0f)) * (Vector3.one * 0.5f);
+			this.rotationVector.y = 0f;
+			this.elapsedTime = 0f;
+		}
+
 		public void Update() {
 			Vector3 pos = Vector3.Lerp(this.origin, this.origin + this.rotationVector, this.elapsedTime);
 			if (this.owner == null || this.owner == null) {
@@ -351,13 +360,13 @@ namespace MultiPlayer {
 			newUnit.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
 			Debug.Log("Calling on splitting rpc.");
-			RpcAddSplit(temp, unit, changes);
+			RpcAddSplit(temp, unit, changes, Random.Range(-180f, 180f));
 			//this.splitList.Add(new Split(temp.transform, unit.transform));
 			RpcOrganizeUnit(unit);
 		}
 
 		[ClientRpc]
-		public void RpcAddSplit(GameObject owner, GameObject split, NewChanges changes) {
+		public void RpcAddSplit(GameObject owner, GameObject split, NewChanges changes, float angle) {
 			if (owner != null && split != null) {
 				Debug.Log("I am now splitting");
 				NewGameUnit splitUnit = split.GetComponent<NewGameUnit>();
@@ -367,7 +376,7 @@ namespace MultiPlayer {
 				else {
 					Debug.LogWarning("SplitUnit does not exist.");
 				}
-				this.splitList.Add(new Split(owner.transform, split.transform));
+				this.splitList.Add(new Split(owner.transform, split.transform, angle));
 			}
 			else {
 				string value1 = (owner == null) ? " Owner is null." : "";
