@@ -2601,7 +2601,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22402228, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.000000059604645
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0515000428d780342942fccf51e58099, type: 2}
@@ -4172,7 +4172,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2006691340}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.67407584
+  m_Size: 0.6753254
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

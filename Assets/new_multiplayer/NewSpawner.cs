@@ -408,8 +408,8 @@ namespace MultiPlayer {
 				for (int i = 0; i < this.unitList.Count; i++) {
 					if (this.unitList[i].unit == null) {
 						this.unitList.RemoveAt(i);
+						break;
 					}
-					break;
 				}
 			}
 		}
