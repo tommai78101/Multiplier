@@ -52,7 +52,7 @@ GameObject:
   - 195: {fileID: 19577254}
   m_Layer: 0
   m_Name: NewGameUnit
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   properties:
+    isInitialized: 0
     isSplitting: 0
     isMerging: 0
     isSelected: 0
@@ -292,6 +293,7 @@ MonoBehaviour:
     level: 0
     teamFactionID: 0
     scalingFactor: 0
+    teamColor: {r: 0, g: 0, b: 0, a: 0}
     mouseTargetPosition: {x: 0, y: 0, z: 0}
     oldMouseTargetPosition: {x: 0, y: 0, z: 0}
     enemySeenTargetPosition: {x: 0, y: 0, z: 0}
@@ -303,6 +305,7 @@ MonoBehaviour:
   selectionRing: {fileID: 140182}
   recoveryCounter: 0
   attackCooldownCounter: 0
+  isDead: 0
 --- !u!114 &11493256
 MonoBehaviour:
   m_ObjectHideFlags: 1
