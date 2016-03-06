@@ -351,7 +351,20 @@ namespace MultiPlayer {
 			newUnit.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
 			RpcOrganizeUnit(unit);
-			this.splitList.Add(new Split(temp.transform, unit.transform));
+			//this.splitList.Add(new Split(temp.transform, unit.transform));
+			RpcAddSplit(temp, unit);
+		}
+
+		[ClientRpc]
+		public void RpcAddSplit(GameObject owner, GameObject split) {
+			if (owner != null && split != null) {
+				this.splitList.Add(new Split(owner.transform, split.transform));
+			}
+			else {
+				string value1 = (owner == null) ? " Owner is null." : "";
+				string value2 = (split == null) ? " Split is null." : "";
+				Debug.LogWarning(value1 + value2);
+			}
 		}
 
 		[Command]
