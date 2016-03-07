@@ -91,6 +91,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 443860}
+  - 114: {fileID: 11432498}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -262,6 +263,38 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 157070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 218
+    i1: 96
+    i2: 252
+    i3: 66
+    i4: 100
+    i5: 129
+    i6: 56
+    i7: 52
+    i8: 90
+    i9: 20
+    i10: 88
+    i11: 103
+    i12: 106
+    i13: 58
+    i14: 245
+    i15: 221
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &11432498
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 170476}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}

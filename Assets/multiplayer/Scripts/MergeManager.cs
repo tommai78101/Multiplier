@@ -150,11 +150,15 @@ namespace MultiPlayer {
 		//[Range(1f, 10f)]
 		//public float mergeSpeedFactor = 3f;
 
+		private bool doNotAllowMerging;
+
 
 		void Start() {
 			if (!this.hasAuthority) {
 				return;
 			}
+
+			this.doNotAllowMerging = false;
 
 			if (this.mergeList == null) {
 				this.mergeList = new List<MergeGroup>();
@@ -211,19 +215,20 @@ namespace MultiPlayer {
 			//Going to change this into network code, to sync up merging.
 			GameObject ownerObject = null, mergerObject = null;
 			List<GameObject> used = new List<GameObject>();
-			for (int i = 0; (i < this.selectionManager.selectedObjects.Count - 1); i++) {
+			for (int i = this.selectionManager.selectedObjects.Count - 1; (i > 0); i--) {
 				if (used.Contains(this.selectionManager.selectedObjects[i])) {
 					continue;
 				}
 				ownerObject = this.selectionManager.selectedObjects[i];
 				GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
-				for (int j = i + 1; j < this.selectionManager.selectedObjects.Count; j++) {
+				for (int j = i - 1; j > 0; j--) {
 					if (used.Contains(this.selectionManager.selectedObjects[j])) {
 						continue;
 					}
 					mergerObject = this.selectionManager.selectedObjects[j];
 					GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-					if (ownerUnit.level == mergerUnit.level && !ownerUnit.isMerging && !mergerUnit.isMerging) {
+					CheckAvailableResource();
+					if (ownerUnit.level == mergerUnit.level && !ownerUnit.isMerging && !mergerUnit.isMerging && !this.doNotAllowMerging) {
 						used.Add(this.selectionManager.selectedObjects[i]);
 						used.Add(this.selectionManager.selectedObjects[j]);
 
@@ -231,6 +236,11 @@ namespace MultiPlayer {
 						if (identity != null) {
 							CmdAddMerge(ownerObject, mergerObject, ownerUnit.hasAuthority, (this.isServer ? NetworkServer.FindLocalObject(identity.netId) : ClientScene.FindLocalObject(identity.netId)));
 						}
+
+						this.selectionManager.selectedObjects.RemoveAt(i);
+						i--;
+						this.selectionManager.selectedObjects.RemoveAt(j);
+						j--;
 						break;
 					}
 				}
@@ -298,6 +308,31 @@ namespace MultiPlayer {
 			NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
 			if (agent != null) {
 				agent.speed *= speedFactor;
+			}
+		}
+
+		private void CheckAvailableResource() {
+			int selectedLevelOneUnitCount = 0;
+			int totalLevelOneUnitCount = 0;
+
+			for (int i = 0; i < this.selectionManager.selectedObjects.Count; i++) {
+				GameUnit unit = this.selectionManager.selectedObjects[i].GetComponent<GameUnit>();
+				if (unit != null && unit.level == 1) {
+					selectedLevelOneUnitCount++;
+				}
+			}
+			for (int i = 0; i < this.selectionManager.allObjects.Count; i++) {
+				GameUnit unit = this.selectionManager.allObjects[i].GetComponent<GameUnit>();
+				if (unit != null && unit.level == 1 && unit.previousLevel == 1) {
+					totalLevelOneUnitCount++;
+				}
+			}
+
+			this.doNotAllowMerging = false;
+			if (selectedLevelOneUnitCount <= 2) {
+				if ((selectedLevelOneUnitCount == totalLevelOneUnitCount) || (selectedLevelOneUnitCount <= 2 && totalLevelOneUnitCount <= 2)) {
+					this.doNotAllowMerging = true;
+				}
 			}
 		}
 
