@@ -8,8 +8,8 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 459386}
-  - 114: {fileID: 11440288}
   - 114: {fileID: 11437994}
+  - 114: {fileID: 11491208}
   m_Layer: 0
   m_Name: Spawner
   m_TagString: Spawner
@@ -61,7 +61,7 @@ MonoBehaviour:
     i15: 98
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &11440288
+--- !u!114 &11491208
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -69,10 +69,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 106330}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 117b76200a7977b44b243d2b0144d54b, type: 3}
+  m_Script: {fileID: 11500000, guid: 03c00565f32e7164595a12195bc9ec93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefab: {fileID: 148424, guid: 845724a5339b2e748a0e4acd450a854e, type: 2}
+  spawnPrefab: {fileID: 194310, guid: 61999ba830d901141b2e4e828a6e83bf, type: 2}
   selectionManagerPrefab: {fileID: 107494, guid: 7dc4ee1ec08351c44852f6760b2ca398,
     type: 2}
   splitManagerPrefab: {fileID: 182220, guid: d4b291cc42cbe484191ea29cc3173a99, type: 2}
