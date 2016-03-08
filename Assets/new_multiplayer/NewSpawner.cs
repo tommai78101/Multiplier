@@ -472,7 +472,10 @@ namespace MultiPlayer {
 						if (owner != null && !owner.properties.isMerging) {
 							for (int j = i - 1; j >= 0; j--) {
 								merge = this.selectedList[j].unit.GetComponent<NewGameUnit>();
-								CheckAvailableResource();
+								this.doNotAllowMerging = false;
+								if (owner.properties.level == 1 && merge.properties.level == 1) {
+									CheckAvailableResource();
+								}
 								if (merge != null && !merge.properties.isMerging && merge.properties.level == owner.properties.level && !this.doNotAllowMerging) {
 									this.changes = owner.CurrentProperty();
 									changes.isMerging = true;
@@ -493,8 +496,9 @@ namespace MultiPlayer {
 										this.changes.isSelected = false;
 										this.changes.isMerging = false;
 										merge.NewProperty(this.changes);
-										this.selectedList.RemoveAt(j);
-										j--;
+										//this.selectedList.RemoveAt(j);
+										//i--;
+										//j--;
 									}
 								}
 							}
@@ -503,8 +507,8 @@ namespace MultiPlayer {
 								this.changes.isSelected = false;
 								this.changes.isMerging = false;
 								owner.NewProperty(this.changes);
-								this.selectedList.RemoveAt(i);
-								i--;
+								//this.selectedList.RemoveAt(i);
+								//i--;
 							}
 						}
 						else if (owner != null) {
@@ -512,8 +516,8 @@ namespace MultiPlayer {
 							this.changes.isSelected = false;
 							this.changes.isMerging = false;
 							owner.NewProperty(this.changes);
-							this.selectedList.RemoveAt(i);
-							i--;
+							//this.selectedList.RemoveAt(i);
+							//i--;
 						}
 					}
 				}
@@ -537,6 +541,32 @@ namespace MultiPlayer {
 							CmdUpdateUnitProperty(temp.unit, this.changes);
 						}
 					}
+				}
+			}
+		}
+
+		private void CheckAvailableResource() {
+			//NOTE(Thompson): In this game, LV1 game units are resources. Splitting is
+			//only available to LV1 game units, so without LV1 game units, the player is
+			//doomed to fail.
+
+			int levelOneUnitCount = 0;
+			int selectedLevelOneUnitCount = 0;
+			for (int i = 0; i < this.unitList.Count; i++) {
+				NewGameUnit unit = this.unitList[i].unit.GetComponent<NewGameUnit>();
+				if (unit != null && unit.properties.level == 1) {
+					levelOneUnitCount++;
+				}
+			}
+			for (int i = 0; i < this.selectedList.Count; i++) {
+				NewGameUnit unit = this.selectedList[i].unit.GetComponent<NewGameUnit>();
+				if (unit != null && unit.properties.level == 1 && unit.properties.isSelected) {
+					selectedLevelOneUnitCount++;
+				}
+			}
+			if (selectedLevelOneUnitCount <= 2) {
+				if (selectedLevelOneUnitCount == levelOneUnitCount || levelOneUnitCount <= 2) {
+					this.doNotAllowMerging = true;
 				}
 			}
 		}
@@ -648,33 +678,6 @@ namespace MultiPlayer {
 						splitGroup.Update();
 						this.splitList[i] = splitGroup;
 					}
-				}
-			}
-		}
-
-		private void CheckAvailableResource() {
-			//NOTE(Thompson): In this game, LV1 game units are resources. Splitting is
-			//only available to LV1 game units, so without LV1 game units, the player is
-			//doomed to fail.
-
-			int levelOneUnitCount = 0;
-			int selectedLevelOneUnitCount = 0;
-			for (int i = 0; i < this.unitList.Count; i++) {
-				NewGameUnit unit = this.unitList[i].unit.GetComponent<NewGameUnit>();
-				if (unit != null && unit.properties.level == 1) {
-					levelOneUnitCount++;
-				}
-			}
-			for (int i = 0; i < this.selectedList.Count; i++) {
-				NewGameUnit unit = this.selectedList[i].unit.GetComponent<NewGameUnit>();
-				if (unit != null && unit.properties.level == 1) {
-					selectedLevelOneUnitCount++;
-				}
-			}
-			this.doNotAllowMerging = false;
-			if (selectedLevelOneUnitCount <= 2) {
-				if ((selectedLevelOneUnitCount == levelOneUnitCount) || (levelOneUnitCount <= 2 && selectedLevelOneUnitCount <= 2)) {
-					this.doNotAllowMerging = true;
 				}
 			}
 		}
