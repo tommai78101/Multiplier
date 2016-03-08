@@ -62,7 +62,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 			this.LANClientNotConnected.SetActive(false);
-			this.endGameMenu.SetActive(false);
+			//this.endGameMenu.SetActive(false);
 			EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 			if (enableEditorObj != null) {
 				enableEditorObj.TurnOffCanvasGroup();
@@ -77,7 +77,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANClientNotReady.SetActive(false);
 				this.LANClientReady.SetActive(false);
 				this.LANHost.SetActive(true);
-				this.endGameMenu.SetActive(false);
+				//this.endGameMenu.SetActive(false);
 				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 				if (enableEditorObj != null) {
 					enableEditorObj.TurnOffCanvasGroup();
@@ -89,7 +89,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANHost.SetActive(false);
 				this.unitAttributeEditor.SetActive(false);
 				this.LANClientNotConnected.SetActive(false);
-				this.endGameMenu.SetActive(false);
+				//this.endGameMenu.SetActive(false);
 				EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 				if (enableEditorObj != null) {
 					enableEditorObj.TurnOffCanvasGroup();
@@ -368,10 +368,10 @@ public class NetworkManagerActions : MonoBehaviour {
  */
 
 	public void SetEndGameSession() {
-		if (!(this.endGameMenu.activeSelf || this.endGameMenu.activeInHierarchy)) {
-			this.endGameMenu.SetActive(true);
-		}
+		//if (!(this.endGameMenu.activeSelf || this.endGameMenu.activeInHierarchy)) {
+		//}
 
+		this.endGameMenu.SetActive(true);
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);
