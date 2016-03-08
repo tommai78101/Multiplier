@@ -57,13 +57,13 @@ namespace SinglePlayer {
 						this.attributePanelUI.DisableCustomEquations();
 						break;
 					case 5:
-						string zero = "y=0";
-						unitAttributes.SetHealthAttributes(zero);
-						unitAttributes.SetAttackAttributes(zero);
-						unitAttributes.SetSpeedAttributes(zero);
-						unitAttributes.SetSplitAttributes(zero);
-						unitAttributes.SetMergeAttributes(zero);
-						unitAttributes.SetAttackCooldownAttributes(zero);
+						string one = "y=1";
+						unitAttributes.SetHealthAttributes(one);
+						unitAttributes.SetAttackAttributes(one);
+						unitAttributes.SetSpeedAttributes(one);
+						unitAttributes.SetSplitAttributes(one);
+						unitAttributes.SetMergeAttributes(one);
+						unitAttributes.SetAttackCooldownAttributes(one);
 						this.attributePanelUI.EnableCustomEquations();
 						break;
 				}
