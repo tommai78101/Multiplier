@@ -137,6 +137,7 @@ namespace MultiPlayer {
 		private bool doNotAllowMerging;
 
 		public static int colorCode = 0;
+		public static int MAX_UNIT_LIMIT = 16;
 
 		public void Awake() {
 			NewSpawner.Instance = this;
@@ -443,7 +444,7 @@ namespace MultiPlayer {
 			if (Input.GetKeyUp(KeyCode.S)) {
 				foreach (NewUnitStruct temp in this.selectedList) {
 					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
-					if (!newUnit.properties.isSplitting && this.unitList.Count < 50 && newUnit.properties.level == 1) {
+					if (!newUnit.properties.isSplitting && this.unitList.Count < NewSpawner.MAX_UNIT_LIMIT && newUnit.properties.level == 1) {
 						CmdSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
 					}
 					else {
@@ -492,6 +493,8 @@ namespace MultiPlayer {
 										this.changes.isSelected = false;
 										this.changes.isMerging = false;
 										merge.NewProperty(this.changes);
+										this.selectedList.RemoveAt(j);
+										j--;
 									}
 								}
 							}
@@ -500,6 +503,8 @@ namespace MultiPlayer {
 								this.changes.isSelected = false;
 								this.changes.isMerging = false;
 								owner.NewProperty(this.changes);
+								this.selectedList.RemoveAt(i);
+								i--;
 							}
 						}
 						else if (owner != null) {
@@ -507,6 +512,8 @@ namespace MultiPlayer {
 							this.changes.isSelected = false;
 							this.changes.isMerging = false;
 							owner.NewProperty(this.changes);
+							this.selectedList.RemoveAt(i);
+							i--;
 						}
 					}
 				}
