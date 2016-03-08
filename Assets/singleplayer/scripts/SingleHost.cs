@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using SinglePlayer;
 using SinglePlayer.UI;
+using Analytics;
 
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
@@ -118,6 +119,10 @@ public class SingleHost : NetworkManager {
 
 		this.enablePauseGameMenu = true;
 		this.notReady = false;
+
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
+		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
+		GameMetricLogger.EnableLoggerHotkey();
 	}
 
 	public void ResetAttributePanelUI() {

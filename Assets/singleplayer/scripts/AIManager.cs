@@ -124,6 +124,8 @@ namespace SinglePlayer {
 		public float splitRatio;
 		public EnumTeam teamFaction;
 
+		public static AIManager Instance;
+
 
 		private float tickIntervalCounter;
 		private float splitPercentage = 0f;
@@ -158,6 +160,8 @@ namespace SinglePlayer {
 			this.splitPercentage = 0f;
 			this.mergePercentage = 0f;
 			this.scoutPercentage = 0f;
+
+			AIManager.Instance = this;
 		}
 
 		public void Update() {

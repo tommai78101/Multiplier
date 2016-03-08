@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using SinglePlayer;
+using Analytics;
 
 namespace MultiPlayer {
 	public class SelectionManager : NetworkBehaviour {
@@ -16,6 +18,7 @@ namespace MultiPlayer {
 
 		public bool isSelecting;
 		public bool isBoxSelecting;
+		public bool isDead;
 
 		public override void OnStartClient() {
 			base.OnStartClient();
@@ -38,6 +41,8 @@ namespace MultiPlayer {
 			if (!this.hasAuthority) {
 				return;
 			}
+
+			this.isDead = false;
 
 			this.InitializeList();
 			this.selectionBox = new Rect();
@@ -65,6 +70,14 @@ namespace MultiPlayer {
 				return;
 			}
 			if (this.minimapCamera == null) {
+				return;
+			}
+			if (this.allObjects.Count <= 0) {
+				if (!this.isDead) {
+					GameMetricLogger.ShowPrintLog();
+					AIManager.Instance.startAIFlag = false;
+					this.isDead = true;
+				}
 				return;
 			}
 
