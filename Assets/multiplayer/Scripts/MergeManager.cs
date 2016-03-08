@@ -227,7 +227,10 @@ namespace MultiPlayer {
 					}
 					mergerObject = this.selectionManager.selectedObjects[j];
 					GameUnit mergerUnit = mergerObject.GetComponent<GameUnit>();
-					CheckAvailableResource();
+					this.doNotAllowMerging = false;
+					if (ownerUnit.level == 1 && mergerUnit.level == 1) {
+						CheckAvailableResource();
+					}
 					if (ownerUnit.level == mergerUnit.level && !ownerUnit.isMerging && !mergerUnit.isMerging && !this.doNotAllowMerging) {
 						used.Add(this.selectionManager.selectedObjects[i]);
 						used.Add(this.selectionManager.selectedObjects[j]);
@@ -328,9 +331,9 @@ namespace MultiPlayer {
 				}
 			}
 
-			this.doNotAllowMerging = false;
+			
 			if (selectedLevelOneUnitCount <= 2) {
-				if ((selectedLevelOneUnitCount == totalLevelOneUnitCount) || (selectedLevelOneUnitCount <= 2 && totalLevelOneUnitCount <= 2)) {
+				if (selectedLevelOneUnitCount == totalLevelOneUnitCount || totalLevelOneUnitCount <= 2) {
 					this.doNotAllowMerging = true;
 				}
 			}
