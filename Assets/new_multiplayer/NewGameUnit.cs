@@ -318,7 +318,7 @@ namespace MultiPlayer {
 				Debug.Log("Death Count");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 
-				CmdDestroy(this.properties.targetUnit);
+				CmdDestroy(this.gameObject);
 				return;
 			}
 			if (this.properties.isAttackCooldownEnabled) {
