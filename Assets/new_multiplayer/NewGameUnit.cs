@@ -229,11 +229,11 @@ namespace MultiPlayer {
 			return this.properties.teamColor;
 		}
 
-		public void TakeDamage() {
-			//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
-			//of it being attacked and taking damage.
-			this.CmdTakeDamageColor();
-		}
+		//public void TakeDamage() {
+		//	//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
+		//	//of it being attacked and taking damage.
+		//	this.CmdTakeDamageColor();
+		//}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
@@ -358,12 +358,16 @@ namespace MultiPlayer {
 
 		[Command]
 		public void CmdTakeDamageColor() {
-			RpcTakeDamageColor();
 		}
 
 		[ClientRpc]
-		public void RpcTakeDamageColor() {
-			this.takeDamageCounter = 1f;
+		public void RpcTakeDamageColor(GameObject attacker, GameObject victim) {
+			if (victim != null) {
+				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
+				if (victimUnit != null) {
+					victimUnit.takeDamageCounter = 1f;
+				}
+			}
 		}
 
 		[Command]
@@ -428,7 +432,7 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-					victimUnit.RpcTakeDamageColor();
+					RpcTakeDamageColor(attacker, victim);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
 						attackerUnit.LogKill();
