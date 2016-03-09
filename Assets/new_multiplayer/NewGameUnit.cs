@@ -234,6 +234,7 @@ namespace MultiPlayer {
 			//of it being attacked and taking damage.
 			//this.CmdTakeDamageColor();
 			this.takeDamageCounter = 1f;
+			Debug.Log(this.properties.teamColor + " take damage counter: " + this.takeDamageCounter);
 		}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
@@ -349,6 +350,7 @@ namespace MultiPlayer {
 					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.takeDamageCounter);
 				}
 			}
+			Debug.Log(this.properties.teamColor + " take damage counter: " + this.takeDamageCounter);
 		}
 
 		private void LogKill() {
