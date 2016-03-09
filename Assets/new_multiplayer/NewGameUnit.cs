@@ -331,6 +331,10 @@ namespace MultiPlayer {
 					changes.isRecoveryEnabled = false;
 					this.NewProperty(changes);
 				}
+				Renderer renderer = this.GetComponent<Renderer>();
+				if (renderer != null) {
+					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.recoveryCounter);
+				}
 			}
 		}
 
