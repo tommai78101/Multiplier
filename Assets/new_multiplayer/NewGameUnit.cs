@@ -134,6 +134,7 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			//NOTE(Thompson): Common update codes for authoritative and non-authoritative objects goes here.
 			HandleNonAuthorityStatus();
 
 			if (!this.hasAuthority) {
@@ -236,7 +237,6 @@ namespace MultiPlayer {
 			//of it being attacked and taking damage.
 			//this.CmdTakeDamageColor();
 			this.takeDamageCounter = 1f;
-			Debug.Log(this.properties.teamColor + " take damage counter: " + this.takeDamageCounter);
 		}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
@@ -317,7 +317,6 @@ namespace MultiPlayer {
 		private void HandleStatus() {
 			if (this.properties.currentHealth <= 0 && !this.isDead) {
 				this.isDead = true;
-				Debug.Log("Death Count");
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 
 				CmdDestroy(this.gameObject);
@@ -375,14 +374,7 @@ namespace MultiPlayer {
 				if (victimUnit != null) {
 					//victimUnit.takeDamageCounter = 1f;
 					victimUnit.TakeDamage();
-					Debug.Log(victimUnit.properties.teamColor.ToString() + " is taking damage.");
 				}
-				else {
-					Debug.Log("cannot find object.");
-				}
-			}
-			else {
-				Debug.Log("cannot find object.");
 			}
 		}
 
@@ -448,9 +440,6 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-
-					Debug.Log(attackerUnit.properties.teamColor.ToString() + " is attacking " + victimUnit.properties.teamColor.ToString());
-
 					RpcTakeDamageColor(victimUnit.netId);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
