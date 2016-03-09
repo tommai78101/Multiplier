@@ -428,7 +428,7 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
-					victimUnit.TakeDamage();
+					victimUnit.RpcTakeDamageColor();
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
 						attackerUnit.LogKill();
