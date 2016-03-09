@@ -229,11 +229,12 @@ namespace MultiPlayer {
 			return this.properties.teamColor;
 		}
 
-		//public void TakeDamage() {
-		//	//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
-		//	//of it being attacked and taking damage.
-		//	this.CmdTakeDamageColor();
-		//}
+		public void TakeDamage() {
+			//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
+			//of it being attacked and taking damage.
+			//this.CmdTakeDamageColor();
+			this.takeDamageCounter = 1f;
+		}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
@@ -342,7 +343,7 @@ namespace MultiPlayer {
 				}
 			}
 			if (this.takeDamageCounter > 0) {
-				this.takeDamageCounter -= Time.deltaTime;
+				this.takeDamageCounter -= Time.deltaTime * 1.4f;
 				Renderer renderer = this.GetComponent<Renderer>();
 				if (renderer != null) {
 					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.takeDamageCounter);
@@ -365,7 +366,8 @@ namespace MultiPlayer {
 			if (victim != null) {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				if (victimUnit != null) {
-					victimUnit.takeDamageCounter = 1f;
+					//victimUnit.takeDamageCounter = 1f;
+					victimUnit.TakeDamage();
 					Debug.Log(victimUnit.properties.teamColor.ToString() + " is taking damage.");
 				}
 			}
