@@ -148,11 +148,13 @@ namespace MultiPlayer {
 				return;
 			}
 
+			if (HandleStatus()) {
+				return;
+			}
 			HandleMovement();
 			HandleSelectionRing();
 			HandleAttacking();
 			HandleRecovering();
-			HandleStatus();
 		}
 
 		public void NewProperty(NewChanges changes) {
@@ -232,13 +234,6 @@ namespace MultiPlayer {
 			return this.properties.teamColor;
 		}
 
-		public void TakeDamage() {
-			//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
-			//of it being attacked and taking damage.
-			//this.CmdTakeDamageColor();
-			this.takeDamageCounter = 1f;
-		}
-
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
 		private void HandleMovement() {
@@ -314,13 +309,16 @@ namespace MultiPlayer {
 			}
 		}
 
-		private void HandleStatus() {
+		private bool HandleStatus() {
+			//Returns TRUE if the game unit is destroyed, preventing all other actions from executing.
+			//Returns FALSE if game unit is alive.
+
 			if (this.properties.currentHealth <= 0 && !this.isDead) {
 				this.isDead = true;
 				GameMetricLogger.Increment(GameMetricOptions.Death);
 
 				CmdDestroy(this.gameObject);
-				return;
+				return true;
 			}
 			if (this.properties.isAttackCooldownEnabled) {
 				if (this.attackCooldownCounter > 0) {
@@ -344,6 +342,7 @@ namespace MultiPlayer {
 					this.NewProperty(changes);
 				}
 			}
+			return false;
 		}
 
 		private void HandleNonAuthorityStatus() {
@@ -372,8 +371,9 @@ namespace MultiPlayer {
 			if (obj != null) {
 				NewGameUnit victimUnit = obj.GetComponent<NewGameUnit>();
 				if (victimUnit != null) {
-					//victimUnit.takeDamageCounter = 1f;
-					victimUnit.TakeDamage();
+					//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
+					//of it being attacked and taking damage.
+					victimUnit.takeDamageCounter = 1f;
 				}
 			}
 		}
@@ -443,6 +443,8 @@ namespace MultiPlayer {
 					RpcTakeDamageColor(victimUnit.netId);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
+						//TODO(Thompson): See if removing the authority check helps fixing the kill counter being 
+						//only the server side can take kill counts, while client side sometimes not taking kill counts.
 						attackerUnit.LogKill();
 					}
 				}
