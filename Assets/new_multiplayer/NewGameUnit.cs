@@ -362,9 +362,10 @@ namespace MultiPlayer {
 		}
 
 		[ClientRpc]
-		public void RpcTakeDamageColor(GameObject attacker, GameObject victim) {
-			if (victim != null) {
-				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
+		public void RpcTakeDamageColor(NetworkInstanceId victimNetID) {
+			GameObject obj = ClientScene.FindLocalObject(victimNetID);
+			if (obj != null) {
+				NewGameUnit victimUnit = obj.GetComponent<NewGameUnit>();
 				if (victimUnit != null) {
 					//victimUnit.takeDamageCounter = 1f;
 					victimUnit.TakeDamage();
@@ -438,7 +439,7 @@ namespace MultiPlayer {
 
 					Debug.Log(attackerUnit.properties.teamColor.ToString() + " is attacking " + victimUnit.properties.teamColor.ToString());
 
-					RpcTakeDamageColor(attacker, victim);
+					RpcTakeDamageColor(victimUnit.netId);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
 						attackerUnit.LogKill();
