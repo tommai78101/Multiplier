@@ -350,7 +350,6 @@ namespace MultiPlayer {
 					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.takeDamageCounter);
 				}
 			}
-			Debug.Log(this.properties.teamColor + " take damage counter: " + this.takeDamageCounter);
 		}
 
 		private void LogKill() {
@@ -373,6 +372,12 @@ namespace MultiPlayer {
 					victimUnit.TakeDamage();
 					Debug.Log(victimUnit.properties.teamColor.ToString() + " is taking damage.");
 				}
+				else {
+					Debug.Log("cannot find object.");
+				}
+			}
+			else {
+				Debug.Log("cannot find object.");
 			}
 		}
 
