@@ -134,6 +134,8 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			HandleNonAuthorityStatus();
+
 			if (!this.hasAuthority) {
 				return;
 			}
@@ -343,6 +345,9 @@ namespace MultiPlayer {
 					this.NewProperty(changes);
 				}
 			}
+		}
+
+		private void HandleNonAuthorityStatus() {
 			if (this.takeDamageCounter > 0) {
 				this.takeDamageCounter -= Time.deltaTime * 1.4f;
 				Renderer renderer = this.GetComponent<Renderer>();
