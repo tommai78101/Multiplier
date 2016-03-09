@@ -316,7 +316,6 @@ namespace MultiPlayer {
 			if (this.properties.currentHealth <= 0 && !this.isDead) {
 				this.isDead = true;
 				GameMetricLogger.Increment(GameMetricOptions.Death);
-
 				CmdDestroy(this.gameObject);
 				return true;
 			}
