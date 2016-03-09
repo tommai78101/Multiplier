@@ -84,6 +84,8 @@ namespace MultiPlayer {
 		[SerializeField]
 		private float attackCooldownCounter;
 		[SerializeField]
+		private float takeDamageCounter;
+		[SerializeField]
 		private bool isDead;
 
 		public void Start() {
@@ -124,6 +126,7 @@ namespace MultiPlayer {
 			}
 			this.recoveryCounter = 0f;
 			this.attackCooldownCounter = 0f;
+			this.takeDamageCounter = 0f;
 			this.isDead = false;
 
 			//NOTE(Thompson): Changing the name here, so I can really get rid of (Clone).
@@ -226,6 +229,12 @@ namespace MultiPlayer {
 			return this.properties.teamColor;
 		}
 
+		public void TakeDamage() {
+			//NOTE(Thompson): This makes the victim (this game unit) show a visual indicator
+			//of it being attacked and taking damage.
+			this.CmdTakeDamageColor();
+		}
+
 		//*** ----------------------------   PRIVATE METHODS  -------------------------
 
 		private void HandleMovement() {
@@ -323,17 +332,20 @@ namespace MultiPlayer {
 				}
 			}
 			if (this.properties.isRecoveryEnabled) {
-				if (recoveryCounter > 0f) {
-					recoveryCounter -= Time.deltaTime / 5f;
+				if (this.recoveryCounter > 0f) {
+					this.recoveryCounter -= Time.deltaTime / 5f;
 				}
 				else {
 					NewChanges changes = this.CurrentProperty();
 					changes.isRecoveryEnabled = false;
 					this.NewProperty(changes);
 				}
+			}
+			if (this.takeDamageCounter > 0) {
+				this.takeDamageCounter -= Time.deltaTime;
 				Renderer renderer = this.GetComponent<Renderer>();
 				if (renderer != null) {
-					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.recoveryCounter);
+					renderer.material.color = Color.Lerp(Color.red, Color.white, 1f - this.takeDamageCounter);
 				}
 			}
 		}
@@ -343,6 +355,16 @@ namespace MultiPlayer {
 		}
 
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
+
+		[Command]
+		public void CmdTakeDamageColor() {
+			RpcTakeDamageColor();
+		}
+
+		[ClientRpc]
+		public void RpcTakeDamageColor() {
+			this.takeDamageCounter = 1f;
+		}
 
 		[Command]
 		public void CmdRecover(GameObject recoveringObject, int healValue) {
@@ -406,6 +428,7 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
+					
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
 						attackerUnit.LogKill();
