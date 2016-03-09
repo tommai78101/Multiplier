@@ -366,6 +366,7 @@ namespace MultiPlayer {
 				NewGameUnit victimUnit = victim.GetComponent<NewGameUnit>();
 				if (victimUnit != null) {
 					victimUnit.takeDamageCounter = 1f;
+					Debug.Log(victimUnit.properties.teamColor.ToString() + " is taking damage.");
 				}
 			}
 		}
@@ -432,6 +433,9 @@ namespace MultiPlayer {
 					changes.damage = damage;
 					changes.isRecoveryEnabled = true;
 					victimUnit.NewProperty(changes);
+
+					Debug.Log(attackerUnit.properties.teamColor.ToString() + " is attacking " + victimUnit.properties.teamColor.ToString());
+
 					RpcTakeDamageColor(attacker, victim);
 
 					if (victimUnit.properties.currentHealth == 0 && attackerUnit.hasAuthority == hasAuthority) {
