@@ -163,7 +163,7 @@ namespace Analytics {
 		}
 
 		public static void ShowPrintLog() {
-			GameMetricLogger.instance.ToggleCanvasGroup();
+			GameMetricLogger.instance.EnableCanvasGroup();
 			GameMetricLogger.instance.Print();
 		}
 
@@ -232,15 +232,25 @@ namespace Analytics {
 			this.isInputEnabled = false;
 
 			//Canvas Group
-			this.gameMetricsLogGroup.alpha = 0f;
-			this.gameMetricsLogGroup.interactable = false;
-			this.gameMetricsLogGroup.blocksRaycasts = false;
+			DisableCanvasGroup();
 		}
 
 		private void ToggleCanvasGroup() {
 			this.gameMetricsLogGroup.alpha = this.gameMetricsLogGroup.alpha > 0f ? 0f : 1f;
 			this.gameMetricsLogGroup.interactable = !this.gameMetricsLogGroup.interactable;
 			this.gameMetricsLogGroup.blocksRaycasts = !this.gameMetricsLogGroup.blocksRaycasts;
+		}
+
+		private void EnableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 1f;
+			this.gameMetricsLogGroup.interactable = true;
+			this.gameMetricsLogGroup.blocksRaycasts = true;
+		}
+
+		private void DisableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 0f;
+			this.gameMetricsLogGroup.interactable = false;
+			this.gameMetricsLogGroup.blocksRaycasts = false;
 		}
 
 		private void Print() {

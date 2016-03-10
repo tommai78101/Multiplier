@@ -445,7 +445,7 @@ namespace MultiPlayer {
 				for (int i = 0; i < spawners.Length; i++) {
 					if (spawners[i].hasAuthority) {
 						spawners[i].isGameStart = false;
-						GameMetricLogger.ShowPrintLog();
+						Debug.Log("Setting isGameStart flag to false.");
 						break;
 					}
 				}
@@ -662,10 +662,13 @@ namespace MultiPlayer {
 				}
 			}
 			else {
-				if (!this.isUnitListEmpty) {
+				if (!this.isUnitListEmpty && this.isGameStart) {
 					this.isUnitListEmpty = true;
 					Debug.Log("The unit list is now empty. Setting flag to TRUE.");
 					CmdShowReport();
+				}
+				else if (this.isUnitListEmpty && !this.isGameStart) {
+					GameMetricLogger.ShowPrintLog();
 				}
 			}
 		}
