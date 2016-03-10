@@ -368,7 +368,6 @@ namespace MultiPlayer {
 			newUnit = unit.GetComponent<NewGameUnit>();
 			newUnit.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
-			Debug.Log("Calling on splitting rpc.");
 			RpcAddSplit(temp, unit, changes, Random.Range(-180f, 180f));
 			//this.splitList.Add(new Split(temp.transform, unit.transform));
 			RpcOrganizeUnit(unit);
@@ -404,7 +403,6 @@ namespace MultiPlayer {
 				NewGameUnit ownerUnit = owner.GetComponent<NewGameUnit>();
 				if (ownerUnit != null) {
 					this.mergeList.Add(new Merge(owner.transform, merge.transform, ownerUnit.properties.scalingFactor));
-					Debug.Log("Adding new merge group to the merge list.");
 				}
 			}
 		}
@@ -445,7 +443,6 @@ namespace MultiPlayer {
 				for (int i = 0; i < spawners.Length; i++) {
 					if (spawners[i].hasAuthority) {
 						spawners[i].isGameStart = false;
-						Debug.Log("Setting isGameStart flag to false.");
 						GameMetricLogger.ShowPrintLog();
 						break;
 					}
@@ -537,11 +534,6 @@ namespace MultiPlayer {
 					}
 				}
 			}
-
-			//if (Input.GetKeyUp(KeyCode.L)) {
-			//	Debug.Log("Damage time!");
-			//	CmdTakeDamage(1);
-			//}
 
 			if (Input.GetMouseButtonUp(1)) {
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -646,20 +638,16 @@ namespace MultiPlayer {
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
-						Debug.Log("Removing unit.");
-						//CmdRemoveUnitList(this.unitList[i].unit);
 						this.unitList.RemoveAt(i);
 						continue;
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
 					if (!id.hasAuthority) {
-						Debug.Log("Removing unit.");
 						CmdRemoveUnitList(this.unitList[i].unit);
 					}
 				}
 			}
 			else {
-				Debug.Log("Unit list is now empty.");
 				CmdShowReport();
 			}
 		}
