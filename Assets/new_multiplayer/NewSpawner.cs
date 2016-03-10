@@ -334,9 +334,6 @@ namespace MultiPlayer {
 
 		public void Update() {
 			//NOTE(Thompson): Common codes for server and clients go here.
-			ManageLists();
-
-			//NOTE(Thompson): Any code past this point requires separating server or client code.
 			if (!this.hasAuthority) {
 				ManageNonAuthorityLists();
 				return;
@@ -348,6 +345,7 @@ namespace MultiPlayer {
 
 			HandleSelection();
 			HandleInputs();
+			ManageLists();
 		}
 
 		[Command]
@@ -694,6 +692,32 @@ namespace MultiPlayer {
 					else {
 						splitGroup.Update();
 						this.splitList[i] = splitGroup;
+					}
+				}
+			}
+			if (this.mergeList.Count > 0) {
+				for (int i = this.mergeList.Count - 1; i >= 0; i--) {
+					Merge mergeGroup = this.mergeList[i];
+					if (mergeGroup.elapsedTime > 1f) {
+						if (mergeGroup.merge != null) {
+							NewGameUnit unit = mergeGroup.merge.GetComponent<NewGameUnit>();
+							if (unit != null) {
+								NewChanges changes = unit.CurrentProperty();
+								changes.damage = unit.properties.maxHealth;
+								unit.NewProperty(changes);
+							}
+							NewUnitStruct temp = new NewUnitStruct();
+							temp.unit = unit.gameObject;
+							this.unitList.Remove(temp);
+							//CmdDestroy(temp.unit);
+						}
+						this.mergeList.RemoveAt(i);
+
+						//GameMetricLogger.Increment(GameMetricOptions.Merges);
+					}
+					else {
+						mergeGroup.Update();
+						this.mergeList[i] = mergeGroup;
 					}
 				}
 			}
