@@ -646,7 +646,8 @@ namespace MultiPlayer {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
 						Debug.Log("Removing unit.");
-						CmdRemoveUnitList(this.unitList[i].unit);
+						//CmdRemoveUnitList(this.unitList[i].unit);
+						this.unitList.RemoveAt(i);
 						continue;
 					}
 					NetworkIdentity id = this.unitList[i].unit.GetComponent<NetworkIdentity>();
@@ -660,7 +661,9 @@ namespace MultiPlayer {
 					NewUnitStruct temp = this.unitList[i];
 					if (temp.unit == null) {
 						Debug.Log("Removing unit.");
-						CmdRemoveUnitList(this.unitList[i].unit);
+						//CmdRemoveUnitList(this.unitList[i].unit);
+						this.unitList.RemoveAt(i);
+						continue;
 					}
 				}
 			}
