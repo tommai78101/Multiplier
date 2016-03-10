@@ -659,14 +659,17 @@ namespace MultiPlayer {
 			}
 			else {
 				Debug.Log("Unit list is now empty.");
-				if (!this.isUnitListEmpty && this.isGameStart) {
-					this.isUnitListEmpty = true;
-					Debug.Log("The unit list is now empty. Setting flag to TRUE.");
-					CmdShowReport();
-				}
-				else if (this.isUnitListEmpty && !this.isGameStart) {
-					GameMetricLogger.ShowPrintLog();
-				}
+				CmdShowReport();
+
+
+				//if (this.isGameStart) {
+				//	this.isUnitListEmpty = true;
+				//	Debug.Log("The unit list is now empty. Setting flag to TRUE.");
+				//	CmdShowReport();
+				//}
+				//else if (this.isUnitListEmpty && !this.isGameStart) {
+				//	GameMetricLogger.ShowPrintLog();
+				//}
 			}
 		}
 
