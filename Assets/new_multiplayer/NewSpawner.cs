@@ -897,7 +897,6 @@ namespace MultiPlayer {
 							changes.isSelected = true;
 							unit.NewProperty(changes);
 							CmdUpdateUnitProperty(unit.gameObject, this.changes);
-							Debug.Log("This is selected.");
 							this.selectedList.Add(temp);
 						}
 					}
