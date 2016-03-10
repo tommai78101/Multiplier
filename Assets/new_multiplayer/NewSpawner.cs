@@ -190,7 +190,7 @@ namespace MultiPlayer {
 			this.isGameStart = false;
 			this.isUnitListEmpty = true;
 			//NOTE(Thompson): This means you are allowed to merge. This checks if there exists one or more LV1 game unit available.
-			this.doNotAllowMerging = false; 
+			this.doNotAllowMerging = false;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
@@ -257,7 +257,7 @@ namespace MultiPlayer {
 			if (!changes.isInitialized) {
 				changes.isInitialized = false;
 				changes.teamColor = color;
-				changes.teamFactionID = (int) (Random.value * 100f); //This is never to be changed.
+				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
 			}
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
@@ -375,22 +375,35 @@ namespace MultiPlayer {
 		[ClientRpc]
 		public void RpcAddSplit(GameObject owner, GameObject split, NewChanges changes, float angle) {
 			if (owner != null && split != null) {
-				Debug.Log("Obtaining the game unit as component.");
 				NewGameUnit splitUnit = split.GetComponent<NewGameUnit>();
 				if (splitUnit != null) {
-					Debug.Log("I'm obtaining the changes.");
 					splitUnit.NewProperty(changes);
 				}
 				else {
 					Debug.LogWarning("SplitUnit does not exist.");
 				}
-				Debug.Log("I am now splitting");
 				this.splitList.Add(new Split(owner.transform, split.transform, angle));
 			}
 			else {
 				string value1 = (owner == null) ? " Owner is null." : "";
 				string value2 = (split == null) ? " Split is null." : "";
 				Debug.LogWarning(value1 + value2);
+			}
+		}
+
+		[Command]
+		public void CmdMergeUpdate(GameObject owner, GameObject merge, NewChanges changes) {
+			RpcAddMerge(owner, merge, changes);
+		}
+
+		[ClientRpc]
+		public void RpcAddMerge(GameObject owner, GameObject merge, NewChanges changes) {
+			if (owner != null && merge != null) {
+				NewGameUnit ownerUnit = owner.GetComponent<NewGameUnit>();
+				if (ownerUnit != null) {
+					this.mergeList.Add(new Merge(owner.transform, merge.transform, ownerUnit.properties.scalingFactor));
+					Debug.Log("Adding new merge group to the merge list.");
+				}
 			}
 		}
 
@@ -483,7 +496,7 @@ namespace MultiPlayer {
 									changes.newLevel++;
 									CmdUpdateUnitProperty(owner.gameObject, this.changes);
 									CmdUpdateUnitProperty(merge.gameObject, this.changes);
-									this.mergeList.Add(new Merge(owner.transform, merge.transform, owner.properties.scalingFactor));
+									CmdMergeUpdate(owner.gameObject, merge.gameObject, this.changes);
 									this.selectedList.RemoveAt(i);
 									i--;
 									this.selectedList.RemoveAt(j);
