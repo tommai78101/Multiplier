@@ -589,6 +589,7 @@ namespace MultiPlayer {
 		}
 
 		private void ManageLists() {
+			Debug.Log("Checking split list.");
 			if (this.splitList.Count > 0) {
 				for (int i = this.splitList.Count - 1; i >= 0; i--) {
 					Split splitGroup = this.splitList[i];
@@ -614,6 +615,7 @@ namespace MultiPlayer {
 					}
 				}
 			}
+			Debug.Log("Checking merge list.");
 			if (this.mergeList.Count > 0) {
 				for (int i = this.mergeList.Count - 1; i >= 0; i--) {
 					Merge mergeGroup = this.mergeList[i];
@@ -642,6 +644,7 @@ namespace MultiPlayer {
 					}
 				}
 			}
+			Debug.Log("Checking unit list.");
 			if (this.unitList.Count > 0) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
