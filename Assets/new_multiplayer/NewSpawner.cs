@@ -877,14 +877,12 @@ namespace MultiPlayer {
 						if (this.unitList.Contains(temp) && unit.hasAuthority) {
 							if (!this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();
-								;
 								changes.isSelected = true;
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Add(temp);
 							}
 							else if (this.selectedList.Contains(temp)) {
 								this.changes = unit.CurrentProperty();
-								;
 								this.changes.isSelected = false;
 								CmdUpdateUnitProperty(unit.gameObject, this.changes);
 								this.selectedList.Remove(temp);
@@ -894,9 +892,9 @@ namespace MultiPlayer {
 					else {
 						if (unit != null && unit.hasAuthority) {
 							this.changes = unit.CurrentProperty();
-							;
 							changes.isSelected = true;
 							CmdUpdateUnitProperty(unit.gameObject, this.changes);
+							Debug.Log("This is selected.");
 							this.selectedList.Add(temp);
 						}
 					}
