@@ -550,7 +550,6 @@ namespace MultiPlayer {
 					if (hit.collider.gameObject.tag.Equals("Floor")) {
 						foreach (NewUnitStruct temp in this.selectedList) {
 							if (temp.unit == null) {
-								this.selectedList.Remove(temp);
 								continue;
 							}
 							NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
