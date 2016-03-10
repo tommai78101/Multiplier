@@ -664,6 +664,7 @@ namespace MultiPlayer {
 			else {
 				if (!this.isUnitListEmpty) {
 					this.isUnitListEmpty = true;
+					Debug.Log("The unit list is now empty. Setting flag to TRUE.");
 					CmdShowReport();
 				}
 			}
