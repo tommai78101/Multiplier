@@ -340,7 +340,6 @@ namespace MultiPlayer {
 			}
 
 			if (!this.isGameStart && this.isUnitListEmpty) {
-				GameMetricLogger.ShowPrintLog();
 				return;
 			}
 
@@ -447,6 +446,7 @@ namespace MultiPlayer {
 					if (spawners[i].hasAuthority) {
 						spawners[i].isGameStart = false;
 						Debug.Log("Setting isGameStart flag to false.");
+						GameMetricLogger.ShowPrintLog();
 						break;
 					}
 				}
