@@ -425,10 +425,9 @@ namespace MultiPlayer {
 				this.unitList.Remove(new NewUnitStruct(obj));
 			}
 			else {
-				for (int i = 0; i < this.unitList.Count; i++) {
+				for (int i = this.unitList.Count - 1; i > 0 ; i--) {
 					if (this.unitList[i].unit == null) {
 						this.unitList.RemoveAt(i);
-						break;
 					}
 				}
 			}
