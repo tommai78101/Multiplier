@@ -333,17 +333,21 @@ namespace MultiPlayer {
 		}
 
 		public void Update() {
+			//NOTE(Thompson): Common codes for server and clients go here.
+			ManageLists();
+
+			//NOTE(Thompson): Any code past this point requires separating server or client code.
 			if (!this.hasAuthority) {
 				ManageNonAuthorityLists();
 				return;
 			}
+
 			if (!this.isGameStart && this.isUnitListEmpty) {
 				return;
 			}
+
 			HandleSelection();
 			HandleInputs();
-			ManageLists();
-			//CheckAvailableResource();
 		}
 
 		[Command]
