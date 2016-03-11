@@ -276,12 +276,24 @@ namespace MultiPlayer {
 			GameObject spawnerObject = ClientScene.FindLocalObject(spawnerID);
 			obj.transform.SetParent(spawnerObject.transform);
 
-			NetworkIdentity id = obj.GetComponent<NetworkIdentity>();
-			if (id.hasAuthority) {
-				Vector3 pos = obj.transform.position;
-				pos.y = Camera.main.transform.position.y;
-				pos.z -= 5f;
-				Camera.main.transform.position = pos;
+			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
+			for (int i = 0; i < units.Length; i++) {
+				NetworkIdentity id = units[i].GetComponent<NetworkIdentity>();
+				if (id.hasAuthority) {
+					Vector3 pos = obj.transform.position;
+					pos.y = Camera.main.transform.position.y;
+					pos.z -= 5f;
+					Camera.main.transform.position = pos;
+					break;
+				}
+				else {
+					for (int j = 0; j < spawners.Length; j++) {
+						if (!spawners[j].hasAuthority) {
+							units[i].transform.SetParent(spawners[j].transform);
+						}
+					}
+				}
 			}
 
 
