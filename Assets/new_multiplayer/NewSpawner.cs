@@ -229,8 +229,8 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdInitialize(GameObject obj) {
-			NetworkIdentity spawnerID = obj.GetComponent<NetworkIdentity>();
+		public void CmdInitialize(GameObject spawner) {
+			NetworkIdentity spawnerID = spawner.GetComponent<NetworkIdentity>();
 
 			//Only the server choose what color values to use. Client values do not matter.
 			int colorValue = NewSpawner.colorCode;
@@ -266,59 +266,74 @@ namespace MultiPlayer {
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
 
-			RpcAdd(gameUnit, obj);
-			RpcFilter();
+			RpcAdd(gameUnit, spawner);
+			RpcFilter(b.netId, spawnerID.netId);
 		}
 
 		[ClientRpc]
-		public void RpcFilter() {
-			NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			List<NetworkStartPosition> starters = new List<NetworkStartPosition>();
-			foreach (Transform child in this.starterObjects.transform) {
-				child.gameObject.SetActive(true);
-				NetworkStartPosition pos = child.GetComponent<NetworkStartPosition>();
-				if (pos != null) {
-					starters.Add(pos);
-				}
+		public void RpcFilter(NetworkInstanceId unitID, NetworkInstanceId spawnerID) {
+			GameObject obj = ClientScene.FindLocalObject(unitID);
+			GameObject spawnerObject = ClientScene.FindLocalObject(spawnerID);
+			obj.transform.SetParent(spawnerObject.transform);
+
+			NetworkIdentity id = obj.GetComponent<NetworkIdentity>();
+			if (id.hasAuthority) {
+				Vector3 pos = obj.transform.position;
+				pos.y = Camera.main.transform.position.y;
+				pos.z -= 5f;
+				Camera.main.transform.position = pos;
 			}
 
-			try {
-				NewStarter enemyStarterObject = null;
-				for (int i = 0; i < starters.Count; i++) {
-					NewStarter starter = starters[i].GetComponent<NewStarter>();
-					if (starter != null) {
-						if (!starter.GetIsTakenFlag()) {
-							this.playerStarterObject = starter;
-							starter.SetIsTakenFlag(true);
-							break;
-						}
-						else {
-							enemyStarterObject = starter;
-						}
-					}
-				}
-				Transform cameraTarget = null;
-				for (int i = 0; i < units.Length; i++) {
-					if (units[i].hasAuthority) {
-						units[i].transform.SetParent(playerStarterObject.transform);
-						units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
-						cameraTarget = units[i].transform;
-					}
-					else {
-						units[i].transform.SetParent(enemyStarterObject.transform);
-						units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
-					}
-				}
-				if (cameraTarget != null && this.hasAuthority) {
-					Vector3 pos = cameraTarget.position;
-					pos.y = Camera.main.transform.position.y;
-					pos.z -= 5f;
-					Camera.main.transform.position = pos;
-				}
-			}
-			catch (System.Exception e) {
-				Debug.LogError("Unable to obtain all start positions, or there's a missing start locations. Error message: " + e.ToString());
-			}
+
+
+			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
+			//List<NetworkStartPosition> starters = new List<NetworkStartPosition>();
+			//foreach (Transform child in this.starterObjects.transform) {
+			//	child.gameObject.SetActive(true);
+			//	NetworkStartPosition pos = child.GetComponent<NetworkStartPosition>();
+			//	if (pos != null) {
+			//		starters.Add(pos);
+			//	}
+			//}
+
+			//try {
+			//	NewStarter enemyStarterObject = null;
+			//	for (int i = 0; i < starters.Count; i++) {
+			//		NewStarter starter = starters[i].GetComponent<NewStarter>();
+			//		if (starter != null) {
+			//			if (!starter.GetIsTakenFlag()) {
+			//				this.playerStarterObject = starter;
+			//				starter.SetIsTakenFlag(true);
+			//				break;
+			//			}
+			//			else {
+			//				enemyStarterObject = starter;
+			//				continue;
+			//			}
+			//		}
+			//	}
+			//	Transform cameraTarget = null;
+			//	for (int i = 0; i < units.Length; i++) {
+			//		if (units[i].hasAuthority) {
+			//			units[i].transform.SetParent(playerStarterObject.transform);
+			//			units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
+			//			cameraTarget = units[i].transform;
+			//		}
+			//		else {
+			//			units[i].transform.SetParent(enemyStarterObject.transform);
+			//			units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
+			//		}
+			//	}
+			//	if (cameraTarget != null && this.hasAuthority) {
+			//		Vector3 pos = cameraTarget.position;
+			//		pos.y = Camera.main.transform.position.y;
+			//		pos.z -= 5f;
+			//		Camera.main.transform.position = pos;
+			//	}
+			//}
+			//catch (System.Exception e) {
+			//	Debug.LogError("Unable to obtain all start positions, or there's a missing start locations. Error message: " + e.ToString());
+			//}
 		}
 
 		[ClientRpc]
