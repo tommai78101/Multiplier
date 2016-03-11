@@ -194,6 +194,7 @@ namespace MultiPlayer {
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
+
 		}
 
 		[Command]
@@ -279,28 +280,16 @@ namespace MultiPlayer {
 			}
 
 			try {
-				for (int j = 0; j < units.Length; j++) {
-					if (units[j].hasAuthority) {
-						for (int i = 0; i < starters.Count; i++) {
-							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
-							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
-								units[j].transform.SetParent(starters[i].transform);
-								startFlag.SetIsTakenFlag(true);
-								break;
-							}
+				for (int i = 0; i < starters.Count; i++) {
+					NewStarter starter = starters[i].GetComponent<NewStarter>();
+					if (starter != null && !starter.GetIsTakenFlag()) {
+						for (int j = 0; j < units.Length; j++) {
+							units[j].transform.SetParent(starters[i].transform);
+							units[j].SetTeamColor(units[j].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 						}
+						starter.SetIsTakenFlag(true);
+						break;
 					}
-					else {
-						for (int i = 0; i < starters.Count; i++) {
-							NewStarter startFlag = starters[i].GetComponent<NewStarter>();
-							if (startFlag != null && !startFlag.GetIsTakenFlag()) {
-								units[j].transform.SetParent(starters[i].transform);
-								startFlag.SetIsTakenFlag(true);
-								break;
-							}
-						}
-					}
-					units[j].SetTeamColor(units[j].properties.teamColor);
 				}
 			}
 			catch (System.Exception e) {
