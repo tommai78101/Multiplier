@@ -133,7 +133,7 @@ namespace MultiPlayer {
 		private Vector3 screenPoint;
 		private NewChanges changes;
 		private PostRenderer selectionBoxRenderer;
-		private Transform starterObjectTransform;
+		private NewStarter playerStarterObject;
 		private bool isUnitListEmpty;
 		private bool doNotAllowMerging;
 
@@ -193,7 +193,7 @@ namespace MultiPlayer {
 			//NOTE(Thompson): This means you are allowed to merge. This checks if there exists one or more LV1 game unit available.
 			this.doNotAllowMerging = false;
 			//NOTE(Thompson): NewSpawner needs to keep track of where the first game unit is spawned at. This is set in CmdInitialize().
-			this.starterObjectTransform = null;
+			this.playerStarterObject = null;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
@@ -283,25 +283,36 @@ namespace MultiPlayer {
 			}
 
 			try {
-				Transform cameraTarget = null;
+				NewStarter enemyStarterObject = null;
 				for (int i = 0; i < starters.Count; i++) {
 					NewStarter starter = starters[i].GetComponent<NewStarter>();
-					if (starter != null && !starter.GetIsTakenFlag()) {
-						for (int j = 0; j < units.Length; j++) {
-							if (this.starterObjectTransform == null) {
-								this.starterObjectTransform = starter.transform;
-								cameraTarget = starter.transform;
-								units[j].transform.SetParent(starters[i].transform);
-							}
-							units[j].SetTeamColor(units[j].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
+					if (starter != null) {
+						if (!starter.GetIsTakenFlag()) {
+							this.playerStarterObject = starter;
+							starter.SetIsTakenFlag(true);
 						}
-						starter.SetIsTakenFlag(true);
+						else {
+							enemyStarterObject = starter;
+						}
 						break;
+					}
+				}
+				Transform cameraTarget = null;
+				for (int i = 0; i < units.Length; i++) {
+					if (units[i].hasAuthority) {
+						units[i].transform.SetParent(playerStarterObject.transform);
+						units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
+						cameraTarget = units[i].transform;
+					}
+					else {
+						units[i].transform.SetParent(enemyStarterObject.transform);
+						units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 					}
 				}
 				if (cameraTarget != null && this.hasAuthority) {
 					Vector3 pos = cameraTarget.position;
 					pos.y = Camera.main.transform.position.y;
+					pos.z -= 5f;
 					Camera.main.transform.position = pos;
 				}
 			}
