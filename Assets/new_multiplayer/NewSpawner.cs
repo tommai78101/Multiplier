@@ -113,7 +113,6 @@ namespace MultiPlayer {
 
 
 	public class NewSpawner : NetworkBehaviour {
-		public bool isPaused;
 		public GameObject newGameUnitPrefab;
 		public NetworkConnection owner;
 		public SplitGroupSyncList splitList = new SplitGroupSyncList();
@@ -128,11 +127,13 @@ namespace MultiPlayer {
 		public bool isSelecting;
 		public bool isBoxSelecting;
 		public bool isGameStart = false;
+		public bool isPaused;
 
 		private Vector3 initialClick;
 		private Vector3 screenPoint;
 		private NewChanges changes;
 		private PostRenderer selectionBoxRenderer;
+		private Transform starterObjectTransform;
 		private bool isUnitListEmpty;
 		private bool doNotAllowMerging;
 
@@ -191,6 +192,8 @@ namespace MultiPlayer {
 			this.isUnitListEmpty = true;
 			//NOTE(Thompson): This means you are allowed to merge. This checks if there exists one or more LV1 game unit available.
 			this.doNotAllowMerging = false;
+			//NOTE(Thompson): NewSpawner needs to keep track of where the first game unit is spawned at. This is set in CmdInitialize().
+			this.starterObjectTransform = null;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
@@ -285,11 +288,14 @@ namespace MultiPlayer {
 					NewStarter starter = starters[i].GetComponent<NewStarter>();
 					if (starter != null && !starter.GetIsTakenFlag()) {
 						for (int j = 0; j < units.Length; j++) {
-							units[j].transform.SetParent(starters[i].transform);
+							if (this.starterObjectTransform == null) {
+								this.starterObjectTransform = starter.transform;
+								cameraTarget = starter.transform;
+								units[j].transform.SetParent(starters[i].transform);
+							}
 							units[j].SetTeamColor(units[j].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 						}
 						starter.SetIsTakenFlag(true);
-						cameraTarget = starter.transform;
 						break;
 					}
 				}
