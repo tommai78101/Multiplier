@@ -272,6 +272,7 @@ namespace MultiPlayer {
 
 		[ClientRpc]
 		public void RpcFilter(NetworkInstanceId unitID, NetworkInstanceId spawnerID) {
+			//NOTE(Thompson): This organizes the Hierarchy in Unity, so player units are children of player owned NewSpawners.
 			GameObject obj = ClientScene.FindLocalObject(unitID);
 			GameObject spawnerObject = ClientScene.FindLocalObject(spawnerID);
 			obj.transform.SetParent(spawnerObject.transform);
@@ -296,57 +297,6 @@ namespace MultiPlayer {
 					}
 				}
 			}
-
-
-
-			//NewGameUnit[] units = GameObject.FindObjectsOfType<NewGameUnit>();
-			//List<NetworkStartPosition> starters = new List<NetworkStartPosition>();
-			//foreach (Transform child in this.starterObjects.transform) {
-			//	child.gameObject.SetActive(true);
-			//	NetworkStartPosition pos = child.GetComponent<NetworkStartPosition>();
-			//	if (pos != null) {
-			//		starters.Add(pos);
-			//	}
-			//}
-
-			//try {
-			//	NewStarter enemyStarterObject = null;
-			//	for (int i = 0; i < starters.Count; i++) {
-			//		NewStarter starter = starters[i].GetComponent<NewStarter>();
-			//		if (starter != null) {
-			//			if (!starter.GetIsTakenFlag()) {
-			//				this.playerStarterObject = starter;
-			//				starter.SetIsTakenFlag(true);
-			//				break;
-			//			}
-			//			else {
-			//				enemyStarterObject = starter;
-			//				continue;
-			//			}
-			//		}
-			//	}
-			//	Transform cameraTarget = null;
-			//	for (int i = 0; i < units.Length; i++) {
-			//		if (units[i].hasAuthority) {
-			//			units[i].transform.SetParent(playerStarterObject.transform);
-			//			units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
-			//			cameraTarget = units[i].transform;
-			//		}
-			//		else {
-			//			units[i].transform.SetParent(enemyStarterObject.transform);
-			//			units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
-			//		}
-			//	}
-			//	if (cameraTarget != null && this.hasAuthority) {
-			//		Vector3 pos = cameraTarget.position;
-			//		pos.y = Camera.main.transform.position.y;
-			//		pos.z -= 5f;
-			//		Camera.main.transform.position = pos;
-			//	}
-			//}
-			//catch (System.Exception e) {
-			//	Debug.LogError("Unable to obtain all start positions, or there's a missing start locations. Error message: " + e.ToString());
-			//}
 		}
 
 		[ClientRpc]
