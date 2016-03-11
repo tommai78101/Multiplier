@@ -290,11 +290,11 @@ namespace MultiPlayer {
 						if (!starter.GetIsTakenFlag()) {
 							this.playerStarterObject = starter;
 							starter.SetIsTakenFlag(true);
+							break;
 						}
 						else {
 							enemyStarterObject = starter;
 						}
-						break;
 					}
 				}
 				Transform cameraTarget = null;
