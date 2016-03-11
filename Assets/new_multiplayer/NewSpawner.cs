@@ -258,7 +258,7 @@ namespace MultiPlayer {
 			if (!changes.isInitialized) {
 				changes.isInitialized = false;
 				changes.teamColor = color;
-				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
+				changes.teamFactionID = (int) (Random.value * 100f); //This is never to be changed.
 			}
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
@@ -280,6 +280,7 @@ namespace MultiPlayer {
 			}
 
 			try {
+				Transform cameraTarget = null;
 				for (int i = 0; i < starters.Count; i++) {
 					NewStarter starter = starters[i].GetComponent<NewStarter>();
 					if (starter != null && !starter.GetIsTakenFlag()) {
@@ -288,8 +289,14 @@ namespace MultiPlayer {
 							units[j].SetTeamColor(units[j].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 						}
 						starter.SetIsTakenFlag(true);
+						cameraTarget = starter.transform;
 						break;
 					}
+				}
+				if (cameraTarget != null && this.hasAuthority) {
+					Vector3 pos = cameraTarget.position;
+					pos.y = Camera.main.transform.position.y;
+					Camera.main.transform.position = pos;
 				}
 			}
 			catch (System.Exception e) {
@@ -393,7 +400,7 @@ namespace MultiPlayer {
 				this.unitList.Remove(new NewUnitStruct(obj));
 			}
 			else {
-				for (int i = this.unitList.Count - 1; i >= 0 ; i--) {
+				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
 						this.unitList.RemoveAt(i);
 					}
