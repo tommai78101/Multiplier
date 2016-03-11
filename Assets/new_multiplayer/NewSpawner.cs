@@ -275,8 +275,9 @@ namespace MultiPlayer {
 			GameObject obj = ClientScene.FindLocalObject(unitID);
 			GameObject spawnerObject = ClientScene.FindLocalObject(spawnerID);
 			obj.transform.SetParent(spawnerObject.transform);
-			NetworkIdentity id = obj.GetComponent<NetworkIdentity>();
-			if (id.hasAuthority) {
+			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
+			if (unit.hasAuthority) {
+				unit.SetTeamColor(unit.properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 				Vector3 pos = obj.transform.position;
 				pos.y = Camera.main.transform.position.y;
 				pos.z -= 5f;
@@ -290,6 +291,7 @@ namespace MultiPlayer {
 					for (int j = 0; j < spawners.Length; j++) {
 						if (!spawners[j].hasAuthority) {
 							units[i].transform.SetParent(spawners[j].transform);
+							units[i].SetTeamColor(units[i].properties.teamColor); //NOTE(Thompson): This has to do with triggering the SyncVar's hook.
 						}
 					}
 				}
