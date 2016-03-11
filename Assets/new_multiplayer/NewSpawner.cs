@@ -308,28 +308,9 @@ namespace MultiPlayer {
 			}
 		}
 
-		[Command]
-		public void CmdOrganizeUnit(GameObject obj) {
-			RpcOrganizeUnit(obj);
-		}
-
 		[ClientRpc]
-		public void RpcOrganizeUnit(GameObject obj) {
-			NewGameUnit unit = obj.GetComponent<NewGameUnit>();
-			NetworkStartPosition[] starters = GameObject.FindObjectsOfType<NetworkStartPosition>();
-			int pickedSpot = Random.Range(0, starters.Length);
-			int otherSpot = pickedSpot;
-			while (otherSpot == pickedSpot) {
-				otherSpot = Random.Range(0, starters.Length);
-			}
-			if (unit.hasAuthority) {
-				unit.transform.SetParent(starters[pickedSpot].transform);
-			}
-			else {
-				if (!unit.hasAuthority) {
-					unit.transform.SetParent(starters[otherSpot].transform);
-				}
-			}
+		public void RpcOrganizeUnit(GameObject owner, GameObject split) {
+			split.transform.SetParent(owner.transform.parent);
 		}
 
 		public void Update() {
@@ -354,23 +335,23 @@ namespace MultiPlayer {
 		}
 
 		[Command]
-		public void CmdSpawn(GameObject temp, NetworkIdentity identity) {
-			NewGameUnit newUnit = temp.GetComponent<NewGameUnit>();
-			NewChanges changes = newUnit.CurrentProperty();
+		public void CmdSplitSpawn(GameObject owner, NetworkIdentity ownerIdentity) {
+			NewGameUnit unit = owner.GetComponent<NewGameUnit>();
+			NewChanges changes = unit.CurrentProperty();
 			changes.isSelected = false;
 			changes.isSplitting = true;
-			changes.teamColor = newUnit.GetTeamColor();
-			newUnit.NewProperty(changes);
-			GameObject unit = MonoBehaviour.Instantiate<GameObject>(temp);
-			unit.name = "NewGameUnit";
-			unit.transform.SetParent(this.transform);
-			unit.transform.position = newUnit.transform.position;
-			newUnit = unit.GetComponent<NewGameUnit>();
-			newUnit.NewProperty(changes);
-			NetworkServer.SpawnWithClientAuthority(unit, identity.clientAuthorityOwner);
-			RpcAddSplit(temp, unit, changes, Random.Range(-180f, 180f));
+			changes.teamColor = unit.GetTeamColor();
+			unit.NewProperty(changes);
+			GameObject split = MonoBehaviour.Instantiate<GameObject>(owner);
+			split.name = "NewGameUnit";
+			split.transform.SetParent(this.transform);
+			split.transform.position = unit.transform.position;
+			unit = split.GetComponent<NewGameUnit>();
+			unit.NewProperty(changes);
+			NetworkServer.SpawnWithClientAuthority(split, ownerIdentity.clientAuthorityOwner);
+			RpcAddSplit(owner, split, changes, Random.Range(-180f, 180f));
 			//this.splitList.Add(new Split(temp.transform, unit.transform));
-			RpcOrganizeUnit(unit);
+			RpcOrganizeUnit(owner, split);
 		}
 
 		[ClientRpc]
@@ -457,7 +438,7 @@ namespace MultiPlayer {
 				foreach (NewUnitStruct temp in this.selectedList) {
 					NewGameUnit newUnit = temp.unit.GetComponent<NewGameUnit>();
 					if (!newUnit.properties.isSplitting && this.unitList.Count < NewSpawner.MAX_UNIT_LIMIT && newUnit.properties.level == 1) {
-						CmdSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
+						CmdSplitSpawn(temp.unit, temp.unit.GetComponent<NetworkIdentity>());
 					}
 					else {
 						if (newUnit != null) {
