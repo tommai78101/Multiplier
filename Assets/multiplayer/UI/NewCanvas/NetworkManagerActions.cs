@@ -166,6 +166,12 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		this.PreUnitAttributesInitialization();
 
+		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
+		if (stuffs != null) {
+			Camera minimapCamera = stuffs.GetComponent<Camera>();
+			minimapCamera.enabled = true;
+		}
+
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 
 	}
@@ -187,6 +193,12 @@ public class NetworkManagerActions : MonoBehaviour {
 		EnableAttributeEditor enableEditorObj = this.optionsMenu.GetComponentInChildren<EnableAttributeEditor>();
 		if (enableEditorObj != null && enableEditorObj.isCustomOptionSelected) {
 			enableEditorObj.TurnOnCanvasGroup();
+		}
+
+		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
+		if (stuffs != null) {
+			Camera minimapCamera = stuffs.GetComponent<Camera>();
+			minimapCamera.enabled = false;
 		}
 
 		GameMetricLogger.DisableLoggerHotkey();
@@ -255,6 +267,13 @@ public class NetworkManagerActions : MonoBehaviour {
 		//if (enableEditorObj != null) {
 		//	enableEditorObj.TurnOffCanvasGroup();
 		//}
+
+		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
+		if (stuffs != null) {
+			Camera minimapCamera = stuffs.GetComponent<Camera>();
+			minimapCamera.enabled = true;
+		}
+
 
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 	}
