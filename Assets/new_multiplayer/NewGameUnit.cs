@@ -130,7 +130,7 @@ namespace MultiPlayer {
 			this.isDead = false;
 
 			//NOTE(Thompson): Changing the name here, so I can really get rid of (Clone).
-			this.name = "New Game Unit";
+			this.name = "NewGameUnit";
 		}
 
 		public void Update() {

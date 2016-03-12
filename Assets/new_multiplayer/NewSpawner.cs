@@ -868,7 +868,9 @@ namespace MultiPlayer {
 			RaycastHit[] hits = Physics.RaycastAll(ray);
 			foreach (RaycastHit hit in hits) {
 				GameObject obj = hit.collider.gameObject;
-				if (obj.tag.Equals("Unit")) { //May need to change this back to checking if Tag is "Unit".
+				//NOTE(Thompson): If all fails, change "tag" to "name", and "Unit" to "NewGameUnit".
+				//This is now fixed, so we have two options here.
+				if (obj.tag.Equals("Unit")) {
 					NewUnitStruct temp = new NewUnitStruct(obj);
 					NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
 					if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl)) {
