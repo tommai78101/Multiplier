@@ -22,7 +22,7 @@ namespace Common {
 		private static List<string> BinaryInfixOperators = new List<string>() { "+", "-", "*", "/", "^" };
 
 		//Shunting yard algorithm
-		public static double ProcessEquation(string equation, AttributeProperty property, int level, int previousLevel) {
+		public static double ProcessEquation(string equation, AttributeProperty property, int level, int previousLevel, float previousAnswer) {
 			if (equation.Equals("")) {
 				throw new ArgumentException("Equation is empty.");
 			}
@@ -36,10 +36,10 @@ namespace Common {
 			Stack<string> stack = new Stack<string>();
 
 			for (int i = 0; i < result.Count; i++) {
-				if (result[i].Equals("x")) {
+				if (result[i].Equals("x") || result[i].Equals("X")) {
 					result[i] = level.ToString();
 				}
-				else if (result[i].Equals("k")) {
+				else if (result[i].Equals("k") || result[i].Equals("K")) {
 					if (previousLevel > 0) {
 						result[i] = previousLevel.ToString();
 					}
@@ -47,7 +47,10 @@ namespace Common {
 						result[i] = "0";
 					}
 				}
-				else if (result[i].Equals("r")) {
+				else if (result[i].Equals("p") || result[i].Equals("P")) {
+					result[i] = previousAnswer.ToString();
+				}
+				else if (result[i].Equals("r") || result[i].Equals("R")) {
 					float value = UnityEngine.Random.Range(1f, 1000f);
 					value /= 1000f;
 					result[i] = value.ToString();

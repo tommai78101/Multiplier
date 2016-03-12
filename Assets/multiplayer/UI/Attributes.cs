@@ -185,8 +185,10 @@ public class Attributes : MonoBehaviour {
 	}
 
 	public void UpdateOnlineAttributes(UnitAttributes unitAttributes, AttributeProperty property) {
+		float previousAnswer = 0f;
 		for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
-			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1, level);
+			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1, level, previousAnswer);
+			previousAnswer = answer;
 
 			if (this.debugFlag) {
 				Debug.Log("DEBUG 8");
@@ -268,8 +270,10 @@ public class Attributes : MonoBehaviour {
 	}
 
 	public void UpdateAttributes(AttributeProperty property) {
+		float previousAnswer = 0f;
 		for (int level = 0; level < MAX_NUM_OF_LEVELS; level++) {
-			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1, level);
+			float answer = (float)MathParser.ProcessEquation(this.equationInputField.text, property, level + 1, level, previousAnswer);
+			previousAnswer = answer;
 
 			if (this.debugFlag) {
 				Debug.Log("DEBUG 8");

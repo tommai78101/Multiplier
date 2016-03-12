@@ -113,9 +113,11 @@ namespace MultiPlayer {
 			if (this.healthPrefabList.Count > 0) {
 				this.healthPrefabList.Clear();
 			}
+			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i + 1, i);
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i + 1, i, previousAnswer);
 				this.healthPrefabList.Add(answer);
+				previousAnswer = answer;
 			}
 		}
 
@@ -126,9 +128,11 @@ namespace MultiPlayer {
 			if (this.speedPrefabList.Count > 0) {
 				this.speedPrefabList.Clear();
 			}
+			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i + 1, i);
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i + 1, i, previousAnswer);
 				this.speedPrefabList.Add(answer);
+				previousAnswer = answer;
 			}
 		}
 
@@ -139,9 +143,11 @@ namespace MultiPlayer {
 			if (this.attackPrefabList.Count > 0) {
 				this.attackPrefabList.Clear();
 			}
+			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i + 1, i);
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i + 1, i, previousAnswer);
 				this.attackPrefabList.Add(answer);
+				previousAnswer = answer;
 			}
 		}
 
@@ -149,7 +155,7 @@ namespace MultiPlayer {
 			if (mathExpression.Equals("") || mathExpression.Length <= 0) {
 				return;
 			}
-			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1, 0);
+			float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, 1, 0, 0f);
 			this.splitPrefabFactor = answer;
 		}
 
@@ -160,9 +166,11 @@ namespace MultiPlayer {
 			if (this.mergePrefabList.Count > 0) {
 				this.mergePrefabList.Clear();
 			}
+			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i + 1, i);
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i + 1, i, previousAnswer);
 				this.mergePrefabList.Add(answer);
+				previousAnswer = answer;
 			}
 		}
 
@@ -173,9 +181,11 @@ namespace MultiPlayer {
 			if (this.attackCooldownPrefabList.Count > 0) {
 				this.attackCooldownPrefabList.Clear();
 			}
+			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i + 1, i);
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i + 1, i, previousAnswer);
 				this.attackCooldownPrefabList.Add(answer);
+				previousAnswer = answer;
 			}
 		}
 
