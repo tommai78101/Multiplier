@@ -268,14 +268,6 @@ public class NetworkManagerActions : MonoBehaviour {
 		//	enableEditorObj.TurnOffCanvasGroup();
 		//}
 
-		Debug.Log("Turning on minimap");
-		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
-		if (stuffs != null) {
-			Camera minimapCamera = stuffs.GetComponent<Camera>();
-			minimapCamera.enabled = true;
-		}
-
-
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 	}
 
@@ -334,6 +326,11 @@ public class NetworkManagerActions : MonoBehaviour {
 				if (renderer != null) {
 					renderer.enabled = true;
 				}
+				MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
+				if (stuffs != null) {
+					Camera minimapCamera = stuffs.GetComponent<Camera>();
+					minimapCamera.enabled = true;
+				}
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
 
@@ -363,6 +360,12 @@ public class NetworkManagerActions : MonoBehaviour {
 			if (renderer != null) {
 				renderer.enabled = true;
 			}
+			MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
+			if (stuffs != null) {
+				Camera minimapCamera = stuffs.GetComponent<Camera>();
+				minimapCamera.enabled = true;
+			}
+
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 
