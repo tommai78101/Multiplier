@@ -170,6 +170,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (stuffs != null) {
 			Camera minimapCamera = stuffs.GetComponent<Camera>();
 			minimapCamera.enabled = true;
+			stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 		}
 
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
@@ -197,6 +198,7 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
 		if (stuffs != null) {
+			stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 			Camera minimapCamera = stuffs.GetComponent<Camera>();
 			minimapCamera.enabled = false;
 		}
@@ -330,6 +332,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				if (stuffs != null) {
 					Camera minimapCamera = stuffs.GetComponent<Camera>();
 					minimapCamera.enabled = true;
+					stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 				}
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
@@ -364,6 +367,7 @@ public class NetworkManagerActions : MonoBehaviour {
 			if (stuffs != null) {
 				Camera minimapCamera = stuffs.GetComponent<Camera>();
 				minimapCamera.enabled = true;
+				stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 			}
 
 			this.LANClientReady.SetActive(false);
