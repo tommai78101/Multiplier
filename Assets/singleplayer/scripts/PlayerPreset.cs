@@ -12,6 +12,16 @@ namespace SinglePlayer {
 		public AttributePanelUI attributePanelUI;
 
 		public void SetAttributes() {
+			DropdownFix[] fixes = GameObject.FindObjectsOfType<DropdownFix>();
+			int values = 0;
+			for (int i = 0; i < fixes.Length; i++) {
+				values += fixes[i].value;
+			}
+			if (values <= 0) {
+				//TODO(Thompson): Need to create some sort of message box alerting the player to set the player presets first.
+				return;
+			}
+
 			if (this.unitAttributes == null) {
 				GameObject obj = GameObject.FindGameObjectWithTag("UnitAttributes");
 				if (obj != null) {

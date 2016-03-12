@@ -42,7 +42,6 @@ public class SingleHost : NetworkManager {
 			if (this.playerObject == null) {
 				this.playerObject = GameObject.FindGameObjectWithTag("Unit");
 				if (this.playerObject != null && (playerObject.activeSelf || playerObject.activeInHierarchy)) {
-					Debug.Log("Deactivating the player's game unit.");
 					this.playerObject.SetActive(false);
 				}
 			}
@@ -50,6 +49,16 @@ public class SingleHost : NetworkManager {
 	}
 
 	public void SingleStartHost() {
+		DropdownFix[] fixes = GameObject.FindObjectsOfType<DropdownFix>();
+		int values = 0;
+		for (int i = 0; i < fixes.Length; i++) {
+			values += fixes[i].value;
+		}
+		if (values <= 0) {
+			//TODO(Thompson): Need to create some sort of message box alerting the player to set the player presets first.
+			return;
+		}
+
 		if (this.attributePanelGroup != null) {
 			this.attributePanelGroup.alpha = 0f;
 			this.attributePanelGroup.blocksRaycasts = false;
