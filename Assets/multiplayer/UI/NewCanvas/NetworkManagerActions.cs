@@ -268,6 +268,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		//	enableEditorObj.TurnOffCanvasGroup();
 		//}
 
+		Debug.Log("Turning on minimap");
 		MinimapStuffs stuffs = GameObject.FindObjectOfType<MinimapStuffs>();
 		if (stuffs != null) {
 			Camera minimapCamera = stuffs.GetComponent<Camera>();
