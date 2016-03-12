@@ -97,7 +97,7 @@ namespace SinglePlayer {
 			List<LevelRate> healthList = this.aiLevelRateHandler.allAttributes[Category.Health.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < healthList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i, i-1);
 					LevelRate rate = healthList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -130,7 +130,7 @@ namespace SinglePlayer {
 			List<LevelRate> attackList = this.aiLevelRateHandler.allAttributes[Category.Attack.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i, i-1);
 					LevelRate rate = attackList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -163,7 +163,7 @@ namespace SinglePlayer {
 			List<LevelRate> attackCooldownList = this.aiLevelRateHandler.allAttributes[Category.AttackCooldown.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackCooldownList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i, i-1);
 					LevelRate rate = attackCooldownList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -196,7 +196,7 @@ namespace SinglePlayer {
 			List<LevelRate> speedList = this.aiLevelRateHandler.allAttributes[Category.Speed.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < speedList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i, i-1);
 					LevelRate rate = speedList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -229,7 +229,7 @@ namespace SinglePlayer {
 			List<LevelRate> splitList = this.aiLevelRateHandler.allAttributes[Category.Split.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < splitList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i, i-1);
 					LevelRate rate = splitList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
@@ -262,7 +262,7 @@ namespace SinglePlayer {
 			List<LevelRate> mergeList = this.aiLevelRateHandler.allAttributes[Category.Merge.value];
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < mergeList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i);
+					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i, i-1);
 					LevelRate rate = mergeList[i];
 					rate.rate = answer;
 					rate.level = i + 1;
