@@ -133,7 +133,6 @@ namespace MultiPlayer {
 		private Vector3 screenPoint;
 		private NewChanges changes;
 		private PostRenderer selectionBoxRenderer;
-		private NewStarter playerStarterObject;
 		private bool isUnitListEmpty;
 		private bool doNotAllowMerging;
 
@@ -193,7 +192,6 @@ namespace MultiPlayer {
 			//NOTE(Thompson): This means you are allowed to merge. This checks if there exists one or more LV1 game unit available.
 			this.doNotAllowMerging = false;
 			//NOTE(Thompson): NewSpawner needs to keep track of where the first game unit is spawned at. This is set in CmdInitialize().
-			this.playerStarterObject = null;
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);

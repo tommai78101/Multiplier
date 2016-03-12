@@ -785,7 +785,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 885368426}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -904,7 +904,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 785861155}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3461,7 +3461,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -3473,15 +3473,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.x
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0515000428d780342942fccf51e58099, type: 2}
@@ -5535,7 +5535,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1446372195}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
