@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Common;
 using SinglePlayer;
+using Analytics;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -234,6 +235,8 @@ namespace MultiPlayer {
 							group.splitUnit.transform.SetParent(this.unitParent);
 						}
 						this.removeList.Add(group);
+
+						GameMetricLogger.Increment(GameMetricOptions.Splits);
 					}
 					else {
 						//Some weird C# language design...

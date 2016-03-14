@@ -72,6 +72,11 @@ namespace Analytics {
 		}
 
 		public static void Increment(GameMetricOptions options) {
+			if (!(GameMetricLogger.instance.gameMetricLoggerStart || GameMetricLogger.instance.gameStartFlag)){
+				Debug.LogWarning("Cannot increment. Game Metrics Logger isn't completely enabled.");
+				return;
+			}
+
 			switch (options) {
 				case GameMetricOptions.Attacks:
 					GameMetricLogger.instance.numberOfAttacks++;
@@ -101,6 +106,12 @@ namespace Analytics {
 		}
 
 		public static void Decrement(GameMetricOptions options) {
+			//Check if logger is activated.
+			if (!(GameMetricLogger.instance.gameMetricLoggerStart || GameMetricLogger.instance.gameStartFlag)) {
+				Debug.LogWarning("Cannot decrement. Game Metrics Logger isn't completely enabled.");
+				return;
+			}
+
 			//This method call should only be used very rarely. But it's worth putting it in for completeness.
 			switch (options) {
 				case GameMetricOptions.Attacks:
