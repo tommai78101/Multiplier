@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Extension;
 using Common;
 using SinglePlayer;
+using Analytics;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -288,11 +289,16 @@ namespace MultiPlayer {
 					if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 						if (this.attackCooldownCounter <= 0f) {
 							CmdAttack(this.targetEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+
+							GameMetricLogger.Increment(GameMetricOptions.Attacks);
+							GameMetricLogger.Increment(GameMetricOptions.AttackTime);
 						}
 					}
 					else if (area.enemiesInAttackRange.Count > 0) {
 						this.targetEnemy = area.enemiesInAttackRange[0];
 					}
+
+					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
 				}
 			}
 			else if (this.targetAIEnemy != null) {
@@ -306,11 +312,16 @@ namespace MultiPlayer {
 							else {
 								AttackAI(this.targetAIEnemy.gameObject, 1f);
 							}
+
+							GameMetricLogger.Increment(GameMetricOptions.Attacks);
+							GameMetricLogger.Increment(GameMetricOptions.AttackTime);
 						}
 					}
 					else if (area.otherEnemies.Count > 0) {
 						this.targetAIEnemy = area.otherEnemies[0];
 					}
+
+					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
 				}
 			}
 		}
@@ -450,6 +461,10 @@ namespace MultiPlayer {
 			if (victimUnit != null) {
 				victimUnit.TakeDamage(this.attackPower);
 				this.attackCooldownCounter = attackCounter;
+
+				if (victimUnit.currentHealth <= 0) {
+					GameMetricLogger.Increment(GameMetricOptions.Kills);
+				}
 			}
 		}
 
@@ -478,6 +493,8 @@ namespace MultiPlayer {
 		public void CmdUpdateStatus(bool targetEnemyIsGone, Color recoveryColor) {
 			if (this.currentHealth <= 0) {
 				if (this.gameObject != null) {
+					GameMetricLogger.Increment(GameMetricOptions.Death);
+
 					RpcUnitDestroy(this.gameObject);
 				}
 			}

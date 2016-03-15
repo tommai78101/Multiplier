@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
+using Analytics;
 
 namespace MultiPlayer {
 	[Serializable]
@@ -19,12 +20,6 @@ namespace MultiPlayer {
 		public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit, float mergeFactor) {
 			this.ownerUnit = ownerUnit;
 			this.mergingUnit = mergingUnit;
-			//if (this.ownerUnit.level < 10) {
-			//	this.ownerUnit.level++;
-			//}
-			//if (this.mergingUnit.level < 10) {
-			//	this.mergingUnit.level++;
-			//}
 			this.elapsedTime = 0f;
 
 			this.ownerPosition = ownerUnit.gameObject.transform.position;
@@ -40,7 +35,6 @@ namespace MultiPlayer {
 			if (mergingUnit.attributes == null) {
 				Debug.LogError("Merging unit attributes are null.");
 			}
-
 
 			this.Stop();
 		}
@@ -215,7 +209,7 @@ namespace MultiPlayer {
 			//Going to change this into network code, to sync up merging.
 			GameObject ownerObject = null, mergerObject = null;
 			List<GameObject> used = new List<GameObject>();
-			for (int i = this.selectionManager.selectedObjects.Count - 1; (i > 0); i--) {
+			for (int i = this.selectionManager.selectedObjects.Count - 1; i > 0; i--) {
 				if (used.Contains(this.selectionManager.selectedObjects[i])) {
 					continue;
 				}
@@ -261,6 +255,8 @@ namespace MultiPlayer {
 						if (!this.removeList.Contains(group)) {
 							FinishMergeGroup(group);
 							this.removeList.Add(group);
+
+							GameMetricLogger.Increment(GameMetricOptions.Merges);
 						}
 					}
 					else {

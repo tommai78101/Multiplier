@@ -5,6 +5,7 @@ using System;
 using Common;
 using Extension;
 using MultiPlayer;
+using Analytics;
 
 namespace SinglePlayer {
 	public enum State {
