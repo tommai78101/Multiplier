@@ -103,5 +103,14 @@ namespace Extension {
             }
 			return Vector3.zero;
 		}
+
+		public static Toggle GetSingleActiveToggle(this ToggleGroup group) {
+			foreach (Toggle toggle in group.ActiveToggles()) {
+				if (toggle.isOn) {
+					return toggle;
+				}
+			}
+			return null;
+		}
 	}
 }

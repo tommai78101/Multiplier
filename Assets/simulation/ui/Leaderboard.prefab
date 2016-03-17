@@ -217,6 +217,7 @@ GameObject:
   - 224: {fileID: 22425078}
   - 222: {fileID: 22241860}
   - 114: {fileID: 11498692}
+  - 114: {fileID: 11407832}
   m_Layer: 5
   m_Name: Leaderboard
   m_TagString: Untagged
@@ -729,6 +730,27 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &11407832
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 137394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99366a33d1fcebd44bf33270aa9af40e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardName: {fileID: 11403754}
+  splits: {fileID: 11487712}
+  merges: {fileID: 11471840}
+  kills: {fileID: 11401828}
+  deaths: {fileID: 11418270}
+  attacks: {fileID: 11434656}
+  attackTime: {fileID: 11435754}
+  battleTime: {fileID: 11420378}
+  wins: {fileID: 11403096}
+  losses: {fileID: 11487700}
 --- !u!114 &11411488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1774,7 +1796,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0.2987798}
   m_AnchorMax: {x: 0.2831499, y: 1}
-  m_AnchoredPosition: {x: 0.0049743652, y: 0.6179352}
+  m_AnchoredPosition: {x: 291.6, y: 0.6179352}
   m_SizeDelta: {x: -0.0099182, y: -1.2379}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22431850
