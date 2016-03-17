@@ -24,6 +24,7 @@ namespace Simulation {
 		//Equation Editor stuffs
 		public InputField equationInputField;
 		public RectTransform contentPane;
+		public GameObject levelInfoPrefab;
 
 		//AI Attribute Managers
 		public AIAttributeManager yellowTeamAttributes;
@@ -58,22 +59,22 @@ namespace Simulation {
 							Debug.LogError("Wrong toggle value: " + toggle.value + ". Please check.");
 							return;
 						case 0:
-							AIManager.SetHealthAttribute(equation);
+							AIManager.SetDirectHealthAttribute(equation);
 							break;
 						case 1:
-							AIManager.SetAttackAttribute(equation);
+							AIManager.SetDirectAttackAttribute(equation);
 							break;
 						case 2:
-							AIManager.SetSpeedAttribute(equation);
+							AIManager.SetDirectSpeedAttribute(equation);
 							break;
 						case 3:
-							AIManager.SetSplitAttribute(equation);
+							AIManager.SetDirectSplitAttribute(equation);
 							break;
 						case 4:
-							AIManager.SetMergeAttribute(equation);
+							AIManager.SetDirectMergeAttribute(equation);
 							break;
 						case 5:
-							AIManager.SetAttackCooldownAttribute(equation);
+							AIManager.SetDirectAttackCooldownAttribute(equation);
 							break;
 					}
 
@@ -104,7 +105,15 @@ namespace Simulation {
 								break;
 						}
 
-						LevelInfo levelInfo = new LevelInfo();
+
+						GameObject obj = null;
+						if (this.contentPane.transform.childCount < Attributes.MAX_NUM_OF_LEVELS) {
+							obj = MonoBehaviour.Instantiate(this.levelInfoPrefab);
+						}
+						else {
+							obj = this.contentPane.GetChild(i).gameObject;
+						}
+						LevelInfo levelInfo = obj.GetComponent<LevelInfo>();
 						levelInfo.level = i + 1;
 						levelInfo.rate = answer;
 						if (levelInfo.level == 1) {
@@ -122,11 +131,13 @@ namespace Simulation {
 							}
 						}
 
+						levelInfo.UpdateText();
+
 						levelInfo.transform.SetParent(this.contentPane.transform);
+						levelInfo.transform.position = this.contentPane.transform.position;
 						RectTransform rectTransform = levelInfo.GetComponent<RectTransform>();
 						rectTransform.localScale = Vector3.one;
-
-						levelInfo.UpdateText();
+						rectTransform.localRotation = this.contentPane.localRotation;
 
 						previousAnswer = answer;
 					}
@@ -141,6 +152,7 @@ namespace Simulation {
 			bool flag = this.editTeamToggleGroup == null;
 			flag |= this.unitAttributeToggleGroup == null;
 			flag |= this.equationInputField == null;
+			flag |= this.levelInfoPrefab == null;
 			if (flag) {
 				Debug.LogError("One of the game objects is null. Please check.");
 			}

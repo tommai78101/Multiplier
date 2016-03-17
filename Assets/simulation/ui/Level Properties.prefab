@@ -203,6 +203,9 @@ MonoBehaviour:
   level: 0
   rate: 0
   comparisonFlag: 0
+  levelText: {fileID: 11433386}
+  rateText: {fileID: 11409760}
+  signText: {fileID: 11403248}
 --- !u!114 &11487932
 MonoBehaviour:
   m_ObjectHideFlags: 1

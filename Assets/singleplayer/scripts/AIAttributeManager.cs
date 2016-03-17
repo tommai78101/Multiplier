@@ -98,7 +98,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < healthList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = healthList[i];
 					rate.rate = answer;
@@ -133,7 +133,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = attackList[i];
 					rate.rate = answer;
@@ -168,7 +168,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < attackCooldownList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = attackCooldownList[i];
 					rate.rate = answer;
@@ -203,7 +203,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < speedList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = speedList[i];
 					rate.rate = answer;
@@ -238,7 +238,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < splitList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = splitList[i];
 					rate.rate = answer;
@@ -273,7 +273,7 @@ namespace SinglePlayer {
 			float previousAnswer = 0f;
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				if (i < mergeList.Count) {
-					float answer = (float) MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i, i-1, previousAnswer);
+					float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i, i - 1, previousAnswer);
 					previousAnswer = answer;
 					LevelRate rate = mergeList[i];
 					rate.rate = answer;
@@ -297,6 +297,76 @@ namespace SinglePlayer {
 					tier.merge = mergeList[i].rate;
 					this.tiers[i] = tier;
 				}
+			}
+		}
+
+		public void SetDirectHealthAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Health, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.health = answer;
+				this.tiers[i] = tier;
+			}
+		}
+
+		public void SetDirectAttackAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Attack, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.attack = answer;
+				this.tiers[i] = tier;
+			}
+		}
+
+
+		public void SetDirectSpeedAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Speed, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.speed = answer;
+				this.tiers[i] = tier;
+			}
+		}
+
+
+		public void SetDirectSplitAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Split, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.split = answer;
+				this.tiers[i] = tier;
+			}
+		}
+
+
+		public void SetDirectMergeAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.Merge, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.merge = answer;
+				this.tiers[i] = tier;
+			}
+		}
+
+
+		public void SetDirectAttackCooldownAttribute(string mathExpression) {
+			float previousAnswer = 0f;
+			for (int i = 0; i < this.tiers.Count; i++) {
+				float answer = (float)MathParser.ProcessEquation(mathExpression, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+				previousAnswer = answer;
+				TierUpgrade tier = this.tiers[i];
+				tier.attackCooldown = answer;
+				this.tiers[i] = tier;
 			}
 		}
 	}
