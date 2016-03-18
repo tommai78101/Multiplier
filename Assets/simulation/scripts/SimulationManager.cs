@@ -7,6 +7,15 @@ using MultiPlayer;
 using SinglePlayer;
 
 namespace Simulation {
+	public struct EquationInfo {
+		public string health;
+		public string attack;
+		public string speed;
+		public string split;
+		public string merge;
+		public string attackCooldown;
+	}
+
 	public class SimulationManager : MonoBehaviour {
 		//Constants
 		public const byte INVALID = 0xFF;
@@ -26,6 +35,7 @@ namespace Simulation {
 		public InputField equationInputField;
 		public RectTransform contentPane;
 		public GameObject levelInfoPrefab;
+		public EquationInfo[] teamEquations;
 
 		//AI Attribute Managers
 		public AIAttributeManager yellowTeamAttributes;
@@ -40,16 +50,54 @@ namespace Simulation {
 			CheckAttributeToggle();
 		}
 
+		public void UpdateAttribute(Toggle toggle) {
+			if (!toggle.isOn) {
+				return;
+			}
+
+			int index = this.isEditingYellowTeam ? 0 : 1;
+			string description = "Enter equation. Current: (";
+			EnumToggle enumToggle = toggle.GetComponent<EnumToggle>();
+			if (enumToggle != null) {
+				switch (enumToggle.value) {
+					default:
+						Debug.LogError("Invalid toggle value.");
+						break;
+					case 0: //Health
+						this.equationInputField.text = description + this.teamEquations[index].health + ")";
+						break;
+					case 1: //Attack
+						this.equationInputField.text = description + this.teamEquations[index].attack + ")";
+						break;
+					case 2: //Speed
+						this.equationInputField.text = description + this.teamEquations[index].speed + ")";
+						break;
+					case 3: //Split
+						this.equationInputField.text = description + this.teamEquations[index].split + ")";
+						break;
+					case 4: //Merge
+						this.equationInputField.text = description + this.teamEquations[index].merge + ")";
+						break;
+					case 5: //Attack Cooldown
+						this.equationInputField.text = description + this.teamEquations[index].attackCooldown + ")";
+						break;
+				}
+			}
+		}
+
 		public void UpdateEquation() {
 			string equation = this.equationInputField.text;
 			Debug.Log("Equation is: " + equation);
 
 			AIAttributeManager AIManager = null;
+			int index;
 			if (this.isEditingYellowTeam) {
 				AIManager = this.yellowTeamAttributes;
+				index = 0;
 			}
 			else {
 				AIManager = this.blueTeamAttributes;
+				index = 1;
 			}
 
 			Toggle attributeToggle = this.unitAttributeToggleGroup.GetSingleActiveToggle();
@@ -62,21 +110,27 @@ namespace Simulation {
 							return;
 						case 0:
 							AIManager.SetDirectHealthAttribute(equation);
+							this.teamEquations[index].health = equation;
 							break;
 						case 1:
 							AIManager.SetDirectAttackAttribute(equation);
+							this.teamEquations[index].attack = equation;
 							break;
 						case 2:
 							AIManager.SetDirectSpeedAttribute(equation);
+							this.teamEquations[index].speed = equation;
 							break;
 						case 3:
 							AIManager.SetDirectSplitAttribute(equation);
+							this.teamEquations[index].split = equation;
 							break;
 						case 4:
 							AIManager.SetDirectMergeAttribute(equation);
+							this.teamEquations[index].merge = equation;
 							break;
 						case 5:
 							AIManager.SetDirectAttackCooldownAttribute(equation);
+							this.teamEquations[index].attackCooldown = equation;
 							break;
 					}
 
@@ -162,6 +216,10 @@ namespace Simulation {
 			//Boolean flags
 			this.isEditingYellowTeam = true;
 
+			//Array initialization
+			this.teamEquations = new EquationInfo[2];
+			InitializeTeamEquations();
+
 			//Initialize content pane.
 			SetDefaultLevelInfo();
 		}
@@ -244,6 +302,18 @@ namespace Simulation {
 			this.blueTeamAttributes.SetDirectSplitAttribute(defaultEquation);
 			this.blueTeamAttributes.SetDirectMergeAttribute(defaultEquation);
 			this.blueTeamAttributes.SetDirectAttackCooldownAttribute(defaultEquation);
+		}
+
+		private void InitializeTeamEquations() {
+			string defaultEquation = "y=1";
+			for (int i = 0; i < this.teamEquations.Length; i++) {
+				this.teamEquations[i].health = defaultEquation;
+				this.teamEquations[i].attack = defaultEquation;
+				this.teamEquations[i].speed = defaultEquation;
+				this.teamEquations[i].split = defaultEquation;
+				this.teamEquations[i].merge = defaultEquation;
+				this.teamEquations[i].attackCooldown = defaultEquation;
+			}
 		}
 	}
 }
