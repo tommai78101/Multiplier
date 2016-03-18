@@ -22,6 +22,7 @@ namespace Simulation {
 		public ToggleGroup unitAttributeToggleGroup;
 
 		//Equation Editor stuffs
+		public Text labelName;
 		public InputField equationInputField;
 		public RectTransform contentPane;
 		public GameObject levelInfoPrefab;
@@ -36,6 +37,7 @@ namespace Simulation {
 
 		public void FixedUpdate() {
 			CheckTeamToggle();
+			CheckAttributeToggle();
 		}
 
 		public void UpdateEquation() {
@@ -86,22 +88,22 @@ namespace Simulation {
 								Debug.LogError("Invalid toggle value: " + toggle.value + ". Please check.");
 								return;
 							case 0:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
 								break;
 							case 1:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
 								break;
 							case 2:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
 								break;
 							case 3:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
 								break;
 							case 4:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
 								break;
 							case 5:
-								answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
 								break;
 						}
 
@@ -159,6 +161,9 @@ namespace Simulation {
 
 			//Boolean flags
 			this.isEditingYellowTeam = true;
+
+			//Initialize content pane.
+			SetDefaultLevelInfo();
 		}
 
 		private void CheckTeamToggle() {
@@ -169,6 +174,76 @@ namespace Simulation {
 					this.isEditingYellowTeam = toggle.value == 0 ? true : false;
 				}
 			}
+		}
+
+		private void CheckAttributeToggle() {
+			Toggle attributeToggle = this.unitAttributeToggleGroup.GetSingleActiveToggle();
+			if (attributeToggle != null) {
+				EnumToggle toggle = attributeToggle.GetComponent<EnumToggle>();
+				if (toggle != null) {
+					string label;
+					switch (toggle.value) {
+						default:
+							label = "Error";
+							break;
+						case 0:
+							label = "Health";
+							break;
+						case 1:
+							label = "Attack";
+							break;
+						case 2:
+							label = "Speed";
+							break;
+						case 3:
+							label = "Split";
+							break;
+						case 4:
+							label = "Merge";
+							break;
+						case 5:
+							label = "Attack Cooldown";
+							break;
+					}
+					this.labelName.text = label;
+				}
+			}
+		}
+
+		private void SetDefaultLevelInfo() {
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				GameObject obj = null;
+				if (this.contentPane.transform.childCount < Attributes.MAX_NUM_OF_LEVELS) {
+					obj = MonoBehaviour.Instantiate(this.levelInfoPrefab);
+				}
+				else {
+					obj = this.contentPane.GetChild(i).gameObject;
+				}
+				LevelInfo levelInfo = obj.GetComponent<LevelInfo>();
+				levelInfo.level = i + 1;
+				levelInfo.rate = 1f;
+				levelInfo.comparisonFlag = INVALID;
+				levelInfo.UpdateText();
+
+				levelInfo.transform.SetParent(this.contentPane.transform);
+				levelInfo.transform.position = this.contentPane.transform.position;
+				RectTransform rectTransform = levelInfo.GetComponent<RectTransform>();
+				rectTransform.localScale = Vector3.one;
+				rectTransform.localRotation = this.contentPane.localRotation;
+			}
+			string defaultEquation = "y=1";
+			this.yellowTeamAttributes.SetDirectHealthAttribute(defaultEquation);
+			this.yellowTeamAttributes.SetDirectAttackAttribute(defaultEquation);
+			this.yellowTeamAttributes.SetDirectSpeedAttribute(defaultEquation);
+			this.yellowTeamAttributes.SetDirectSplitAttribute(defaultEquation);
+			this.yellowTeamAttributes.SetDirectMergeAttribute(defaultEquation);
+			this.yellowTeamAttributes.SetDirectAttackCooldownAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectHealthAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectAttackAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectSpeedAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectSplitAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectMergeAttribute(defaultEquation);
+			this.blueTeamAttributes.SetDirectAttackCooldownAttribute(defaultEquation);
 		}
 	}
 }
