@@ -85,6 +85,55 @@ namespace Simulation {
 			}
 		}
 
+		public void UpdateTeamToggle(Toggle toggle) {
+			if (!toggle.isOn) {
+				return;
+			}
+
+			EnumToggle enumToggle = toggle.GetComponent<EnumToggle>();
+			if (enumToggle == null) {
+				Debug.Log("Unable to obtain EnumToggle component. Did you accidentally passed in the wrong Toggle?");
+				return;
+			}
+
+			this.isEditingYellowTeam = enumToggle.value == 0 ? true : false;
+
+			//NOTE(Thompson): If enumToggle.value is not using 0 or 1, change this to check on isEditingYellowTeam.
+			int index = enumToggle.value;
+			Toggle attributeToggle = this.unitAttributeToggleGroup.GetSingleActiveToggle();
+			if (attributeToggle != null) {
+				EnumToggle attributeEnumToggle = attributeToggle.GetComponent<EnumToggle>();
+				if (attributeEnumToggle != null) {
+					string equationValue = "Enter equation. Current: (";
+					switch (attributeEnumToggle.value) {
+						default:
+							Debug.LogError("Attribute Enum Toggle value is invalid.");
+							equationValue = "[INTERNAL ERROR]: Invalid attribute enum toggle value.";
+							break;
+						case 0:
+							equationValue += this.teamEquations[index].health + ")";
+							break;
+						case 1:
+							equationValue += this.teamEquations[index].attack + ")";
+							break;
+						case 2:
+							equationValue += this.teamEquations[index].speed + ")";
+							break;
+						case 3:
+							equationValue += this.teamEquations[index].split + ")";
+							break;
+						case 4:
+							equationValue += this.teamEquations[index].merge + ")";
+							break;
+						case 5:
+							equationValue += this.teamEquations[index].attackCooldown + ")";
+							break;
+					}
+					this.equationInputField.text = equationValue;
+				}
+			}
+		}
+
 		public void UpdateEquation() {
 			string equation = this.equationInputField.text;
 			Debug.Log("Equation is: " + equation);
