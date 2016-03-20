@@ -57,7 +57,6 @@ public class Starter : MonoBehaviour {
 			obj.transform.SetParent(this.blueTeamUnits.transform);
 			obj.transform.position = this.blueTeamUnits.position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
-			unit.SetTeamColor(1);
 
 			//AI manager spawning.
 			AIManager AImanager = this.blueTeam.GetComponentInChildren<AIManager>();
