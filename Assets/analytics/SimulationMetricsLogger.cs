@@ -31,16 +31,20 @@ namespace Analytics {
 		public List<TeamMetric> teamMetrics;
 
 		//Flags
-		public bool gameStartFlag {
+		public bool gameStartFlag
+		{
 			get; set;
 		}
-		public bool simulationMetricsLoggerStart {
+		public bool simulationMetricsLoggerStart
+		{
 			get; set;
 		}
-		public bool isInputEnabled {
+		public bool isInputEnabled
+		{
 			get; set;
 		}
-		public bool isShownToScreen	{
+		public bool isShownToScreen
+		{
 			get; set;
 		}
 
@@ -51,10 +55,6 @@ namespace Analytics {
 		}
 
 		public void Update() {
-			if (!this.isInputEnabled) {
-				return;
-			}
-
 			this.outputField.GetComponentInChildren<Text>().text = this.outputField.text.ToString();
 
 			if (Input.GetKeyUp(this.triggerKey)) {
@@ -77,9 +77,7 @@ namespace Analytics {
 		public void ShowPrintLog() {
 			this.EnableCanvasGroup();
 			this.stringBuilder.Length = 0;
-			for (int i = 0; i < this.teamMetrics.Count; i++) {
-				this.Print(i);
-			}
+			this.Print();
 		}
 
 		public void EnableCanvasGroup() {
@@ -216,9 +214,7 @@ namespace Analytics {
 			}
 			else {
 				SimulationMetricsLogger.instance.stringBuilder.Length = 0;
-				for (int i = 0; i < SimulationMetricsLogger.instance.teamMetrics.Count; i++) {
-					SimulationMetricsLogger.instance.Print(i);
-				}
+				SimulationMetricsLogger.instance.Print();
 			}
 		}
 
@@ -299,30 +295,33 @@ namespace Analytics {
 			this.gameMetricsLogGroup.blocksRaycasts = !this.gameMetricsLogGroup.blocksRaycasts;
 		}
 
-		private void Print(int index) {
-			TeamMetric log = SimulationMetricsLogger.instance.teamMetrics[index];
+		private void Print() {
 			StringBuilder sB = this.stringBuilder;
 
 			sB.AppendLine();
 			sB.AppendLine("Simulation Game Metrics Report");
-			sB.AppendLine("------------------------------------------------------------------");
-			sB.AppendLine();
-			sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
-			sB.AppendLine();
-			sB.AppendLine("Player Name: " + log.teamName);
-			sB.AppendLine("Level Difficulty: " + GetLevelDifficulty(index));
-			sB.AppendLine("Unit Attribute Equation Used: " + log.difficultyEquations);
-			sB.AppendLine();
-			sB.AppendLine("Total Time Played: " + log.totalGameTime.ToString("0.000") + " seconds");
-			sB.AppendLine("Total Death: " + log.numberOfDeaths);
-			sB.AppendLine("Total Kills: " + log.numberOfKills);
-			sB.AppendLine("Total Attacks: " + log.numberOfAttacks);
-			sB.AppendLine("Total Splits: " + log.numberOfSplits);
-			sB.AppendLine("Total Merges: " + log.numberOfMerges);
-			sB.AppendLine();
-			sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
-			sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
-			sB.AppendLine();
+
+			for (int index = 0; index < this.teamMetrics.Count; index++) {
+				sB.AppendLine("------------------------------------------------------------------");
+				sB.AppendLine();
+				TeamMetric log = SimulationMetricsLogger.instance.teamMetrics[index];
+				sB.AppendLine("Team Name: " + log.teamName);
+				sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
+				sB.AppendLine();
+				sB.AppendLine("Level Difficulty: " + GetLevelDifficulty(index));
+				sB.AppendLine("Unit Attribute Equation Used: " + log.difficultyEquations);
+				sB.AppendLine();
+				sB.AppendLine("Total Time Played: " + log.totalGameTime.ToString("0.000") + " seconds");
+				sB.AppendLine("Total Death: " + log.numberOfDeaths);
+				sB.AppendLine("Total Kills: " + log.numberOfKills);
+				sB.AppendLine("Total Attacks: " + log.numberOfAttacks);
+				sB.AppendLine("Total Splits: " + log.numberOfSplits);
+				sB.AppendLine("Total Merges: " + log.numberOfMerges);
+				sB.AppendLine();
+				sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
+				sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
+				sB.AppendLine();
+			}
 
 			this.outputField.text = sB.ToString();
 			this.outputField.Rebuild(CanvasUpdate.MaxUpdateValue);
