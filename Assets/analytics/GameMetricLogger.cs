@@ -197,6 +197,18 @@ namespace Analytics {
 			GameMetricLogger.instance.isInputEnabled = false;
 		}
 
+		public void EnableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 1f;
+			this.gameMetricsLogGroup.interactable = true;
+			this.gameMetricsLogGroup.blocksRaycasts = true;
+		}
+
+		public void DisableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 0f;
+			this.gameMetricsLogGroup.interactable = false;
+			this.gameMetricsLogGroup.blocksRaycasts = false;
+		}
+
 		// ------------   Private variables  ------------------------------
 
 		private static string GetLevelDifficulty() {
@@ -250,18 +262,6 @@ namespace Analytics {
 			this.gameMetricsLogGroup.alpha = this.gameMetricsLogGroup.alpha > 0f ? 0f : 1f;
 			this.gameMetricsLogGroup.interactable = !this.gameMetricsLogGroup.interactable;
 			this.gameMetricsLogGroup.blocksRaycasts = !this.gameMetricsLogGroup.blocksRaycasts;
-		}
-
-		private void EnableCanvasGroup() {
-			this.gameMetricsLogGroup.alpha = 1f;
-			this.gameMetricsLogGroup.interactable = true;
-			this.gameMetricsLogGroup.blocksRaycasts = true;
-		}
-
-		private void DisableCanvasGroup() {
-			this.gameMetricsLogGroup.alpha = 0f;
-			this.gameMetricsLogGroup.interactable = false;
-			this.gameMetricsLogGroup.blocksRaycasts = false;
 		}
 
 		private void Print() {

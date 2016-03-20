@@ -41,6 +41,10 @@ namespace Simulation {
 		public AIAttributeManager yellowTeamAttributes;
 		public AIAttributeManager blueTeamAttributes;
 
+		//Leaderboards
+		public Leaderboard yellowTeamLeaderboard;
+		public Leaderboard blueTeamLeaderboard;
+
 		public void Start() {
 			Initialization();
 		}
