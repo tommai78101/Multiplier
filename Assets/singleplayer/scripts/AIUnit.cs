@@ -5,6 +5,7 @@ using System;
 using Common;
 using Extension;
 using MultiPlayer;
+using Simulation;
 using Analytics;
 
 namespace SinglePlayer {
@@ -261,6 +262,12 @@ namespace SinglePlayer {
 		}
 
 		public void OnGUI() {
+			if (SimulationMetricsLogger.instance != null) {
+				if (SimulationMetricsLogger.instance.isShownToScreen) {
+					return;
+				}
+			}
+
 			GUIStyle style = new GUIStyle();
 			style.normal.textColor = Color.black;
 			style.alignment = TextAnchor.MiddleCenter;

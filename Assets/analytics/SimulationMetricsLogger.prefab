@@ -44,7 +44,6 @@ GameObject:
   - 222: {fileID: 22294056}
   - 114: {fileID: 11410222}
   - 114: {fileID: 11494524}
-  - 114: {fileID: 11460970}
   m_Layer: 5
   m_Name: Close Report
   m_TagString: Untagged
@@ -130,9 +129,9 @@ GameObject:
   - 222: {fileID: 22269162}
   - 114: {fileID: 11443810}
   - 225: {fileID: 22548566}
-  - 114: {fileID: 11488268}
+  - 114: {fileID: 11456004}
   m_Layer: 5
-  m_Name: TempMetricsLogger
+  m_Name: SimulationMetricsLogger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -458,6 +457,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11456004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 164776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bd1d269f0461de4588389004e9b5d55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerKey: 109
+  outputField: {fileID: 11401186}
+  gameMetricsLogGroup: {fileID: 22548566}
 --- !u!114 &11457064
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -485,17 +498,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11460970
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 135440}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29dd737badac341479ebf629688395ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11474128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -561,7 +563,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11457064}
   m_HandleRect: {fileID: 22402228}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -582,32 +584,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!114 &11488268
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 164776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d191873992756c4fb3cf1720f741720, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerKey: 109
-  outputField: {fileID: 0}
-  gameMetricsLogGroup: {fileID: 0}
-  levelDifficulty: 0
-  numberOfDeaths: 0
-  numberOfSplits: 0
-  numberOfMerges: 0
-  numberOfKills: 0
-  numberOfAttacks: 0
-  totalGameTimeSinceEpoch: 0
-  totalGameTime: 0
-  totalAttackTime: 0
-  totalBattleEngagementTime: 0
-  playerName: 
-  difficultyEquations: 
 --- !u!114 &11494524
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -647,7 +623,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11488268}
+      - m_Target: {fileID: 11456004}
         m_MethodName: DisableCanvasGroup
         m_Mode: 1
         m_Arguments:
@@ -805,7 +781,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0000038146973}
+  m_AnchoredPosition: {x: 0, y: 0.000047683716}
   m_SizeDelta: {x: 617, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22438832

@@ -40,6 +40,9 @@ namespace Analytics {
 		public bool isInputEnabled {
 			get; set;
 		}
+		public bool isShownToScreen	{
+			get; set;
+		}
 
 		public void Start() {
 			Initialization();
@@ -70,6 +73,30 @@ namespace Analytics {
 				}
 			}
 		}
+
+		public void ShowPrintLog() {
+			this.EnableCanvasGroup();
+			this.stringBuilder.Length = 0;
+			for (int i = 0; i < this.teamMetrics.Count; i++) {
+				this.Print(i);
+			}
+		}
+
+		public void EnableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 1f;
+			this.gameMetricsLogGroup.interactable = true;
+			this.gameMetricsLogGroup.blocksRaycasts = true;
+			this.isShownToScreen = true;
+		}
+
+		public void DisableCanvasGroup() {
+			this.gameMetricsLogGroup.alpha = 0f;
+			this.gameMetricsLogGroup.interactable = false;
+			this.gameMetricsLogGroup.blocksRaycasts = false;
+			this.isShownToScreen = false;
+		}
+
+		//---------------------   STATIC METHODS   --------------------------------
 
 		public static void Increment(GameMetricOptions options, int index) {
 			if (!(SimulationMetricsLogger.instance.simulationMetricsLoggerStart || SimulationMetricsLogger.instance.gameStartFlag)) {
@@ -181,14 +208,6 @@ namespace Analytics {
 			SimulationMetricsLogger.instance.Initialization();
 		}
 
-		public static void ShowPrintLog() {
-			SimulationMetricsLogger.instance.EnableCanvasGroup();
-			SimulationMetricsLogger.instance.stringBuilder.Length = 0;
-			for (int i = 0; i < SimulationMetricsLogger.instance.teamMetrics.Count; i++) {
-				SimulationMetricsLogger.instance.Print(i);
-			}
-		}
-
 		public static void PrintLog() {
 			if (SimulationMetricsLogger.instance.stringBuilder == null) {
 				SimulationMetricsLogger log = SimulationMetricsLogger.instance;
@@ -209,18 +228,6 @@ namespace Analytics {
 
 		public static void DisableLoggerHotkey() {
 			SimulationMetricsLogger.instance.isInputEnabled = false;
-		}
-
-		public void EnableCanvasGroup() {
-			this.gameMetricsLogGroup.alpha = 1f;
-			this.gameMetricsLogGroup.interactable = true;
-			this.gameMetricsLogGroup.blocksRaycasts = true;
-		}
-
-		public void DisableCanvasGroup() {
-			this.gameMetricsLogGroup.alpha = 0f;
-			this.gameMetricsLogGroup.interactable = false;
-			this.gameMetricsLogGroup.blocksRaycasts = false;
 		}
 
 		// ------------   Private variables  ------------------------------
@@ -245,6 +252,10 @@ namespace Analytics {
 			string[] teamLabels = {
 				"Yellow Team", "Blue Team"
 			};
+			if (this.teamMetrics == null) {
+				this.teamMetrics = new List<TeamMetric>();
+			}
+
 			for (int i = 0; i < teamLabels.Length; i++) {
 				TeamMetric metric = new TeamMetric();
 
@@ -292,8 +303,9 @@ namespace Analytics {
 			TeamMetric log = SimulationMetricsLogger.instance.teamMetrics[index];
 			StringBuilder sB = this.stringBuilder;
 
-			sB.AppendLine("Game Metrics Report");
-			sB.AppendLine("(Please copy and paste this report somewhere else. Press M to toggle.)");
+			sB.AppendLine();
+			sB.AppendLine("Simulation Game Metrics Report");
+			sB.AppendLine("------------------------------------------------------------------");
 			sB.AppendLine();
 			sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
 			sB.AppendLine();
