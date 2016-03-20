@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using SinglePlayer;
 
 public class Starter : MonoBehaviour {
-	public GameObject redTeam;
-	public Transform redTeamUnits;
-	public Transform redTeamStartPosiiton;
+	public GameObject yellowTeam;
+	public Transform yellowTeamUnits;
+	public Transform yellowTeamStartPosiiton;
 	public GameObject blueTeam;
 	public Transform blueTeamUnits;
 	public Transform blueTeamStartPosition;
 	public GameObject AIUnitPrefab;
 
-	private AIManager redTeamAI;
+	private AIManager yellowTeamAI;
 	private AIManager blueTeamAI;
 	private bool gameMatchStart;
 	private float timePauseCounter;
 
+	public const int YELLOW_TEAM_INDEX = 0;
+	public const int BLUE_TEAM_INDEX = 1;
+
 	public void Start() {
 		this.timePauseCounter = 1f;
 
-		if (this.redTeamUnits != null) {
-			int childs = this.redTeamUnits.transform.childCount;
+		if (this.yellowTeamUnits != null) {
+			int childs = this.yellowTeamUnits.transform.childCount;
 			for (int i = childs; i > 0; i--) {
-				MonoBehaviour.Destroy(this.redTeamUnits.transform.GetChild(i-1).gameObject);
+				MonoBehaviour.Destroy(this.yellowTeamUnits.transform.GetChild(i-1).gameObject);
 			}
 		}
 
@@ -33,17 +36,17 @@ public class Starter : MonoBehaviour {
 			}
 		}
 
-		if (this.redTeam != null) {
+		if (this.yellowTeam != null) {
 			//AI Unit spawning.
 			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
-			obj.transform.SetParent(this.redTeamUnits.transform);
-			obj.transform.position = this.redTeamStartPosiiton.position;
+			obj.transform.SetParent(this.yellowTeamUnits.transform);
+			obj.transform.position = this.yellowTeamStartPosiiton.position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
 
 			//AI manager spawning.
-			AIManager AImanager = this.redTeam.GetComponentInChildren<AIManager>();
+			AIManager AImanager = this.yellowTeam.GetComponentInChildren<AIManager>();
 			if (AImanager != null) {
-				this.redTeamAI = AImanager;
+				this.yellowTeamAI = AImanager;
 				unit.unitManager = AImanager;
 				unit.teamFaction = AImanager.teamFaction;
 				unit.SetTeamColor(0);
@@ -74,9 +77,9 @@ public class Starter : MonoBehaviour {
 
 	public void FixedUpdate() {
 		if (this.gameMatchStart) {
-			if (this.redTeamAI != null) {
-				if (this.redTeamUnits.transform.childCount > 0) {
-					this.redTeamAI.Activate();
+			if (this.yellowTeamAI != null) {
+				if (this.yellowTeamUnits.transform.childCount > 0) {
+					this.yellowTeamAI.Activate();
 				}
 			}
 			if (this.blueTeamAI != null) {
@@ -85,13 +88,13 @@ public class Starter : MonoBehaviour {
 				}
 			}
 
-			if (this.redTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
-				this.redTeamAI.Deactivate();
+			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
+				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
 
-				int childs = this.redTeamUnits.transform.childCount;
+				int childs = this.yellowTeamUnits.transform.childCount;
 				for (int i = childs; i > 0; i--) {
-					MonoBehaviour.Destroy(this.redTeamUnits.transform.GetChild(i-1).gameObject);
+					MonoBehaviour.Destroy(this.yellowTeamUnits.transform.GetChild(i-1).gameObject);
 				}
 
 				childs = this.blueTeamUnits.transform.childCount;
