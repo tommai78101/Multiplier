@@ -69,21 +69,27 @@ namespace Simulation {
 						break;
 					case 0: //Health
 						this.equationInputField.text = description + this.teamEquations[index].health + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].health);
 						break;
 					case 1: //Attack
 						this.equationInputField.text = description + this.teamEquations[index].attack + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].attack);
 						break;
 					case 2: //Speed
 						this.equationInputField.text = description + this.teamEquations[index].speed + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].speed);
 						break;
 					case 3: //Split
 						this.equationInputField.text = description + this.teamEquations[index].split + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].split);
 						break;
 					case 4: //Merge
 						this.equationInputField.text = description + this.teamEquations[index].merge + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].merge);
 						break;
 					case 5: //Attack Cooldown
 						this.equationInputField.text = description + this.teamEquations[index].attackCooldown + ")";
+						UpdateLevelInfo(enumToggle.value, this.teamEquations[index].attackCooldown);
 						break;
 				}
 			}
@@ -116,21 +122,27 @@ namespace Simulation {
 							break;
 						case 0:
 							equationValue += this.teamEquations[index].health + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].health);
 							break;
 						case 1:
 							equationValue += this.teamEquations[index].attack + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].attack);
 							break;
 						case 2:
 							equationValue += this.teamEquations[index].speed + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].speed);
 							break;
 						case 3:
 							equationValue += this.teamEquations[index].split + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].split);
 							break;
 						case 4:
 							equationValue += this.teamEquations[index].merge + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].merge);
 							break;
 						case 5:
 							equationValue += this.teamEquations[index].attackCooldown + ")";
+							UpdateLevelInfo(attributeEnumToggle.value, this.teamEquations[index].attackCooldown);
 							break;
 					}
 					this.equationInputField.text = equationValue;
@@ -187,74 +199,83 @@ namespace Simulation {
 							break;
 					}
 
-					float previousAnswer = 0f;
-					float answer = 0f;
-					for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-						switch (toggle.value) {
-							default:
-								Debug.LogError("Invalid toggle value: " + toggle.value + ". Please check.");
-								return;
-							case 0:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
-								break;
-							case 1:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
-								break;
-							case 2:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
-								break;
-							case 3:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
-								break;
-							case 4:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
-								break;
-							case 5:
-								answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
-								break;
-						}
-
-
-						GameObject obj = null;
-						if (this.contentPane.transform.childCount < Attributes.MAX_NUM_OF_LEVELS) {
-							obj = MonoBehaviour.Instantiate(this.levelInfoPrefab);
-						}
-						else {
-							obj = this.contentPane.GetChild(i).gameObject;
-						}
-						LevelInfo levelInfo = obj.GetComponent<LevelInfo>();
-						levelInfo.level = i + 1;
-						levelInfo.rate = answer;
-						if (levelInfo.level == 1) {
-							levelInfo.comparisonFlag = INVALID;
-						}
-						else {
-							if (answer < previousAnswer) {
-								levelInfo.comparisonFlag = SMALLER;
-							}
-							else if (Mathf.Abs(previousAnswer - answer) <= float.Epsilon) {
-								levelInfo.comparisonFlag = APPROXIMATE;
-							}
-							else if (answer > previousAnswer) {
-								levelInfo.comparisonFlag = LARGER;
-							}
-						}
-
-						levelInfo.UpdateText();
-
-						levelInfo.transform.SetParent(this.contentPane.transform);
-						levelInfo.transform.position = this.contentPane.transform.position;
-						RectTransform rectTransform = levelInfo.GetComponent<RectTransform>();
-						rectTransform.localScale = Vector3.one;
-						rectTransform.localRotation = this.contentPane.localRotation;
-
-						previousAnswer = answer;
-					}
+					UpdateLevelInfo(toggle.value, equation);
 				}
 			}
 		}
 
+		public void UpdateLevelInfo(int toggleValue, string equation) {
+			float previousAnswer = 0f;
+			float answer = 0f;
+			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+				switch (toggleValue) {
+					default:
+						Debug.LogError("Invalid toggle value: " + toggleValue + ". Please check.");
+						return;
+					case 0:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
+						break;
+					case 1:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
+						break;
+					case 2:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
+						break;
+					case 3:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
+						break;
+					case 4:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
+						break;
+					case 5:
+						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+						break;
+				}
+				UpdateLevelInfoIteration(i, answer, previousAnswer);
+				previousAnswer = answer;
+			}
+		}
+
 		//-----------------  PRIVATE METHODS  ----------------------------
+
+		private void UpdateLevelInfoIteration(int level, float answer, float previousAnswer) {
+			bool isLevelInfoInitialized = false;
+			GameObject obj = null;
+			if (this.contentPane.transform.childCount < Attributes.MAX_NUM_OF_LEVELS) {
+				obj = MonoBehaviour.Instantiate(this.levelInfoPrefab);
+				isLevelInfoInitialized = true;
+			}
+			else {
+				obj = this.contentPane.GetChild(level).gameObject;
+			}
+			LevelInfo levelInfo = obj.GetComponent<LevelInfo>();
+			levelInfo.level = level + 1;
+			levelInfo.rate = answer;
+			if (levelInfo.level == 1) {
+				levelInfo.comparisonFlag = INVALID;
+			}
+			else {
+				if (answer < previousAnswer) {
+					levelInfo.comparisonFlag = SMALLER;
+				}
+				else if (Mathf.Abs(previousAnswer - answer) <= float.Epsilon) {
+					levelInfo.comparisonFlag = APPROXIMATE;
+				}
+				else if (answer > previousAnswer) {
+					levelInfo.comparisonFlag = LARGER;
+				}
+			}
+
+			levelInfo.UpdateText();
+
+			if (isLevelInfoInitialized) {
+				levelInfo.transform.SetParent(this.contentPane.transform);
+				levelInfo.transform.position = this.contentPane.transform.position;
+				RectTransform rectTransform = levelInfo.GetComponent<RectTransform>();
+				rectTransform.localScale = Vector3.one;
+				rectTransform.localRotation = this.contentPane.localRotation;
+			}
+		}
 
 		private void Initialization() {
 			//GameObjects null checking. Yes, you can do bitwise operations.
