@@ -82,12 +82,10 @@ namespace Simulation {
 		}
 
 		public void StartSimulation() {
-			Debug.Log("Starting simulation");
 			this.gameMatchStart = true;
 		}
 
 		public void StopSimulation() {
-			Debug.Log("Stopping simulation");
 			this.gameMatchStart = false;
 			this.ClearSimulation();
 			this.InitializeSimulation();
@@ -102,8 +100,6 @@ namespace Simulation {
 				this.timePauseCounter -= Time.deltaTime;
 				return;
 			}
-
-			Debug.Log("Simulation should be running.");
 
 			if (this.yellowTeamAI != null) {
 				if (this.yellowTeamUnits.transform.childCount > 0) {
