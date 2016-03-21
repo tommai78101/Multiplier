@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Simulation;
 
 public class RunStopButtonAction : MonoBehaviour {
 	public Text runStopButtonText;

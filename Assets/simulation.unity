@@ -1285,7 +1285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runStopButtonText: {fileID: 935460200}
   isRunning: 0
-  simulationStarter: {fileID: 1463049465}
+  simulationStarter: {fileID: 1463049467}
 --- !u!1 &225081182
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,7 +2360,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1900491295}
   m_Direction: 0
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4523,7 +4523,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1463049466}
-  - 114: {fileID: 1463049465}
+  - 114: {fileID: 1463049467}
   m_Layer: 0
   m_Name: Starter
   m_TagString: Untagged
@@ -4531,24 +4531,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1463049465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1463049464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c2bd535373e5741b0719bd60c09713, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yellowTeam: {fileID: 908721331}
-  yellowTeamUnits: {fileID: 803318012}
-  yellowTeamStartPosiiton: {fileID: 908721332}
-  blueTeam: {fileID: 1644186065}
-  blueTeamUnits: {fileID: 1686425600}
-  blueTeamStartPosition: {fileID: 1644186066}
-  AIUnitPrefab: {fileID: 194310, guid: eb9de138273e64043a05d6410c5baadc, type: 2}
 --- !u!4 &1463049466
 Transform:
   m_ObjectHideFlags: 0
@@ -4561,6 +4543,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
+--- !u!114 &1463049467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1463049464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 224888f4b091b1e42832c1bb6fde8a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  yellowTeam: {fileID: 908721331}
+  yellowTeamUnits: {fileID: 803318012}
+  yellowTeamStartPosiiton: {fileID: 908721332}
+  blueTeam: {fileID: 1644186065}
+  blueTeamUnits: {fileID: 1686425600}
+  blueTeamStartPosition: {fileID: 1644186066}
+  AIUnitPrefab: {fileID: 194310, guid: eb9de138273e64043a05d6410c5baadc, type: 2}
 --- !u!1 &1473077402
 GameObject:
   m_ObjectHideFlags: 0
