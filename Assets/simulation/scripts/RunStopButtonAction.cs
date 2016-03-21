@@ -5,7 +5,7 @@ using System.Collections;
 public class RunStopButtonAction : MonoBehaviour {
 	public Text runStopButtonText;
 	public bool isRunning;
-	public Starter simulationStarter;
+	public SimulationStarter simulationStarter;
 
 	public void Start() {
 		this.isRunning = false;

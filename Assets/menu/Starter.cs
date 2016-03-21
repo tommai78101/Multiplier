@@ -3,45 +3,51 @@ using System.Collections.Generic;
 using SinglePlayer;
 
 public class Starter : MonoBehaviour {
-	public GameObject yellowTeam;
-	public Transform yellowTeamUnits;
-	public Transform yellowTeamStartPosiiton;
+	public GameObject redTeam;
+	public Transform redTeamUnits;
+	public Transform redTeamStartPosiiton;
 	public GameObject blueTeam;
 	public Transform blueTeamUnits;
 	public Transform blueTeamStartPosition;
 	public GameObject AIUnitPrefab;
 
-	private AIManager yellowTeamAI;
+	private AIManager redTeamAI;
 	private AIManager blueTeamAI;
 	private bool gameMatchStart;
 	private float timePauseCounter;
 
-	public const int YELLOW_TEAM_INDEX = 0;
-	public const int BLUE_TEAM_INDEX = 1;
-
 	public void Start() {
-		this.gameMatchStart = false;
-		InitializeSimulation();
-	}
+		this.timePauseCounter = 1f;
 
-	public void InitializeSimulation() {
-		this.timePauseCounter = 0f;
+		if (this.redTeamUnits != null) {
+			int childs = this.redTeamUnits.transform.childCount;
+			for (int i = childs; i > 0; i--) {
+				MonoBehaviour.Destroy(this.redTeamUnits.transform.GetChild(i-1).gameObject);
+			}
+		}
 
-		if (this.yellowTeam != null) {
+		if (this.blueTeamUnits != null) {
+			int childs = this.blueTeamUnits.transform.childCount;
+			for (int i = childs; i > 0; i--) {
+				MonoBehaviour.Destroy(this.blueTeamUnits.transform.GetChild(i-1).gameObject);
+			}
+		}
+
+		if (this.redTeam != null) {
 			//AI Unit spawning.
 			GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
-			obj.transform.SetParent(this.yellowTeamUnits.transform);
-			obj.transform.position = this.yellowTeamStartPosiiton.position;
+			obj.transform.SetParent(this.redTeamUnits.transform);
+			obj.transform.position = this.redTeamStartPosiiton.position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
 
 			//AI manager spawning.
-			AIManager AImanager = this.yellowTeam.GetComponentInChildren<AIManager>();
+			AIManager AImanager = this.redTeam.GetComponentInChildren<AIManager>();
 			if (AImanager != null) {
-				this.yellowTeamAI = AImanager;
+				this.redTeamAI = AImanager;
 				unit.unitManager = AImanager;
 				unit.teamFaction = AImanager.teamFaction;
-				unit.SetTeamColor(YELLOW_TEAM_INDEX);
-				AImanager.Deactivate();
+				unit.SetTeamColor(0);
+				AImanager.Activate();
 			}
 		}
 
@@ -51,6 +57,7 @@ public class Starter : MonoBehaviour {
 			obj.transform.SetParent(this.blueTeamUnits.transform);
 			obj.transform.position = this.blueTeamUnits.position;
 			AIUnit unit = obj.GetComponent<AIUnit>();
+			unit.SetTeamColor(1);
 
 			//AI manager spawning.
 			AIManager AImanager = this.blueTeam.GetComponentInChildren<AIManager>();
@@ -58,70 +65,51 @@ public class Starter : MonoBehaviour {
 				this.blueTeamAI = AImanager;
 				unit.unitManager = AImanager;
 				unit.teamFaction = AImanager.teamFaction;
-				unit.SetTeamColor(BLUE_TEAM_INDEX);
-				AImanager.Deactivate();
-			}
-		}
-	}
-
-	public void ClearSimulation() {
-		if (this.yellowTeamUnits != null) {
-			int childs = this.yellowTeamUnits.transform.childCount;
-			for (int i = childs; i > 0; i--) {
-				MonoBehaviour.Destroy(this.yellowTeamUnits.transform.GetChild(i - 1).gameObject);
+				unit.SetTeamColor(1);
+				AImanager.Activate();
 			}
 		}
 
-		if (this.blueTeamUnits != null) {
-			int childs = this.blueTeamUnits.transform.childCount;
-			for (int i = childs; i > 0; i--) {
-				MonoBehaviour.Destroy(this.blueTeamUnits.transform.GetChild(i - 1).gameObject);
-			}
-		}
-	}
-
-	public void StartSimulation() {
-		Debug.Log("Starting simulation");
 		this.gameMatchStart = true;
 	}
 
-	public void StopSimulation() {
-		Debug.Log("Stopping simulation");
-		this.gameMatchStart = false;
-		this.ClearSimulation();
-		this.InitializeSimulation();
-	}
-
 	public void FixedUpdate() {
-		if (!this.gameMatchStart) {
-			return;
-		}
+		if (this.gameMatchStart) {
+			if (this.redTeamAI != null) {
+				if (this.redTeamUnits.transform.childCount > 0) {
+					this.redTeamAI.Activate();
+				}
+			}
+			if (this.blueTeamAI != null) {
+				if (this.blueTeamUnits.transform.childCount > 0) {
+					this.blueTeamAI.Activate();
+				}
+			}
 
-		if (this.timePauseCounter > 0f) {
-			this.timePauseCounter -= Time.deltaTime;
-			return;
-		}
+			if (this.redTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
+				this.redTeamAI.Deactivate();
+				this.blueTeamAI.Deactivate();
 
-		Debug.Log("Simulation should be running.");
+				int childs = this.redTeamUnits.transform.childCount;
+				for (int i = childs; i > 0; i--) {
+					MonoBehaviour.Destroy(this.redTeamUnits.transform.GetChild(i-1).gameObject);
+				}
 
-		if (this.yellowTeamAI != null) {
-			if (this.yellowTeamUnits.transform.childCount > 0) {
-				this.yellowTeamAI.Activate();
+				childs = this.blueTeamUnits.transform.childCount;
+				for (int i = childs; i > 0; i--) {
+					MonoBehaviour.Destroy(this.blueTeamUnits.transform.GetChild(i-1).gameObject);
+				}
+
+				this.gameMatchStart = false;
 			}
 		}
-		if (this.blueTeamAI != null) {
-			if (this.blueTeamUnits.transform.childCount > 0) {
-				this.blueTeamAI.Activate();
+		else {
+			if (this.timePauseCounter > 0f) {
+				this.timePauseCounter -= Time.deltaTime;
 			}
-		}
-
-		if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
-			this.yellowTeamAI.Deactivate();
-			this.blueTeamAI.Deactivate();
-
-			ClearSimulation();
-			this.timePauseCounter = 1f;
-			this.gameMatchStart = false;
+			else {
+				this.Start();
+			}
 		}
 	}
 }

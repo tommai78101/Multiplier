@@ -1013,6 +1013,10 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 648837855}
+--- !u!4 &653880807 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 456306, guid: 7dba66ed7d0b6b0489dbf104df8c80cb, type: 2}
+  m_PrefabInternal: {fileID: 37007654}
 --- !u!1 &786610930
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,9 +1578,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6c2bd535373e5741b0719bd60c09713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  yellowTeam: {fileID: 0}
-  yellowTeamUnits: {fileID: 0}
-  yellowTeamStartPosiiton: {fileID: 0}
+  redTeam: {fileID: 1922269193}
+  redTeamUnits: {fileID: 653880807}
+  redTeamStartPosiiton: {fileID: 908721332}
   blueTeam: {fileID: 1644186065}
   blueTeamUnits: {fileID: 1686425600}
   blueTeamStartPosition: {fileID: 1644186066}
@@ -1977,6 +1981,10 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: 1}
   m_UseGraphicAlpha: 1
+--- !u!1 &1922269193 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 142998, guid: 7dba66ed7d0b6b0489dbf104df8c80cb, type: 2}
+  m_PrefabInternal: {fileID: 37007654}
 --- !u!1 &2068827534
 GameObject:
   m_ObjectHideFlags: 0
