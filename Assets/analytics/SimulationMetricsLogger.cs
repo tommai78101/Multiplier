@@ -300,6 +300,7 @@ namespace Analytics {
 
 			sB.AppendLine();
 			sB.AppendLine("Simulation Game Metrics Report");
+			sB.AppendLine("(Please copy and paste the report to any text editor in order to save the report.)");
 
 			for (int index = 0; index < this.teamMetrics.Count; index++) {
 				sB.AppendLine("------------------------------------------------------------------");
