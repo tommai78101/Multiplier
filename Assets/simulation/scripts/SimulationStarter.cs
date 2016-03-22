@@ -15,6 +15,7 @@ namespace Simulation {
 		private AIManager yellowTeamAI;
 		private AIManager blueTeamAI;
 		private bool gameMatchStart;
+		private bool gamePaused;
 		private float timePauseCounter;
 
 		public const int YELLOW_TEAM_INDEX = 0;
@@ -91,14 +92,27 @@ namespace Simulation {
 			this.InitializeSimulation();
 		}
 
+		public void ContinueSimulation() {
+			this.timePauseCounter = 1f;
+			this.ClearSimulation();
+			this.gameMatchStart = true;
+			this.gamePaused = true;
+		}
+
 		public void FixedUpdate() {
 			if (!this.gameMatchStart) {
 				return;
 			}
 
-			if (this.timePauseCounter > 0f) {
-				this.timePauseCounter -= Time.deltaTime;
-				return;
+			if (this.gamePaused) {
+				if (this.timePauseCounter > 0f) {
+					this.timePauseCounter -= Time.deltaTime;
+					return;
+				}
+				else {
+					this.gamePaused = false;
+					this.InitializeSimulation();
+				}
 			}
 
 			if (this.yellowTeamAI != null) {
@@ -115,10 +129,7 @@ namespace Simulation {
 			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
 				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
-
-				ClearSimulation();
-				this.timePauseCounter = 1f;
-				this.gameMatchStart = false;
+				ContinueSimulation();
 			}
 		}
 	}
