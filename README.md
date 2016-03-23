@@ -2,13 +2,7 @@
 
 ![](https://github.com/tommai78101/Unity-UNET-RTS/raw/testing/demo.gif)
 
-<style type="text/css">
-	.playable {
-		font-size: 20dp;
-	}
-</style>
-
-[<span class="playable">Playable demo.</span>](http://tom-mai78101.itch.io/multiplier) (Requires browsers that support Unity Web Player)
+[<span style="font-size:20dp;">Playable demo.</span>](http://tom-mai78101.itch.io/multiplier) (Requires browsers that support Unity Web Player)
 
 ## Disclaimer:
 
