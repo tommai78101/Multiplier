@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using SinglePlayer;
+using Analytics;
 
 namespace Simulation {
 	public class SimulationStarter : MonoBehaviour {
@@ -91,29 +92,36 @@ namespace Simulation {
 
 		public void StartSimulation() {
 			this.gameMatchStart = true;
-			this.sessionNumber++;
-			Debug.Log("Session Number has increased - INITIAL PHASE.");
+			this.sessionNumber = 1;
+			SimulationMetricsLogger.ResetLogger();
+			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
+			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 		}
 
 		public void StopSimulation() {
 			this.gameMatchStart = false;
-			this.sessionNumber = 0;
 			this.ClearSimulation();
 			this.InitializeSimulation();
+			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
+			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 		}
 
 		public void ContinueSimulation() {
 			this.timePauseCounter = 1f;
 			this.sessionNumber++;
 			this.sessionNumberText.text = this.sessionNumber.ToString();
-			Debug.Log("Session Number has increased.");
 			this.ClearSimulation();
 			this.gameMatchStart = true;
-			//this.gamePaused = true;
 		}
 
 		public void PauseSimulation() {
 			this.gamePaused = !this.gamePaused;
+			if (this.gamePaused) {
+				SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
+			}
+			else {
+				SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
+			}
 		}
 
 		public void FixedUpdate() {
@@ -157,7 +165,6 @@ namespace Simulation {
 			}
 
 			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
-				Debug.Log("TEST");
 				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
 				ContinueSimulation();

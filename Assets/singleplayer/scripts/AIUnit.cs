@@ -14,7 +14,7 @@ namespace SinglePlayer {
 	};
 
 	public class AIUnit : BaseUnit {
-		public State currentState;
+		public bool isSplitting;
 		public float splitFactor;
 		public float mergeFactor;
 		public float attackFactor;
@@ -26,14 +26,15 @@ namespace SinglePlayer {
 		public int currentHealth;
 		[Range(0, 100)]
 		public int maxHealth;
-		public bool isSplitting;
 		public int teamColorValue;
+		public int level;
+		public int previousLevel;
+		public State currentState;
 		public EnumTeam teamFaction;
 		public AIManager unitManager;
 		public AILineOfSight lineOfSight;
 		public AIAttackRange attackRange;
-		public int level;
-		public int previousLevel;
+		public SimulationManager simulationManager;
 
 		private float splitCounter;
 		private float mergeCounter;
@@ -198,6 +199,8 @@ namespace SinglePlayer {
 						if (this.agent != null) {
 							this.agent.ResetPath();
 						}
+						//EnumTeam index value is constant: Player = 0, Computer = 1
+						SimulationMetricsLogger.Increment(GameMetricOptions.Splits, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					}
 					break;
 				case State.Scout:
@@ -222,6 +225,8 @@ namespace SinglePlayer {
 					}
 					else {
 						this.currentState = State.Idle;
+						//EnumTeam index value is constant: Player = 0, Computer = 1
+						SimulationMetricsLogger.Increment(GameMetricOptions.Merges, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					}
 					break;
 				case State.Attack:
@@ -245,10 +250,16 @@ namespace SinglePlayer {
 										playerUnit.CmdTakeDamage(playerUnit.gameObject, playerUnit.currentHealth - 1);
 										break;
 									}
+
+									//EnumTeam index value is constant: Player = 0, Computer = 1
+									SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
+									SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 								}
 							}
 						}
 					}
+					//EnumTeam index value is constant: Player = 0, Computer = 1
+					SimulationMetricsLogger.Increment(GameMetricOptions.BattleEngagementTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					break;
 			}
 
@@ -352,6 +363,9 @@ namespace SinglePlayer {
 			this.recoveryCounter = 0f;
 			if (this.currentHealth <= 0) {
 				MonoBehaviour.Destroy(this.gameObject);
+				//EnumTeam index value is constant: Player = 0, Computer = 1
+				SimulationMetricsLogger.Increment(GameMetricOptions.Death, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
+				SimulationMetricsLogger.Increment(GameMetricOptions.Kills, (this.teamFaction != EnumTeam.Player) ? 0 : 1);
 			}
 		}
 

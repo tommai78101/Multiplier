@@ -100,6 +100,10 @@ namespace Analytics {
 		//---------------------   STATIC METHODS   --------------------------------
 
 		public static void Increment(GameMetricOptions options, int index) {
+			if (SimulationMetricsLogger.instance == null) {
+				return;
+			}
+
 			if (!(SimulationMetricsLogger.instance.simulationMetricsLoggerStart || SimulationMetricsLogger.instance.gameStartFlag)) {
 				Debug.LogWarning("Cannot increment. Game Metrics Logger isn't completely enabled.");
 				return;
@@ -136,6 +140,10 @@ namespace Analytics {
 		}
 
 		public static void Decrement(GameMetricOptions options, int index) {
+			if (SimulationMetricsLogger.instance == null) {
+				return;
+			}
+
 			//Check if logger is activated.
 			if (!(SimulationMetricsLogger.instance.simulationMetricsLoggerStart || SimulationMetricsLogger.instance.gameStartFlag)) {
 				Debug.LogWarning("Cannot decrement. Game Metrics Logger isn't completely enabled.");
@@ -253,36 +261,40 @@ namespace Analytics {
 			};
 			if (this.teamMetrics == null) {
 				this.teamMetrics = new List<TeamMetric>();
-			}
+				for (int i = 0; i < teamLabels.Length; i++) {
+					TeamMetric metric = new TeamMetric();
 
-			for (int i = 0; i < teamLabels.Length; i++) {
-				TeamMetric metric = new TeamMetric();
+					//Integers
+					metric.levelDifficulty = -1;
+					metric.numberOfAttacks = 0;
+					metric.numberOfDeaths = 0;
+					metric.numberOfKills = 0;
+					metric.numberOfMerges = 0;
+					metric.numberOfSplits = 0;
 
-				//Integers
-				metric.levelDifficulty = -1;
-				metric.numberOfAttacks = 0;
-				metric.numberOfDeaths = 0;
-				metric.numberOfKills = 0;
-				metric.numberOfMerges = 0;
-				metric.numberOfSplits = 0;
+					//Floats
+					metric.totalGameTimeSinceEpoch = 0f;
+					metric.totalGameTime = 0f;
+					metric.totalBattleEngagementTime = 0f;
+					metric.totalAttackTime = 0f;
 
-				//Floats
-				metric.totalGameTimeSinceEpoch = 0f;
-				metric.totalGameTime = 0f;
-				metric.totalBattleEngagementTime = 0f;
-				metric.totalAttackTime = 0f;
+					//Strings
+					metric.teamName = teamLabels[i];
+					metric.difficultyEquations = "N/A (Not used.)";
 
-				//Strings
-				metric.teamName = teamLabels[i];
-				metric.difficultyEquations = "N/A (Not used.)";
-
-				this.teamMetrics.Add(metric);
+					this.teamMetrics.Add(metric);
+				}
 			}
 
 			//Flags and class members
 			this.outputField = this.GetComponentInChildren<InputField>();
 			this.outputField.readOnly = true;
-			this.stringBuilder = new StringBuilder();
+			if (this.stringBuilder == null) {
+				this.stringBuilder = new StringBuilder();
+			}
+			else {
+				this.stringBuilder.Length = 0;
+			}
 			this.gameMetricsLogGroup = this.GetComponent<CanvasGroup>();
 			this.simulationMetricsLoggerStart = false;
 			this.gameStartFlag = false;
@@ -313,7 +325,7 @@ namespace Analytics {
 			sB.AppendLine("Total Sessions: " + this.simulationManager.simulationStarter.sessionNumberText.text);
 			sB.AppendLine();
 
-
+			Debug.Log("Team Metrics Count: " + this.teamMetrics.Count);
 			for (int index = 0; index < this.teamMetrics.Count; index++) {
 				sB.AppendLine("------------------------------------------------------------------");
 				sB.AppendLine();
