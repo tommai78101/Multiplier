@@ -39,13 +39,15 @@ You may play against yourself, or have someone to join you on another computer. 
 
 Player 1 is the host of the game. Player 2 is the client of the game.
 
-Player 1 instructions (Host):   
+**Player 1 instructions (Host):**   
+
 * Press "Enable Match Maker".
 * In the input field, give your game session a name. For example, "default".
 * Press "Create Internet Match".
 * Wait for anyone to join. Game should start immediately afterwards.
 
-Player 2 instructions (Client):    
+**Player 2 instructions (Client):**    
+
 * Press "Enable Match Maker".   
 * Press "Find Internet Match".  
 * Near the top, if the game has found an internet match, it will display, "Join Match: [Game Session Name]". Press any one of them to join the game.   
