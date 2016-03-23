@@ -2,7 +2,7 @@
 
 ![](https://github.com/tommai78101/Unity-UNET-RTS/raw/testing/demo.gif)
 
-[Playable demo.](http://tom-mai78101.itch.io/multiplier)
+[<h1>Playable demo.</h1>](http://tom-mai78101.itch.io/multiplier)
 
 ## Disclaimer:
 
