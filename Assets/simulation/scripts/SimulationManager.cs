@@ -45,6 +45,9 @@ namespace Simulation {
 		public Leaderboard yellowTeamLeaderboard;
 		public Leaderboard blueTeamLeaderboard;
 
+		//Simulation Starter
+		public SimulationStarter simulationStarter;
+
 		public void Start() {
 			Initialization();
 		}
@@ -202,6 +205,9 @@ namespace Simulation {
 					UpdateLevelInfo(toggle.value, equation);
 				}
 			}
+			this.simulationStarter.StopSimulation();
+			this.simulationStarter.ClearSimulation();
+			this.simulationStarter.InitializeSimulation();
 		}
 
 		public void UpdateLevelInfo(int toggleValue, string equation) {
@@ -283,6 +289,7 @@ namespace Simulation {
 			flag |= this.unitAttributeToggleGroup == null;
 			flag |= this.equationInputField == null;
 			flag |= this.levelInfoPrefab == null;
+			flag |= this.simulationStarter == null;
 			if (flag) {
 				Debug.LogError("One of the game objects is null. Please check.");
 			}

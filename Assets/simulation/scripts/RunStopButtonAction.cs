@@ -14,15 +14,23 @@ public class RunStopButtonAction : MonoBehaviour {
 	}
 
 	public void Toggle() {
-		if (!this.isRunning) {
-			this.runStopButtonText.text = "Stop Simulation";
-			this.isRunning = true;
-			this.simulationStarter.StartSimulation();
+		if (this.isRunning) {
+			StopSimulation();
 		}
 		else {
-			this.runStopButtonText.text = "Start Simulation";
-			this.isRunning = false;
-			this.simulationStarter.StopSimulation();
+			StartSimulation();
 		}
+	}
+
+	public void StopSimulation() {
+		this.runStopButtonText.text = "Start Simulation";
+		this.isRunning = false;
+		this.simulationStarter.StopSimulation();
+	}
+
+	public void StartSimulation() {
+		this.runStopButtonText.text = "Stop Simulation";
+		this.isRunning = true;
+		this.simulationStarter.StartSimulation();
 	}
 }

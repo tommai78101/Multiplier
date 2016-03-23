@@ -190,7 +190,7 @@ namespace SinglePlayer {
 							unit.level++;
 
 							//TODO: Use the attribute manager to manage the attributes after merging.
-							TierUpgrade tier = this.aiAttributeManager.tiers[unit.level];
+							TierUpgrade tier = this.aiAttributeManager.tiers[unit.level-1];
 
 							//float temp = unit.currentHealth;
 							unit.currentHealth = (int) tier.health; // (temp * tier.health);
