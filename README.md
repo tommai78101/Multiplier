@@ -76,7 +76,7 @@ Note: Singleplayer controls are very similar.
 
 ### - v0.4.1-unet:
 
-​* Simulation now reflects upon game metrics correctly.   
+* Simulation now reflects upon game metrics correctly.   
 * Now takes into account how many sessions in the simulation.   
 
 ### - v0.4-unet:
