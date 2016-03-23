@@ -122,6 +122,7 @@ namespace MultiPlayer {
 		public Rect selectionBox;
 		public Camera minimapCamera;
 		public GameObject starterObjects;
+		public UnitAttributes unitAttributesManager;
 		public static NewSpawner Instance;
 
 		public bool isSelecting;
@@ -182,6 +183,13 @@ namespace MultiPlayer {
 				//NOTE(Thompson): Setting the renderer to a variable, so I can later on check to see
 				//if the renderer is disabled or not. If disabled, disallow unit selection.
 				this.selectionBoxRenderer = renderer;
+			}
+
+			if (this.unitAttributesManager == null) {
+				this.unitAttributesManager = GameObject.FindObjectOfType<UnitAttributes>();
+				if (this.unitAttributesManager == null) {
+					Debug.LogError("Unable to get unit attributes manager.");
+				}
 			}
 
 			this.selectionBox = new Rect();
@@ -259,7 +267,7 @@ namespace MultiPlayer {
 			if (!changes.isInitialized) {
 				changes.isInitialized = false;
 				changes.teamColor = color;
-				changes.teamFactionID = (int) (Random.value * 100f); //This is never to be changed.
+				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
 			}
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
@@ -462,7 +470,15 @@ namespace MultiPlayer {
 									this.changes = owner.CurrentProperty();
 									changes.isMerging = true;
 									changes.isSelected = false;
+
 									changes.newLevel++;
+									changes.newMaxHealth = this.unitAttributesManager.healthPrefabList[changes.newLevel];
+									changes.newAttack = this.unitAttributesManager.attackPrefabList[changes.newLevel];
+									changes.newSpeed = this.unitAttributesManager.speedPrefabList[changes.newLevel];
+									changes.newSplit = this.unitAttributesManager.splitPrefabFactor;
+									changes.newMerge = this.unitAttributesManager.mergePrefabList[changes.newLevel];
+									changes.newAttackCooldown = this.unitAttributesManager.attackCooldownPrefabList[changes.newLevel];
+
 									CmdUpdateUnitProperty(owner.gameObject, this.changes);
 									CmdUpdateUnitProperty(merge.gameObject, this.changes);
 									CmdMergeUpdate(owner.gameObject, merge.gameObject, this.changes);

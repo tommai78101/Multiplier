@@ -19,6 +19,11 @@ namespace MultiPlayer {
 		public int level;
 		public int teamFactionID;
 		public float scalingFactor;
+		public float attackFactor;
+		public float speedFactor;
+		public float splitFactor;
+		public float mergeFactor;
+		public float attackCooldownFactor;
 		public Color teamColor;
 		public Vector3 mouseTargetPosition;
 		public Vector3 oldMouseTargetPosition;
@@ -42,6 +47,13 @@ namespace MultiPlayer {
 		public int heal;
 		public int newLevel;
 		public int teamFactionID;
+		public float newMaxHealth;
+		public float newCurrentHealth;
+		public float newAttack;
+		public float newSpeed;
+		public float newSplit;
+		public float newMerge;
+		public float newAttackCooldown;
 		public Vector3 mousePosition;
 		public Vector3 enemySeenPosition;
 		public Vector3 enemyHitPosition;
@@ -59,6 +71,13 @@ namespace MultiPlayer {
 			this.damage = 0;
 			this.heal = 0;
 			this.newLevel = 1;
+			this.newMaxHealth = 3;
+			this.newCurrentHealth = 3;
+			this.newAttack = 1f;
+			this.newSpeed = 1f;
+			this.newSplit = 1f;
+			this.newMerge = 1f;
+			this.newAttackCooldown = 1f;
 			this.mousePosition = Vector3.one * -9999;
 			this.teamColor = Color.gray;
 			this.enemySeenPosition = this.mousePosition;
@@ -78,6 +97,8 @@ namespace MultiPlayer {
 		public UpdateProperties updateProperties;
 		public NavMeshAgent agent;
 		public GameObject selectionRing;
+		public Camera minimapCamera;
+		public Vector3 viewportPosition;
 
 		[SerializeField]
 		private float recoveryCounter;
@@ -184,6 +205,15 @@ namespace MultiPlayer {
 			pro.isRecoveryEnabled = changes.isRecoveryEnabled;
 			pro.targetUnit = changes.targetUnit;
 
+			pro.currentHealth = (int) changes.newCurrentHealth;
+			pro.maxHealth = (int) changes.newMaxHealth;
+			pro.attackFactor = changes.newAttack;
+			pro.speedFactor = changes.newSpeed;
+			pro.splitFactor = changes.newSplit;
+			pro.mergeFactor = changes.newMerge;
+			pro.attackCooldownFactor = changes.newAttackCooldown;
+
+
 			pro.teamColor = changes.teamColor;
 			Renderer renderer = this.GetComponent<Renderer>();
 			renderer.material.SetColor("_TeamColor", changes.teamColor);
@@ -202,6 +232,13 @@ namespace MultiPlayer {
 			changes.isAttackCooldownEnabled = this.properties.isAttackCooldownEnabled;
 			changes.isRecoveryEnabled = this.properties.isRecoveryEnabled;
 			changes.newLevel = this.properties.level;
+			changes.newCurrentHealth = this.properties.currentHealth;
+			changes.newMaxHealth = this.properties.maxHealth;
+			changes.newAttack = this.properties.attackFactor;
+			changes.newSpeed = this.properties.speedFactor;
+			changes.newSplit = this.properties.splitFactor;
+			changes.newMerge = this.properties.mergeFactor;
+			changes.newAttackCooldown = this.properties.attackCooldownFactor;
 			changes.mousePosition = this.properties.mouseTargetPosition;
 			changes.enemySeenPosition = this.properties.enemySeenTargetPosition;
 			changes.targetUnit = this.properties.targetUnit;
@@ -232,6 +269,34 @@ namespace MultiPlayer {
 
 		public Color GetTeamColor() {
 			return this.properties.teamColor;
+		}
+
+		public void OnGUI() {
+			if (this.minimapCamera != null) {
+				GUIStyle style = new GUIStyle();
+				style.normal.textColor = Color.black;
+				style.alignment = TextAnchor.MiddleCenter;
+				Vector3 healthPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+				this.viewportPosition = Camera.main.ScreenToViewportPoint(new Vector3(healthPosition.x, healthPosition.y + 30f));
+				if (!this.minimapCamera.rect.Contains(this.viewportPosition)) {
+					Rect healthRect = new Rect(healthPosition.x - 50f, (Screen.height - healthPosition.y) - 45f, 100f, 25f);
+					GUI.Label(healthRect, this.properties.currentHealth.ToString() + "/" + this.properties.maxHealth.ToString(), style);
+				}
+			}
+			else {
+				GameObject obj = GameObject.FindGameObjectWithTag("Minimap");
+				if (obj != null) {
+					if (obj.activeSelf || obj.activeInHierarchy) {
+						this.minimapCamera = obj.GetComponent<Camera>();
+						if (this.minimapCamera == null) {
+							return;
+						}
+						if (!this.minimapCamera.isActiveAndEnabled || !this.minimapCamera.enabled) {
+							this.minimapCamera.enabled = true;
+						}
+					}
+				}
+			}
 		}
 
 		//*** ----------------------------   PRIVATE METHODS  -------------------------

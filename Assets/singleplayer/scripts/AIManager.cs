@@ -192,13 +192,13 @@ namespace SinglePlayer {
 							//TODO: Use the attribute manager to manage the attributes after merging.
 							TierUpgrade tier = this.aiAttributeManager.tiers[unit.level];
 
-							float temp = unit.currentHealth;
-							unit.currentHealth = (int) (temp * tier.health);
-							temp = unit.maxHealth;
-							unit.maxHealth = (int) (temp * tier.health);
+							//float temp = unit.currentHealth;
+							unit.currentHealth = (int) tier.health; // (temp * tier.health);
+							//temp = unit.maxHealth;
+							unit.maxHealth = (int) tier.health; //(temp * tier.health);
 
-							unit.attackFactor *= tier.attack;
-							unit.mergeFactor *= tier.merge;
+							unit.attackFactor = tier.attack;
+							unit.mergeFactor = tier.merge;
 							unit.attackCooldownFactor = tier.attackCooldown;
 							unit.splitFactor = tier.split;
 							unit.mergeFactor = tier.merge;
