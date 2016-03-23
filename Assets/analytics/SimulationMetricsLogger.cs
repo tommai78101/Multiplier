@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Text;
 using System.Collections.Generic;
+using Simulation;
 
 namespace Analytics {
 	public struct TeamMetric {
@@ -25,6 +26,8 @@ namespace Analytics {
 		public InputField outputField;
 		public CanvasGroup gameMetricsLogGroup;
 		public StringBuilder stringBuilder;
+		public SimulationManager simulationManager;
+
 		public static SimulationMetricsLogger instance;
 
 		//Game Metrics for each team
@@ -284,6 +287,10 @@ namespace Analytics {
 			this.simulationMetricsLoggerStart = false;
 			this.gameStartFlag = false;
 			this.isInputEnabled = false;
+			this.simulationManager = GameObject.FindObjectOfType<SimulationManager>();
+			if (this.simulationManager == null) {
+				Debug.LogError("Couldn't find simulation manager.");
+			}
 
 			//Canvas Group
 			DisableCanvasGroup();
@@ -301,6 +308,11 @@ namespace Analytics {
 			sB.AppendLine();
 			sB.AppendLine("Simulation Game Metrics Report");
 			sB.AppendLine("(Please copy and paste the report to any text editor in order to save the report.)");
+			sB.AppendLine("------------------------------------------------------------------");
+			sB.AppendLine();
+			sB.AppendLine("Total Sessions: " + this.simulationManager.simulationStarter.sessionNumberText.text);
+			sB.AppendLine();
+
 
 			for (int index = 0; index < this.teamMetrics.Count; index++) {
 				sB.AppendLine("------------------------------------------------------------------");
