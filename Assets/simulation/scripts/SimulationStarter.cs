@@ -1,34 +1,41 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using SinglePlayer;
 
 namespace Simulation {
 	public class SimulationStarter : MonoBehaviour {
-		public GameObject yellowTeam;
 		public Transform yellowTeamUnits;
 		public Transform yellowTeamStartPosiiton;
-		public GameObject blueTeam;
 		public Transform blueTeamUnits;
 		public Transform blueTeamStartPosition;
+		public GameObject yellowTeam;
+		public GameObject blueTeam;
 		public GameObject AIUnitPrefab;
+		public Text sessionNumberText;
 
+		[SerializeField]
+		private bool gameMatchStart;
+		[SerializeField]
+		private bool gamePaused;
+		[SerializeField]
+		private int sessionNumber;
+		[SerializeField]
+		private float timePauseCounter;
 		private AIManager yellowTeamAI;
 		private AIManager blueTeamAI;
-		private bool gameMatchStart;
-		private bool gamePaused;
-		private float timePauseCounter;
 
 		public const int YELLOW_TEAM_INDEX = 0;
 		public const int BLUE_TEAM_INDEX = 1;
 
 		public void Start() {
 			this.gameMatchStart = false;
+			this.sessionNumber = 0;
+			this.timePauseCounter = 0f;
 			InitializeSimulation();
 		}
 
 		public void InitializeSimulation() {
-			this.timePauseCounter = 0f;
-
 			if (this.yellowTeam != null) {
 				//AI Unit spawning.
 				GameObject obj = MonoBehaviour.Instantiate(this.AIUnitPrefab) as GameObject;
@@ -84,34 +91,57 @@ namespace Simulation {
 
 		public void StartSimulation() {
 			this.gameMatchStart = true;
+			this.sessionNumber++;
+			Debug.Log("Session Number has increased - INITIAL PHASE.");
 		}
 
 		public void StopSimulation() {
 			this.gameMatchStart = false;
+			this.sessionNumber = 0;
 			this.ClearSimulation();
 			this.InitializeSimulation();
 		}
 
 		public void ContinueSimulation() {
 			this.timePauseCounter = 1f;
+			this.sessionNumber++;
+			this.sessionNumberText.text = this.sessionNumber.ToString();
+			Debug.Log("Session Number has increased.");
 			this.ClearSimulation();
 			this.gameMatchStart = true;
-			this.gamePaused = true;
+			//this.gamePaused = true;
+		}
+
+		public void PauseSimulation() {
+			this.gamePaused = !this.gamePaused;
 		}
 
 		public void FixedUpdate() {
+			if (this.sessionNumberText != null) {
+				this.sessionNumberText.text = this.sessionNumber.ToString();
+			}
+
 			if (!this.gameMatchStart) {
 				return;
 			}
 
 			if (this.gamePaused) {
-				if (this.timePauseCounter > 0f) {
-					this.timePauseCounter -= Time.deltaTime;
+				this.timePauseCounter = 1f;
+				this.yellowTeamAI.Deactivate();
+				this.blueTeamAI.Deactivate();
+				return;
+			}
+
+			if (this.timePauseCounter > 0f) {
+				this.timePauseCounter -= Time.deltaTime;
+				return;
+			}
+			else {
+				if (this.yellowTeamUnits.transform.childCount <= 0 && this.blueTeamUnits.transform.childCount <= 0) {
+					InitializeSimulation();
+					this.yellowTeamAI.Activate();
+					this.blueTeamAI.Activate();
 					return;
-				}
-				else {
-					this.gamePaused = false;
-					this.InitializeSimulation();
 				}
 			}
 
@@ -127,6 +157,7 @@ namespace Simulation {
 			}
 
 			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
+				Debug.Log("TEST");
 				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
 				ContinueSimulation();
