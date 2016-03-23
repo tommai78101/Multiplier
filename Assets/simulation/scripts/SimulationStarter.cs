@@ -167,6 +167,10 @@ namespace Simulation {
 			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
 				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
+
+				SimulationMetricsLogger.Increment(GameMetricOptions.Wins, (this.yellowTeamUnits.transform.childCount > 0) ? 0 : 1);
+				SimulationMetricsLogger.Increment(GameMetricOptions.Losses, (this.yellowTeamUnits.transform.childCount <= 0) ? 0 : 1);
+
 				ContinueSimulation();
 			}
 		}

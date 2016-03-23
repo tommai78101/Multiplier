@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Analytics {
 	public enum GameMetricOptions {
-		Death, Splits, Merges, Kills, Attacks, AttackTime, BattleEngagementTime
+		Death, Splits, Merges, Kills, Attacks, AttackTime, BattleEngagementTime, Wins, Losses
 	}
 
 	public enum GameLoggerOptions {

@@ -12,6 +12,8 @@ namespace Analytics {
 		public int numberOfMerges;
 		public int numberOfKills;
 		public int numberOfAttacks;
+		public int winCount;
+		public int lossCount;
 		public float totalGameTimeSinceEpoch;
 		public float totalGameTime;
 		public float totalAttackTime;
@@ -132,6 +134,12 @@ namespace Analytics {
 				case GameMetricOptions.BattleEngagementTime:
 					metric.totalBattleEngagementTime += Time.deltaTime;
 					break;
+				case GameMetricOptions.Wins:
+					metric.winCount++;
+					break;
+				case GameMetricOptions.Losses:
+					metric.lossCount++;
+					break;
 				default:
 					Debug.LogError("Increment(): Invalid Game Metric Options. Please double check. Value: " + options.ToString());
 					break;
@@ -173,6 +181,12 @@ namespace Analytics {
 					break;
 				case GameMetricOptions.BattleEngagementTime:
 					metric.totalBattleEngagementTime -= Time.deltaTime;
+					break;
+				case GameMetricOptions.Wins:
+					metric.winCount--;
+					break;
+				case GameMetricOptions.Losses:
+					metric.lossCount--;
 					break;
 				default:
 					Debug.LogError("Decrement(): Invalid Game Metric Options. Please double check. Value: " + options.ToString());
@@ -261,7 +275,9 @@ namespace Analytics {
 			};
 			if (this.teamMetrics == null) {
 				this.teamMetrics = new List<TeamMetric>();
-				for (int i = 0; i < teamLabels.Length; i++) {
+			}
+			for (int i = 0; i < teamLabels.Length; i++) {
+				if (this.teamMetrics.Count < teamLabels.Length) {
 					TeamMetric metric = new TeamMetric();
 
 					//Integers
@@ -271,6 +287,8 @@ namespace Analytics {
 					metric.numberOfKills = 0;
 					metric.numberOfMerges = 0;
 					metric.numberOfSplits = 0;
+					metric.winCount = 0;
+					metric.lossCount = 0;
 
 					//Floats
 					metric.totalGameTimeSinceEpoch = 0f;
@@ -283,6 +301,9 @@ namespace Analytics {
 					metric.difficultyEquations = "N/A (Not used.)";
 
 					this.teamMetrics.Add(metric);
+				}
+				else {
+					ResetMetric(teamLabels[i], i);
 				}
 			}
 
@@ -306,6 +327,32 @@ namespace Analytics {
 
 			//Canvas Group
 			DisableCanvasGroup();
+		}
+
+		private void ResetMetric(string teamLabel, int index) {
+			TeamMetric metric = this.teamMetrics[index];
+
+			//Integers
+			metric.levelDifficulty = -1;
+			metric.numberOfAttacks = 0;
+			metric.numberOfDeaths = 0;
+			metric.numberOfKills = 0;
+			metric.numberOfMerges = 0;
+			metric.numberOfSplits = 0;
+			metric.winCount = 0;
+			metric.lossCount = 0;
+
+			//Floats
+			metric.totalGameTimeSinceEpoch = 0f;
+			metric.totalGameTime = 0f;
+			metric.totalBattleEngagementTime = 0f;
+			metric.totalAttackTime = 0f;
+
+			//Strings
+			metric.teamName = teamLabel;
+			metric.difficultyEquations = "N/A (Not used.)";
+
+			this.teamMetrics[index] = metric;
 		}
 
 		private void ToggleCanvasGroup() {
@@ -342,6 +389,9 @@ namespace Analytics {
 				sB.AppendLine("Total Attacks: " + log.numberOfAttacks);
 				sB.AppendLine("Total Splits: " + log.numberOfSplits);
 				sB.AppendLine("Total Merges: " + log.numberOfMerges);
+				sB.AppendLine();
+				sB.AppendLine("Wins: " + log.winCount);
+				sB.AppendLine("Losses: " + log.lossCount);
 				sB.AppendLine();
 				sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
 				sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");

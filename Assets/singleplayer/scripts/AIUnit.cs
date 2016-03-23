@@ -242,18 +242,20 @@ namespace SinglePlayer {
 										this.attackCooldownCounter = 1f;
 										this.targetEnemy = aiUnit;
 										aiUnit.TakeDamage(this.attackFactor);
+										//EnumTeam index value is constant: Player = 0, Computer = 1
+										SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
+										SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 										break;
 									}
 									if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
 										this.attackCooldownCounter = 1f;
 										this.targetEnemy = playerUnit;
 										playerUnit.CmdTakeDamage(playerUnit.gameObject, playerUnit.currentHealth - 1);
+										//EnumTeam index value is constant: Player = 0, Computer = 1
+										SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
+										SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 										break;
 									}
-
-									//EnumTeam index value is constant: Player = 0, Computer = 1
-									SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
-									SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 								}
 							}
 						}
