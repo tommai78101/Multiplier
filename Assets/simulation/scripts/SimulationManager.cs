@@ -219,22 +219,22 @@ namespace Simulation {
 						Debug.LogError("Invalid toggle value: " + toggleValue + ". Please check.");
 						return;
 					case 0:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
 						break;
 					case 1:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
 						break;
 					case 2:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
 						break;
 					case 3:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
 						break;
 					case 4:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
 						break;
 					case 5:
-						answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
 						break;
 				}
 				UpdateLevelInfoIteration(i, answer, previousAnswer);
@@ -352,11 +352,13 @@ namespace Simulation {
 		private void SetDefaultLevelInfo() {
 			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
 				GameObject obj = null;
+				bool sameObjectCheck = false;
 				if (this.contentPane.transform.childCount < Attributes.MAX_NUM_OF_LEVELS) {
 					obj = MonoBehaviour.Instantiate(this.levelInfoPrefab);
 				}
 				else {
 					obj = this.contentPane.GetChild(i).gameObject;
+					sameObjectCheck = true;
 				}
 				LevelInfo levelInfo = obj.GetComponent<LevelInfo>();
 				levelInfo.level = i + 1;
@@ -365,10 +367,18 @@ namespace Simulation {
 				levelInfo.UpdateText();
 
 				levelInfo.transform.SetParent(this.contentPane.transform);
-				levelInfo.transform.position = this.contentPane.transform.position;
 				RectTransform rectTransform = levelInfo.GetComponent<RectTransform>();
+				Vector3 pos;
+				if (sameObjectCheck) {
+					pos = this.contentPane.GetChild(i).GetComponent<RectTransform>().localPosition;
+				}
+				else {
+					pos = this.contentPane.transform.position;
+				}
+				pos.z = 0f;
 				rectTransform.localScale = Vector3.one;
 				rectTransform.localRotation = this.contentPane.localRotation;
+				rectTransform.localPosition = pos;
 			}
 			string defaultEquation = "y=1";
 			this.yellowTeamAttributes.SetDirectHealthAttribute(defaultEquation);

@@ -1677,7 +1677,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 310934811}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1118442806}
+        m_MethodName: Start
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &310934811
@@ -2084,11 +2095,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22402228, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.9999997
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 15.437003
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchorMax.x
@@ -2104,7 +2115,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: -0.000059127808
       objectReference: {fileID: 0}
     - target: {fileID: 22402228, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchorMin.y
@@ -2542,7 +2553,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1900491295}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
