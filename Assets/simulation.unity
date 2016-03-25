@@ -2088,7 +2088,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 15.437003
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchorMax.x
@@ -2541,8 +2541,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1900491296}
   m_HandleRect: {fileID: 1900491295}
   m_Direction: 0
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5986,6 +5986,7 @@ GameObject:
   - 224: {fileID: 1905900223}
   - 114: {fileID: 1905900224}
   - 114: {fileID: 1905900225}
+  - 114: {fileID: 1905900226}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -6005,11 +6006,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 965128530}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0, y: 1}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1905900224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6046,6 +6047,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &1905900226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1905900222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: 600
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 1000
+  m_FlexibleHeight: -1
 --- !u!1 &1935921350
 GameObject:
   m_ObjectHideFlags: 0
