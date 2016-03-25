@@ -20,6 +20,10 @@ namespace MultiPlayer {
 		public MergeGroup(GameUnit ownerUnit, GameUnit mergingUnit, float mergeFactor) {
 			this.ownerUnit = ownerUnit;
 			this.mergingUnit = mergingUnit;
+
+			this.ownerUnit.isMerging = true;
+			this.mergingUnit.isMerging = true;
+
 			this.elapsedTime = 0f;
 
 			this.ownerPosition = ownerUnit.gameObject.transform.position;
@@ -31,6 +35,9 @@ namespace MultiPlayer {
 
 			if (ownerUnit.attributes == null) {
 				Debug.LogError("Owner unit attributes are null.");
+			}
+			else {
+				
 			}
 			if (mergingUnit.attributes == null) {
 				Debug.LogError("Merging unit attributes are null.");
@@ -209,13 +216,13 @@ namespace MultiPlayer {
 			//Going to change this into network code, to sync up merging.
 			GameObject ownerObject = null, mergerObject = null;
 			List<GameObject> used = new List<GameObject>();
-			for (int i = this.selectionManager.selectedObjects.Count - 1; i > 0; i--) {
+			for (int i = this.selectionManager.selectedObjects.Count - 1; i >= 0; i--) {
 				if (used.Contains(this.selectionManager.selectedObjects[i])) {
 					continue;
 				}
 				ownerObject = this.selectionManager.selectedObjects[i];
 				GameUnit ownerUnit = ownerObject.GetComponent<GameUnit>();
-				for (int j = i - 1; j > 0; j--) {
+				for (int j = i - 1; j >= 0; j--) {
 					if (used.Contains(this.selectionManager.selectedObjects[j])) {
 						continue;
 					}
@@ -316,20 +323,24 @@ namespace MultiPlayer {
 
 			for (int i = 0; i < this.selectionManager.selectedObjects.Count; i++) {
 				GameUnit unit = this.selectionManager.selectedObjects[i].GetComponent<GameUnit>();
-				if (unit != null && unit.level == 1) {
+				if (unit != null && unit.level == 1 && !unit.isMerging) {
 					selectedLevelOneUnitCount++;
 				}
 			}
 			for (int i = 0; i < this.selectionManager.allObjects.Count; i++) {
 				GameUnit unit = this.selectionManager.allObjects[i].GetComponent<GameUnit>();
-				if (unit != null && unit.level == 1 && unit.previousLevel == 1) {
+				if (unit != null && unit.level == 1 && unit.previousLevel == 1 && !unit.isMerging) {
 					totalLevelOneUnitCount++;
 				}
 			}
 
-			
-			if (selectedLevelOneUnitCount <= 2) {
-				if (selectedLevelOneUnitCount == totalLevelOneUnitCount || totalLevelOneUnitCount <= 2) {
+			if (totalLevelOneUnitCount >= selectedLevelOneUnitCount) {
+				if (selectedLevelOneUnitCount == totalLevelOneUnitCount) {
+					if (selectedLevelOneUnitCount <= 2) {
+						this.doNotAllowMerging = true;
+					}
+				}
+				else if (selectedLevelOneUnitCount <= 2) {
 					this.doNotAllowMerging = true;
 				}
 			}
