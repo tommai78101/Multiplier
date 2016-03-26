@@ -97,6 +97,9 @@ namespace MultiPlayer {
 				}
 			}
 			else {
+				if (this.minimapCamera.rect.Contains(this.screenPoint)) {
+					return;
+				}
 				//This handles all the input actions the player has done to box select in the game.
 				//Currently, it doesn't handle clicking to select.
 				if (Input.GetMouseButtonDown(0)) {
