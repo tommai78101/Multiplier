@@ -205,7 +205,7 @@ namespace MultiPlayer {
 			pro.isRecoveryEnabled = changes.isRecoveryEnabled;
 			pro.targetUnit = changes.targetUnit;
 
-			pro.currentHealth = (int) changes.newCurrentHealth;
+			//pro.currentHealth = (int) changes.newCurrentHealth;
 			pro.maxHealth = (int) changes.newMaxHealth;
 			pro.attackFactor = changes.newAttack;
 			pro.speedFactor = changes.newSpeed;
