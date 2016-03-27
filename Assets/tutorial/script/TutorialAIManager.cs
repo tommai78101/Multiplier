@@ -90,6 +90,8 @@ namespace Tutorial {
 	}
 
 	public class TutorialAIManager : MonoBehaviour {
+		public bool debugFlag;
+
 		public Camera mainCamera;
 		public Camera minimapCamera;
 		public CameraPanning mainCameraPanning;
@@ -119,8 +121,6 @@ namespace Tutorial {
 		private int stringLetterCounter;
 		[SerializeField]
 		private int groupListCounter = 0;
-		[SerializeField]
-		private int dialogueSectionCounter;
 		[Range(0f, 1f)]
 		private float delay;
 		[SerializeField]
@@ -133,6 +133,8 @@ namespace Tutorial {
 		private Vector3 cameraOrigin;
 		[SerializeField]
 		private Parts currentTutorialStage;
+		[SerializeField]
+		private int dialogueSectionCounter;
 
 		public void Start() {
 			this.isInitialized = false;
@@ -191,8 +193,12 @@ namespace Tutorial {
 				else {
 					if (this.stringLetterCounter < this.dialogue.Length) {
 						//#DEBUG
-						//this.nextStepButton.interactable = true;
-						this.nextStepButton.interactable = false;
+						if (this.debugFlag) {
+							this.nextStepButton.interactable = true;
+						}
+						else {
+							this.nextStepButton.interactable = false;
+						}
 
 						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
 						this.stringLetterCounter++;

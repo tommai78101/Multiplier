@@ -881,6 +881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6fc2cce52d53ba4ba947782c303ac26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugFlag: 1
   mainCamera: {fileID: 349166315}
   minimapCamera: {fileID: 0}
   mainCameraPanning: {fileID: 0}
@@ -2186,6 +2187,7 @@ Canvas:
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
