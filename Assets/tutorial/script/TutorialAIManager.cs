@@ -119,6 +119,7 @@ namespace Tutorial {
 		public NewTutorialAIUnit tutorialUnit;
 
 		public SplitMergeManager splitMergeManager;
+		public ImageManager imageManager;
 
 		public GameObject cursorPrefab;
 		public Cursor mainCursor;
@@ -255,22 +256,51 @@ namespace Tutorial {
 						this.dialogueSectionCounter = 0;
 						break;
 					}
+					NewRawImage img = null;
 					switch (this.dialogueSectionCounter) {
 						case 1:
+							img = this.imageManager.Obtain(0);
+							img.ToggleImage(true);
 							break;
 						case 2:
+							img = this.imageManager.Obtain(0);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(1);
+							img.ToggleImage(true);
 							break;
 						case 3:
+							img = this.imageManager.Obtain(1);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(2);
+							img.ToggleImage(true);
 							break;
 						case 4:
+							img = this.imageManager.Obtain(2);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(5);
+							img.ToggleImage(true);
 							break;
 						case 5:
+							img = this.imageManager.Obtain(5);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(3);
+							img.ToggleImage(true);
 							break;
 						case 6:
+							img = this.imageManager.Obtain(3);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(true);
 							break;
 						case 7:
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(false);
 							break;
-						case 8:
+						default:
+							for (int i = 0; i < this.imageManager.images.Count; i++) {
+								img = this.imageManager.Obtain(i);
+								img.ToggleImage(false);
+							}
 							break;
 					}
 					this.dialogueSectionCounter++;
@@ -295,6 +325,10 @@ namespace Tutorial {
 							this.minimap.enabled = true;
 							break;
 						default:
+							for (int i = 0; i < this.imageManager.images.Count; i++) {
+								img = this.imageManager.Obtain(i);
+								img.ToggleImage(false);
+							}
 							break;
 					}
 					this.dialogueSectionCounter++;
