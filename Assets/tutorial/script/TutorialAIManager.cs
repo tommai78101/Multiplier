@@ -14,28 +14,44 @@ namespace Tutorial {
 
 	//This code layout is the most readable layout that I can think of for others to understand and follow. Nothing wrong with redundancy.
 	public class StringConstants {
+		public const int INTRODUCTION_SIZE = 8;
+		public const int CAMERA_CONTROLS_SIZE = 5;
+		public const int UNIT_CONTROLS_SIZE = 18;
+
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
 				case Parts.Introduction:
 					switch (section) {
 						case 0:
-							return "Hello there. Welcome to the tutorial for Multiplier. To begin, please press the \"Next Step\" button on the left. You may exit the tutorial at any time by pressing the \"Return to Main Menu\" button on the left.";
+							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool. You may exit at any time. Press Next to continue.";
 						case 1:
-							return "In this tutorial, you will learn how the game is played, as well as how this game can be used as a tool.";
+							return "To start off, the premise of the game is all about managing your units by splitting and merging units to create more powerful units. Without units, you lose the game.";
 						case 2:
-							return "Let's begin, shall we?";
+							return "The game is structured around 4 simple concepts. Your game units are resources. Splitting is the act of building up your faction. Merging is upgrading your units. And finally, seeking your enemies to destroy.";
+						case 3:
+							return "Each of these concepts are all equally important, not only as part of the game, but also as part of the simulation tool provided, which is called the Attributes Editor.";
+						case 4:
+							return "As you can see, your units and their attributes are based upon the leveling rates determined by math formulae. This is how game balancing is done, but they are usually done in Excel spreadsheets.";
+						case 5:
+							return "You can customize your unit's leveling rates by either selecting the preset default difficulty settings, or choosing the Custom preset.";
+						case 6:
+							return "If you choose the Custom preset, you can then enter a math equation in the input field shown, and the resulting answers will update the leveling rates.";
+						case 7:
+							return "You can decide how weak or powerful your units will be through the use of the Attributes Editor. Creating your balanced units, or really broken units. The sky's the limit!";
+						case 8:
+							return "Now we can jump in to the actual gameplay controls.";
 					}
 					break;
 				case Parts.Camera_Controls:
 					switch (section) {
 						case 0:
-							return "The first lesson is Camera Controls. Here, we introduce to you the basics of moving around the camera.";
+							return "The first lesson is Camera Controls, teaching you the basics of moving around the camera.";
 						case 1:
-							return "To start, move your mouse to the edge of the game boundaries. Press \"Next Step\" to continue when you are done.";
+							return "Move your mouse to the edge of the game boundaries (near the flashing red borders).";
 						case 2:
-							return "When you put your mouse at the edge of where you wished to go, the camera will move in that general direction. This is useful if you want to \"nudge\" the camera just a tiny bit to see clearly.";
+							return "When you put your mouse at the edge of where you wished to go, the camera will move in that general direction. Useful for panning the camera around.";
 						case 3:
-							return "The other method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around. Press \"Next Step\" when you are done.";
+							return "The other method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around.";
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
 						case 5:
@@ -90,6 +106,8 @@ namespace Tutorial {
 	}
 
 	public class TutorialAIManager : MonoBehaviour {
+		public bool debugFlag;
+
 		public Camera mainCamera;
 		public Camera minimapCamera;
 		public CameraPanning mainCameraPanning;
@@ -101,6 +119,7 @@ namespace Tutorial {
 		public NewTutorialAIUnit tutorialUnit;
 
 		public SplitMergeManager splitMergeManager;
+		public ImageManager imageManager;
 
 		public GameObject cursorPrefab;
 		public Cursor mainCursor;
@@ -108,6 +127,7 @@ namespace Tutorial {
 		public Canvas mainCanvas;
 		public Button nextStepButton;
 		public Text dialogueText;
+		public GameObject uiBorderPanel;
 
 		[SerializeField]
 		private bool isInitialized;
@@ -119,8 +139,6 @@ namespace Tutorial {
 		private int stringLetterCounter;
 		[SerializeField]
 		private int groupListCounter = 0;
-		[SerializeField]
-		private int dialogueSectionCounter;
 		[Range(0f, 1f)]
 		private float delay;
 		[SerializeField]
@@ -133,6 +151,8 @@ namespace Tutorial {
 		private Vector3 cameraOrigin;
 		[SerializeField]
 		private Parts currentTutorialStage;
+		[SerializeField]
+		private int dialogueSectionCounter;
 
 		public void Start() {
 			this.isInitialized = false;
@@ -191,8 +211,12 @@ namespace Tutorial {
 				else {
 					if (this.stringLetterCounter < this.dialogue.Length) {
 						//#DEBUG
-						//this.nextStepButton.interactable = true;
-						this.nextStepButton.interactable = false;
+						if (this.debugFlag) {
+							this.nextStepButton.interactable = true;
+						}
+						else {
+							this.nextStepButton.interactable = false;
+						}
 
 						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
 						this.stringLetterCounter++;
@@ -227,16 +251,63 @@ namespace Tutorial {
 					break;
 				case Parts.Introduction:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= 2) {
+					if (this.dialogueSectionCounter >= StringConstants.INTRODUCTION_SIZE) {
 						this.currentTutorialStage = Parts.Camera_Controls;
 						this.dialogueSectionCounter = 0;
 						break;
+					}
+					NewRawImage img = null;
+					switch (this.dialogueSectionCounter) {
+						case 1:
+							img = this.imageManager.Obtain(0);
+							img.ToggleImage(true);
+							break;
+						case 2:
+							img = this.imageManager.Obtain(0);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(1);
+							img.ToggleImage(true);
+							break;
+						case 3:
+							img = this.imageManager.Obtain(1);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(2);
+							img.ToggleImage(true);
+							break;
+						case 4:
+							img = this.imageManager.Obtain(2);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(5);
+							img.ToggleImage(true);
+							break;
+						case 5:
+							img = this.imageManager.Obtain(5);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(3);
+							img.ToggleImage(true);
+							break;
+						case 6:
+							img = this.imageManager.Obtain(3);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(true);
+							break;
+						case 7:
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(false);
+							break;
+						default:
+							for (int i = 0; i < this.imageManager.images.Count; i++) {
+								img = this.imageManager.Obtain(i);
+								img.ToggleImage(false);
+							}
+							break;
 					}
 					this.dialogueSectionCounter++;
 					break;
 				case Parts.Camera_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= 5) {
+					if (this.dialogueSectionCounter >= StringConstants.CAMERA_CONTROLS_SIZE) {
 						this.currentTutorialStage = Parts.Unit_Controls;
 						this.dialogueSectionCounter = 0;
 						break;
@@ -244,21 +315,29 @@ namespace Tutorial {
 					switch (this.dialogueSectionCounter) {
 						case 1:
 							this.mainCameraPanning.enabled = true;
+							this.uiBorderPanel.gameObject.SetActive(true);
+							break;
+						case 2:
+							this.uiBorderPanel.gameObject.SetActive(false);
 							break;
 						case 3:
 							this.minimapCamera.enabled = true;
 							this.minimap.enabled = true;
 							break;
 						default:
+							for (int i = 0; i < this.imageManager.images.Count; i++) {
+								img = this.imageManager.Obtain(i);
+								img.ToggleImage(false);
+							}
 							break;
 					}
 					this.dialogueSectionCounter++;
 					break;
 				case Parts.Unit_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= 18) {
+					if (this.dialogueSectionCounter >= StringConstants.UNIT_CONTROLS_SIZE) {
 						this.currentTutorialStage = Parts.Unit_Controls;
-						this.dialogueSectionCounter = 18;
+						this.dialogueSectionCounter = StringConstants.UNIT_CONTROLS_SIZE;
 						this.isTutorialFinished = true;
 						this.nextStepButton.interactable = false;
 						break;
