@@ -290,6 +290,7 @@ namespace Simulation {
 			flag |= this.equationInputField == null;
 			flag |= this.levelInfoPrefab == null;
 			flag |= this.simulationStarter == null;
+			flag |= this.contentPane == null;
 			if (flag) {
 				Debug.LogError("One of the game objects is null. Please check.");
 			}
@@ -380,6 +381,7 @@ namespace Simulation {
 				rectTransform.localRotation = this.contentPane.localRotation;
 				rectTransform.localPosition = pos;
 			}
+
 			string defaultEquation = "y=1";
 			this.yellowTeamAttributes.SetDirectHealthAttribute(defaultEquation);
 			this.yellowTeamAttributes.SetDirectAttackAttribute(defaultEquation);
