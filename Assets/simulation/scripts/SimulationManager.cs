@@ -211,7 +211,7 @@ namespace Simulation {
 				this.simulationStarter.ClearSimulation();
 				this.simulationStarter.InitializeSimulation();
 			}
-			catch (System.Exception e) {
+			catch (System.Exception) {
 				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
@@ -248,7 +248,7 @@ namespace Simulation {
 					previousAnswer = answer;
 				}
 			}
-			catch (System.Exception e) {
+			catch (System.Exception) {
 				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}

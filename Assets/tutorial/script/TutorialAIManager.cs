@@ -23,7 +23,7 @@ namespace Tutorial {
 				case Parts.Introduction:
 					switch (section) {
 						case 0:
-							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool. You may exit at any time. Press Next to continue.";
+							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool.";
 						case 1:
 							return "To start off, the premise of the game is all about managing your units by splitting and merging units to create more powerful units. Without units, you lose the game.";
 						case 2:
@@ -45,23 +45,27 @@ namespace Tutorial {
 				case Parts.Attributes_Editor:
 					switch (section) {
 						case 0:
-							return "";
+							return "This lesson is about the Attributes Editor. Here's an overview of what the Attributes Editor looks like, shown below. We'll do a quick rundown of how to control this beast.";
 						case 1:
-							return "";
+							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area. We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
 						case 2:
-							return "";
+							return "This dropdown context menu is the Presets. The editor has provided some simple equations used as pre-configured defaults for you. For example, 'Health Heavy' means the game units will have more health, but less overall stats.";
 						case 3:
-							return "";
+							return "As you noticed, there's a 'Custom' option. This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
 						case 4:
-							return "";
+							return "When the preset is set to 'Custom', you will see the Equation Input Field at the bottom is now active. You type the equations here.";
 						case 5:
-							return "";
+							return "Here's an example showing how a typical equation is written, as well as the rules to follow.";
+						case 6:
+							return "5";
+						case 7:
+							return "Empty string. Write whatever you want here! The last dialogue for each section is never shown to the players.";
 					}
 					break;
 				case Parts.Camera_Controls:
 					switch (section) {
 						case 0:
-							return "The first lesson is Camera Controls, teaching you the basics of moving around the camera.";
+							return "This lesson is the Camera Controls, teaching you the basics of moving around the camera.";
 						case 1:
 							return "Move your mouse to the edge of the game boundaries (near the flashing red borders).";
 						case 2:
@@ -248,15 +252,14 @@ namespace Tutorial {
 						//#DEBUG
 						if (this.debugFlag) {
 							this.nextStepButton.interactable = true;
+							this.dialogueText.text = this.dialogue;
+							this.stringLetterCounter = this.dialogue.Length;
 						}
 						else {
 							this.nextStepButton.interactable = false;
+							this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
+							this.stringLetterCounter++;
 						}
-
-						//this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
-						//this.stringLetterCounter++;
-						this.dialogueText.text = this.dialogue;
-						this.stringLetterCounter = this.dialogue.Length;
 					}
 					else {
 						this.startTextRollingFlag = false;
@@ -293,6 +296,9 @@ namespace Tutorial {
 						break;
 					}
 					NewRawImage img = null;
+					//Image index 0 ~ 5: General Section
+					//ImageManager.Obtain() takes in image index as parameter, to display which specific image to show.
+					//Image index is determined at compile time, while placing images in the Unity editor.
 					switch (this.dialogueSectionCounter) {
 						case 1:
 							img = this.imageManager.Obtain(0);
@@ -341,6 +347,7 @@ namespace Tutorial {
 					}
 					this.dialogueSectionCounter++;
 					break;
+				//Image index 6 ~ 12: Attributes Editor
 				case Parts.Attributes_Editor:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
 					if (this.dialogueSectionCounter >= StringConstants.CAMERA_CONTROLS_SIZE) {
@@ -348,7 +355,51 @@ namespace Tutorial {
 						break;
 					}
 					switch (this.dialogueSectionCounter) {
+						case 0:
+							img = this.imageManager.Obtain(6);
+							img.ToggleImage(true);
+							break;
+						case 1:
+							img = this.imageManager.Obtain(6);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(7);
+							img.ToggleImage(true);
+							break;
+						case 2:
+							img = this.imageManager.Obtain(7);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(8);
+							img.ToggleImage(true);
+							break;
+						case 3:
+							img = this.imageManager.Obtain(8);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(9);
+							img.ToggleImage(true);
+							break;
+						case 4:
+							img = this.imageManager.Obtain(9);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(7);
+							img.ToggleImage(true);
+							break;
+						case 5:
+							img = this.imageManager.Obtain(7);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(true);
+							break;
+						case 6:
+							img = this.imageManager.Obtain(4);
+							img.ToggleImage(false);
+							img = this.imageManager.Obtain(11);
+							img.ToggleImage(true);
+							break;
 						default:
+							for (int i = 0; i < this.imageManager.images.Count; i++) {
+								img = this.imageManager.Obtain(i);
+								img.ToggleImage(false);
+							}
 							break;
 					}
 					this.dialogueSectionCounter++;
@@ -544,6 +595,16 @@ namespace Tutorial {
 		public void ReturnToSections() {
 			this.dialogueBox.gameObject.SetActive(false);
 			this.tutorialSections.gameObject.SetActive(true);
+			for (int i = 0; i < this.imageManager.images.Count; i++) {
+				NewRawImage img = this.imageManager.Obtain(i);
+				img.ToggleImage(false);
+			}
+			if (this.mainCameraPanning != null) {
+				this.mainCameraPanning.enabled = false;
+			}
+			if (this.minimapCamera != null) {
+				this.minimapCamera.enabled = false;
+			}
 		}
 	}
 }

@@ -294,7 +294,7 @@ namespace SinglePlayer.UI {
 					}
 				}
 			}
-			catch (System.Exception e) {
+			catch (System.Exception) {
 				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
@@ -386,7 +386,7 @@ namespace SinglePlayer.UI {
 					}
 				}
 			}
-			catch (System.Exception e) {
+			catch (System.Exception) {
 				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
