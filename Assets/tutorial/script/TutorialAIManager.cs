@@ -9,7 +9,7 @@ using System;
 
 namespace Tutorial {
 	public enum Parts {
-		Introduction, Camera_Controls, Unit_Controls, Splitting, Merging, Invalid, Error
+		Introduction, Attributes_Editor, Camera_Controls, Unit_Controls, Splitting, Merging, Invalid, Error
 	}
 
 	//This code layout is the most readable layout that I can think of for others to understand and follow. Nothing wrong with redundancy.
@@ -40,6 +40,22 @@ namespace Tutorial {
 							return "You can decide how weak or powerful your units will be through the use of the Attributes Editor. Creating your balanced units, or really broken units. The sky's the limit!";
 						case 8:
 							return "Now we can jump in to the actual gameplay controls.";
+					}
+					break;
+				case Parts.Attributes_Editor:
+					switch (section) {
+						case 0:
+							return "";
+						case 1:
+							return "";
+						case 2:
+							return "";
+						case 3:
+							return "";
+						case 4:
+							return "";
+						case 5:
+							return "";
 					}
 					break;
 				case Parts.Camera_Controls:
@@ -106,6 +122,8 @@ namespace Tutorial {
 	}
 
 	public class TutorialAIManager : MonoBehaviour {
+		public static TutorialAIManager Instance;
+
 		public bool debugFlag;
 
 		public Camera mainCamera;
@@ -128,6 +146,8 @@ namespace Tutorial {
 		public Button nextStepButton;
 		public Text dialogueText;
 		public GameObject uiBorderPanel;
+		public GameObject tutorialSections;
+		public GameObject dialogueBox;
 
 		[SerializeField]
 		private bool isInitialized;
@@ -155,7 +175,10 @@ namespace Tutorial {
 		private int dialogueSectionCounter;
 
 		public void Start() {
+			TutorialAIManager.Instance = this;
+
 			this.isInitialized = false;
+
 			this.isTutorialFinished = false;
 			this.delay = 0f;
 			this.delayInterval = 0f;
@@ -190,6 +213,12 @@ namespace Tutorial {
 			if (this.dialogueText == null) {
 				Debug.LogError("Dialogue text field is not bind to this variable.");
 			}
+			if (this.tutorialSections == null) {
+				Debug.LogError("Tutorial sections are not set.");
+			}
+			if (this.dialogueBox == null) {
+				Debug.LogError("Dialogue box not set.");
+			}
 
 			//Cursor setup
 			GameObject obj = MonoBehaviour.Instantiate(this.cursorPrefab) as GameObject;
@@ -200,6 +229,12 @@ namespace Tutorial {
 			}
 
 			InitializeCursorPanGroups();
+			InitializeTutorial();
+		}
+
+		public void InitializeTutorial() {
+			this.dialogueBox.gameObject.SetActive(false);
+			this.tutorialSections.gameObject.SetActive(true);
 		}
 
 		public void Update() {
@@ -462,6 +497,30 @@ namespace Tutorial {
 			this.splitMergeManager.mergeGroupList.Add(new Group(child_1, child_2));
 
 			this.Invoke("DelayHideAllSelectionRings", 0.1f);
+		}
+
+		public void PrepareGeneralSection() {
+			this.currentTutorialStage = Parts.Introduction;
+			this.dialogueSectionCounter = 0;
+			this.OnClickAction();
+		}
+
+		public void PrepareEditorSection() {
+			this.currentTutorialStage = Parts.Attributes_Editor;
+			this.dialogueSectionCounter = 0;
+			this.OnClickAction();
+		}
+
+		public void PrepareCameraSection() {
+			this.currentTutorialStage = Parts.Camera_Controls;
+			this.dialogueSectionCounter = 0;
+			this.OnClickAction();
+		}
+
+		public void PrepareGameplaySection() {
+			this.currentTutorialStage = Parts.Unit_Controls;
+			this.dialogueSectionCounter = 0;
+			this.OnClickAction();
 		}
 	}
 }
