@@ -2,33 +2,26 @@
 using System.Collections;
 
 namespace Tutorial {
-	public enum Section {
-		//public const byte GENERAL = 0x00;
-		//public const byte ATTRIBUTES_EDITOR = 0x01;
-		//public const byte CAMERA_CONTROLS = 0x02;
-		//public const byte GAMEPLAY = 0x03;
-		INVALID, GENERAL, ATTRIBUTES_EDITOR, CAMERA_CONTROLS, GAMEPLAY
-	}
-
 	public class TutorialSectionActions : MonoBehaviour {
-		public void ShowTutorialSection(Section section) {
-			switch (section) {
-				case Section.GENERAL:
+		public void ShowTutorialSection(int index) {
+			TutorialAIManager.Instance.dialogueBox.gameObject.SetActive(true);
+			switch (index) {
+				case 0: //General
 					TutorialAIManager.Instance.PrepareGeneralSection();
 					break;
-				case Section.ATTRIBUTES_EDITOR:
+				case 1: //Attributes Editor
 					TutorialAIManager.Instance.PrepareEditorSection();
 					break;
-				case Section.CAMERA_CONTROLS:
+				case 2: //Camera controls
 					TutorialAIManager.Instance.PrepareCameraSection();
 					break;
-				case Section.GAMEPLAY:
+				case 3: //Gameplay (Unit Controls)
 					TutorialAIManager.Instance.PrepareGameplaySection();
 					break;
 				default:
-				case Section.INVALID:
 					break;
 			}
+			TutorialAIManager.Instance.tutorialSections.gameObject.SetActive(false);
 		}
 	}
 }

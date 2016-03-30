@@ -253,8 +253,10 @@ namespace Tutorial {
 							this.nextStepButton.interactable = false;
 						}
 
-						this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
-						this.stringLetterCounter++;
+						//this.dialogueText.text = this.dialogueText.text.Insert(this.dialogueText.text.Length, this.dialogue[this.stringLetterCounter].ToString());
+						//this.stringLetterCounter++;
+						this.dialogueText.text = this.dialogue;
+						this.stringLetterCounter = this.dialogue.Length;
 					}
 					else {
 						this.startTextRollingFlag = false;
@@ -287,8 +289,7 @@ namespace Tutorial {
 				case Parts.Introduction:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
 					if (this.dialogueSectionCounter >= StringConstants.INTRODUCTION_SIZE) {
-						this.currentTutorialStage = Parts.Camera_Controls;
-						this.dialogueSectionCounter = 0;
+						this.ReturnToSections();
 						break;
 					}
 					NewRawImage img = null;
@@ -340,11 +341,22 @@ namespace Tutorial {
 					}
 					this.dialogueSectionCounter++;
 					break;
+				case Parts.Attributes_Editor:
+					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
+					if (this.dialogueSectionCounter >= StringConstants.CAMERA_CONTROLS_SIZE) {
+						this.ReturnToSections();
+						break;
+					}
+					switch (this.dialogueSectionCounter) {
+						default:
+							break;
+					}
+					this.dialogueSectionCounter++;
+					break;
 				case Parts.Camera_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
 					if (this.dialogueSectionCounter >= StringConstants.CAMERA_CONTROLS_SIZE) {
-						this.currentTutorialStage = Parts.Unit_Controls;
-						this.dialogueSectionCounter = 0;
+						this.ReturnToSections();
 						break;
 					}
 					switch (this.dialogueSectionCounter) {
@@ -371,10 +383,12 @@ namespace Tutorial {
 				case Parts.Unit_Controls:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
 					if (this.dialogueSectionCounter >= StringConstants.UNIT_CONTROLS_SIZE) {
-						this.currentTutorialStage = Parts.Unit_Controls;
-						this.dialogueSectionCounter = StringConstants.UNIT_CONTROLS_SIZE;
-						this.isTutorialFinished = true;
-						this.nextStepButton.interactable = false;
+						//this.currentTutorialStage = Parts.Unit_Controls;
+						//this.dialogueSectionCounter = StringConstants.UNIT_CONTROLS_SIZE;
+						//this.isTutorialFinished = true;
+						//this.nextStepButton.interactable = false;
+						this.distanceUnitParent.gameObject.SetActive(false);
+						this.ReturnToSections();
 						break;
 					}
 					switch (this.dialogueSectionCounter) {
@@ -502,25 +516,34 @@ namespace Tutorial {
 		public void PrepareGeneralSection() {
 			this.currentTutorialStage = Parts.Introduction;
 			this.dialogueSectionCounter = 0;
+			this.debugFlag = true;
 			this.OnClickAction();
 		}
 
 		public void PrepareEditorSection() {
 			this.currentTutorialStage = Parts.Attributes_Editor;
 			this.dialogueSectionCounter = 0;
+			this.debugFlag = true;
 			this.OnClickAction();
 		}
 
 		public void PrepareCameraSection() {
 			this.currentTutorialStage = Parts.Camera_Controls;
 			this.dialogueSectionCounter = 0;
+			this.debugFlag = true;
 			this.OnClickAction();
 		}
 
 		public void PrepareGameplaySection() {
 			this.currentTutorialStage = Parts.Unit_Controls;
 			this.dialogueSectionCounter = 0;
+			this.debugFlag = false;
 			this.OnClickAction();
+		}
+
+		public void ReturnToSections() {
+			this.dialogueBox.gameObject.SetActive(false);
+			this.tutorialSections.gameObject.SetActive(true);
 		}
 	}
 }
