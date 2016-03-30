@@ -53,7 +53,9 @@ namespace SinglePlayer.UI {
 					tog.interactable = value;
 				}
 			}
-			this.equationField.interactable = value;
+			if (this.presetSelection.value >= 5) {
+				this.equationField.interactable = value;
+			}
 		}
 	}
 }
