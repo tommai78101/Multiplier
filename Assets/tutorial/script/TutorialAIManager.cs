@@ -17,6 +17,7 @@ namespace Tutorial {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
 		public const int UNIT_CONTROLS_SIZE = 18;
+		public const int ATTRIBUTES_EDITOR_SIZE = 12;
 
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
@@ -350,7 +351,7 @@ namespace Tutorial {
 				//Image index 6 ~ 12: Attributes Editor
 				case Parts.Attributes_Editor:
 					this.dialogue = StringConstants.Values(this.currentTutorialStage, this.dialogueSectionCounter);
-					if (this.dialogueSectionCounter >= StringConstants.CAMERA_CONTROLS_SIZE) {
+					if (this.dialogueSectionCounter >= StringConstants.ATTRIBUTES_EDITOR_SIZE) {
 						this.ReturnToSections();
 						break;
 					}
