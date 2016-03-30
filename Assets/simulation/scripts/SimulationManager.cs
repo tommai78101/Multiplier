@@ -154,91 +154,102 @@ namespace Simulation {
 		}
 
 		public void UpdateEquation() {
-			string equation = this.equationInputField.text;
-			Debug.Log("Equation is: " + equation);
+			try {
 
-			AIAttributeManager AIManager = null;
-			int index;
-			if (this.isEditingYellowTeam) {
-				AIManager = this.yellowTeamAttributes;
-				index = 0;
-			}
-			else {
-				AIManager = this.blueTeamAttributes;
-				index = 1;
-			}
+				string equation = this.equationInputField.text;
+				Debug.Log("Equation is: " + equation);
 
-			Toggle attributeToggle = this.unitAttributeToggleGroup.GetSingleActiveToggle();
-			if (attributeToggle != null) {
-				EnumToggle toggle = attributeToggle.GetComponent<EnumToggle>();
-				if (toggle != null) {
-					switch (toggle.value) {
-						default:
-							Debug.LogError("Wrong toggle value: " + toggle.value + ". Please check.");
-							return;
-						case 0:
-							AIManager.SetDirectHealthAttribute(equation);
-							this.teamEquations[index].health = equation;
-							break;
-						case 1:
-							AIManager.SetDirectAttackAttribute(equation);
-							this.teamEquations[index].attack = equation;
-							break;
-						case 2:
-							AIManager.SetDirectSpeedAttribute(equation);
-							this.teamEquations[index].speed = equation;
-							break;
-						case 3:
-							AIManager.SetDirectSplitAttribute(equation);
-							this.teamEquations[index].split = equation;
-							break;
-						case 4:
-							AIManager.SetDirectMergeAttribute(equation);
-							this.teamEquations[index].merge = equation;
-							break;
-						case 5:
-							AIManager.SetDirectAttackCooldownAttribute(equation);
-							this.teamEquations[index].attackCooldown = equation;
-							break;
-					}
-
-					UpdateLevelInfo(toggle.value, equation);
+				AIAttributeManager AIManager = null;
+				int index;
+				if (this.isEditingYellowTeam) {
+					AIManager = this.yellowTeamAttributes;
+					index = 0;
 				}
+				else {
+					AIManager = this.blueTeamAttributes;
+					index = 1;
+				}
+
+				Toggle attributeToggle = this.unitAttributeToggleGroup.GetSingleActiveToggle();
+				if (attributeToggle != null) {
+					EnumToggle toggle = attributeToggle.GetComponent<EnumToggle>();
+					if (toggle != null) {
+						switch (toggle.value) {
+							default:
+								Debug.LogError("Wrong toggle value: " + toggle.value + ". Please check.");
+								return;
+							case 0:
+								AIManager.SetDirectHealthAttribute(equation);
+								this.teamEquations[index].health = equation;
+								break;
+							case 1:
+								AIManager.SetDirectAttackAttribute(equation);
+								this.teamEquations[index].attack = equation;
+								break;
+							case 2:
+								AIManager.SetDirectSpeedAttribute(equation);
+								this.teamEquations[index].speed = equation;
+								break;
+							case 3:
+								AIManager.SetDirectSplitAttribute(equation);
+								this.teamEquations[index].split = equation;
+								break;
+							case 4:
+								AIManager.SetDirectMergeAttribute(equation);
+								this.teamEquations[index].merge = equation;
+								break;
+							case 5:
+								AIManager.SetDirectAttackCooldownAttribute(equation);
+								this.teamEquations[index].attackCooldown = equation;
+								break;
+						}
+
+						UpdateLevelInfo(toggle.value, equation);
+					}
+				}
+				this.simulationStarter.StopSimulation();
+				this.simulationStarter.ClearSimulation();
+				this.simulationStarter.InitializeSimulation();
 			}
-			this.simulationStarter.StopSimulation();
-			this.simulationStarter.ClearSimulation();
-			this.simulationStarter.InitializeSimulation();
+			catch (System.Exception e) {
+				this.equationInputField.text = "[Invalid Equation.]";
+			}
 		}
 
 		public void UpdateLevelInfo(int toggleValue, string equation) {
-			float previousAnswer = 0f;
-			float answer = 0f;
-			for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
-				switch (toggleValue) {
-					default:
-						Debug.LogError("Invalid toggle value: " + toggleValue + ". Please check.");
-						return;
-					case 0:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
-						break;
-					case 1:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
-						break;
-					case 2:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
-						break;
-					case 3:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
-						break;
-					case 4:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
-						break;
-					case 5:
-						answer = (float) MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
-						break;
+			try {
+				float previousAnswer = 0f;
+				float answer = 0f;
+				for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+					switch (toggleValue) {
+						default:
+							Debug.LogError("Invalid toggle value: " + toggleValue + ". Please check.");
+							return;
+						case 0:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
+							break;
+						case 1:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
+							break;
+						case 2:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
+							break;
+						case 3:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
+							break;
+						case 4:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
+							break;
+						case 5:
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+							break;
+					}
+					UpdateLevelInfoIteration(i, answer, previousAnswer);
+					previousAnswer = answer;
 				}
-				UpdateLevelInfoIteration(i, answer, previousAnswer);
-				previousAnswer = answer;
+			}
+			catch (System.Exception e) {
+				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
 

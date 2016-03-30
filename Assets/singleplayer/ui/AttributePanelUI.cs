@@ -208,176 +208,186 @@ namespace SinglePlayer.UI {
 		}
 
 		public void FinishedEditing() {
-			GameObject obj = GameObject.FindGameObjectWithTag("UnitAttributes");
-			if (obj != null) {
-				UnitAttributes unitAttributes = obj.GetComponent<UnitAttributes>();
-				if (unitAttributes != null) {
-					foreach (Category cat in Category.Values) {
-						if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
-							int catValue = cat.value;
-							switch (catValue) {
-								default:
-								case 0:
-									unitAttributes.SetHealthAttributes(this.equationTextObject.text);
-									break;
-								case 1:
-									unitAttributes.SetAttackAttributes(this.equationTextObject.text);
-									break;
-								case 2:
-									unitAttributes.SetAttackCooldownAttributes(this.equationTextObject.text);
-									break;
-								case 3:
-									unitAttributes.SetSpeedAttributes(this.equationTextObject.text);
-									break;
-								case 4:
-									unitAttributes.SetSplitAttributes(this.equationTextObject.text);
-									break;
-								case 5:
-									unitAttributes.SetMergeAttributes(this.equationTextObject.text);
-									break;
-							}
-							List<LevelRate> tempList = this.levelingRatesObject.allAttributes[catValue];
-							for (int i = 0; i < tempList.Count; i++) {
-								bool flag = i > 0;
-								LevelRate rate = tempList[i];
-								switch (cat.value) {
+			try {
+				GameObject obj = GameObject.FindGameObjectWithTag("UnitAttributes");
+				if (obj != null) {
+					UnitAttributes unitAttributes = obj.GetComponent<UnitAttributes>();
+					if (unitAttributes != null) {
+						foreach (Category cat in Category.Values) {
+							if (cat.name.Equals(this.categoryContentObject.selectedToggle)) {
+								int catValue = cat.value;
+								switch (catValue) {
 									default:
 									case 0:
-										rate.rate = unitAttributes.healthPrefabList[i];
-										if (flag) {
-											rate.isIncreasing = rate.rate > unitAttributes.healthPrefabList[i - 1] ? 1 : -1;
-										}
+										unitAttributes.SetHealthAttributes(this.equationTextObject.text);
 										break;
 									case 1:
-										rate.rate = unitAttributes.attackPrefabList[i];
-										if (flag) {
-											rate.isIncreasing = rate.rate > unitAttributes.attackPrefabList[i - 1] ? 1 : -1;
-										}
+										unitAttributes.SetAttackAttributes(this.equationTextObject.text);
 										break;
 									case 2:
-										rate.rate = unitAttributes.attackCooldownPrefabList[i];
-										if (flag) {
-											rate.isIncreasing = rate.rate > unitAttributes.attackCooldownPrefabList[i - 1] ? 1 : -1;
-										}
+										unitAttributes.SetAttackCooldownAttributes(this.equationTextObject.text);
 										break;
 									case 3:
-										rate.rate = unitAttributes.speedPrefabList[i];
-										if (flag) {
-											rate.isIncreasing = rate.rate > unitAttributes.speedPrefabList[i - 1] ? 1 : -1;
-										}
+										unitAttributes.SetSpeedAttributes(this.equationTextObject.text);
 										break;
 									case 4:
-										if (i == 0) {
-											rate.rate = unitAttributes.splitPrefabFactor;
-											rate.isIncreasing = 0;
-										}
-										else {
-											rate.rate = 0f;
-											rate.isIncreasing = 0;
-										}
+										unitAttributes.SetSplitAttributes(this.equationTextObject.text);
 										break;
 									case 5:
-										rate.rate = unitAttributes.mergePrefabList[i];
-										if (flag) {
-											rate.isIncreasing = rate.rate > unitAttributes.mergePrefabList[i - 1] ? 1 : -1;
-										}
+										unitAttributes.SetMergeAttributes(this.equationTextObject.text);
 										break;
 								}
-								tempList[i] = rate;
+								List<LevelRate> tempList = this.levelingRatesObject.allAttributes[catValue];
+								for (int i = 0; i < tempList.Count; i++) {
+									bool flag = i > 0;
+									LevelRate rate = tempList[i];
+									switch (cat.value) {
+										default:
+										case 0:
+											rate.rate = unitAttributes.healthPrefabList[i];
+											if (flag) {
+												rate.isIncreasing = rate.rate > unitAttributes.healthPrefabList[i - 1] ? 1 : -1;
+											}
+											break;
+										case 1:
+											rate.rate = unitAttributes.attackPrefabList[i];
+											if (flag) {
+												rate.isIncreasing = rate.rate > unitAttributes.attackPrefabList[i - 1] ? 1 : -1;
+											}
+											break;
+										case 2:
+											rate.rate = unitAttributes.attackCooldownPrefabList[i];
+											if (flag) {
+												rate.isIncreasing = rate.rate > unitAttributes.attackCooldownPrefabList[i - 1] ? 1 : -1;
+											}
+											break;
+										case 3:
+											rate.rate = unitAttributes.speedPrefabList[i];
+											if (flag) {
+												rate.isIncreasing = rate.rate > unitAttributes.speedPrefabList[i - 1] ? 1 : -1;
+											}
+											break;
+										case 4:
+											if (i == 0) {
+												rate.rate = unitAttributes.splitPrefabFactor;
+												rate.isIncreasing = 0;
+											}
+											else {
+												rate.rate = 0f;
+												rate.isIncreasing = 0;
+											}
+											break;
+										case 5:
+											rate.rate = unitAttributes.mergePrefabList[i];
+											if (flag) {
+												rate.isIncreasing = rate.rate > unitAttributes.mergePrefabList[i - 1] ? 1 : -1;
+											}
+											break;
+									}
+									tempList[i] = rate;
+								}
+								this.levelingRatesObject.allAttributes[cat.value] = tempList;
+								break;
 							}
-							this.levelingRatesObject.allAttributes[cat.value] = tempList;
-							break;
 						}
+						this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
 					}
-					this.levelingRatesObject.UpdateAllPanelItems(this.categoryContentObject.selectedToggle);
 				}
+			}
+			catch (System.Exception e) {
+				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
 
 		public void AIFinishedEditing() {
-			GameObject obj = GameObject.FindGameObjectWithTag("AIAttributeManager");
-			if (obj != null) {
-				AIAttributeManager aiAttributeManager = obj.GetComponent<AIAttributeManager>();
-				if (aiAttributeManager != null) {
-					foreach (Category cat in Category.Values) {
-						if (cat.name.Equals(this.aiCategoryContentObject.selectedToggle)) {
-							int catValue = cat.value;
-							switch (catValue) {
-								default:
-								case 0:
-									aiAttributeManager.SetHealthAttribute(this.aiEquationTextObject.text);
-									break;
-								case 1:
-									aiAttributeManager.SetAttackAttribute(this.aiEquationTextObject.text);
-									break;
-								case 2:
-									aiAttributeManager.SetAttackCooldownAttribute(this.aiEquationTextObject.text);
-									break;
-								case 3:
-									aiAttributeManager.SetSpeedAttribute(this.aiEquationTextObject.text);
-									break;
-								case 4:
-									aiAttributeManager.SetSplitAttribute(this.aiEquationTextObject.text);
-									break;
-								case 5:
-									aiAttributeManager.SetMergeAttribute(this.aiEquationTextObject.text);
-									break;
-							}
-							List<LevelRate> tempList = this.aiLevelingRatesObject.allAttributes[catValue];
-							for (int i = 0; i < tempList.Count; i++) {
-								bool flag = i > 0;
-								LevelRate rate = tempList[i];
-								switch (cat.value) {
+			try {
+				GameObject obj = GameObject.FindGameObjectWithTag("AIAttributeManager");
+				if (obj != null) {
+					AIAttributeManager aiAttributeManager = obj.GetComponent<AIAttributeManager>();
+					if (aiAttributeManager != null) {
+						foreach (Category cat in Category.Values) {
+							if (cat.name.Equals(this.aiCategoryContentObject.selectedToggle)) {
+								int catValue = cat.value;
+								switch (catValue) {
 									default:
 									case 0:
-										rate.rate = aiAttributeManager.tiers[i].health;
-										if (flag) {
-											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].health ? 1 : -1;
-										}
+										aiAttributeManager.SetHealthAttribute(this.aiEquationTextObject.text);
 										break;
 									case 1:
-										rate.rate = aiAttributeManager.tiers[i].attack;
-										if (flag) {
-											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attack ? 1 : -1;
-										}
+										aiAttributeManager.SetAttackAttribute(this.aiEquationTextObject.text);
 										break;
 									case 2:
-										rate.rate = aiAttributeManager.tiers[i].attackCooldown;
-										if (flag) {
-											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attackCooldown ? 1 : -1;
-										}
+										aiAttributeManager.SetAttackCooldownAttribute(this.aiEquationTextObject.text);
 										break;
 									case 3:
-										rate.rate = aiAttributeManager.tiers[i].speed;
-										if (flag) {
-											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].speed ? 1 : -1;
-										}
+										aiAttributeManager.SetSpeedAttribute(this.aiEquationTextObject.text);
 										break;
 									case 4:
-										if (i == 0) {
-											rate.rate = aiAttributeManager.tiers[i].split;
-											rate.isIncreasing = 0;
-										}
-										else {
-											rate.rate = 0f;
-											rate.isIncreasing = 0;
-										}
+										aiAttributeManager.SetSplitAttribute(this.aiEquationTextObject.text);
 										break;
 									case 5:
-										rate.rate = aiAttributeManager.tiers[i].merge;
-										if (flag) {
-											rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].merge ? 1 : -1;
-										}
+										aiAttributeManager.SetMergeAttribute(this.aiEquationTextObject.text);
 										break;
 								}
-								tempList[i] = rate;
+								List<LevelRate> tempList = this.aiLevelingRatesObject.allAttributes[catValue];
+								for (int i = 0; i < tempList.Count; i++) {
+									bool flag = i > 0;
+									LevelRate rate = tempList[i];
+									switch (cat.value) {
+										default:
+										case 0:
+											rate.rate = aiAttributeManager.tiers[i].health;
+											if (flag) {
+												rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].health ? 1 : -1;
+											}
+											break;
+										case 1:
+											rate.rate = aiAttributeManager.tiers[i].attack;
+											if (flag) {
+												rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attack ? 1 : -1;
+											}
+											break;
+										case 2:
+											rate.rate = aiAttributeManager.tiers[i].attackCooldown;
+											if (flag) {
+												rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].attackCooldown ? 1 : -1;
+											}
+											break;
+										case 3:
+											rate.rate = aiAttributeManager.tiers[i].speed;
+											if (flag) {
+												rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].speed ? 1 : -1;
+											}
+											break;
+										case 4:
+											if (i == 0) {
+												rate.rate = aiAttributeManager.tiers[i].split;
+												rate.isIncreasing = 0;
+											}
+											else {
+												rate.rate = 0f;
+												rate.isIncreasing = 0;
+											}
+											break;
+										case 5:
+											rate.rate = aiAttributeManager.tiers[i].merge;
+											if (flag) {
+												rate.isIncreasing = rate.rate > aiAttributeManager.tiers[i - 1].merge ? 1 : -1;
+											}
+											break;
+									}
+									tempList[i] = rate;
+								}
+								this.aiLevelingRatesObject.allAttributes[cat.value] = tempList;
+								break;
 							}
-							this.aiLevelingRatesObject.allAttributes[cat.value] = tempList;
-							break;
 						}
+						this.aiLevelingRatesObject.UpdateAllPanelItems(this.aiCategoryContentObject.selectedToggle);
 					}
-					this.aiLevelingRatesObject.UpdateAllPanelItems(this.aiCategoryContentObject.selectedToggle);
 				}
+			}
+			catch (System.Exception e) {
+				this.equationInputField.text = "[Invalid Equation.]";
 			}
 		}
 	}
