@@ -17,7 +17,7 @@ namespace Tutorial {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
 		public const int UNIT_CONTROLS_SIZE = 18;
-		public const int ATTRIBUTES_EDITOR_SIZE = 14;
+		public const int ATTRIBUTES_EDITOR_SIZE = 15;
 
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
@@ -75,6 +75,8 @@ namespace Tutorial {
 							return "";
 						case 14:
 							return "";
+						case 15:
+							return "THIS IS AN EMPTY LINE. PLAYERS SHOULD NOT BE ABLE TO READ THIS.";
 					}
 					break;
 				case Parts.Camera_Controls:
@@ -630,7 +632,9 @@ namespace Tutorial {
 			this.tutorialSections.gameObject.SetActive(true);
 			for (int i = 0; i < this.imageManager.images.Count; i++) {
 				GameObject img = this.imageManager.Obtain(i);
-				img.SetActive(false);
+				if (img != null) {
+					img.SetActive(false);
+				}
 			}
 			if (this.mainCameraPanning != null) {
 				this.mainCameraPanning.enabled = false;
