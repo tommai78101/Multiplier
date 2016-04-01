@@ -4,24 +4,25 @@ using System.Collections.Generic;
 
 namespace Tutorial {
 	public class ImageManager : MonoBehaviour {
-		public List<NewRawImage> images;
+		public List<Transform> images;
 
 		void Start() {
-			this.images = new List<NewRawImage>();
+			this.images = new List<Transform>();
 			foreach (Transform child in this.transform) {
-				NewRawImage img = child.GetComponent<NewRawImage>();
-				img.Initialize();
-				Color color = img.color;
-				color.a = 0f;
-				img.color = color;
-				this.images.Add(img);
+				//NewRawImage img = child.GetComponent<NewRawImage>();
+				//img.Initialize();
+				//Color color = img.color;
+				//color.a = 0f;
+				//img.color = color;
+				this.images.Add(child);
 			}
 		}
 
-		public NewRawImage Obtain(int index) {
+		public GameObject Obtain(int index) {
 			for (int i = 0; i < this.images.Count; i++) {
-				if (this.images[i].index.index == index) {
-					return this.images[i];
+				ImageIndex imageIndex = this.images[i].GetComponent<ImageIndex>();
+				if (imageIndex != null && imageIndex.index == index) {
+					return this.images[i].gameObject;
 				}
 			}
 			return null;

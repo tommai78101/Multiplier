@@ -51,16 +51,20 @@ namespace Tutorial {
 							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area. We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
 						case 2:
 							return "This dropdown context menu is the Presets. The editor has provided some simple equations used as pre-configured defaults for you. For example, 'Health Heavy' means the game units will have more health, but less overall stats.";
-						case 3:
-							return "As you noticed, there's a 'Custom' option. This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
+                        case 3:
+							return "Have you noticed there's a 'Custom' option in the Presets downdown? This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
 						case 4:
 							return "When the preset is set to 'Custom', you will see the Equation Input Field at the bottom is now active. You type the equations here.";
 						case 5:
-							return "Here's an example showing how a typical equation is written, as well as the rules to follow.";
+							return "In the equation field, it is okay to type numbers or math equations starting with 'y='. If you input something wrong, it will report back '[Invalid Token]'.";
 						case 6:
-							return "5";
+							return "Here is one possible example of a math equation. The table below shows what symbols can be typed.";
 						case 7:
-							return "Empty string. Write whatever you want here! The last dialogue for each section is never shown to the players.";
+                            return "Moving back up, the Category toggles allow you to specify which unit attribute you want to modify. As shown, Health is selected, meaning the equation will modify Health points.";
+						case 8:
+							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. This area is similar to the Player Configuration Area.";
+                        case 9:
+                            return "";
 					}
 					break;
 				case Parts.Camera_Controls:
@@ -296,53 +300,53 @@ namespace Tutorial {
 						this.ReturnToSections();
 						break;
 					}
-					NewRawImage img = null;
+					GameObject img = null;
 					//Image index 0 ~ 5: General Section
 					//ImageManager.Obtain() takes in image index as parameter, to display which specific image to show.
 					//Image index is determined at compile time, while placing images in the Unity editor.
 					switch (this.dialogueSectionCounter) {
 						case 1:
 							img = this.imageManager.Obtain(0);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 2:
 							img = this.imageManager.Obtain(0);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(1);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 3:
 							img = this.imageManager.Obtain(1);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(2);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 4:
 							img = this.imageManager.Obtain(2);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(5);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 5:
 							img = this.imageManager.Obtain(5);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(3);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 6:
 							img = this.imageManager.Obtain(3);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(4);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 7:
 							img = this.imageManager.Obtain(4);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							break;
 						default:
 							for (int i = 0; i < this.imageManager.images.Count; i++) {
 								img = this.imageManager.Obtain(i);
-								img.ToggleImage(false);
+								img.SetActive(false);
 							}
 							break;
 					}
@@ -358,48 +362,48 @@ namespace Tutorial {
 					switch (this.dialogueSectionCounter) {
 						case 0:
 							img = this.imageManager.Obtain(6);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 1:
 							img = this.imageManager.Obtain(6);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(7);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 2:
 							img = this.imageManager.Obtain(7);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(8);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 3:
 							img = this.imageManager.Obtain(8);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(9);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 4:
 							img = this.imageManager.Obtain(9);
-							img.ToggleImage(false);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(7);
-							img.ToggleImage(true);
-							break;
-						case 5:
-							img = this.imageManager.Obtain(7);
-							img.ToggleImage(false);
-							img = this.imageManager.Obtain(4);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						case 6:
+							img = this.imageManager.Obtain(7);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(4);
-							img.ToggleImage(false);
+							img.SetActive(true);
+							break;
+						case 7:
+							img = this.imageManager.Obtain(4);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(11);
-							img.ToggleImage(true);
+							img.SetActive(true);
 							break;
 						default:
 							for (int i = 0; i < this.imageManager.images.Count; i++) {
 								img = this.imageManager.Obtain(i);
-								img.ToggleImage(false);
+								img.SetActive(false);
 							}
 							break;
 					}
@@ -426,7 +430,7 @@ namespace Tutorial {
 						default:
 							for (int i = 0; i < this.imageManager.images.Count; i++) {
 								img = this.imageManager.Obtain(i);
-								img.ToggleImage(false);
+								img.SetActive(false);
 							}
 							break;
 					}
@@ -597,8 +601,8 @@ namespace Tutorial {
 			this.dialogueBox.gameObject.SetActive(false);
 			this.tutorialSections.gameObject.SetActive(true);
 			for (int i = 0; i < this.imageManager.images.Count; i++) {
-				NewRawImage img = this.imageManager.Obtain(i);
-				img.ToggleImage(false);
+				GameObject img = this.imageManager.Obtain(i);
+				img.SetActive(false);
 			}
 			if (this.mainCameraPanning != null) {
 				this.mainCameraPanning.enabled = false;
