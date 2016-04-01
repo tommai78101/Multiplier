@@ -16,7 +16,7 @@ namespace Tutorial {
 	public class StringConstants {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
-		public const int UNIT_CONTROLS_SIZE = 18;
+		public const int UNIT_CONTROLS_SIZE = 20;
 		public const int ATTRIBUTES_EDITOR_SIZE = 19;
 
 		public static string Values(Parts parts, int section) {
@@ -140,8 +140,12 @@ namespace Tutorial {
 						case 16:
 							return "The red colored Capsules are your units. The gray colored Capsules are used to measure the distance. By lining up the gray colored Capsules, you can see how long \"close enough\" really is. Also, the higher the tier level, the longer the distance will be.";
 						case 17:
-							return "Remember, 1 unit away is your attacking range, and 3 units away is how close your unit should be at your enemy in order to engage in battle. Utilize this knowledge when facing an upcoming battle and win!";
+							return "When a unit is taking damage from an enemy attack, it will flare up as red, as shown below.";
 						case 18:
+							return "Once the unit takes damage, you can see its health points decreasing. The left number represents the current health points, and the right number represents full health points.";
+						case 19:
+							return "That is it for Unit Controls. Go, have fun, and experiment!";
+						case 20:
 							return "Thank you for watching! Go and experiment!";
 					}
 					break;
@@ -562,10 +566,22 @@ namespace Tutorial {
 								this.distanceUnitParent.gameObject.SetActive(true);
 							}
 							break;
-						case 18:
+						case 17:
 							if (this.distanceUnitParent != null) {
 								this.distanceUnitParent.gameObject.SetActive(false);
 							}
+							img = this.imageManager.Obtain(20);
+							img.SetActive(true);
+							break;
+						case 18:
+							img = this.imageManager.Obtain(20);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(21);
+							img.SetActive(true);
+							break;
+						case 19:
+							img = this.imageManager.Obtain(21);
+							img.SetActive(false);
 							break;
 						default:
 							break;
