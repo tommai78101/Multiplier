@@ -17,7 +17,7 @@ namespace Tutorial {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
 		public const int UNIT_CONTROLS_SIZE = 18;
-		public const int ATTRIBUTES_EDITOR_SIZE = 15;
+		public const int ATTRIBUTES_EDITOR_SIZE = 19;
 
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
@@ -26,13 +26,13 @@ namespace Tutorial {
 						case 0:
 							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool.";
 						case 1:
-							return "To start off, the premise of the game is all about managing your units by splitting and merging units to create more powerful units. Without units, you lose the game.";
+							return "To start off, the premise of the game is all about managing your units by splitting and merging units to create more powerful units, and destroy your opponent's game units!";
 						case 2:
-							return "The game is structured around 4 simple concepts. Your game units are resources. Splitting is the act of building up your faction. Merging is upgrading your units. And finally, seeking your enemies to destroy.";
+							return "4 simple concepts: Your game units are expendable resources. Splitting is to build up your resources for merging. Merging is to upgrade your units to higher levels. When you have no more units, you lose the game!";
 						case 3:
 							return "Each of these concepts are all equally important, not only as part of the game, but also as part of the simulation tool provided, which is called the Attributes Editor.";
 						case 4:
-							return "As you can see, your units and their attributes are based upon the leveling rates determined by math formulae. This is how game balancing is done, but they are usually done in Excel spreadsheets.";
+							return "With the editor, your units and attributes are now based upon the leveling rates determined by math equations as results. Of which, they are usually done in Excel spreadsheets, without being able to see immediate results.";
 						case 5:
 							return "You can customize your unit's leveling rates by either selecting the preset default difficulty settings, or choosing the Custom preset.";
 						case 6:
@@ -52,7 +52,7 @@ namespace Tutorial {
 						case 2:
 							return "We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
                         case 3:
-							return "Located at the top is the Presets, or pre-configured defaults, that the editor provided for you.";
+							return "Located at the top is the Presets, or pre-configured defaults the editor has provided you with.";
 						case 4:
 							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a game unit. The 'Health Heavy' preset means the game units will have more health, but less overall stats, which is useful for testing realistic situations.";
 						case 5:
@@ -68,15 +68,23 @@ namespace Tutorial {
 						case 10:
 							return "And finally, the Leveling Rates shows what unit attributes per level will be applied to your game unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
 						case 11:
-							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. This area is similar to the Player Configuration Area. We'll be going over only the differences.";
+							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. Because this area is similar to the Player Configuration Area, we'll only introduce the Mode Selection.";
 						case 12:
-                            return "";
+                            return "This is the Mode Selection. You can choose to leave the A.I. as Default pre-configurations, or use Custom configurations, which will enable the rest of the editor. Difficulty only affects the game.";
 						case 13:
-							return "";
+							return "We're now introducing to you the Simulation Attributes Editor.";
 						case 14:
-							return "";
+							return "As shown, you have the Yellow Team and the Blue Team, each with their own Leaderboards. The Leaderboards count the statistics given, as the Simulation is running.";
 						case 15:
-							return "THIS IS AN EMPTY LINE. PLAYERS SHOULD NOT BE ABLE TO READ THIS.";
+							return "The Attributes Editor is very much the same elsewhere, with the only difference is the Categories are placed to the right of the Equation Input Field, and are lined up in the same order.";
+						case 16:
+							return "This is the Main Control Panel. You can choose to edit the unit attributes of either the Yellow Team or the Blue Team. 'Generate Report' is important for logging the statistics of your simulations, as well as your testing sessions.";
+						case 17:
+							return "To return to the Main Menu, press ESCAPE key to open up the menu.";
+						case 18:
+							return "That is it for this lesson.";
+						case 19:
+							return "EMPTY STRING. PLEASE IGNORE!";
 					}
 					break;
 				case Parts.Camera_Controls:
@@ -429,6 +437,36 @@ namespace Tutorial {
 							img.SetActive(false);
 							img = this.imageManager.Obtain(15);
 							img.SetActive(true);
+							break;
+						case 12:
+							img = this.imageManager.Obtain(15);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(16);
+							img.SetActive(true);
+							break;
+						case 13:
+							img = this.imageManager.Obtain(16);
+							img.SetActive(false);
+							break;
+						case 14:
+							img = this.imageManager.Obtain(17);
+							img.SetActive(true);
+							break;
+						case 16:
+							img = this.imageManager.Obtain(17);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(18);
+							img.SetActive(true);
+							break;
+						case 17:
+							img = this.imageManager.Obtain(18);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(19);
+							img.SetActive(true);
+							break;
+						case 18:
+							img = this.imageManager.Obtain(19);
+							img.SetActive(false);
 							break;
 						default:
 							//for (int i = 0; i < this.imageManager.images.Count; i++) {
