@@ -17,7 +17,7 @@ namespace Tutorial {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
 		public const int UNIT_CONTROLS_SIZE = 18;
-		public const int ATTRIBUTES_EDITOR_SIZE = 12;
+		public const int ATTRIBUTES_EDITOR_SIZE = 14;
 
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
@@ -48,23 +48,33 @@ namespace Tutorial {
 						case 0:
 							return "This lesson is about the Attributes Editor. Here's an overview of what the Attributes Editor looks like, shown below. We'll do a quick rundown of how to control this beast.";
 						case 1:
-							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area. We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
+							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area.";
 						case 2:
-							return "This dropdown context menu is the Presets. The editor has provided some simple equations used as pre-configured defaults for you. For example, 'Health Heavy' means the game units will have more health, but less overall stats.";
+							return "We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
                         case 3:
-							return "Have you noticed there's a 'Custom' option in the Presets downdown? This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
+							return "Located at the top is the Presets, or pre-configured defaults, that the editor provided for you.";
 						case 4:
-							return "When the preset is set to 'Custom', you will see the Equation Input Field at the bottom is now active. You type the equations here.";
+							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a game unit. The 'Health Heavy' preset means the game units will have more health, but less overall stats, which is useful for testing realistic situations.";
 						case 5:
-							return "In the equation field, it is okay to type numbers or math equations starting with 'y='. If you input something wrong, it will report back '[Invalid Token]'.";
+							return "Have you noticed there's a 'Custom' option in the Presets downdown? This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
 						case 6:
-							return "Here is one possible example of a math equation. The table below shows what symbols can be typed.";
+							return "When the preset is set to 'Custom', you will see the Equation Input Field, located at the bottom, is now active. You type the equations in there.";
 						case 7:
-                            return "Moving back up, the Category toggles allow you to specify which unit attribute you want to modify. As shown, Health is selected, meaning the equation will modify Health points.";
+							return "In the equation field, it is okay to type numbers or math equations starting with 'y='. If you input something wrong, it will report back '[Invalid Token]'.";
 						case 8:
-							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. This area is similar to the Player Configuration Area.";
+							return "Here is one possible example of a math equation. The table below shows what symbols can be typed.";
                         case 9:
+                            return "Going back up, the Category toggles allow you to specify which unit attribute you want to modify. As an example shown below, Health is selected, meaning the equation will only modify all Health points leveling rates.";
+						case 10:
+							return "And finally, the Leveling Rates shows what unit attributes per level will be applied to your game unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
+						case 11:
+							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. This area is similar to the Player Configuration Area. We'll be going over only the differences.";
+						case 12:
                             return "";
+						case 13:
+							return "";
+						case 14:
+							return "";
 					}
 					break;
 				case Parts.Camera_Controls:
@@ -360,51 +370,69 @@ namespace Tutorial {
 						break;
 					}
 					switch (this.dialogueSectionCounter) {
-						case 0:
-							img = this.imageManager.Obtain(6);
-							img.SetActive(true);
-							break;
 						case 1:
 							img = this.imageManager.Obtain(6);
-							img.SetActive(false);
-							img = this.imageManager.Obtain(7);
 							img.SetActive(true);
 							break;
 						case 2:
 							img = this.imageManager.Obtain(7);
-							img.SetActive(false);
-							img = this.imageManager.Obtain(8);
 							img.SetActive(true);
 							break;
 						case 3:
+							img = this.imageManager.Obtain(6);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(7);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(8);
+							img.SetActive(true);
+							break;
+						case 4:
 							img = this.imageManager.Obtain(8);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(9);
 							img.SetActive(true);
 							break;
-						case 4:
+						case 5:
 							img = this.imageManager.Obtain(9);
 							img.SetActive(false);
-							img = this.imageManager.Obtain(7);
+							img = this.imageManager.Obtain(10);
 							img.SetActive(true);
 							break;
 						case 6:
-							img = this.imageManager.Obtain(7);
-							img.SetActive(false);
-							img = this.imageManager.Obtain(4);
-							img.SetActive(true);
-							break;
-						case 7:
-							img = this.imageManager.Obtain(4);
+							img = this.imageManager.Obtain(10);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(11);
 							img.SetActive(true);
 							break;
+						case 8:
+							img = this.imageManager.Obtain(11);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(12);
+							img.SetActive(true);
+							break;
+						case 9:
+							img = this.imageManager.Obtain(12);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(13);
+							img.SetActive(true);
+							break;
+						case 10:
+							img = this.imageManager.Obtain(13);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(14);
+							img.SetActive(true);
+							break;
+						case 11:
+							img = this.imageManager.Obtain(14);
+							img.SetActive(false);
+							img = this.imageManager.Obtain(15);
+							img.SetActive(true);
+							break;
 						default:
-							for (int i = 0; i < this.imageManager.images.Count; i++) {
-								img = this.imageManager.Obtain(i);
-								img.SetActive(false);
-							}
+							//for (int i = 0; i < this.imageManager.images.Count; i++) {
+							//	img = this.imageManager.Obtain(i);
+							//	img.SetActive(false);
+							//}
 							break;
 					}
 					this.dialogueSectionCounter++;

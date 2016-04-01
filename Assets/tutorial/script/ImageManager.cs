@@ -14,6 +14,7 @@ namespace Tutorial {
 				//Color color = img.color;
 				//color.a = 0f;
 				//img.color = color;
+				child.gameObject.SetActive(false);
 				this.images.Add(child);
 			}
 		}
