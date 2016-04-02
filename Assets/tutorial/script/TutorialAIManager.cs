@@ -17,20 +17,20 @@ namespace Tutorial {
 		public const int INTRODUCTION_SIZE = 8;
 		public const int CAMERA_CONTROLS_SIZE = 5;
 		public const int UNIT_CONTROLS_SIZE = 20;
-		public const int ATTRIBUTES_EDITOR_SIZE = 19;
+		public const int ATTRIBUTES_EDITOR_SIZE = 20;
 
 		public static string Values(Parts parts, int section) {
 			switch (parts) {
 				case Parts.Introduction:
 					switch (section) {
 						case 0:
-							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool.";
+							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool. To return to the Main Menu in other game modes, press ESCAPE key to open up the menu.";
 						case 1:
-							return "To start off, the premise of the game is all about managing your units by splitting and merging units to create more powerful units, and destroy your opponent's game units!";
+							return "To begin, premise of the game is about managing your units by splitting and merging units to create more powerful units, and destroy your opponent's game units!";
 						case 2:
 							return "4 simple concepts: Your game units are expendable resources. Splitting is to build up your resources for merging. Merging is to upgrade your units to higher levels. When you have no more units, you lose the game!";
 						case 3:
-							return "Each of these concepts are all equally important, not only as part of the game, but also as part of the simulation tool provided, which is called the Attributes Editor.";
+							return "Each concept is equally important, not only as part of the game. To see them in action, you can check out the simulation tool provided, and tweak variables using the Attributes Editor.";
 						case 4:
 							return "With the editor, your units and attributes are now based upon the leveling rates determined by math equations as results. Of which, they are usually done in Excel spreadsheets, without being able to see immediate results.";
 						case 5:
@@ -48,42 +48,44 @@ namespace Tutorial {
 						case 0:
 							return "This lesson is about the Attributes Editor. Here's an overview of what the Attributes Editor looks like, shown below. We'll do a quick rundown of how to control this beast.";
 						case 1:
-							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area.";
+							return "When in any game modes, to return to the Main Menu, press ESCAPE key to open up the menu.";
 						case 2:
+							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area.";
+						case 3:
 							return "We'll start with the Player Configuration Area, which is the top part of the Attributes Editor, shown below.";
-                        case 3:
+                        case 4:
 							return "Located at the top is the Presets, or pre-configured defaults the editor has provided you with.";
-						case 4:
-							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a game unit. The 'Health Heavy' preset means the game units will have more health, but less overall stats, which is useful for testing realistic situations.";
 						case 5:
-							return "Have you noticed there's a 'Custom' option in the Presets downdown? This option enables more functionalities of the editor, thus be able to fully customize your game unit attributes.";
+							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a game unit. The 'Health Heavy' preset means the game units will have more health, but less overall stats, which is useful for testing realistic situations.";
 						case 6:
-							return "When the preset is set to 'Custom', you will see the Equation Input Field, located at the bottom, is now active. You type the equations in there.";
+							return "Speaking of the 'Custom' option in the Presets downdown, this option enables more functionalities of the editor, allowing you to fully customize your game unit attributes.";
 						case 7:
-							return "In the equation field, it is okay to type numbers or math equations starting with 'y='. If you input something wrong, it will report back '[Invalid Token]'.";
+							return "When the preset is set to 'Custom', you will see the Equation Input Field, located at the bottom, is now active. You type the equations in there.";
 						case 8:
-							return "Here is one possible example of a math equation. The table below shows what symbols can be typed.";
-                        case 9:
-                            return "Going back up, the Category toggles allow you to specify which unit attribute you want to modify. As an example shown below, Health is selected, meaning the equation will only modify all Health points leveling rates.";
+							return "In the equation field, it is okay to type numbers or math equations starting with 'y='. If you input something wrong, it will report back '[Invalid Token]'.";
+						case 9:
+							return "When a correct math equation is entered, the Leveling Rates, above the Equation Input Field, will update all the leveling rates based on your equations. For example, y is equal to 42. Therefore, for each level, the Leveling Rate is 42.";
 						case 10:
-							return "And finally, the Leveling Rates shows what unit attributes per level will be applied to your game unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
-						case 11:
-							return "This next area is the A.I. Configuration Area, where you can customize the A.I. player's game units. Because this area is similar to the Player Configuration Area, we'll only introduce the Mode Selection.";
+							return "The table below shows what symbols can be typed, which is used in the Equation Input Field. The editor will then read the equation and display the results to each Leveling Rates.";
+                        case 11:
+                            return "Going back up, the Category toggles allow you to specify which unit attribute you want to modify. As an example shown below, Health is selected, meaning the equation will only modify all Health points leveling rates.";
 						case 12:
-                            return "This is the Mode Selection. You can choose to leave the A.I. as Default pre-configurations, or use Custom configurations, which will enable the rest of the editor. Difficulty only affects the game.";
+							return "The Leveling Rates shows what unit attributes per level will be applied to your game unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
 						case 13:
-							return "We're now introducing to you the Simulation Attributes Editor.";
+							return "Now, this next area, shown below, is the A.I. Configuration Area, where you can customize the A.I. player's game units. Because this area is similar to the Player Configuration Area, we'll only introduce the Mode Selection.";
 						case 14:
-							return "As shown, you have the Yellow Team and the Blue Team, each with their own Leaderboards. The Leaderboards count the statistics given, as the Simulation is running.";
+                            return "This is the Mode Selection. You can choose to leave the A.I. as Default pre-configurations, or use Custom configurations, which will enable the rest of the editor. Difficulty only affects the game.";
 						case 15:
-							return "The Attributes Editor is very much the same elsewhere, with the only difference is the Categories are placed to the right of the Equation Input Field, and are lined up in the same order.";
+							return "We now introduce to you the \"Simulation Editor\". Purpose is to run simulations to find if your math equations are balanced for use, especially since the high-level algorithms to determine unit properties can be applied elsewhere outside of this tool.";
 						case 16:
-							return "This is the Main Control Panel. You can choose to edit the unit attributes of either the Yellow Team or the Blue Team. 'Generate Report' is important for logging the statistics of your simulations, as well as your testing sessions.";
+							return "As shown, you have the Yellow Team and the Blue Team, each with their own Leaderboards. You also have the editor at the bottom, and the session counter in between the Leaderboards. The numbers on the Leaderboards are updated in real-time as the simulations are running.";
 						case 17:
-							return "To return to the Main Menu, press ESCAPE key to open up the menu.";
+							return "The bottom editor is very much the same in other game modes, with the only difference is the Categories are placed to the right of the Equation Input Field, and are lined up in the same order to save space.";
 						case 18:
-							return "That is it for this lesson.";
+							return "The final part of this tutorial section is the Main Control Panel. You edit the unit attributes of either the Yellow Team or the Blue Team here. \"Generate Report\" is used for logging the statistics of your simulations, as well as your testing sessions. Copy and paste the report somewhere safe!";
 						case 19:
+							return "That is it for this lesson.";
+						case 20:
 							return "EMPTY STRING. PLEASE IGNORE!";
 					}
 					break;
@@ -389,18 +391,18 @@ namespace Tutorial {
 							img.SetActive(true);
 							break;
 						case 2:
+							img = this.imageManager.Obtain(6);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(7);
 							img.SetActive(true);
 							break;
 						case 3:
-							img = this.imageManager.Obtain(6);
-							img.SetActive(false);
-							img = this.imageManager.Obtain(7);
-							img.SetActive(false);
 							img = this.imageManager.Obtain(8);
 							img.SetActive(true);
 							break;
 						case 4:
+							img = this.imageManager.Obtain(7);
+							img.SetActive(false);
 							img = this.imageManager.Obtain(8);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(9);
@@ -418,57 +420,55 @@ namespace Tutorial {
 							img = this.imageManager.Obtain(11);
 							img.SetActive(true);
 							break;
-						case 8:
+						case 7:
 							img = this.imageManager.Obtain(11);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(12);
 							img.SetActive(true);
 							break;
-						case 9:
+						case 10:
 							img = this.imageManager.Obtain(12);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(13);
 							img.SetActive(true);
 							break;
-						case 10:
+						case 11:
 							img = this.imageManager.Obtain(13);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(14);
 							img.SetActive(true);
 							break;
-						case 11:
+						case 12:
 							img = this.imageManager.Obtain(14);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(15);
 							img.SetActive(true);
 							break;
-						case 12:
+						case 13:
 							img = this.imageManager.Obtain(15);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(16);
 							img.SetActive(true);
 							break;
-						case 13:
+						case 14:
 							img = this.imageManager.Obtain(16);
 							img.SetActive(false);
-							break;
-						case 14:
 							img = this.imageManager.Obtain(17);
 							img.SetActive(true);
 							break;
-						case 16:
+						case 15:
 							img = this.imageManager.Obtain(17);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(18);
 							img.SetActive(true);
 							break;
-						case 17:
+						case 18:
 							img = this.imageManager.Obtain(18);
 							img.SetActive(false);
 							img = this.imageManager.Obtain(19);
 							img.SetActive(true);
 							break;
-						case 18:
+						case 19:
 							img = this.imageManager.Obtain(19);
 							img.SetActive(false);
 							break;
