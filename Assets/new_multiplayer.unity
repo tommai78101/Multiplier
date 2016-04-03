@@ -161,6 +161,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 6624299}
+  - 114: {fileID: 6624300}
   m_Layer: 5
   m_Name: Leveling Rates
   m_TagString: Untagged
@@ -187,6 +188,26 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000045776003, y: -0.022884369}
   m_SizeDelta: {x: -0, y: -0.14580011}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6624300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 6624298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nThe Leveling Rates show the progression
+    of the active unit attribute for each level. The active unit attribute is the
+    unit attribute chosen. \r\n\r\nFor example, Level 1 unit's Attack is 1. Level
+    2 unit's Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories,
+    the Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\r\n\r\nAnother
+    example, if Speed is chosen, the Leveling Rates will show the Speed attributes
+    for each level. When a unit upgrades to the next level, that corresponding Leveling
+    Rate will apply to that upgraded unit."
+  tooltip: {fileID: 1184025271}
 --- !u!1001 &25848523
 Prefab:
   m_ObjectHideFlags: 0
@@ -4629,6 +4650,7 @@ GameObject:
   - 224: {fileID: 907394515}
   - 222: {fileID: 907394518}
   - 114: {fileID: 907394517}
+  - 114: {fileID: 907394516}
   m_Layer: 5
   m_Name: Equation Input
   m_TagString: Untagged
@@ -4655,6 +4677,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0.0000038147}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &907394516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 907394514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nCustom Equation can only be enabled
+    when the Preset is set to \"Custom\". When enabled, you can modify the chosen
+    unit attribute in the Category, and all of the Leveling Rates will give the results
+    of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\tx: Level Number\n- : Subtract\t\ty:
+    Level Rate\n* : Multiply\t\t\tk: Previous Level Number\n/ : Divide\t\t\tp: Previous
+    Level Rate\n^: Power\t\t\tr: Random Number between 0 and 1"
+  tooltip: {fileID: 1184025271}
 --- !u!114 &907394517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5664,7 +5704,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000015944242, y: -0.000024795532}
+  m_AnchoredPosition: {x: 0.0000071525574, y: -0.000024795532}
   m_SizeDelta: {x: 0, y: 87}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1113069362
@@ -7297,6 +7337,7 @@ GameObject:
   - 222: {fileID: 1385611712}
   - 114: {fileID: 1385611711}
   - 114: {fileID: 1385611709}
+  - 114: {fileID: 1385611710}
   m_Layer: 5
   m_Name: Categories
   m_TagString: Untagged
@@ -7335,6 +7376,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 1
+--- !u!114 &1385611710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1385611707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nView the Leveling Rates that corresponds
+    to the chosen unit attribute, thus setting it as \"active\". If the Preset is
+    set to \"Custom\", the Custom Equation modifies the active unit attribute for
+    each level.\r\n\r\nFor example, if you chose \"Health\", the Leveling Rates will
+    show the progression of the active Health attribute for each level.\r"
+  tooltip: {fileID: 1184025271}
 --- !u!114 &1385611711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8556,7 +8614,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000029206276, y: 0}
+  m_AnchoredPosition: {x: -0.000002682209, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454
