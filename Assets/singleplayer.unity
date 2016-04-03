@@ -93,6 +93,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 2303887}
+  - 114: {fileID: 2303888}
   m_Layer: 5
   m_Name: Leveling Rates
   m_TagString: Untagged
@@ -120,6 +121,26 @@ RectTransform:
   m_AnchoredPosition: {x: -0.024975538, y: -0.000038146973}
   m_SizeDelta: {x: 0.1, y: -0.000015259}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2303888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2303886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nThe Leveling Rates show the progression
+    of the active unit attribute for each level. The active unit attribute is the
+    unit attribute chosen. \n\nFor example, Level 1 unit's Attack is 1. Level 2 unit's
+    Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories, the
+    Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\n\nAnother
+    example, if Speed is chosen, the Leveling Rates will show the Speed attributes
+    for each level. When a unit upgrades to the next level, that corresponding Leveling
+    Rate will apply to that upgraded unit.\n"
+  tooltip: {fileID: 470695016}
 --- !u!1 &28345864
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,6 +150,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 28345865}
   - 114: {fileID: 28345866}
+  - 114: {fileID: 28345867}
   m_Layer: 5
   m_Name: Categories
   m_TagString: Untagged
@@ -169,6 +191,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!114 &28345867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 28345864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: '(Toggle Tooltip: SHIFT key)
+
+
+    View the Leveling Rates that corresponds to the chosen unit attribute, thus setting
+    it as "active". If the Preset is set to "Custom", the Custom Equation modifies
+    the active unit attribute for each level.
+
+
+    For example, if you chose "Health", the Leveling Rates will show the progression
+    of the active Health attribute for each level.'
+  tooltip: {fileID: 470695016}
 --- !u!1001 &45946999
 Prefab:
   m_ObjectHideFlags: 0
@@ -280,7 +324,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: Test 2
+  tooltipText: '(Toggle Tooltip: SHIFT key)
+
+
+    Start the game with the game units set in the editor. You cannot start the game
+    when both the Player and the A.I. presets are not set to anything other than "Please
+    select a Preset.".'
   tooltip: {fileID: 470695016}
 --- !u!114 &56817054
 MonoBehaviour:
@@ -688,7 +737,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: 
+  tooltipText: '(Toggle Tooltip: SHIFT key)
+
+
+    Applies all the changes made in the editor to your game units when they are spawned
+    onto the map.'
   tooltip: {fileID: 470695016}
 --- !u!1 &77646443
 GameObject:
@@ -3270,6 +3323,7 @@ GameObject:
   - 114: {fileID: 356797353}
   - 114: {fileID: 356797352}
   - 114: {fileID: 356797351}
+  - 114: {fileID: 356797355}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -3396,6 +3450,19 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 356797349}
+--- !u!114 &356797355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 356797349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key) \nReturn to main menu."
+  tooltip: {fileID: 470695016}
 --- !u!1001 &358853103
 Prefab:
   m_ObjectHideFlags: 0
@@ -3510,6 +3577,10 @@ Prefab:
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 164776, guid: 0515000428d780342942fccf51e58099, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0515000428d780342942fccf51e58099, type: 2}
@@ -4168,15 +4239,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 186
+      value: 213.45
       objectReference: {fileID: 0}
     - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 104
+      value: 119.9
       objectReference: {fileID: 0}
     - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMin.x
@@ -4202,10 +4273,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 11458006, guid: 4553f217effd22145872f50e7a26543f, type: 2}
-      propertyPath: m_Color.a
-      value: 0.522
-      objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMin.y
       value: 0
@@ -4229,6 +4296,14 @@ Prefab:
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: toggleKey
+      value: 304
+      objectReference: {fileID: 0}
+    - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: alternateToggleKey
+      value: 303
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4553f217effd22145872f50e7a26543f, type: 2}
@@ -7366,6 +7441,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1066905403}
+  - 114: {fileID: 1066905404}
   m_Layer: 5
   m_Name: Presets
   m_TagString: Untagged
@@ -7393,6 +7469,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.024993896}
   m_SizeDelta: {x: 0, y: 0.049999}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1066905404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1066905402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: '(Toggle Tooltip: SHIFT key)
+
+
+    Choose whichever pre-configured math equations in the list to use for your game
+    unit. The chosen math equation will apply the hueristic to each of the unit attributes.
+
+
+    For example, when "y=3.14" is chosen, the attributes, Health, Attack, Speed, Split,
+    Merge, and Attack Cooldown, will all have their Leveling Rates be set to "3.14".
+
+
+    To enable custom configurations, choose "Custom".'
+  tooltip: {fileID: 470695016}
 --- !u!1 &1077077319
 GameObject:
   m_ObjectHideFlags: 0
@@ -9209,6 +9309,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1520678995}
+  - 114: {fileID: 1520678996}
   m_Layer: 5
   m_Name: Selections
   m_TagString: Untagged
@@ -9236,6 +9337,21 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000030517578, y: 0}
   m_SizeDelta: {x: 0.000061035, y: 0.000015259}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1520678996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1520678994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nDefault:\tUse pre-configured A.I. unit
+    attributes.\nCustom:\tCustomize the A.I. unit attributes.\nDifficulty:\tThe simulated
+    A.I. player actions execution speed."
+  tooltip: {fileID: 470695016}
 --- !u!1 &1537872488
 GameObject:
   m_ObjectHideFlags: 0
@@ -9725,7 +9841,6 @@ GameObject:
   m_Component:
   - 224: {fileID: 1652151227}
   - 114: {fileID: 1652151228}
-  - 114: {fileID: 1652151229}
   m_Layer: 5
   m_Name: Buttons
   m_TagString: Untagged
@@ -9775,19 +9890,6 @@ MonoBehaviour:
   m_Spacing: 0
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
---- !u!114 &1652151229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1652151226}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tooltipText: Layout
-  tooltip: {fileID: 470695016}
 --- !u!1 &1674165732
 GameObject:
   m_ObjectHideFlags: 0
@@ -10631,6 +10733,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1934983220}
+  - 114: {fileID: 1934983221}
   m_Layer: 5
   m_Name: Equation
   m_TagString: Untagged
@@ -10658,6 +10761,24 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015258789, y: 0.025018692}
   m_SizeDelta: {x: 0, y: 0.049995}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1934983221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1934983219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nCustom Equation can only be enabled
+    when the Preset is set to \"Custom\". When enabled, you can modify the chosen
+    unit attribute in the Category, and all of the Leveling Rates will give the results
+    of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\tx: Level Number\n- : Subtract\t\ty:
+    Level Rate\n* : Multiply\t\t\tk: Previous Level Number\n/ : Divide\t\t\tp: Previous
+    Level Rate\n^: Power\t\t\tr: Random Number between 0 and 1"
+  tooltip: {fileID: 470695016}
 --- !u!1 &1958607326
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using System.Collections;
 using System;
 
 public class TooltipHint : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+	[TextArea]
 	public string tooltipText;
 	public BaseTooltip tooltip;
 

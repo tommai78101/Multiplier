@@ -9,11 +9,11 @@ public class BaseTooltip : MonoBehaviour {
 	public float screenPlaneDistanceFromCamera;
 	public bool followCursorFlag;
 	public CanvasGroup canvasGroup;
-	public GridLayoutGroup gridGroup;
 	public Image panel;
+	public KeyCode toggleKey;
+	public KeyCode alternateToggleKey;
 	public Text tooltipTextContent;
 	public RectTransform rectTransform;
-
 	public RectTransform target;
 
 	[Range(-400f, 400f)]
@@ -22,11 +22,11 @@ public class BaseTooltip : MonoBehaviour {
 	public float yOffset;
 
 	private String textMemory;
+	private bool enableTooltipFlag;
 
 	public void Start() {
 		this.panel = this.GetComponent<Image>();
 		this.canvasGroup = this.GetComponent<CanvasGroup>();
-		this.gridGroup = this.GetComponent<GridLayoutGroup>();
 		this.rectTransform = this.GetComponent<RectTransform>();
 		this.tooltipTextContent = this.GetComponentInChildren<Text>();
 		if (this.paddingSize == 0) {
@@ -35,39 +35,31 @@ public class BaseTooltip : MonoBehaviour {
 		this.transform.position = Vector3.zero;
 		rectTransform.localScale = Vector3.one;
 		rectTransform.localPosition = Vector3.zero;
+		this.enableTooltipFlag = true;
+		this.SetToolTipHidden(true);
 	}
 
 	public void Update() {
-		if (this.panel != null && this.gridGroup != null) {
-			this.gridGroup.padding.bottom = this.gridGroup.padding.top = this.gridGroup.padding.right = this.gridGroup.padding.left = this.paddingSize;
-			Vector2 size = this.panel.rectTransform.sizeDelta;
-			size.x -= this.gridGroup.padding.left * 2;
-			size.y -= this.gridGroup.padding.top * 2;
-			this.gridGroup.cellSize = size;
+		if (Input.GetKeyUp(this.toggleKey) || Input.GetKeyUp(this.alternateToggleKey)) {
+			this.enableTooltipFlag = !this.enableTooltipFlag;
 		}
-		if (this.tooltipTextContent != null) {
+
+		if (this.panel != null && this.tooltipTextContent != null) {
 			this.tooltipTextContent.text = this.textMemory;
+			if (this.tooltipTextContent.preferredWidth > Screen.width) {
+				this.panel.rectTransform.sizeDelta = new Vector2(this.tooltipTextContent.preferredWidth * 0.5f, this.tooltipTextContent.preferredHeight + this.paddingSize * 2f);
+			}
+			else {
+				this.panel.rectTransform.sizeDelta = new Vector2(this.tooltipTextContent.preferredWidth, this.tooltipTextContent.preferredHeight + this.paddingSize * 2f);
+			}
 		}
 
 		if (this.target != null) {
-			//this.rectTransform.localPosition = Vector3.zero;
-			//Vector3 pos = Input.mousePosition;
-			//pos.z = this.screenPlaneDistanceFromCamera;
-			//pos = Camera.main.ScreenToWorldPoint(pos);
-			//pos.z = 0f;
-			//Vector3 targetPos = this.target.transform.position;
-			//targetPos.z = 0f;
-			////this.transform.position = targetPos + pos;
-			//this.rectTransform.localScale = Vector3.one / this.screenPlaneDistanceFromCamera;
-			//this.rectTransform.localPosition = targetPos + pos;
 			Vector2 pos = Input.mousePosition;
 			pos.x -= this.xOffset;
 			pos.y -= this.yOffset;
 			this.rectTransform.localPosition = pos;
-			//Debug.Log("mouse: " + Input.mousePosition + " pos: " + this.transform.position + " rect: " + this.rectTransform.localPosition);
 		}
-
-
 	}
 
 	public void SetText(string hint) {
@@ -75,14 +67,21 @@ public class BaseTooltip : MonoBehaviour {
 	}
 
 	public void SetToolTipHidden(bool flag) {
-		if (flag) {
-			this.canvasGroup.alpha = 0f;
-			this.canvasGroup.interactable = false;
-			this.canvasGroup.blocksRaycasts = false;
+		if (this.enableTooltipFlag) {
+			if (flag) {
+				this.canvasGroup.alpha = 0f;
+				this.canvasGroup.interactable = false;
+				this.canvasGroup.blocksRaycasts = false;
+			}
+			else {
+				this.canvasGroup.alpha = 1f;
+				this.canvasGroup.interactable = true;
+				this.canvasGroup.blocksRaycasts = false;
+			}
 		}
 		else {
-			this.canvasGroup.alpha = 1f;
-			this.canvasGroup.interactable = true;
+			this.canvasGroup.alpha = 0f;
+			this.canvasGroup.interactable = false;
 			this.canvasGroup.blocksRaycasts = false;
 		}
 	}
