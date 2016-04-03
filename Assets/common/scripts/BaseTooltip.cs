@@ -42,6 +42,7 @@ public class BaseTooltip : MonoBehaviour {
 	public void Update() {
 		if (Input.GetKeyUp(this.toggleKey) || Input.GetKeyUp(this.alternateToggleKey)) {
 			this.enableTooltipFlag = !this.enableTooltipFlag;
+			this.SetToolTipHidden(this.enableTooltipFlag);
 		}
 
 		if (this.panel != null && this.tooltipTextContent != null) {

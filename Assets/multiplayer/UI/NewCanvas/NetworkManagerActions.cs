@@ -14,7 +14,7 @@ public class NetworkManagerActions : MonoBehaviour {
 	public GameObject optionsMenu;
 	public GameObject unitAttributeEditor;
 	public GameObject temporaryUnitAttributesObject;
-	public GameObject endGameMenu;
+	//public GameObject endGameMenu;
 
 	public GameObject LANClientNotConnected;
 	public GameObject LANClientNotReady;
@@ -31,9 +31,9 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (this.initialMenu == null) {
 			Debug.LogError("Unassigned context menu for the first menu shown to the player.");
 		}
-		if (this.endGameMenu == null) {
-			Debug.LogError("Unassigned context menu shown to the player when the game has ended.");
-		}
+		//if (this.endGameMenu == null) {
+		//	Debug.LogError("Unassigned context menu shown to the player when the game has ended.");
+		//}
 		if (this.LANHost == null) {
 			Debug.LogError("Unassigned context menu shown to the player when the game sets up a LAN server.");
 		}
@@ -149,6 +149,10 @@ public class NetworkManagerActions : MonoBehaviour {
 		╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝    ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝   
 	*/
 
+	public void TurnOffLANHost() {
+		this.LANHost.SetActive(false);
+	}
+
 	public void StartLANHost() {
 		this.PreInitialization();
 
@@ -174,7 +178,6 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
-
 	}
 
 	public void StopLANHost() {
@@ -398,7 +401,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		//if (!(this.endGameMenu.activeSelf || this.endGameMenu.activeInHierarchy)) {
 		//}
 
-		this.endGameMenu.SetActive(true);
+		//this.endGameMenu.SetActive(true);
 		this.initialMenu.SetActive(false);
 		this.optionsMenu.SetActive(false);
 		this.LANClientNotConnected.SetActive(false);

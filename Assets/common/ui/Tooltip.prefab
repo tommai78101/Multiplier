@@ -87,6 +87,8 @@ MonoBehaviour:
   followCursorFlag: 1
   canvasGroup: {fileID: 0}
   panel: {fileID: 0}
+  toggleKey: 304
+  alternateToggleKey: 303
   tooltipTextContent: {fileID: 0}
   rectTransform: {fileID: 0}
   target: {fileID: 0}
