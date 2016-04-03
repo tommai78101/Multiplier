@@ -27,12 +27,7 @@ public class TooltipHint : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 	public void OnPointerEnter(PointerEventData eventData) {
 		this.tooltip.SetToolTipHidden(false);
 		this.tooltip.SetText(this.tooltipText);
-		RectTransform rect = this.GetComponent<RectTransform>();
-		this.tooltip.SetTarget(rect);
-		this.tooltip.transform.position = this.transform.position;
-
-		Debug.LogWarning("Target RectTransform: " + rect.localPosition + " " + rect.position);
-		
+		this.tooltip.SetTarget(this.GetComponent<RectTransform>());
 	}
 
 	public void OnPointerExit(PointerEventData eventData) {
