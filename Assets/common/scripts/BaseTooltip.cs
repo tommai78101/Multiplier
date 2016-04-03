@@ -55,7 +55,7 @@ public class BaseTooltip : MonoBehaviour {
 			}
 		}
 
-		if (this.target != null) {
+		if (this.target != null && this.followCursorFlag) {
 			Vector2 pos = Input.mousePosition;
 			pos.x -= this.xOffset;
 			pos.y -= this.yOffset;

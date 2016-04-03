@@ -1332,6 +1332,7 @@ GameObject:
   - 114: {fileID: 214990347}
   - 114: {fileID: 214990346}
   - 114: {fileID: 214990349}
+  - 114: {fileID: 214990350}
   m_Layer: 5
   m_Name: Run/Stop Simulation
   m_TagString: Untagged
@@ -1460,6 +1461,20 @@ MonoBehaviour:
   runStopButtonText: {fileID: 935460200}
   isRunning: 0
   simulationStarter: {fileID: 1463049467}
+--- !u!114 &214990350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 214990344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nStarts the simulation of two A.I.
+    players and log the metrics in real-time. Press again to stop the simulation."
+  tooltip: {fileID: 1085698579}
 --- !u!1 &225081182
 GameObject:
   m_ObjectHideFlags: 0
@@ -1612,6 +1627,7 @@ GameObject:
   - 222: {fileID: 310934812}
   - 114: {fileID: 310934811}
   - 114: {fileID: 310934810}
+  - 114: {fileID: 310934813}
   m_Layer: 5
   m_Name: Reset to Default
   m_TagString: Untagged
@@ -1726,6 +1742,19 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 310934808}
+--- !u!114 &310934813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 310934808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nResets back to initial state."
+  tooltip: {fileID: 1085698579}
 --- !u!1 &353588780
 GameObject:
   m_ObjectHideFlags: 0
@@ -2120,6 +2149,10 @@ Prefab:
     - target: {fileID: 22402228, guid: d49c55db429b685468fdd90b57b12124, type: 2}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 164776, guid: d49c55db429b685468fdd90b57b12124, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d49c55db429b685468fdd90b57b12124, type: 2}
@@ -2552,7 +2585,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1900491296}
   m_HandleRect: {fileID: 1900491295}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 0.00000007648612
   m_Size: 0.601005
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4020,6 +4053,7 @@ GameObject:
   - 114: {fileID: 1074911669}
   - 114: {fileID: 1074911668}
   - 114: {fileID: 1074911670}
+  - 114: {fileID: 1074911671}
   m_Layer: 5
   m_Name: Team Toggle
   m_TagString: Untagged
@@ -4096,6 +4130,143 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!114 &1074911671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1074911666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: '(Toggle Tooltip: SHIFT key)
+
+
+    Choose which team to modify the unit attributes, respectively.'
+  tooltip: {fileID: 1085698579}
+--- !u!1001 &1085698577
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1118442805}
+    m_Modifications:
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 213.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 119.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+      propertyPath: followCursorFlag
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 4553f217effd22145872f50e7a26543f, type: 2}
+  m_IsPrefabParent: 0
+--- !u!224 &1085698578 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22496644, guid: 4553f217effd22145872f50e7a26543f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1085698577}
+--- !u!114 &1085698579 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f,
+    type: 2}
+  m_PrefabInternal: {fileID: 1085698577}
+  m_Script: {fileID: 11500000, guid: 6ae0cff5618b16e45b8ab15643964a74, type: 3}
 --- !u!1 &1094119541
 GameObject:
   m_ObjectHideFlags: 0
@@ -4263,6 +4434,7 @@ GameObject:
   - 114: {fileID: 1118442803}
   - 114: {fileID: 1118442802}
   - 114: {fileID: 1118442806}
+  - 114: {fileID: 1118442807}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4342,6 +4514,7 @@ RectTransform:
   - {fileID: 2064227965}
   - {fileID: 534872051}
   - {fileID: 1232097674}
+  - {fileID: 1085698578}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
@@ -4372,6 +4545,18 @@ MonoBehaviour:
   yellowTeamLeaderboard: {fileID: 829290555}
   blueTeamLeaderboard: {fileID: 85202679}
   simulationStarter: {fileID: 1463049467}
+--- !u!114 &1118442807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118442801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2485a7a2554cea4b8b4b7488bb8418c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltip: {fileID: 1085698579}
 --- !u!1 &1128196614
 GameObject:
   m_ObjectHideFlags: 0
@@ -5761,6 +5946,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 1814104066}
+  - 114: {fileID: 1814104067}
   m_Layer: 5
   m_Name: Bottom Portion
   m_TagString: Untagged
@@ -5786,6 +5972,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000030517578, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: -0.00012207}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1814104067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1814104065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nThe Leveling Rates show the progression
+    of the active unit attribute for each level. The active unit attribute is the
+    unit attribute chosen. \r\n\r\nFor example, Level 1 unit's Attack is 1. Level
+    2 unit's Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories,
+    the Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\r\n\r\nAnother
+    example, if Speed is chosen, the Leveling Rates will show the Speed attributes
+    for each level. When a unit upgrades to the next level, that corresponding Leveling
+    Rate will apply to that upgraded unit."
+  tooltip: {fileID: 1085698579}
 --- !u!1 &1848023128
 GameObject:
   m_ObjectHideFlags: 0
@@ -6088,6 +6294,7 @@ GameObject:
   - 222: {fileID: 1935921354}
   - 114: {fileID: 1935921353}
   - 114: {fileID: 1935921352}
+  - 114: {fileID: 1935921355}
   m_Layer: 5
   m_Name: Print Results
   m_TagString: Untagged
@@ -6202,6 +6409,21 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1935921350}
+--- !u!114 &1935921355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1935921350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nCreates a metrics report for both
+    the Yellow Team and Blue Team. You can then copy the contents of the report to
+    a different location and save the results."
+  tooltip: {fileID: 1085698579}
 --- !u!1 &2044234900
 GameObject:
   m_ObjectHideFlags: 0
@@ -6285,6 +6507,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 2049065785}
+  - 114: {fileID: 2049065786}
   m_Layer: 5
   m_Name: Top Portion
   m_TagString: Untagged
@@ -6311,6 +6534,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0.00004577682, y: -0.50002384}
   m_SizeDelta: {x: 0, y: -0.9999523}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2049065786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2049065784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nFrom left to right:\n\nAttribute
+    Label:\tShows the name of the active (chosen) unit attribute to view or modify.\n\nEquations
+    Field:\tCustom Equation can only be enabled when the Preset is set to \"Custom\".
+    When enabled, you can modify the chosen unit attribute in the Category, and all
+    of the Leveling Rates will give the results of your equation.\r\n\nCategories:\tChoose
+    the unit attributes to view or modify. They are from left to right: Health, Attack,
+    Speed, Split, Merge, Attack Cooldown.\n\r\nAllowed symbols for the Equation Field:\r\n\r\n+:
+    Add\t\t\tx: Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\t\tk:
+    Previous Level Number\r\n/ : Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr:
+    Random Number between 0 and 1"
+  tooltip: {fileID: 1085698579}
 --- !u!1 &2063370776
 GameObject:
   m_ObjectHideFlags: 0
@@ -6389,6 +6634,7 @@ GameObject:
   - 224: {fileID: 2064227965}
   - 222: {fileID: 2064227967}
   - 114: {fileID: 2064227966}
+  - 114: {fileID: 2064227968}
   m_Layer: 5
   m_Name: Current Session
   m_TagString: Untagged
@@ -6448,6 +6694,22 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2064227964}
+--- !u!114 &2064227968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2064227964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nShows the current simulated session
+    and the accumulated simulated sessions count.\n\nFor example, current session
+    is 5. That means it's simulating the teams for the 5th time, and has accumulated
+    a total of 5 sessions (including the current session)."
+  tooltip: {fileID: 1085698579}
 --- !u!1 &2120961746
 GameObject:
   m_ObjectHideFlags: 0
