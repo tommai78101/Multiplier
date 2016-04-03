@@ -26,6 +26,8 @@ TagManager:
   - AIAttributeManager
   - NetworkManager
   - Preset
+  - Name
+  - Difficulty
   layers:
   - Default
   - TransparentFX

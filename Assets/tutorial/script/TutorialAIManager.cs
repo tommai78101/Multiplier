@@ -24,15 +24,15 @@ namespace Tutorial {
 				case Parts.Introduction:
 					switch (section) {
 						case 0:
-							return "Hello there. Welcome to the tutorial for Multiplier, a real-time strategy game and simulation tool. To return to the Main Menu in other game modes, press ESCAPE key to open up the menu.";
+							return "Hello there. Welcome to the general introduction for Multiplier, a simulation tool that tweaks game balance, and a real-time strategy game built into this tool.";
 						case 1:
-							return "To begin, premise of the game is about managing your units by splitting and merging units to create more powerful units, and destroy your opponent's game units!";
+							return "The premise of the real-time strategy game, made for this tool, is about managing your units by splitting and merging units to create more powerful units, and destroy your opponent's units!";
 						case 2:
-							return "4 simple concepts: Your game units are expendable resources. Splitting is to build up your resources for merging. Merging is to upgrade your units to higher levels. When you have no more units, you lose the game!";
+							return "There are 4 simple concepts: Your units are expendable resources. Splitting is to build up your resources for merging. Merging is to upgrade your units to higher levels. When you have no more units, the session ends!";
 						case 3:
-							return "Each concept is equally important, not only as part of the game. To see them in action, you can check out the simulation tool provided, and tweak variables using the Attributes Editor.";
+							return "Each concept is important to understand the balance of the game, such as resource management, game unit properties, and other aspects. To see them in action, you can check out the simulation tool provided, and tweak the variables using the Attributes Editor.";
 						case 4:
-							return "With the editor, your units and attributes are now based upon the leveling rates determined by math equations as results. Of which, they are usually done in Excel spreadsheets, without being able to see immediate results.";
+							return "With the editor, your units and their attributes will use the leveling rates determined by math equations as results. This simplifies the process of tweaking that is usually done in Excel spreadsheets, and be able to see the immediate results.";
 						case 5:
 							return "You can customize your unit's leveling rates by either selecting the preset default difficulty settings, or choosing the Custom preset.";
 						case 6:
@@ -40,7 +40,7 @@ namespace Tutorial {
 						case 7:
 							return "You can decide how weak or powerful your units will be through the use of the Attributes Editor. Creating your balanced units, or really broken units. The sky's the limit!";
 						case 8:
-							return "Now we can jump in to the actual gameplay controls.";
+							return "EMPTY LINE, DO NOT READ";
 					}
 					break;
 				case Parts.Attributes_Editor:
@@ -48,7 +48,7 @@ namespace Tutorial {
 						case 0:
 							return "This lesson is about the Attributes Editor. Here's an overview of what the Attributes Editor looks like, shown below. We'll do a quick rundown of how to control this beast.";
 						case 1:
-							return "When in any game modes, to return to the Main Menu, press ESCAPE key to open up the menu.";
+							return "When in Versus A.I., Multiplayer, or Simulation Mode, press ESCAPE key to open up the menu if you wished to return to the Main Menu screen.";
 						case 2:
 							return "There are two areas in the Attributes Editor, the Player Configuration Area, and the A.I. Configuration Area.";
 						case 3:
@@ -56,9 +56,9 @@ namespace Tutorial {
                         case 4:
 							return "Located at the top is the Presets, or pre-configured defaults the editor has provided you with.";
 						case 5:
-							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a game unit. The 'Health Heavy' preset means the game units will have more health, but less overall stats, which is useful for testing realistic situations.";
+							return "The presets are labeled as simple math equations. They determine the leveling rates of all unit attributes of a unit. The 'Health Heavy' preset means the units will have more health, but less overall stats, which is useful for testing realistic situations.";
 						case 6:
-							return "Speaking of the 'Custom' option in the Presets downdown, this option enables more functionalities of the editor, allowing you to fully customize your game unit attributes.";
+							return "Speaking of the 'Custom' option in the Presets downdown, this option enables more functionalities of the editor, allowing you to fully customize your unit attributes.";
 						case 7:
 							return "When the preset is set to 'Custom', you will see the Equation Input Field, located at the bottom, is now active. You type the equations in there.";
 						case 8:
@@ -70,17 +70,17 @@ namespace Tutorial {
                         case 11:
                             return "Going back up, the Category toggles allow you to specify which unit attribute you want to modify. As an example shown below, Health is selected, meaning the equation will only modify all Health points leveling rates.";
 						case 12:
-							return "The Leveling Rates shows what unit attributes per level will be applied to your game unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
+							return "The Leveling Rates shows what unit attributes per level will be applied to your unit. For example, a Level 3 unit will have the Level 3 leveling rates for each attributes, a Level 6 unit will have Level 6 leveling rates, and so on.";
 						case 13:
-							return "Now, this next area, shown below, is the A.I. Configuration Area, where you can customize the A.I. player's game units. Because this area is similar to the Player Configuration Area, we'll only introduce the Mode Selection.";
+							return "Now, this next area, shown below, is the A.I. Configuration Area, where you can customize the A.I. player's units. Because this area is similar to the Player Configuration Area, we'll only introduce the Mode Selection.";
 						case 14:
-                            return "This is the Mode Selection. You can choose to leave the A.I. as Default pre-configurations, or use Custom configurations, which will enable the rest of the editor. Difficulty only affects the game.";
+                            return "This is the Mode Selection. You can choose to leave the A.I. as Default pre-configurations, or use Custom configurations, which will enable the rest of the editor. Difficulty only affects the A.I. player's execution speed.";
 						case 15:
 							return "We now introduce to you the \"Simulation Editor\". Purpose is to run simulations to find if your math equations are balanced for use, especially since the high-level algorithms to determine unit properties can be applied elsewhere outside of this tool.";
 						case 16:
 							return "As shown, you have the Yellow Team and the Blue Team, each with their own Leaderboards. You also have the editor at the bottom, and the session counter in between the Leaderboards. The numbers on the Leaderboards are updated in real-time as the simulations are running.";
 						case 17:
-							return "The bottom editor is very much the same in other game modes, with the only difference is the Categories are placed to the right of the Equation Input Field, and are lined up in the same order to save space.";
+							return "The bottom editor is very much the same in other modes, with the only difference is the Categories are placed to the right of the Equation Input Field, and are lined up in the same order to save space.";
 						case 18:
 							return "The final part of this tutorial section is the Main Control Panel. You edit the unit attributes of either the Yellow Team or the Blue Team here. \"Generate Report\" is used for logging the statistics of your simulations, as well as your testing sessions. Copy and paste the report somewhere safe!";
 						case 19:
@@ -92,9 +92,9 @@ namespace Tutorial {
 				case Parts.Camera_Controls:
 					switch (section) {
 						case 0:
-							return "This lesson is the Camera Controls, teaching you the basics of moving around the camera.";
+							return "This lesson is about Camera Controls, teaching you the basics of moving around the camera when you are playtesting your units against A.I or with human players.";
 						case 1:
-							return "Move your mouse to the edge of the game boundaries (near the flashing red borders).";
+							return "Move your mouse to the edge of the screen boundaries (near the flashing red borders).";
 						case 2:
 							return "When you put your mouse at the edge of where you wished to go, the camera will move in that general direction. Useful for panning the camera around.";
 						case 3:
@@ -102,13 +102,13 @@ namespace Tutorial {
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
 						case 5:
-							return "Now, let's move onwards to learn about Game Unit Controls. We'll focus on the units and not on the camera.";
+							return "EMPTY LINE, NOTHING OF VALUE IS LOST.";
 					}
 					break;
 				case Parts.Unit_Controls:
 					switch (section) {
 						case 0:
-							return "Here, we introduce to you the game unit, Capsule. It is shaped like a capsule, and has a team color labeled at the top.";
+							return "This lesson is about teaching you how to play the real-time strategy game built into this tool. The game unit, Capsule, named for its shape, has a team color painted at the top.";
 						case 1:
 							return "Capsules in the game can be interacted with the mouse and the keyboard. We'll start off with showing what the Capsules can do with the mouse.";
 						case 2:
@@ -128,7 +128,7 @@ namespace Tutorial {
 						case 9:
 							return "As you can see, a higher-tiered Capsule is bigger than it was before the merge.";
 						case 10:
-							return "However, be aware that unit attributes may not correlate with the tiers, since the game allows you to customize your unit attributes. Your customizations may not always give a net positive upgrade.";
+							return "However, be aware that unit attributes may not correlate with the tiers, since the tool allows you to customize your unit attributes. Your customizations may not always give a net positive upgrade.";
 						case 11:
 							return "The following animation sequence shows what a non-positive upgrade will look like for the unit attribute, \"Speed\", according to the given mathematical equation. You will normally see this when customizing your unit attributes.";
 						case 12:
@@ -148,7 +148,7 @@ namespace Tutorial {
 						case 19:
 							return "That is it for Unit Controls. Go, have fun, and experiment!";
 						case 20:
-							return "Thank you for watching! Go and experiment!";
+							return "EMPTY LINE, STOP READING ME!";
 					}
 					break;
 			}

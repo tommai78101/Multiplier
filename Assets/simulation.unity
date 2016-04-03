@@ -6421,8 +6421,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nCreates a metrics report for both
-    the Yellow Team and Blue Team. You can then copy the contents of the report to
-    a different location and save the results."
+    the Yellow Team and Blue Team. \nYou can then copy the contents of the report
+    to a different location and save the results."
   tooltip: {fileID: 1085698579}
 --- !u!1 &2044234900
 GameObject:
@@ -6552,7 +6552,7 @@ MonoBehaviour:
     of the Leveling Rates will give the results of your equation.\r\n\nCategories:\tChoose
     the unit attributes to view or modify. They are from left to right: Health, Attack,
     Speed, Split, Merge, Attack Cooldown.\n\r\nAllowed symbols for the Equation Field:\r\n\r\n+:
-    Add\t\t\tx: Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\t\tk:
+    Add\t\t\t\tx: Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk:
     Previous Level Number\r\n/ : Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr:
     Random Number between 0 and 1"
   tooltip: {fileID: 1085698579}
@@ -6707,7 +6707,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nShows the current simulated session
     and the accumulated simulated sessions count.\n\nFor example, current session
-    is 5. That means it's simulating the teams for the 5th time, and has accumulated
+    is 5. That means it's simulating the teams for the 5th time, \nand has accumulated
     a total of 5 sessions (including the current session)."
   tooltip: {fileID: 1085698579}
 --- !u!1 &2120961746

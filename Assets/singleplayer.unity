@@ -866,7 +866,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 885368426}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.96467185
+  m_Size: 0.96467173
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1735,7 +1735,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -3552,7 +3552,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22402228, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.9390353
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.y
@@ -3560,7 +3560,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22438180, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 22402228, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMin.y
@@ -3568,15 +3568,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444438, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_SizeDelta.x
-      value: -20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 164776, guid: 0515000428d780342942fccf51e58099, type: 2}
       propertyPath: m_IsActive
@@ -4275,27 +4275,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 106.725
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -59.95
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 183.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 89.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: toggleKey
@@ -5759,7 +5759,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1446372195}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10775,9 +10775,9 @@ MonoBehaviour:
   tooltipText: "(Toggle Tooltip: SHIFT key)\n\nCustom Equation can only be enabled
     when the Preset is set to \"Custom\". When enabled, you can modify the chosen
     unit attribute in the Category, and all of the Leveling Rates will give the results
-    of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\tx: Level Number\n- : Subtract\t\ty:
-    Level Rate\n* : Multiply\t\t\tk: Previous Level Number\n/ : Divide\t\t\tp: Previous
-    Level Rate\n^: Power\t\t\tr: Random Number between 0 and 1"
+    of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n- :
+    Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ : Divide\t\t\tp:
+    Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0 and 1"
   tooltip: {fileID: 470695016}
 --- !u!1 &1958607326
 GameObject:

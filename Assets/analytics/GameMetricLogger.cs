@@ -248,11 +248,26 @@ namespace Analytics {
 			//Flags and class members
 			this.outputField = this.GetComponentInChildren<InputField>();
 			this.outputField.readOnly = true;
+			this.outputField.lineType = InputField.LineType.MultiLineNewline;
+			this.outputField.characterLimit = 0;
 			this.stringBuilder = new StringBuilder();
 			this.gameMetricsLogGroup = this.GetComponent<CanvasGroup>();
 			this.gameMetricLoggerStart = false;
 			this.gameStartFlag = false;
 			this.isInputEnabled = false;
+
+			//Check if name and difficulty is valid
+			GameObject obj = GameObject.FindGameObjectWithTag("Name");
+			if (obj != null) {
+				InputField field = obj.GetComponent<InputField>();
+				this.playerName = field.text;
+			}
+			obj = GameObject.FindGameObjectWithTag("Difficulty");
+			if (obj != null) {
+				Dropdown down = obj.GetComponent<Dropdown>();
+				this.levelDifficulty = down.value;
+				this.difficultyEquations = down.options[down.value].text;
+			}
 
 			//Canvas Group
 			DisableCanvasGroup();
