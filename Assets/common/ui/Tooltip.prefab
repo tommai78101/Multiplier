@@ -84,7 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   paddingSize: 15
   screenPlaneDistanceFromCamera: 1
-  followCursorFlag: 1
+  followCursorFlag: 0
   canvasGroup: {fileID: 0}
   panel: {fileID: 0}
   toggleKey: 304

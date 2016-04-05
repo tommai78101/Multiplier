@@ -132,11 +132,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nThe Leveling Rates show the progression
-    of the active unit attribute for each level. The active unit attribute is the
-    unit attribute chosen. \n\nFor example, Level 1 unit's Attack is 1. Level 2 unit's
-    Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories, the
-    Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\n\nAnother
+  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nThe Leveling Rates show the
+    progression of the active unit attribute for each level. The active unit attribute
+    is the unit attribute chosen. \n\nFor example, Level 1 unit's Attack is 1. Level
+    2 unit's Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories,
+    the Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\n\nAnother
     example, if Speed is chosen, the Leveling Rates will show the Speed attributes
     for each level. When a unit upgrades to the next level, that corresponding Leveling
     Rate will apply to that upgraded unit.\n"
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Toggle Tooltip: SHIFT key)
+  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
 
 
     View the Leveling Rates that corresponds to the chosen unit attribute, thus setting
@@ -985,7 +985,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 785861155}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1735,7 +1735,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -7358,7 +7358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Toggle Tooltip: SHIFT key)
+  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
 
 
     Choose whichever pre-configured math equations in the list to use for your game
@@ -8209,19 +8209,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 620
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -8234,6 +8234,10 @@ Prefab:
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
@@ -9348,9 +9352,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nDefault:\tUse pre-configured A.I. unit
-    attributes.\nCustom:\tCustomize the A.I. unit attributes.\nDifficulty:\tThe simulated
-    A.I. player actions execution speed."
+  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nDefault:\tUse pre-configured
+    A.I. unit attributes.\nCustom:\tCustomize the A.I. unit attributes.\nDifficulty:\tThe
+    simulated A.I. player actions execution speed."
   tooltip: {fileID: 470695016}
 --- !u!1 &1537872488
 GameObject:
@@ -10772,12 +10776,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\n\nCustom Equation can only be enabled
-    when the Preset is set to \"Custom\". When enabled, you can modify the chosen
-    unit attribute in the Category, and all of the Leveling Rates will give the results
-    of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n- :
-    Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ : Divide\t\t\tp:
-    Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0 and 1"
+  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nCustom Equation can only be
+    enabled when the Preset is set to \"Custom\". When enabled, you can modify the
+    chosen unit attribute in the Category, and all of the Leveling Rates will give
+    the results of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n-
+    : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ :
+    Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0
+    and 1"
   tooltip: {fileID: 470695016}
 --- !u!1 &1958607326
 GameObject:

@@ -7,6 +7,9 @@ using UnityEditor;
 #endif
 
 public class CameraPanning : MonoBehaviour {
+	public const int MIN_ZOOM_VALUE = 3;
+	public const int MAX_ZOOM_VALUE = 20;
+
 	[SerializeField]
 	private bool panningEnableFlag;
 	[SerializeField]
@@ -67,7 +70,7 @@ public class CameraPanning : MonoBehaviour {
 	public void OnApplicationFocus(bool focus) {
 		this.mouseInFocus = focus;
 		this.cameraPanning = focus;
-		this.cameraZooming = focus;
+		//this.cameraZooming = focus;
 	}
 
 	public void Update() {
@@ -132,16 +135,16 @@ public class CameraPanning : MonoBehaviour {
 			if (delta > 0f) {
 				//Scroll up
 				this.zoomLevel++;
-				if (this.zoomLevel > 20) {
-					this.zoomLevel = 20;
+				if (this.zoomLevel > MAX_ZOOM_VALUE) {
+					this.zoomLevel = MAX_ZOOM_VALUE;
 				}
 				SetCameraPosition(float.NaN, (float) this.zoomLevel, float.NaN);
 			}
 			else if (delta < 0f) {
 				//Scroll down
 				this.zoomLevel--;
-				if (this.zoomLevel < 3) {
-					this.zoomLevel = 3;
+				if (this.zoomLevel < MIN_ZOOM_VALUE) {
+					this.zoomLevel = MIN_ZOOM_VALUE;
 				}
 				SetCameraPosition(float.NaN, (float) this.zoomLevel, float.NaN);
 			}

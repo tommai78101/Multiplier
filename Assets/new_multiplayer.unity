@@ -798,7 +798,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 449800527}
   m_HandleRect: {fileID: 449800526}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1496,19 +1496,35 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 620
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 400
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
@@ -1975,6 +1991,7 @@ GameObject:
   - 224: {fileID: 387373743}
   - 222: {fileID: 387373745}
   - 114: {fileID: 387373744}
+  - 114: {fileID: 387373746}
   m_Layer: 5
   m_Name: LAN Host
   m_TagString: Untagged
@@ -2034,6 +2051,25 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 387373742}
+--- !u!114 &387373746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 387373742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
+
+    (Open Menu: ESCAPE key)
+
+
+    Right now, you are hosting a LAN server. To return, you must manually stop LAN
+    hosting to return to the Options Menu, else you can''t return.'
+  tooltip: {fileID: 1184025271}
 --- !u!1 &397743028
 GameObject:
   m_ObjectHideFlags: 0
@@ -5696,7 +5732,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000066906214, y: -0.000024795532}
+  m_AnchoredPosition: {x: 0.000004425645, y: -0.000024795532}
   m_SizeDelta: {x: 0, y: 87}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1113069362
@@ -6302,27 +6338,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 106.725
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -59.95
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 183.45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 89.9
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4553f217effd22145872f50e7a26543f, type: 2}
@@ -8606,7 +8642,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015199184, y: 0}
+  m_AnchoredPosition: {x: -0.000003799796, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454
@@ -9281,6 +9317,8 @@ MonoBehaviour:
   optionsMenu: {fileID: 283038291}
   unitAttributeEditor: {fileID: 1275323874}
   temporaryUnitAttributesObject: {fileID: 192999758}
+  playerNameField: {fileID: 1679203204}
+  difficultyDropdown: {fileID: 1024463639}
   LANClientNotConnected: {fileID: 2056148120}
   LANClientNotReady: {fileID: 1800610527}
   LANClientReady: {fileID: 1238902997}
@@ -9327,6 +9365,7 @@ GameObject:
   - 224: {fileID: 1800610530}
   - 222: {fileID: 1800610529}
   - 114: {fileID: 1800610528}
+  - 114: {fileID: 1800610531}
   m_Layer: 5
   m_Name: LAN Client Not Ready
   m_TagString: Untagged
@@ -9385,6 +9424,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0.38171387, y: -0.000015258789}
   m_SizeDelta: {x: 0.8, y: -0.000030518}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1800610531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1800610527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
+
+    (Open Menu: ESCAPE key)
+
+
+    Right now, you are the LAN client, connected to a LAN server. If you do not see
+    anything appearing, it means you may have connected to the wrong IP address, therefore
+    you need to access the menu to return to Options Menu.'
+  tooltip: {fileID: 1184025271}
 --- !u!1 &1805135773
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,8 @@ public class NetworkManagerActions : MonoBehaviour {
 	public GameObject optionsMenu;
 	public GameObject unitAttributeEditor;
 	public GameObject temporaryUnitAttributesObject;
-	//public GameObject endGameMenu;
+	public InputField playerNameField;
+	public Dropdown difficultyDropdown;
 
 	public GameObject LANClientNotConnected;
 	public GameObject LANClientNotReady;
@@ -51,6 +52,9 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 		if (this.LANClientReady == null) {
 			Debug.LogError("Unassigned context menu shown to the player when the game sets up a LAN client. (Ready state)");
+		}
+		if (this.playerNameField == null || this.difficultyDropdown == null) {
+			Debug.LogError("Can't even initialize the most basic metric ever.");
 		}
 	}
 
@@ -123,18 +127,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				}
 			}
 			else {
-				//Because there's nothing going on. Would rather just stay opened.
 				SceneManager.LoadScene("new_multiplayer");
-				//if (NetworkClient.active || NetworkServer.active) {
-				//	if (NetworkClient.active) {
-				//		this.StopLANClient();
-				//	}
-				//	else if (NetworkServer.active) {
-				//		this.StopLANHost();
-				//	}
-				//}
-				//this.initialMenu.SetActive(true);
-				//this.optionsMenu.SetActive(true);
 			}
 		}
 	}
@@ -177,6 +170,14 @@ public class NetworkManagerActions : MonoBehaviour {
 			stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 		}
 
+		string name = this.playerNameField.text;
+		if (name.Length > 0) {
+			GameMetricLogger.instance.playerName = name;
+		}
+		else {
+			GameMetricLogger.instance.playerName = "Player";
+		}
+		GameMetricLogger.instance.difficultyEquations = this.difficultyDropdown.options[this.difficultyDropdown.value].text;
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 	}
 
@@ -376,6 +377,14 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientReady.SetActive(false);
 			this.LANClientNotReady.SetActive(false);
 
+			string name = this.playerNameField.text;
+			if (name.Length > 0) {
+				GameMetricLogger.instance.playerName = name;
+			}
+			else {
+				GameMetricLogger.instance.playerName = "Player";
+			}
+			GameMetricLogger.instance.difficultyEquations = this.difficultyDropdown.options[this.difficultyDropdown.value].text;
 			GameMetricLogger.EnableLoggerHotkey();
 
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
