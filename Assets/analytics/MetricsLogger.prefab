@@ -25,7 +25,7 @@ GameObject:
   - 224: {fileID: 22438180}
   - 222: {fileID: 22209452}
   - 114: {fileID: 11418732}
-  - 114: {fileID: 11486270}
+  - 114: {fileID: 11439626}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -97,6 +97,7 @@ GameObject:
   - 114: {fileID: 11402786}
   - 114: {fileID: 11401186}
   - 114: {fileID: 11494612}
+  - 114: {fileID: 11444442}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -431,6 +432,24 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11439626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 124486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: 1200
+  m_PreferredWidth: -1
+  m_PreferredHeight: 1200
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: 2000
 --- !u!114 &11443810
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -458,6 +477,19 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &11444442
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 148742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!114 &11457064
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -562,26 +594,13 @@ MonoBehaviour:
   m_HandleRect: {fileID: 22402228}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 0.524894
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Scrollbar+ScrollEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &11486270
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 124486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
 --- !u!114 &11488268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -608,6 +627,7 @@ MonoBehaviour:
   totalBattleEngagementTime: 0
   playerName: 
   difficultyEquations: 
+  debugFlag: 1
 --- !u!114 &11494524
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -805,8 +825,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0000038146973}
-  m_SizeDelta: {x: 617, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_SizeDelta: {x: 617, y: 500}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22438832
 RectTransform:

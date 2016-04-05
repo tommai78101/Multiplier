@@ -272,6 +272,12 @@ namespace MultiPlayer {
 		}
 
 		public void OnGUI() {
+			if (GameMetricLogger.instance != null) {
+				if (GameMetricLogger.instance.isShownToScreen) {
+					return;
+				}
+			}
+
 			if (this.minimapCamera != null) {
 				GUIStyle style = new GUIStyle();
 				style.normal.textColor = Color.black;

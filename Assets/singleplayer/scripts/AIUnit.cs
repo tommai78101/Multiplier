@@ -281,6 +281,12 @@ namespace SinglePlayer {
 				}
 			}
 
+			if (GameMetricLogger.instance != null) {
+				if (GameMetricLogger.instance.isShownToScreen) {
+					return;
+				}
+			}
+
 			GUIStyle style = new GUIStyle();
 			style.normal.textColor = Color.black;
 			style.alignment = TextAnchor.MiddleCenter;

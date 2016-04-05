@@ -34,6 +34,11 @@ namespace Analytics {
 		public string playerName;
 		public string difficultyEquations;
 
+		public bool debugFlag;
+
+		//Temporary memory space
+		private string metricsReportText;
+
 		//Flags
 		public bool gameStartFlag {
 			get; set;
@@ -44,6 +49,9 @@ namespace Analytics {
 		public bool isInputEnabled {
 			get; set;
 		}
+		public bool isShownToScreen {
+			get; set;
+		}
 
 		public void Start() {
 			Initialization();
@@ -52,11 +60,13 @@ namespace Analytics {
 		}
 
 		public void Update() {
+			if (this.debugFlag) {
+				this.outputField.text = this.metricsReportText;
+			}
+
 			if (!this.isInputEnabled) {
 				return;
 			}
-
-			this.outputField.GetComponentInChildren<Text>().text = this.outputField.text.ToString();
 
 			if (Input.GetKeyUp(this.triggerKey)) {
 				ToggleCanvasGroup();
@@ -201,12 +211,14 @@ namespace Analytics {
 			this.gameMetricsLogGroup.alpha = 1f;
 			this.gameMetricsLogGroup.interactable = true;
 			this.gameMetricsLogGroup.blocksRaycasts = true;
+			this.isShownToScreen = true;
 		}
 
 		public void DisableCanvasGroup() {
 			this.gameMetricsLogGroup.alpha = 0f;
 			this.gameMetricsLogGroup.interactable = false;
 			this.gameMetricsLogGroup.blocksRaycasts = false;
+			this.isShownToScreen = false;
 		}
 
 		// ------------   Private variables  ------------------------------
@@ -255,6 +267,7 @@ namespace Analytics {
 			this.gameMetricLoggerStart = false;
 			this.gameStartFlag = false;
 			this.isInputEnabled = false;
+			this.metricsReportText = "";
 
 			//Check if name and difficulty is valid
 			GameObject obj = GameObject.FindGameObjectWithTag("Name");
@@ -304,8 +317,9 @@ namespace Analytics {
 			sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
 			sB.AppendLine();
 
-			log.outputField.text = sB.ToString();
-			log.outputField.Rebuild(CanvasUpdate.MaxUpdateValue);
+			this.metricsReportText = sB.ToString();
+			this.outputField.GetComponentInChildren<Text>().text = sB.ToString();
+			log.outputField.Rebuild(CanvasUpdate.Layout);
 			Canvas.ForceUpdateCanvases();
 		}
 	}
