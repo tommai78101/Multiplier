@@ -226,22 +226,22 @@ namespace Simulation {
 							Debug.LogError("Invalid toggle value: " + toggleValue + ". Please check.");
 							return;
 						case 0:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Health, i+1, i, previousAnswer);
 							break;
 						case 1:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Attack, i + 1, i, previousAnswer);
 							break;
 						case 2:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Speed, i + 1, i, previousAnswer);
 							break;
 						case 3:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Split, i + 1, i, previousAnswer);
 							break;
 						case 4:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.Merge, i + 1, i, previousAnswer);
 							break;
 						case 5:
-							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i, i - 1, previousAnswer);
+							answer = (float)MathParser.ProcessEquation(equation, AttributeProperty.AttackCooldown, i + 1, i, previousAnswer);
 							break;
 					}
 					UpdateLevelInfoIteration(i, answer, previousAnswer);
