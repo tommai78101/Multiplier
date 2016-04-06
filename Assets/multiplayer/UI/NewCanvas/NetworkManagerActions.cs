@@ -363,7 +363,7 @@ public class NetworkManagerActions : MonoBehaviour {
 					}
 				}
 
-				GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
+				GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 			}
 			else {
 				this.LANClientReady.SetActive(false);
@@ -409,7 +409,7 @@ public class NetworkManagerActions : MonoBehaviour {
 				}
 			}
 
-			GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
+			GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 		}
 	}
 
