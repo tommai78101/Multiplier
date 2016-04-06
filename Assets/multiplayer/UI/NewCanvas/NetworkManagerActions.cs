@@ -362,6 +362,8 @@ public class NetworkManagerActions : MonoBehaviour {
 						NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
 					}
 				}
+
+				GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 			}
 			else {
 				this.LANClientReady.SetActive(false);
@@ -406,6 +408,8 @@ public class NetworkManagerActions : MonoBehaviour {
 					NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
 				}
 			}
+
+			GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 		}
 	}
 
