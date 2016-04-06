@@ -298,7 +298,7 @@ namespace Analytics {
 			sB.Length = 0;
 
 			sB.AppendLine("Game Metrics Report");
-			sB.AppendLine("(Please copy and paste this report somewhere else. Press M to toggle.)");
+			sB.AppendLine("(Please copy, paste, and SAVE this report! Research purposes only. Press M to show/hide Metrics Report.)");
 			sB.AppendLine();
 			sB.AppendLine("Total Game Time Since Report Is Generated: " + log.totalGameTimeSinceEpoch.ToString("0.000") + " seconds");
 			sB.AppendLine();
@@ -316,11 +316,48 @@ namespace Analytics {
 			sB.AppendLine("Total Time Accumulated When Attacking: " + log.totalAttackTime.ToString("0.000") + " seconds");
 			sB.AppendLine("Total Time Accumulated Under Attack: " + log.totalBattleEngagementTime.ToString("0.000") + " seconds");
 			sB.AppendLine();
+			sB.AppendLine("Report Ends Here");
+			sB.AppendLine();
+			sB.AppendLine("--------------------EXCEL DATA (SYLK)---------------------");
+			sB.AppendLine("-------------------DO NOT MODIFY THIS!--------------------");
+			sB.AppendLine("------------------FOR RESEARCHERS ONLY!-------------------");
+			sB.AppendLine();
+			sB.AppendLine("ID;P");
+			sB.AppendLine(CreateCell(1, 1, "Player Name"));
+			sB.AppendLine(CreateCell(2, 1, log.playerName));
+			sB.AppendLine(CreateCell(1, 2, "Level Difficulty"));
+			sB.AppendLine(CreateCell(2, 2, GetLevelDifficulty()));
+			sB.AppendLine(CreateCell(1, 3, "Equation Used"));
+			sB.AppendLine(CreateCell(2, 3, log.difficultyEquations));
+			sB.AppendLine(CreateCell(1, 4, "Total Game Time (seconds)"));
+			sB.AppendLine(CreateCell(2, 4, log.totalGameTimeSinceEpoch.ToString("0.000")));
+			sB.AppendLine(CreateCell(1, 5, "Total Time Played (seconds)"));
+			sB.AppendLine(CreateCell(2, 5, log.totalGameTime.ToString("0.000")));
+			sB.AppendLine(CreateCell(1, 6, "Total Deaths"));
+			sB.AppendLine(CreateCell(2, 6, log.numberOfDeaths.ToString()));
+			sB.AppendLine(CreateCell(1, 7, "Total Kills"));
+			sB.AppendLine(CreateCell(2, 7, log.numberOfKills.ToString()));
+			sB.AppendLine(CreateCell(1, 8, "Total Attacks"));
+			sB.AppendLine(CreateCell(2, 8, log.numberOfAttacks.ToString()));
+			sB.AppendLine(CreateCell(1, 9, "Total Splits"));
+			sB.AppendLine(CreateCell(2, 9, log.numberOfSplits.ToString()));
+			sB.AppendLine(CreateCell(1, 10, "Total Merges"));
+			sB.AppendLine(CreateCell(2, 10, log.numberOfMerges.ToString()));
+			sB.AppendLine(CreateCell(1, 11, "Total Attack Time Accumulated"));
+			sB.AppendLine(CreateCell(2, 11, log.totalAttackTime.ToString()));
+			sB.AppendLine(CreateCell(1, 11, "Total Battle Time Accumulated"));
+			sB.AppendLine(CreateCell(2, 11, log.totalBattleEngagementTime.ToString()));
+			sB.AppendLine("E");
+			sB.AppendLine();
 
 			this.metricsReportText = sB.ToString();
 			this.outputField.GetComponentInChildren<Text>().text = sB.ToString();
 			log.outputField.Rebuild(CanvasUpdate.Layout);
 			Canvas.ForceUpdateCanvases();
+		}
+
+		private string CreateCell(int x, int y, string tag) {
+			return "C;Y" + y + ";X" + x + ";K\"" + tag + "\"";
 		}
 	}
 }

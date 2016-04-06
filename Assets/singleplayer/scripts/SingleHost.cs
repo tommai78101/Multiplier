@@ -57,6 +57,11 @@ public class SingleHost : NetworkManager {
 			//TODO(Thompson): Need to create some sort of message box alerting the player to set the player presets first.
 			return;
 		}
+		//Player is always index 0.
+		GameMetricLogger.instance.levelDifficulty = fixes[0].value;
+		GameMetricLogger.SetDifficultyEquation(fixes[0].options[fixes[0].value + 1].text); //NOTE(Thompson): Why it needs value + 1, I have no idea. Maybe a Unity quirk.
+		GameMetricLogger.SetPlayerName("Player");
+
 
 		if (this.attributePanelGroup != null) {
 			this.attributePanelGroup.alpha = 0f;
