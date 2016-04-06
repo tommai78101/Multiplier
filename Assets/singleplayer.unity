@@ -329,7 +329,8 @@ MonoBehaviour:
 
 
     Start the game with the game units set in the editor. You cannot start the game
-    when the Player is not set to any presets.'
+    when the Player is not set to any presets, and when the A.I. player is set to
+    Custom mode, and its preset is not set.'
   tooltip: {fileID: 470695016}
 --- !u!114 &56817054
 MonoBehaviour:
