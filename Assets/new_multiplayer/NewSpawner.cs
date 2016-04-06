@@ -428,7 +428,6 @@ namespace MultiPlayer {
 					if (spawners[i].hasAuthority) {
 						spawners[i].isGameStart = false;
 						GameMetricLogger.ShowPrintLog();
-						break;
 					}
 				}
 			}
