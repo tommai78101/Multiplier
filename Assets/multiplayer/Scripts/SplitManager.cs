@@ -201,7 +201,7 @@ namespace MultiPlayer {
 			//When the player starts the action to split a game unit into two, it takes in all the selected game units
 			//one by one, and splits them individually.
 			if (Input.GetKeyDown(KeyCode.S)) {
-				this.maxUnitCount = 50;
+				this.maxUnitCount = SelectionManager.MAX_UNIT_COUNT;
 				if (this.globalManagerObject != null) {
 					this.maxUnitCount = this.globalManagerObject.playerMaxUnitCount;
 				}
@@ -211,7 +211,7 @@ namespace MultiPlayer {
 			}
 			UpdateSplitGroup();
 		}
-		 
+
 		public void UpdateSplitGroup() {
 			if (this.splitGroupList != null && this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using SinglePlayer;
@@ -6,15 +7,19 @@ using Analytics;
 
 namespace MultiPlayer {
 	public class SelectionManager : NetworkBehaviour {
+		public const int MAX_UNIT_COUNT = 50;
+
 		public List<GameObject> selectedObjects;
 		public List<GameObject> allObjects;
 		public List<GameObject> removeList; 
 
 		public Rect selectionBox;
-		public Vector3 initialClick;
 		public NetworkConnection authorityOwner;
 		public Camera minimapCamera;
+		public Vector3 initialClick;
 		public Vector3 screenPoint;
+
+		public Text unitCountText;
 
 		public bool isSelecting;
 		public bool isBoxSelecting;
