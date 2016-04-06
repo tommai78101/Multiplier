@@ -526,25 +526,6 @@ namespace MultiPlayer {
 					}
 				}
 			}
-
-			if (Input.GetMouseButtonUp(1)) {
-				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				RaycastHit[] hits = Physics.RaycastAll(ray);
-				foreach (RaycastHit hit in hits) {
-					if (hit.collider.gameObject.tag.Equals("Floor")) {
-						foreach (NewUnitStruct temp in this.selectedList) {
-							if (temp.unit == null) {
-								continue;
-							}
-							NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
-							this.changes = unit.CurrentProperty();
-							this.changes.mousePosition = hit.point;
-							this.changes.isCommanded = true;
-							CmdUpdateUnitProperty(temp.unit, this.changes);
-						}
-					}
-				}
-			}
 		}
 
 		private void CheckAvailableResource() {
@@ -930,7 +911,7 @@ namespace MultiPlayer {
 		private void CastRay(NewGameUnit unit, bool isMinimap, Vector3 mousePosition, Camera minimapCamera) {
 			Ray ray;
 			if (isMinimap) {
-				ray = minimapCamera.ViewportPointToRay(mousePosition);
+				ray = this.minimapCamera.ViewportPointToRay(mousePosition);
 			}
 			else {
 				ray = Camera.main.ScreenPointToRay(mousePosition);
@@ -940,6 +921,7 @@ namespace MultiPlayer {
 				if (hit.collider.gameObject.tag.Equals("Floor")) {
 					this.changes = unit.CurrentProperty();
 					this.changes.mousePosition = hit.point;
+					this.changes.isCommanded = true;
 					CmdUpdateUnitProperty(unit.gameObject, this.changes);
 					break;
 				}
