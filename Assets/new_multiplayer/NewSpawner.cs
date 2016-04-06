@@ -311,6 +311,9 @@ namespace MultiPlayer {
 
 		public void Update() {
 			//NOTE(Thompson): Common codes for server and clients go here.
+			//Common codes end here.
+
+			//NOTE(Thompson): Codes needed to run for non-authority objects go here.
 			if (!this.hasAuthority) {
 				ManageNonAuthorityLists();
 				return;
