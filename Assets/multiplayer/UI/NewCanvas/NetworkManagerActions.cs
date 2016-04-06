@@ -217,6 +217,7 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 
 		GameMetricLogger.DisableLoggerHotkey();
+		//GameMetricLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
 	}
 
 	//NOTE(Thompson): This is equivalent to SetClientReady().
@@ -228,6 +229,12 @@ public class NetworkManagerActions : MonoBehaviour {
 		PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
 		if (renderer != null) {
 			renderer.enabled = true;
+		}
+
+		Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+		TooltipLocator loc = canvas.GetComponent<TooltipLocator>();
+		if (loc != null) {
+			loc.tooltip.SetToolTipHidden(true);
 		}
 	}
 
@@ -410,6 +417,12 @@ public class NetworkManagerActions : MonoBehaviour {
 			}
 
 			GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
+		}
+
+		Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+		TooltipLocator loc = canvas.GetComponent<TooltipLocator>();
+		if (loc != null) {
+			loc.tooltip.SetToolTipHidden(true);
 		}
 	}
 
