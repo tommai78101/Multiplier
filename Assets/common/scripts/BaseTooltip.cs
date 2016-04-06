@@ -35,6 +35,7 @@ public class BaseTooltip : MonoBehaviour {
 		this.transform.position = Vector3.zero;
 		rectTransform.localScale = Vector3.one;
 		rectTransform.localPosition = Vector3.zero;
+		this.tooltipTextContent.text = "";
 		this.enableTooltipFlag = true;
 		this.SetToolTipHidden(true);
 	}
