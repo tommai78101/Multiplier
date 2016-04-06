@@ -425,8 +425,8 @@ namespace MultiPlayer {
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			if (spawners.Length > 0) {
 				for (int i = 0; i < spawners.Length; i++) {
+					spawners[i].isGameStart = false;
 					if (spawners[i].hasAuthority) {
-						spawners[i].isGameStart = false;
 						GameMetricLogger.ShowPrintLog();
 					}
 				}
