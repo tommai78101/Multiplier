@@ -177,6 +177,11 @@ public class NetworkManagerActions : MonoBehaviour {
 		else {
 			GameMetricLogger.instance.playerName = "Player";
 		}
+
+		if (Taskbar.Instance != null) {
+			Taskbar.Instance.ShowTaskbar(true);
+		}
+
 		GameMetricLogger.instance.difficultyEquations = this.difficultyDropdown.options[this.difficultyDropdown.value].text;
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 	}
@@ -205,6 +210,10 @@ public class NetworkManagerActions : MonoBehaviour {
 			stuffs.playerCameraPanning = Camera.main.GetComponent<CameraPanning>();
 			Camera minimapCamera = stuffs.GetComponent<Camera>();
 			minimapCamera.enabled = false;
+		}
+
+		if (Taskbar.Instance != null) {
+			Taskbar.Instance.ShowTaskbar(false);
 		}
 
 		GameMetricLogger.DisableLoggerHotkey();
@@ -304,6 +313,10 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 
 		this.Invoke("PreUnitAttributesInitialization", 1f);
+
+		if (Taskbar.Instance != null) {
+			Taskbar.Instance.ShowTaskbar(true);
+		}
 	}
 
 	public void StopLANClient() {

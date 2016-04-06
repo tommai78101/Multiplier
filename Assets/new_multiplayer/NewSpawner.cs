@@ -203,7 +203,6 @@ namespace MultiPlayer {
 			this.changes.Clear();
 
 			CmdInitialize(this.gameObject);
-
 		}
 
 		[Command]
@@ -324,6 +323,10 @@ namespace MultiPlayer {
 			HandleSelection();
 			HandleInputs();
 			ManageLists();
+
+			if (Taskbar.Instance != null) {
+				Taskbar.Instance.taskbarText.text = "Unit Count: " + this.unitList.Count + "/" + NewSpawner.MAX_UNIT_LIMIT;
+			}
 		}
 
 		[Command]

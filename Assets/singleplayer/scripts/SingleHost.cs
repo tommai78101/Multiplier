@@ -128,7 +128,9 @@ public class SingleHost : NetworkManager {
 		this.enablePauseGameMenu = true;
 		this.notReady = false;
 
-		Taskbar.Instance.ShowTaskbar(true);
+		if (Taskbar.Instance != null) {
+			Taskbar.Instance.ShowTaskbar(true);
+		}
 
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
