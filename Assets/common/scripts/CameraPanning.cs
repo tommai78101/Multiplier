@@ -18,7 +18,7 @@ public class CameraPanning : MonoBehaviour {
 	private bool cameraZoomingFlag;
 
 	public float aspectRatio;
-	public int marginSize = 15;
+	public int marginSize = 25;
 	public bool useDebugSceneCameraBorder = true;
 	public float cameraSpeed = 0.05f;
 	public int zoomLevel = 3;

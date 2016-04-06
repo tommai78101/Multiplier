@@ -19,7 +19,6 @@ public class SingleHost : NetworkManager {
 
 	private GameObject playerObject;
 	
-
 	public void Start() {
 		this.notReady = true;
 		this.enablePauseGameMenu = false;
@@ -128,6 +127,8 @@ public class SingleHost : NetworkManager {
 
 		this.enablePauseGameMenu = true;
 		this.notReady = false;
+
+		Taskbar.Instance.ShowTaskbar(true);
 
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);

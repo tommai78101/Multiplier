@@ -21,6 +21,7 @@ namespace MultiPlayer {
 
 		public Text unitCountText;
 
+		public int currentMaxUnitCount = MAX_UNIT_COUNT;
 		public bool isSelecting;
 		public bool isBoxSelecting;
 		public bool isDead;
@@ -165,6 +166,12 @@ namespace MultiPlayer {
 					CmdDestroy(obj);
 				}
 				this.removeList.Clear();
+			}
+		}
+
+		void OnGUI() {
+			if (Taskbar.Instance != null) {
+				Taskbar.Instance.taskbarText.text = "Unit Count / Max Unit Count : " + this.allObjects.Count + "/" + this.currentMaxUnitCount;
 			}
 		}
 

@@ -204,6 +204,7 @@ namespace MultiPlayer {
 				this.maxUnitCount = SelectionManager.MAX_UNIT_COUNT;
 				if (this.globalManagerObject != null) {
 					this.maxUnitCount = this.globalManagerObject.playerMaxUnitCount;
+					this.selectionManager.currentMaxUnitCount = this.globalManagerObject.playerMaxUnitCount;
 				}
 				if (this.selectionManager != null) {
 					AddingNewSplitGroup();
