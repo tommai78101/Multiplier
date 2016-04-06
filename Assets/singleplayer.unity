@@ -325,12 +325,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
-
-
-    Start the game with the game units set in the editor. You cannot start the game
-    when the Player is not set to any presets, and when the A.I. player is set to
-    Custom mode and its preset is not set.'
+  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nWelcome to Single Player Mode.
+    Each singleplayer session will log match statistics only, and can be viewed immediately
+    once the match ends. You will return to the Main Menu once the session is over.\n\nSelect
+    \"Start Game\" to start the game with the game units set in the editor. \n\nYou
+    cannot start the game when the Player is not set to any presets, and when the
+    A.I. player is set to Custom mode and its preset is not set."
   tooltip: {fileID: 470695016}
 --- !u!114 &56817054
 MonoBehaviour:
@@ -883,7 +883,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 885368426}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.96467173
+  m_Size: 0.96467185
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1752,7 +1752,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -1999,7 +1999,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 109.46}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &217337298
@@ -4170,27 +4170,27 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 106.725
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -59.95
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 183.45
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 89.9
       objectReference: {fileID: 0}
     - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: toggleKey
@@ -6910,7 +6910,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1982096129}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8226,35 +8226,35 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 620
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 0.000015258789
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
@@ -8297,7 +8297,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1356498879
@@ -9314,7 +9314,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Back
+  m_Text: Return to Main Menu
 --- !u!222 &1516450263
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10797,10 +10797,10 @@ MonoBehaviour:
   tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nCustom Equation can only be
     enabled when the Preset is set to \"Custom\". When enabled, you can modify the
     chosen unit attribute in the Category, and all of the Leveling Rates will give
-    the results of your equation.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n-
-    : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ :
-    Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0
-    and 1\n() : Parentheses"
+    the results of your equation.\n\nNote: For various reasons, 0 Health behaves the
+    same as 1 Health.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n- :
+    Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ : Divide\t\t\tp:
+    Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0 and 1\n() : Parentheses"
   tooltip: {fileID: 470695016}
 --- !u!224 &1936778576 stripped
 RectTransform:
