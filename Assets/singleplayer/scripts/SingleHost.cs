@@ -99,7 +99,7 @@ public class SingleHost : NetworkManager {
 
 				if (attributeManager != null && attributeManager.attributePanelUI != null) {
 					DifficultyGroup group = attributeManager.attributePanelUI.aiCalibrationDifficulty;
-					AImanager.difficulty = group.GetDifficulty();
+					AImanager.UpdateDifficulty(group.GetDifficulty());
 				}
 
 				unit.SetTeam(AImanager.teamFaction);

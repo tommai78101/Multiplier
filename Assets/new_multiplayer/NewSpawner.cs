@@ -523,6 +523,24 @@ namespace MultiPlayer {
 					}
 				}
 			}
+			if (Input.GetMouseButtonUp(1) && !this.minimapCamera.rect.Contains(this.screenPoint)) {
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				RaycastHit[] hits = Physics.RaycastAll(ray);
+				foreach (RaycastHit hit in hits) {
+					if (hit.collider.gameObject.tag.Equals("Floor")) {
+						foreach (NewUnitStruct temp in this.selectedList) {
+							if (temp.unit == null) {
+								continue;
+							}
+							NewGameUnit unit = temp.unit.GetComponent<NewGameUnit>();
+							this.changes = unit.CurrentProperty();
+							this.changes.mousePosition = hit.point;
+							this.changes.isCommanded = true;
+							CmdUpdateUnitProperty(temp.unit, this.changes);
+						}
+					}
+				}
+			}
 		}
 
 		private void CheckAvailableResource() {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Common;
 using Extension;
+using Analytics;
 
 namespace SinglePlayer {
 	public enum Difficulty {
@@ -105,6 +106,7 @@ namespace SinglePlayer {
 		public List<AIUnit> selectedUnits;
 		public List<AIUnit> spawnList;
 		public List<AIUnit> mergeList;
+		public List<AIUnit> unitList;
 		public List<SplitGroup> splitGroupList;
 		public List<MergeGroup> mergeGroupList;
 		public bool startAIFlag;
@@ -124,6 +126,8 @@ namespace SinglePlayer {
 		[Range(0f, 1f)]
 		public float splitRatio;
 		public EnumTeam teamFaction;
+		public bool isSingleAIPlayer;
+		public bool hasLostTheGame;
 
 		public static AIManager Instance;
 
@@ -140,17 +144,8 @@ namespace SinglePlayer {
 				this.maxUnitCount = 50;
 			}
 
-			switch (this.difficulty) {
-				case Difficulty.Easy:
-					tickIntervals = 2f;
-					break;
-				case Difficulty.Normal:
-					tickIntervals = 1f;
-					break;
-				case Difficulty.Hard:
-					tickIntervals = 0.5f;
-					break;
-			}
+			this.difficulty = Difficulty.Easy;
+			this.UpdateDifficulty(this.difficulty);
 			this.tickIntervalCounter = UnityEngine.Random.Range(0f, this.tickIntervals + 1f);
 			this.currentFiniteState = FSMState.Wait;
 			this.removeUnitList = new List<AIUnit>();
@@ -161,11 +156,20 @@ namespace SinglePlayer {
 			this.splitPercentage = 0f;
 			this.mergePercentage = 0f;
 			this.scoutPercentage = 0f;
+			this.isSingleAIPlayer = false;
+			this.hasLostTheGame = false;
 
 			AIManager.Instance = this;
 		}
 
 		public void Update() {
+			if (this.unitCount <= 0 && !this.startAIFlag && this.isSingleAIPlayer && this.hasLostTheGame) {
+				if (!GameMetricLogger.instance.isShownToScreen) {
+					GameMetricLogger.ShowPrintLog();
+				}
+				return;
+			}
+
 			if (this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
 					SplitGroup splitGroup = this.splitGroupList[i];
@@ -226,6 +230,7 @@ namespace SinglePlayer {
 				}
 				this.removeUnitList.Clear();
 			}
+			this.unitCount = this.unitContainer.transform.childCount;
 		}
 
 		public void FixedUpdate() {
@@ -259,20 +264,34 @@ namespace SinglePlayer {
 			this.startAIFlag = false;
 		}
 
+		public void UpdateDifficulty(Difficulty diff) {
+			switch (diff) {
+				case Difficulty.Easy:
+					tickIntervals = 2f;
+					break;
+				case Difficulty.Normal:
+					tickIntervals = 1f;
+					break;
+				case Difficulty.Hard:
+					tickIntervals = 0.5f;
+					break;
+			}
+			this.difficulty = diff;
+		}
+
 		//Actual update tick
 		public void Tick() {
-			this.unitCount = this.unitContainer.transform.childCount;
+			if (this.unitCount <= 0) {
+				//Defeat. No more AI units on the map.
+				Debug.Log("AI Player is defeated.");
+				this.hasLostTheGame = true;
+				this.startAIFlag = false;
+				return;
+			}
 			switch (this.currentFiniteState) {
 				case FSMState.Wait:
 					if (this.selectedUnits.Count > 0) {
 						this.selectedUnits.Clear();
-					}
-
-					if (this.unitCount <= 0) {
-						//Defeat. No more AI units on the map.
-						Debug.Log("AI Player is defeated.");
-						this.startAIFlag = false;
-						return;
 					}
 
 					if (this.unitCount == 1) {
@@ -352,7 +371,6 @@ namespace SinglePlayer {
 									GameObject splitObject = SplitUnit(unit);
 									if (splitObject != null) {
 										this.splitGroupList.Add(new SplitGroup(unit.gameObject, splitObject));
-										this.unitCount = this.unitContainer.transform.childCount;
 									}
 								}
 								else {
