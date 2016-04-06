@@ -40,18 +40,14 @@ namespace Analytics {
 		private string metricsReportText;
 
 		//Flags
-		public bool gameStartFlag {
-			get; set;
-		}
-		public bool gameMetricLoggerStart {
-			get; set;
-		}
-		public bool isInputEnabled {
-			get; set;
-		}
-		public bool isShownToScreen {
-			get; set;
-		}
+		[SerializeField]
+		public bool gameStartFlag;
+		[SerializeField]
+		public bool gameMetricLoggerStart;
+		[SerializeField]
+		public bool isInputEnabled;
+		[SerializeField]
+		public bool isShownToScreen;
 
 		public void Start() {
 			Initialization();
