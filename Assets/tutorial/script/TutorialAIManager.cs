@@ -94,11 +94,11 @@ namespace Tutorial {
 						case 0:
 							return "This lesson is about Camera Controls, teaching you the basics of moving around the camera when you are playtesting your units against A.I or with human players.";
 						case 1:
-							return "Move your mouse to the edge of the screen boundaries (near the flashing red borders).";
+							return "Move your mouse to the edge of the screen boundaries (near the flashing red borders). When you put your mouse at the edge of where you wished to go, the camera will move in that general direction.";
 						case 2:
-							return "When you put your mouse at the edge of where you wished to go, the camera will move in that general direction. Useful for panning the camera around.";
+							return "You can also move the camera around using the Arrow Keys.";
 						case 3:
-							return "The other method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around.";
+							return "Another method of moving the camera is by using the minimap shown in the lower right screen. Click and drag in the minimap at the lower right of your screen to move the camera around.";
 						case 4:
 							return "This method of control is best suited for quickly panning the camera to where you want to see.";
 						case 5:
