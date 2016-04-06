@@ -92,22 +92,22 @@ public class CameraPanning : MonoBehaviour {
 #endif
 
 
-			if (mousePosition.x > 0 && mousePosition.x < this.aspectRatioMarginSize) {
+			if (mousePosition.x > 0 && mousePosition.x < this.aspectRatioMarginSize || Input.GetKey(KeyCode.LeftArrow)) {
 				Vector3 camPos = this.transform.position;
 				camPos.x -= cameraSpeed;
 				this.transform.position = camPos;
 			}
-			if (mousePosition.y > 0 && mousePosition.y < this.aspectRatioMarginSize) {
+			if (mousePosition.y > 0 && mousePosition.y < this.aspectRatioMarginSize || Input.GetKey(KeyCode.DownArrow)) {
 				Vector3 camPos = this.transform.position;
 				camPos.z -= cameraSpeed;
 				this.transform.position = camPos;
 			}
-			if (mousePosition.x > (screen.x - this.aspectRatioMarginSize) && mousePosition.x <= screen.x) {
+			if (mousePosition.x > (screen.x - this.aspectRatioMarginSize) && mousePosition.x <= screen.x || Input.GetKey(KeyCode.RightArrow)) {
 				Vector3 camPos = this.transform.position;
 				camPos.x += cameraSpeed;
 				this.transform.position = camPos;
 			}
-			if (mousePosition.y > (screen.y - this.aspectRatioMarginSize) && mousePosition.y <= screen.y) {
+			if (mousePosition.y > (screen.y - this.aspectRatioMarginSize) && mousePosition.y <= screen.y || Input.GetKey(KeyCode.UpArrow)) {
 				Vector3 camPos = this.transform.position;
 				camPos.z += cameraSpeed;
 				this.transform.position = camPos;
