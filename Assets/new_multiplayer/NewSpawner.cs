@@ -605,7 +605,8 @@ namespace MultiPlayer {
 					}
 				}
 			}
-			if (this.unitList.Count > 0) {
+			this.isUnitListEmpty = this.unitList.Count <= 0;
+			if (!this.isUnitListEmpty) {
 				for (int i = this.unitList.Count - 1; i >= 0; i--) {
 					if (this.unitList[i].unit == null) {
 						this.unitList.RemoveAt(i);
