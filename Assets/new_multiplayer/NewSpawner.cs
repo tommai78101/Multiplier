@@ -722,6 +722,9 @@ namespace MultiPlayer {
 			}
 			else {
 				if (Input.GetMouseButtonDown(0)) {
+					if (this.minimapCamera.rect.Contains(this.screenPoint)) {
+						return;
+					}
 					if (!(Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))) {
 						ClearSelectObjects();
 					}
