@@ -224,7 +224,7 @@ namespace MultiPlayer {
 				this.currentHealth = this.maxHealth;
 				this.attackPower = this.unitAttributes.attackPrefabList[this.level];
 				this.speed = this.unitAttributes.speedPrefabList[this.level];
-				this.attackCooldownCounter = this.unitAttributes.attackCooldownPrefabList[this.level];
+				this.attackCooldown = this.unitAttributes.attackCooldownPrefabList[this.level];
 				NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
 				if (agent != null) {
 					agent.speed = this.speed;
