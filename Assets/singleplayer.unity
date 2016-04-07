@@ -1243,8 +1243,9 @@ GameObject:
   - 222: {fileID: 134973244}
   - 114: {fileID: 134973243}
   - 114: {fileID: 134973242}
+  - 114: {fileID: 134973245}
   m_Layer: 5
-  m_Name: Disconnect
+  m_Name: Restart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1307,26 +1308,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1752860196}
-        m_MethodName: StopServer
-        m_Mode: 1
+      - m_Target: {fileID: 134973245}
+        m_MethodName: Load
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1752860196}
-        m_MethodName: ResetAttributePanelUI
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: singleplayer
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -1364,6 +1354,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 134973240}
+--- !u!114 &134973245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 134973240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29dd737badac341479ebf629688395ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &154558176
 GameObject:
   m_ObjectHideFlags: 0
@@ -3959,7 +3960,7 @@ GameObject:
   - 114: {fileID: 461459589}
   - 114: {fileID: 461459588}
   m_Layer: 5
-  m_Name: Paused Text
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4032,7 +4033,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Paused
+  m_Text: Menu
 --- !u!222 &461459590
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4798,7 +4799,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Disconnect
+  m_Text: Restart
 --- !u!222 &539469575
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8901,7 +8902,7 @@ GameObject:
   - 114: {fileID: 1464894942}
   - 114: {fileID: 1464894941}
   m_Layer: 5
-  m_Name: Unpause Game
+  m_Name: Return to Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9443,7 +9444,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Unpause Game
+  m_Text: Return to Game
 --- !u!222 &1537872491
 CanvasRenderer:
   m_ObjectHideFlags: 0
