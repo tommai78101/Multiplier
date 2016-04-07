@@ -273,9 +273,9 @@ namespace MultiPlayer {
 		[Command]
 		public void CmdSplit(GameObject obj, bool hasAuthority) {
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			if (unit.attributes == null) {
+			if (unit.unitAttributes == null) {
 				if (this.unitAttributes != null) {
-					unit.attributes = this.unitAttributes;
+					unit.unitAttributes = this.unitAttributes;
 				}
 				else {
 					Debug.LogError("Definitely something is wrong here with unit attributes.");
@@ -323,20 +323,20 @@ namespace MultiPlayer {
 			GameUnit original = obj.GetComponent<GameUnit>();
 			GameUnit copy = split.GetComponent<GameUnit>();
 
-			if (original.attributes == null) {
+			if (original.unitAttributes == null) {
 				GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
 				if (obj != null) {
-					original.attributes = attrObj.GetComponent<UnitAttributes>();
-					if (original.attributes == null) {
+					original.unitAttributes = attrObj.GetComponent<UnitAttributes>();
+					if (original.unitAttributes == null) {
 						Debug.LogError("Unit attributes are missing from original unit.");
 					}
 				}
 			}
-			if (copy.attributes == null) {
+			if (copy.unitAttributes == null) {
 				GameObject attrObj = GameObject.FindGameObjectWithTag("UnitAttributes");
 				if (obj != null) {
-					copy.attributes = attrObj.GetComponent<UnitAttributes>();
-					if (copy.attributes == null) {
+					copy.unitAttributes = attrObj.GetComponent<UnitAttributes>();
+					if (copy.unitAttributes == null) {
 						Debug.LogError("Unit attributes are missing from copy unit.");
 					}
 				}
@@ -397,7 +397,7 @@ namespace MultiPlayer {
 			copy.attackCooldownCounter = original.attackCooldownCounter = 0;
 			copy.attackPower = original.attackPower;
 
-			copy.attributes = original.attributes;
+			copy.unitAttributes = original.unitAttributes;
 			copy.teamColorValue = original.teamColorValue;
 
 			original.SetTeamColor(original.teamColorValue);

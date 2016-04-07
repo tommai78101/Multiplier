@@ -6,11 +6,11 @@ using Common;
 
 namespace MultiPlayer {
 	public class UnitAttributes : NetworkBehaviour {
-		public List<float> healthPrefabList;
-		public List<float> attackPrefabList;
-		public List<float> speedPrefabList;
-		public List<float> mergePrefabList;
-		public List<float> attackCooldownPrefabList;
+		public List<float> healthPrefabList = new List<float>(10);
+		public List<float> attackPrefabList = new List<float>(10);
+		public List<float> speedPrefabList = new List<float>(10);
+		public List<float> mergePrefabList = new List<float>(10);
+		public List<float> attackCooldownPrefabList = new List<float>(10);
 		public float splitPrefabFactor;
 		public int maxLevelCount;
 
@@ -24,41 +24,29 @@ namespace MultiPlayer {
 		//}
 
 		public void Initialize() {
-			this.healthPrefabList = new List<float>(10);
-			this.attackPrefabList = new List<float>(10);
-			this.speedPrefabList = new List<float>(10);
-			this.mergePrefabList = new List<float>(10);
-			this.attackCooldownPrefabList = new List<float>(10);
-
-			GameObject content = GameObject.FindGameObjectWithTag("Content");
-			if (content != null) {
-				Attributes attr = content.GetComponent<Attributes>();
-				if (attr != null) {
-					for (int i = 0; i < 6; i++) {
-						for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
-							switch (i) {
-								case 0:
-									this.healthPrefabList.Add((float) (1 + j));
-									break;
-								case 1:
-									this.attackPrefabList.Add((float) (1 + j));
-									break;
-								case 2:
-									this.speedPrefabList.Add((float) 3f / (1 + j));
-									break;
-								case 3:
-									this.mergePrefabList.Add(3f);
-									break;
-								case 4:
-									this.attackCooldownPrefabList.Add(3f);
-									break;
-								case 5:
-									if (j <= 0) {
-										this.splitPrefabFactor = 3f;
-									}
-									break;
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < Attributes.MAX_NUM_OF_LEVELS; j++) {
+					switch (i) {
+						case 0:
+							this.healthPrefabList.Add((float)(1 + j));
+							break;
+						case 1:
+							this.attackPrefabList.Add((float)(1 + j));
+							break;
+						case 2:
+							this.speedPrefabList.Add((float)3f / (1 + j));
+							break;
+						case 3:
+							this.mergePrefabList.Add(3f);
+							break;
+						case 4:
+							this.attackCooldownPrefabList.Add(3f);
+							break;
+						case 5:
+							if (j <= 0) {
+								this.splitPrefabFactor = 3f;
 							}
-						}
+							break;
 					}
 				}
 			}

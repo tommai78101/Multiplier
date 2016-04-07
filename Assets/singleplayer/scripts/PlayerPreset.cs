@@ -80,5 +80,9 @@ namespace SinglePlayer {
 				this.attributePanelUI.RefreshAttributes(this.unitAttributes);
 			}
 		}
+
+		public void ApplyAttributes() {
+
+		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using System.Text;
 using System.Collections.Generic;
 using SinglePlayer;
+using MultiPlayer;
 using SinglePlayer.UI;
 using Analytics;
 
@@ -54,12 +56,14 @@ public class SingleHost : NetworkManager {
 			values += fixes[i].value;
 		}
 		if (values <= 0) {
-			//TODO(Thompson): Need to create some sort of message box alerting the player to set the player presets first.
+			//Start Game button is now interactable only when player hasn't chosen a preset.
 			return;
 		}
-		//Player is always index 0.
+		//Note(Thompson): Player is always index 1.
+		//Note(Thompson): Obtain the A.I. level difficulty.
 		GameMetricLogger.instance.levelDifficulty = fixes[0].value;
-		GameMetricLogger.SetDifficultyEquation(fixes[0].options[fixes[0].value + 1].text); //NOTE(Thompson): Why it needs value + 1, I have no idea. Maybe a Unity quirk.
+		//Note(Thompson): Check if the Player dropdown value is 5. If not, and is above 0, return difficulty equation used. Else, return a full range of custom equations used.
+		GameMetricLogger.SetDifficultyEquation(ConvertCustomToEquations(fixes[1].value, fixes[1].options[fixes[1].value].text)); 
 		GameMetricLogger.SetPlayerName("Player");
 
 
@@ -114,17 +118,7 @@ public class SingleHost : NetworkManager {
 			this.HumanUnits = unitUmbrellaTransform.gameObject;
 		}
 
-		if (!this.isNetworkActive) {
-			this.StartHost();
-		}
-
-		this.enablePauseGameMenu = true;
-		this.playerUmbrellaObject = GameObject.FindGameObjectWithTag("Player");
-		if (this.playerUmbrellaObject != null) {
-			this.HumanPlayer = this.playerUmbrellaObject;
-			Transform unitUmbrellaTransform = this.playerUmbrellaObject.transform.GetChild(0);
-			this.HumanUnits = unitUmbrellaTransform.gameObject;
-		}
+		SetupPlayerUnits();
 
 		if (!this.isNetworkActive) {
 			this.StartHost();
@@ -197,6 +191,28 @@ public class SingleHost : NetworkManager {
 			else {
 				this.pauseMenuGroup.gameObject.SetActive(true);
 			}
+		}
+	}
+
+	public string ConvertCustomToEquations(int value, string text) {
+		StringBuilder sB = new StringBuilder();
+		return sB.ToString();
+	}
+
+	public void SetupPlayerUnits() {
+		if (this.HumanUnits != null) {
+			foreach (Transform child in this.HumanUnits.transform) {
+				GameUnit unit = child.GetComponent<GameUnit>();
+				if (unit != null) {
+					unit.UpdateUnitAttributes();
+				}
+				else {
+					Debug.LogError("Didn't see any GameUnit objects.");
+				}
+			}
+		}
+		else {
+			Debug.LogError("Transform object, Units, is not set.");
 		}
 	}
 }

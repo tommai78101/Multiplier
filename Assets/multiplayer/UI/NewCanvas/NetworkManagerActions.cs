@@ -529,7 +529,7 @@ public class NetworkManagerActions : MonoBehaviour {
 					NetworkIdentity identity = unit.GetComponent<NetworkIdentity>();
 					if (identity != null && identity.hasAuthority) {
 						GameUnit gameUnit = unit.GetComponent<GameUnit>();
-						gameUnit.attributes = myAttributes;
+						gameUnit.unitAttributes = myAttributes;
 					}
 				}
 			}

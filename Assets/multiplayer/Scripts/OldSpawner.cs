@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 using Common;
 using SinglePlayer;
+using SinglePlayer.UI;
 
 namespace MultiPlayer {
 	public class OldSpawner : NetworkBehaviour {
@@ -146,7 +147,7 @@ namespace MultiPlayer {
 					splitManager.globalManagerObject = globalManagerObject;
 					splitManager.maxUnitCount = globalManagerObject.playerMaxUnitCount;
 				}
-            }
+			}
 			NetworkServer.SpawnWithClientAuthority(manager, this.connectionToClient);
 
 			//Player merge manager
@@ -218,8 +219,49 @@ namespace MultiPlayer {
 					}
 				}
 
+
 				if (playerUnit != null) {
-					playerUnit.attributes = attributes;
+					playerUnit.unitAttributes = attributes;
+					AttributePanelUI attributePanelUI = GameObject.FindObjectOfType<AttributePanelUI>();
+					if (attributePanelUI != null) {
+						foreach (Category cat in Category.Values) {
+							List<LevelRate> levelRate = attributePanelUI.levelingRatesObject.allAttributes[cat.value];
+							switch (cat.value) {
+								case 0:
+									for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+										playerUnit.unitAttributes.healthPrefabList[i] = levelRate[i].rate;
+									}
+									break;
+								case 1:
+									for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+										playerUnit.unitAttributes.attackPrefabList[i] = levelRate[i].rate;
+									}
+									break;
+								case 2:
+									for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+										playerUnit.unitAttributes.speedPrefabList[i] = levelRate[i].rate;
+									}
+									break;
+								case 3:
+									playerUnit.unitAttributes.splitPrefabFactor = levelRate[0].rate;
+									break;
+								case 4:
+									for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+										playerUnit.unitAttributes.mergePrefabList[i] = levelRate[i].rate;
+									}
+									break;
+								case 5:
+									for (int i = 0; i < Attributes.MAX_NUM_OF_LEVELS; i++) {
+										playerUnit.unitAttributes.attackCooldownPrefabList[i] = levelRate[i].rate;
+									}
+									break;
+								default:
+									Debug.LogError("Cannot process what's going on. Please check code execution flow using debugger and breakpoints set to here.");
+									break;
+							}
+						}
+						playerUnit.UpdateUnitAttributes();
+					}
 				}
 			}
 		}

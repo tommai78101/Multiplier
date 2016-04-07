@@ -20,13 +20,10 @@ namespace MultiPlayer {
 		public bool isMerging;
 		[SyncVar]
 		public int currentHealth;
-		[Range(3, 100)]
 		[SyncVar]
 		public int maxHealth;
-		[Range(1f, 100f)]
 		[SyncVar]
 		public float attackPower;
-		[Range(0.001f, 10f)]
 		[SyncVar]
 		public float attackCooldown;
 		[SyncVar]
@@ -41,7 +38,7 @@ namespace MultiPlayer {
 		[SyncVar]
 		public int teamColorValue;
 
-		public UnitAttributes attributes;
+		public UnitAttributes unitAttributes;
 		public float attackCooldownCounter;
 		public float recoverCounter;
 		public Color initialColor;
@@ -80,6 +77,8 @@ namespace MultiPlayer {
 			this.level = 1;
 			this.previousLevel = 1;
 
+			UpdateUnitAttributes();
+
 			Renderer renderer = this.GetComponent<Renderer>();
 			if (renderer != null) {
 				this.initialColor = renderer.material.color;
@@ -88,6 +87,7 @@ namespace MultiPlayer {
 
 		public void Start() {
 			this.SetTeamColor(this.teamColorValue);
+			this.currentHealth = this.maxHealth;
 		}
 
 		public void Update() {
@@ -217,6 +217,17 @@ namespace MultiPlayer {
 			}
 		}
 
+		public void UpdateUnitAttributes() {
+			//TODO(Thompson): This is where I need to update Unit Attributes here to match the Unit Attribute Tracker provided.
+			if (this.unitAttributes != null) {
+				this.maxHealth = (int)this.unitAttributes.healthPrefabList[this.level];
+				this.currentHealth = this.maxHealth;
+				this.attackPower = this.unitAttributes.attackPrefabList[this.level];
+				this.speed = this.unitAttributes.speedPrefabList[this.level];
+				this.attackCooldownCounter = this.unitAttributes.attackCooldownPrefabList[this.level];
+			}
+		}
+
 		//Sets the team color.
 		public void SetTeamColor(int colorValue) {
 			this.teamColorValue = colorValue;
@@ -288,7 +299,7 @@ namespace MultiPlayer {
 				if (area != null) {
 					if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 						if (this.attackCooldownCounter <= 0f) {
-							CmdAttack(this.targetEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+							CmdAttack(this.targetEnemy.gameObject, this.unitAttributes.attackCooldownPrefabList[this.level]);
 
 							GameMetricLogger.Increment(GameMetricOptions.Attacks);
 							GameMetricLogger.Increment(GameMetricOptions.AttackTime);
@@ -306,8 +317,8 @@ namespace MultiPlayer {
 				if (area != null) {
 					if (area.otherEnemies.Contains(this.targetAIEnemy)) {
 						if (this.attackCooldownCounter <= 0f) {
-							if (this.attributes.attackCooldownPrefabList.Count > 0) {
-								AttackAI(this.targetAIEnemy.gameObject, this.attributes.attackCooldownPrefabList[this.level]);
+							if (this.unitAttributes.attackCooldownPrefabList.Count > 0) {
+								AttackAI(this.targetAIEnemy.gameObject, this.unitAttributes.attackCooldownPrefabList[this.level]);
 							}
 							else {
 								AttackAI(this.targetAIEnemy.gameObject, 1f);
@@ -335,7 +346,8 @@ namespace MultiPlayer {
 				this.recoverCounter += Time.deltaTime;
 			}
 
-			if (this.currentHealth <= 0) {
+			if (this.currentHealth < 0) {
+				//NOTE(Thompson): Game allows 0 health points to act like 1 health points.
 				CmdUnitDestroy(this.gameObject);
 			}
 

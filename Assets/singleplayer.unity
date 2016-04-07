@@ -383,8 +383,8 @@ MonoBehaviour:
           m_StringArgument: menu
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 455889521}
-        m_MethodName: SetAttributes
+      - m_Target: {fileID: 2067481519}
+        m_MethodName: FinishedEditing
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -883,7 +883,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 885368426}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1001,8 +1001,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 785861156}
   m_HandleRect: {fileID: 785861155}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1752,7 +1752,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -1999,7 +1999,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 109.46}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &217337298
@@ -2607,7 +2607,7 @@ GameObject:
   - 114: {fileID: 319687393}
   - 114: {fileID: 319687392}
   m_Layer: 5
-  m_Name: Selections Fix
+  m_Name: AI Selections Fix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3723,7 +3723,7 @@ GameObject:
   - 114: {fileID: 455889518}
   - 114: {fileID: 455889521}
   m_Layer: 5
-  m_Name: Selections Fix
+  m_Name: Player Selections Fix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5604,7 +5604,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1446372195}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6856,7 +6856,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1982096129}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8160,7 +8160,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.6454868
+      value: 0.65646714
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -8204,7 +8204,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000061035156
+      value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 11409796, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_Size
@@ -8251,7 +8251,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1356498879
@@ -9815,7 +9815,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 59301637}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.77801853
+  m_Size: 0.7602721
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11518,13 +11518,13 @@ MonoBehaviour:
   categoryContentObject: {fileID: 1356498881}
   levelingRatesObject: {fileID: 1769783595}
   equationTextObject: {fileID: 1077077321}
-  equationInputField: {fileID: 0}
+  equationInputField: {fileID: 885866270}
   aiCategoryContentObject: {fileID: 190387248}
   aiLevelingRatesObject: {fileID: 217337298}
   aiCalibrationDifficulty: {fileID: 1030146358}
   aiCalibrationPresets: {fileID: 172463336}
   aiEquationTextObject: {fileID: 1452976244}
-  aiEquationInputField: {fileID: 0}
+  aiEquationInputField: {fileID: 2136536035}
   enablePlayerCustomEquations: 0
 --- !u!1 &2075833229
 GameObject:

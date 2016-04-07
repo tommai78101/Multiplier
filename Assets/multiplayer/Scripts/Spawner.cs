@@ -219,7 +219,7 @@ namespace MultiPlayer {
 				}
 
 				if (playerUnit != null) {
-					playerUnit.attributes = attributes;
+					playerUnit.unitAttributes = attributes;
 				}
 			}
 		}
