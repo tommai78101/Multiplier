@@ -1484,7 +1484,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.6454868
+      value: 0.64210814
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -1496,23 +1496,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 605
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -1524,10 +1524,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5456,8 +5452,6 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: y = 3.872983 (Hard)
       m_Image: {fileID: 0}
-    - m_Text: Custom
-      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -8759,7 +8753,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000015944242, y: 0}
+  m_AnchoredPosition: {x: 0.000012591481, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454
