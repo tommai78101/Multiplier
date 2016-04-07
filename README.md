@@ -72,6 +72,7 @@ Note: Singleplayer controls are very similar.
 
 ## Changelog:
 
+**Known Issue:** Tooltips will briefly flash a big portion of the screen. I currently do not know how to fix this.    
 **Known Issue:** Multiplayer Mode and Singleplayer Mode may have hidden bugs due to game engine rewrite.   
 **Known Issue:** TODO messages are scattered through the scenes. They are there to remind me of what to do, and will be removed once the scenes are completed.   
 
