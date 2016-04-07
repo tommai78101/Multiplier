@@ -31,6 +31,8 @@ Random (e.g., 5+r)
 
 Future math expressions may be supported.
 
+#### I would highly recommend you to try out the Tutorials, as it gives an in-depth explanations and details of the latest controls and gameplay of the game.
+
 [Trello Scrum board can be found here.](https://trello.com/b/VQIT6pl9/master-s-project) This shows the current progression and future plans of the project. It is always updated.
 
 ## Start:
