@@ -1,6 +1,6 @@
 # Unity-UNET-RTS
 
-![](https://github.com/tommai78101/Unity-UNET-RTS/raw/testing/demo.gif)
+![](https://github.com/tommai78101/Unity-UNET-RTS/raw/master/demo.gif)
 
 [<span style="font-size:20dp;">Playable demo.</span>](http://tom-mai78101.itch.io/multiplier) (Requires browsers that support Unity Web Player)
 
