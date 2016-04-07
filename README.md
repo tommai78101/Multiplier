@@ -70,9 +70,47 @@ Note: Singleplayer controls are very similar.
 
 ## Changelog:
 
-**Known Issue:** There's a lack of polish in this build. This will definitely change.   
 **Known Issue:** Multiplayer Mode and Singleplayer Mode may have hidden bugs due to game engine rewrite.   
 **Known Issue:** TODO messages are scattered through the scenes. They are there to remind me of what to do, and will be removed once the scenes are completed.   
+
+### - v0.5.1-unet:
+
+* SinglePlayer: Slightly changed menu labels when pressing Escape key during game session.   
+
+### - v0.5-unet:
+
+* All: Changed all floor colors to dark green, so it stands out from the white background.   
+* All: Changed selection box line color to a lighter green for more clarity.   
+* All: Camera panning can now be controlled using the Arrow keys.   
+* Singleplayer/Multiplayer: Added Taskbar depicting unit count and max unit count.   
+* All: Replaced Metrics Logger with a more improved version to fix the weird Text UI component issue.   
+* Singleplayer: Fixed hidden bug where Unit Attributes Editor not even once affect player's units at all. All attributes are now affected to its correct values from Unit Attributes Editor.    
+* Singleplayer: Fixed Health Bar from showing up when Metrics Logger is shown.   
+* Singleplayer: Fixed Metrics Logger not logging level difficulty and what equations were used.   
+* Multiplayer: Fixed right clicking on Minimap issues Move Command to wrong location.   
+* Multiplayer: Fixed Metrics Logger not showing up for server when client loses.   
+* Multiplayer: Fixed client not starting to log total time when the game match ends.    
+* Multiplayer: Fixed Tooltip from blocking view after the game match has started, and the player hasn't disable Tooltips yet.    
+
+### - v0.4.5-unet:
+
+* Added tooltips for the confusing UI.   
+* To toggle tooltips (show/hide), press SHIFT key.    
+
+### - v0.4.4-unet:
+
+* Improved Tutorials.   
+* Fixed aspect ratio being off. Resolved graphical issues.    
+
+### - v0.4.3-unet:
+
+* Completed Tutorials.   
+* Split Tutorials up into Sections for easier navigation.   
+
+### - v0.4.2-unet:
+
+* Fixed leveling rates not appearing in Simulation Mode.    
+* Added a few more lessons to the Tutorials.    
 
 ### - v0.4.1-unet:
 
