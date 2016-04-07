@@ -82,6 +82,10 @@ namespace Analytics {
 		public void ShowPrintLog() {
 			this.EnableCanvasGroup();
 			this.stringBuilder.Length = 0;
+			RectTransform rect = this.outputField.GetComponent<RectTransform>();
+			Vector3 pos = rect.sizeDelta;
+			pos.y += 10;
+			rect.sizeDelta = pos;
 			this.Print();
 		}
 

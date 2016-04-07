@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System;
+using System.Text;
+using Extension;
 
 public class BaseTooltip : MonoBehaviour {
 	public int paddingSize;
@@ -15,6 +17,7 @@ public class BaseTooltip : MonoBehaviour {
 	public Text tooltipTextContent;
 	public RectTransform rectTransform;
 	public RectTransform target;
+	public Image uiBorder;
 
 	[Range(-400f, 400f)]
 	public float xOffset;
@@ -23,6 +26,7 @@ public class BaseTooltip : MonoBehaviour {
 
 	private String textMemory;
 	private bool enableTooltipFlag;
+	private bool isFadingAway;
 
 	//Initialization stuffs.
 	public void Start() {
@@ -34,6 +38,9 @@ public class BaseTooltip : MonoBehaviour {
 			this.paddingSize = 10; //Sets the text margins on all 4 sides (top, left, bottom, right).
 		}
 		this.transform.position = Vector3.zero;
+		this.toggleKey =  KeyCode.T;
+		this.alternateToggleKey = KeyCode.P;
+		this.isFadingAway = false;
 		rectTransform.localScale = Vector3.one;
 		rectTransform.localPosition = Vector3.zero;
 		this.tooltipTextContent.text = "";  //Initialize the actual Tooltip text content to an empty string.
@@ -66,18 +73,30 @@ public class BaseTooltip : MonoBehaviour {
 			pos.y -= this.yOffset;
 			this.rectTransform.localPosition = pos;
 		}
+
+		if (this.isFadingAway) {
+			if (this.canvasGroup != null && this.canvasGroup.alpha > 0f) {
+				this.canvasGroup.alpha -= Time.deltaTime;
+			}
+		}
 	}
 
 	//Just setting text to the child Text UI component.
 	public void SetText(string hint) {
-		this.textMemory = hint;
+		StringBuilder sB = new StringBuilder();
+		sB.AppendLine("(Enable/Disable Tooltip: Press T key)");
+		sB.AppendLine();
+		sB.AppendLine(hint);
+		this.textMemory = sB.ToString();
 	}
 
 	//Toggles tooltip visibility/
 	public void SetToolTipHidden(bool flag) {
 		if (this.enableTooltipFlag) {
 			if (flag) {
-				this.canvasGroup.alpha = 0f;
+				if (this.canvasGroup.alpha > 0f) {
+					this.isFadingAway = true;
+				}
 				this.canvasGroup.interactable = false;
 				this.canvasGroup.blocksRaycasts = false;
 			}
@@ -85,12 +104,14 @@ public class BaseTooltip : MonoBehaviour {
 				this.canvasGroup.alpha = 1f;
 				this.canvasGroup.interactable = true;
 				this.canvasGroup.blocksRaycasts = false;
+				this.isFadingAway = false;
 			}
 		}
 		else {
 			this.canvasGroup.alpha = 0f;
 			this.canvasGroup.interactable = false;
 			this.canvasGroup.blocksRaycasts = false;
+			this.isFadingAway = true;
 		}
 	}
 
@@ -99,6 +120,25 @@ public class BaseTooltip : MonoBehaviour {
 	//will be called. Its intended purpose is merely just to point out the last touched UI 
 	//component the player has the mouse hovering over.
 	public void SetTarget(RectTransform obj) {
+		if (!this.enableTooltipFlag) {
+			this.uiBorder.transform.SetParent(this.transform);
+			return;
+		}
 		this.target = obj;
+		Image targetImage = this.target.GetComponent<Image>();
+		//if (targetImage == null) {
+		//	targetImage = this.target.GetComponentInChildren<Image>();
+		//}
+		if (targetImage != null) {
+			this.uiBorder.transform.SetParent(targetImage.transform);
+			this.uiBorder.rectTransform.sizeDelta = targetImage.rectTransform.sizeDelta;
+			this.uiBorder.rectTransform.localPosition = Vector2.zero;
+		}
+		else {
+			this.uiBorder.transform.SetParent(this.target.transform);
+			RectTransform rect = this.target.GetComponent<RectTransform>();
+			this.uiBorder.rectTransform.SetSize(this.target.GetSize());
+			this.uiBorder.rectTransform.localPosition = Vector2.zero;
+		}
 	}
 }

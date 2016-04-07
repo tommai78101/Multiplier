@@ -132,14 +132,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nThe Leveling Rates show the
-    progression of the active unit attribute for each level. The active unit attribute
-    is the unit attribute chosen. \n\nFor example, Level 1 unit's Attack is 1. Level
-    2 unit's Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories,
-    the Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\n\nAnother
-    example, if Speed is chosen, the Leveling Rates will show the Speed attributes
-    for each level. When a unit upgrades to the next level, that corresponding Leveling
-    Rate will apply to that upgraded unit.\n"
+  tooltipText: "The Leveling Rates show the progression of the active unit attribute
+    for each level. The active unit attribute is the unit attribute chosen. \n\nFor
+    example, Level 1 unit's Attack is 1. Level 2 unit's Attack is 2. If the \"Attack\"
+    unit attribute is chosen in the Categories, the Leveling Rate for Level 1 is \"1\",
+    and the Leveling Rate for Level 2 is \"2\".\n\nAnother example, if Speed is chosen,
+    the Leveling Rates will show the Speed attributes for each level. When a unit
+    upgrades to the next level, that corresponding Leveling Rate will apply to that
+    upgraded unit.\n"
   tooltip: {fileID: 470695016}
 --- !u!1 &28345864
 GameObject:
@@ -202,12 +202,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
-
-
-    View the Leveling Rates that corresponds to the chosen unit attribute, thus setting
-    it as "active". If the Preset is set to "Custom", the Custom Equation modifies
-    the active unit attribute for each level.
+  tooltipText: 'View the Leveling Rates that corresponds to the chosen unit attribute,
+    thus setting it as "active". If the Preset is set to "Custom", the Custom Equation
+    modifies the active unit attribute for each level.
 
 
     For example, if you chose "Health", the Leveling Rates will show the progression
@@ -325,12 +322,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nWelcome to Single Player Mode.
-    Each singleplayer session will log match statistics only, and can be viewed immediately
-    once the match ends. You will return to the Main Menu once the session is over.\n\nSelect
-    \"Start Game\" to start the game with the game units set in the editor. \n\nYou
-    cannot start the game when the Player is not set to any presets, and when the
-    A.I. player is set to Custom mode and its preset is not set."
+  tooltipText: "Welcome to Single Player Mode. Each singleplayer session will log
+    match statistics only, and can be viewed immediately once the match ends. You
+    will return to the Main Menu once the session is over.\n\nSelect \"Start Game\"
+    to start the game with the game units set in the editor. \n\nYou cannot start
+    the game when the Player is not set to any presets, and when the A.I. player is
+    set to Custom mode and its preset is not set."
   tooltip: {fileID: 470695016}
 --- !u!114 &56817054
 MonoBehaviour:
@@ -754,11 +751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
-
-
-    Applies all the changes made in the editor to your game units when they are spawned
-    onto the map.'
+  tooltipText: Applies all the changes made in the editor to your game units when
+    they are spawned onto the map.
   tooltip: {fileID: 470695016}
 --- !u!1 &77646443
 GameObject:
@@ -1002,7 +996,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 785861155}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1753,7 +1747,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &190387246
@@ -2000,7 +1994,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 109.46}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &217337298
@@ -2537,6 +2531,7 @@ GameObject:
   - 224: {fileID: 301349107}
   - 114: {fileID: 301349108}
   - 114: {fileID: 301349109}
+  - 114: {fileID: 301349110}
   m_Layer: 5
   m_Name: Categories
   m_TagString: Untagged
@@ -2595,6 +2590,25 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &301349110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 301349106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: 'View the Leveling Rates that corresponds to the chosen unit attribute,
+    thus setting it as "active". If the Preset is set to "Custom", the Custom Equation
+    modifies the active unit attribute for each level.
+
+
+    For example, if you chose "Health", the Leveling Rates will show the progression
+    of the active Health attribute for each level.'
+  tooltip: {fileID: 470695016}
 --- !u!1 &319687390
 GameObject:
   m_ObjectHideFlags: 0
@@ -3429,7 +3443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Enable/Disable Tooltip: SHIFT key) \n\nReturn to main menu."
+  tooltipText: Return to main menu.
   tooltip: {fileID: 470695016}
 --- !u!1 &377565786
 GameObject:
@@ -4552,6 +4566,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 526526105}
   - 114: {fileID: 526526106}
+  - 114: {fileID: 526526107}
   m_Layer: 5
   m_Name: Leveling Rates
   m_TagString: Untagged
@@ -4597,6 +4612,26 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &526526107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 526526104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "The Leveling Rates show the progression of the active unit attribute
+    for each level. The active unit attribute is the unit attribute chosen. \n\nFor
+    example, Level 1 unit's Attack is 1. Level 2 unit's Attack is 2. If the \"Attack\"
+    unit attribute is chosen in the Categories, the Leveling Rate for Level 1 is \"1\",
+    and the Leveling Rate for Level 2 is \"2\".\n\nAnother example, if Speed is chosen,
+    the Leveling Rates will show the Speed attributes for each level. When a unit
+    upgrades to the next level, that corresponding Leveling Rate will apply to that
+    upgraded unit.\n"
+  tooltip: {fileID: 470695016}
 --- !u!1 &533541559
 GameObject:
   m_ObjectHideFlags: 0
@@ -5605,7 +5640,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1446372195}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6857,7 +6892,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1982096129}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7322,11 +7357,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Enable/Disable Tooltip: SHIFT key)
-
-
-    Choose whichever pre-configured math equations in the list to use for your game
-    unit. The chosen math equation will apply the hueristic to each of the unit attributes.
+  tooltipText: 'Choose whichever pre-configured math equations in the list to use
+    for your game unit. The chosen math equation will apply the hueristic to each
+    of the unit attributes.
 
 
     For example, when "y=3.14" is chosen, the attributes, Health, Attack, Speed, Split,
@@ -7965,6 +7998,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1324155553}
   - 114: {fileID: 1324155554}
+  - 114: {fileID: 1324155555}
   m_Layer: 5
   m_Name: Presets
   m_TagString: Untagged
@@ -8010,6 +8044,28 @@ MonoBehaviour:
   m_PreferredHeight: 30
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+--- !u!114 &1324155555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1324155552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: 'Choose whichever pre-configured math equations in the list to use
+    for your game unit. The chosen math equation will apply the hueristic to each
+    of the unit attributes.
+
+
+    For example, when "y=3.14" is chosen, the attributes, Health, Attack, Speed, Split,
+    Merge, and Attack Cooldown, will all have their Leveling Rates be set to "3.14".
+
+
+    To enable custom configurations, choose "Custom".'
+  tooltip: {fileID: 470695016}
 --- !u!1 &1345659389
 GameObject:
   m_ObjectHideFlags: 0
@@ -8161,7 +8217,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.64886534
+      value: 0.55945295
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -8169,7 +8225,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.9173448
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
@@ -8205,7 +8261,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000030517578
+      value: 82.655136
       objectReference: {fileID: 0}
     - target: {fileID: 11409796, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_Size
@@ -8252,7 +8308,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000030517578, y: 0}
   m_SizeDelta: {x: 0, y: 41}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1356498879
@@ -8348,6 +8404,7 @@ GameObject:
   - 224: {fileID: 1372586333}
   - 114: {fileID: 1372586334}
   - 114: {fileID: 1372586335}
+  - 114: {fileID: 1372586336}
   m_Layer: 5
   m_Name: AI Equation
   m_TagString: Untagged
@@ -8406,6 +8463,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equationInputField: {fileID: 2136536035}
   enableCustomEquations: 0
+--- !u!114 &1372586336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372586332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltipText: "Custom Equation can only be enabled when the Preset is set to \"Custom\".
+    When enabled, you can modify the chosen unit attribute in the Category, and all
+    of the Leveling Rates will give the results of your equation.\n\nNote: For various
+    reasons, 0 Health behaves the same as 1 Health.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx:
+    Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level
+    Number\r\n/ : Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr: Random Number
+    between 0 and 1\n() : Parentheses"
+  tooltip: {fileID: 470695016}
 --- !u!1 &1389201100
 GameObject:
   m_ObjectHideFlags: 0
@@ -9374,9 +9450,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nDefault:\tUse pre-configured
-    A.I. unit attributes.\nCustom:\tCustomize the A.I. unit attributes.\nDifficulty:\tThe
-    simulated A.I. player actions execution speed."
+  tooltipText: "Default:\tUse pre-configured A.I. unit attributes.\nCustom:\tCustomize
+    the A.I. unit attributes.\nDifficulty:\tThe simulated A.I. player actions execution
+    speed."
   tooltip: {fileID: 470695016}
 --- !u!1 &1537872488
 GameObject:
@@ -9816,7 +9892,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 59301637}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.77255815
+  m_Size: 0.7834792
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10789,13 +10865,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nCustom Equation can only be
-    enabled when the Preset is set to \"Custom\". When enabled, you can modify the
-    chosen unit attribute in the Category, and all of the Leveling Rates will give
-    the results of your equation.\n\nNote: For various reasons, 0 Health behaves the
-    same as 1 Health.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx: Level Number\r\n- :
-    Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level Number\r\n/ : Divide\t\t\tp:
-    Previous Level Rate\r\n^: Power\t\t\tr: Random Number between 0 and 1\n() : Parentheses"
+  tooltipText: "Custom Equation can only be enabled when the Preset is set to \"Custom\".
+    When enabled, you can modify the chosen unit attribute in the Category, and all
+    of the Leveling Rates will give the results of your equation.\n\nNote: For various
+    reasons, 0 Health behaves the same as 1 Health.\n\nAllowed symbols:\n\n+: Add\t\t\t\tx:
+    Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk: Previous Level
+    Number\r\n/ : Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr: Random Number
+    between 0 and 1\n() : Parentheses"
   tooltip: {fileID: 470695016}
 --- !u!224 &1936778576 stripped
 RectTransform:

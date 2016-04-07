@@ -1667,8 +1667,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nStarts the simulation of two A.I.
-    players and log the metrics in real-time. Press again to stop the simulation."
+  tooltipText: Starts the simulation of two A.I. players and log the metrics in real-time.
+    Press again to stop the simulation.
   tooltip: {fileID: 1085698579}
 --- !u!1 &225081182
 GameObject:
@@ -1948,7 +1948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nResets back to initial state."
+  tooltipText: Resets back to initial state.
   tooltip: {fileID: 1085698579}
 --- !u!1 &320190457
 GameObject:
@@ -3758,7 +3758,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2064227965}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.0000076293945, y: -0.00000584645}
@@ -4596,10 +4596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: '(Toggle Tooltip: SHIFT key)
-
-
-    Choose which team to modify the unit attributes, respectively.'
+  tooltipText: Choose which team to modify the unit attributes, respectively.
   tooltip: {fileID: 1085698579}
 --- !u!1001 &1085698577
 Prefab:
@@ -4702,10 +4699,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22444054, guid: 4553f217effd22145872f50e7a26543f, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11446646, guid: 4553f217effd22145872f50e7a26543f, type: 2}
-      propertyPath: followCursorFlag
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -5660,7 +5653,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2064227965}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0.00000023841858}
@@ -6357,6 +6350,73 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1506128650}
+--- !u!1 &1517599081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1517599082}
+  - 222: {fileID: 1517599084}
+  - 114: {fileID: 1517599083}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1517599082
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1517599081}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.0000068242407}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2064227965}
+  m_RootOrder: 0
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1517599083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1517599081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1517599084
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1517599081}
 --- !u!224 &1535515191 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 22425078, guid: 01a11f456dda8df4885744c877160e03,
@@ -6743,6 +6803,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1814104066}
   - 114: {fileID: 1814104067}
+  - 222: {fileID: 1814104069}
   m_Layer: 5
   m_Name: Bottom Portion
   m_TagString: Untagged
@@ -6779,15 +6840,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nThe Leveling Rates show the progression
-    of the active unit attribute for each level. The active unit attribute is the
-    unit attribute chosen. \r\n\r\nFor example, Level 1 unit's Attack is 1. Level
-    2 unit's Attack is 2. If the \"Attack\" unit attribute is chosen in the Categories,
-    the Leveling Rate for Level 1 is \"1\", and the Leveling Rate for Level 2 is \"2\".\r\n\r\nAnother
-    example, if Speed is chosen, the Leveling Rates will show the Speed attributes
-    for each level. When a unit upgrades to the next level, that corresponding Leveling
-    Rate will apply to that upgraded unit."
+  tooltipText: "The Leveling Rates show the progression of the active unit attribute
+    for each level. The active unit attribute is the unit attribute chosen. \r\n\r\nFor
+    example, Level 1 unit's Attack is 1. Level 2 unit's Attack is 2. If the \"Attack\"
+    unit attribute is chosen in the Categories, the Leveling Rate for Level 1 is \"1\",
+    and the Leveling Rate for Level 2 is \"2\".\r\n\r\nAnother example, if Speed is
+    chosen, the Leveling Rates will show the Speed attributes for each level. When
+    a unit upgrades to the next level, that corresponding Leveling Rate will apply
+    to that upgraded unit."
   tooltip: {fileID: 1085698579}
+--- !u!222 &1814104069
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1814104065}
 --- !u!1 &1848023128
 GameObject:
   m_ObjectHideFlags: 0
@@ -7341,9 +7408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nCreates a metrics report for both
-    the Yellow Team and Blue Team. \nYou can then copy the contents of the report
-    to a different location and save the results."
+  tooltipText: "Creates a metrics report for both the Yellow Team and Blue Team. \nYou
+    can then copy the contents of the report to a different location and save the
+    results."
   tooltip: {fileID: 1085698579}
 --- !u!1 &1949597568
 GameObject:
@@ -7643,6 +7710,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 2049065785}
   - 114: {fileID: 2049065786}
+  - 222: {fileID: 2049065788}
   m_Layer: 5
   m_Name: Top Portion
   m_TagString: Untagged
@@ -7680,17 +7748,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\nFrom left to right:\n\nAttribute
-    Label:\tShows the name of the active (chosen) unit attribute to view or modify.\n\nEquations
-    Field:\tCustom Equation can only be enabled when the Preset is set to \"Custom\".
-    When enabled, you can modify the chosen unit attribute in the Category, and all
-    of the Leveling Rates will give the results of your equation.\r\n\nCategories:\tChoose
-    the unit attributes to view or modify. They are from left to right: Health, Attack,
-    Speed, Split, Merge, Attack Cooldown.\n\r\nAllowed symbols for the Equation Field:\r\n\r\n+:
+  tooltipText: "From left to right:\n\nAttribute Label:\tShows the name of the active
+    (chosen) unit attribute to view or modify.\n\nEquations Field:\tCustom Equation
+    can only be enabled when the Preset is set to \"Custom\". When enabled, you can
+    modify the chosen unit attribute in the Category, and all of the Leveling Rates
+    will give the results of your equation.\r\n\nCategories:\tChoose the unit attributes
+    to view or modify. They are from left to right: Health, Attack, Speed, Split,
+    Merge, Attack Cooldown.\n\r\nAllowed symbols for the Equation Field:\r\n\r\n+:
     Add\t\t\t\tx: Level Number\r\n- : Subtract\t\ty: Level Rate\r\n* : Multiply\t\tk:
     Previous Level Number\r\n/ : Divide\t\t\tp: Previous Level Rate\r\n^: Power\t\t\tr:
     Random Number between 0 and 1\n(): Parentheses"
   tooltip: {fileID: 1085698579}
+--- !u!222 &2049065788
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2049065784}
 --- !u!1 &2063370776
 GameObject:
   m_ObjectHideFlags: 0
@@ -7768,7 +7842,6 @@ GameObject:
   m_Component:
   - 224: {fileID: 2064227965}
   - 222: {fileID: 2064227967}
-  - 114: {fileID: 2064227966}
   - 114: {fileID: 2064227968}
   m_Layer: 5
   m_Name: Current Session
@@ -7787,6 +7860,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0.000032543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1517599082}
   - {fileID: 1263290770}
   - {fileID: 830676257}
   m_Father: {fileID: 1118442805}
@@ -7796,33 +7870,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.000015258789, y: 0.000038146973}
   m_SizeDelta: {x: 0, y: 0.000030518}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2064227966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2064227964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
 --- !u!222 &2064227967
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7840,10 +7887,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddca016971be6342825e869a0f7a91b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tooltipText: "(Toggle Tooltip: SHIFT key)\r\n\r\nShows the current simulated session
-    and the accumulated simulated sessions count.\n\nFor example, current session
-    is 5. That means it's simulating the teams for the 5th time, \nand has accumulated
-    a total of 5 sessions (including the current session)."
+  tooltipText: "Shows the current simulated session and the accumulated simulated
+    sessions count.\n\nFor example, current session is 5. That means it's simulating
+    the teams for the 5th time, \nand has accumulated a total of 5 sessions (including
+    the current session)."
   tooltip: {fileID: 1085698579}
 --- !u!1 &2078627687
 GameObject:
