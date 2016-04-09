@@ -7378,10 +7378,7 @@ MonoBehaviour:
 
 
     For example, when "y=3.14" is chosen, the attributes, Health, Attack, Speed, Split,
-    Merge, and Attack Cooldown, will all have their Leveling Rates be set to "3.14".
-
-
-    To enable custom configurations, choose "Custom".'
+    Merge, and Attack Cooldown, will all have their Leveling Rates be set to "3.14".'
   tooltip: {fileID: 470695016}
 --- !u!1 &1077077319
 GameObject:
@@ -8221,47 +8218,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 605
       objectReference: {fileID: 0}
     - target: {fileID: 22409994, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22488816, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.000045776367
-      objectReference: {fileID: 0}
-    - target: {fileID: 102982, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22587804, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
-      propertyPath: m_Alpha
-      value: 0
+      value: 1000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
@@ -9377,8 +9350,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipText: "(Enable/Disable Tooltip: SHIFT key)\n\nDefault:\tUse pre-configured
-    A.I. unit attributes.\nCustom:\tCustomize the A.I. unit attributes.\nDifficulty:\tThe
-    simulated A.I. player actions execution speed."
+    A.I. unit attributes.\nCustom:\tCustomize the A.I. unit attributes by selecting
+    one of the presets.\nDifficulty:\tThe simulated A.I. player actions execution
+    speed."
   tooltip: {fileID: 470695016}
 --- !u!1 &1537872488
 GameObject:
