@@ -798,7 +798,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 449800527}
   m_HandleRect: {fileID: 449800526}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1484,7 +1484,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.737553
+      value: 0.64886534
       objectReference: {fileID: 0}
     - target: {fileID: 22491964, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchorMax.x
@@ -1528,7 +1528,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445640, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000091552734
+      value: 0.000045776367
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff8c4005d19fd2a4ba37bdf0acfeb379, type: 2}
@@ -4317,7 +4317,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2006691341}
   m_HandleRect: {fileID: 2006691340}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5822,7 +5822,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00001770258, y: -0.000024795532}
+  m_AnchoredPosition: {x: 0.0000031143427, y: -0.000024795532}
   m_SizeDelta: {x: 0, y: 87}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1113069362
@@ -8757,7 +8757,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000013425946, y: 0}
+  m_AnchoredPosition: {x: -0.000010445714, y: 0}
   m_SizeDelta: {x: 0, y: 47.154}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1598117454
