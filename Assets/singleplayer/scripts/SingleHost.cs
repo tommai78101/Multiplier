@@ -97,6 +97,9 @@ public class SingleHost : NetworkManager {
 			if (AImanager != null) {
 				unit.unitManager = AImanager;
 
+				//Initializing AI Manager
+				AIManager.Instance.isSingleAIPlayer = true;
+
 				if (attributeManager != null && attributeManager.attributePanelUI != null) {
 					DifficultyGroup group = attributeManager.attributePanelUI.aiCalibrationDifficulty;
 					AImanager.UpdateDifficulty(group.GetDifficulty());
