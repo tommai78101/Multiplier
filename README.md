@@ -1,4 +1,4 @@
-# Unity-UNET-RTS
+# Multiplier: Real-Time Strategy Unit Balancing Tool
 
 ![](https://github.com/tommai78101/Unity-UNET-RTS/raw/master/demo.gif)
 
@@ -13,6 +13,8 @@ Since this prototype was designed for network multiplayer RTS at the start of th
 Unity Web Player does not support high DPI displays or dual monitors setup. But this may change for Unity 5.3 and up, now that it has support for dual monitors. At the moment, it is currently not supported.
 
 **As of March 6, 2016, Multiplier is now the official game title**, because I'm not talented in coming up with creative names. If you happen to know what name to give, please contact me at any time.
+
+**As of April 29, 2016, development has 99% ceased to be.** The thesis paper has been turned in, research has now concluded. And I'm moving on. BUT, if you still see any bugs that I may have missed, please file an issues report. That 1% development will solely be devoted to fixing said issues.
 
 ## Introduction:
 
@@ -29,7 +31,7 @@ Division (e.g., 14/7)
 Power (e.g., 3^4)  
 Random (e.g., 5+r)  
 
-Future math expressions may be supported.
+Future math expressions may be supported, if there are better ways of parsing them.
 
 #### I would highly recommend you to try out the Tutorials in the game, as it gives an in-depth explanations and details of the latest controls and gameplay of the game.
 
