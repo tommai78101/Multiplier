@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Extension;
 using Common;
 using SinglePlayer;
-using Analytics;
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -118,7 +117,7 @@ namespace MultiPlayer {
 			}
 
 			//Obtaining the nav mesh agent here for future uses.
-			NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
 
 			//Non-directed, self-defense
 			LineOfSight sight = this.GetComponentInChildren<LineOfSight>();
@@ -225,7 +224,7 @@ namespace MultiPlayer {
 				this.attackPower = this.unitAttributes.attackPrefabList[this.level];
 				this.speed = this.unitAttributes.speedPrefabList[this.level];
 				this.attackCooldown = this.unitAttributes.attackCooldownPrefabList[this.level];
-				NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+				UnityEngine.AI.NavMeshAgent agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
 				if (agent != null) {
 					agent.speed = this.speed;
 				}
@@ -266,7 +265,7 @@ namespace MultiPlayer {
 			//		checkEnemyNearby = true;
 			//	}
 			//}
-			NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = obj.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			GameUnit unit = obj.GetComponent<GameUnit>();
 			if (agent != null && unit != null) {
 				Renderer unitRenderer = unit.targetEnemy.GetComponent<Renderer>();
@@ -282,7 +281,7 @@ namespace MultiPlayer {
 		}
 
 		public void MoveToAITarget(GameObject attacker) {
-			NavMeshAgent agent = this.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			GameUnit unit = attacker.GetComponent<GameUnit>();
 			if (agent != null) {
 				if (unit.targetAIEnemy != null) {
@@ -304,16 +303,11 @@ namespace MultiPlayer {
 					if (area.enemiesInAttackRange.Contains(this.targetEnemy)) {
 						if (this.attackCooldownCounter <= 0f) {
 							CmdAttack(this.targetEnemy.gameObject, this.unitAttributes.attackCooldownPrefabList[this.level]);
-
-							GameMetricLogger.Increment(GameMetricOptions.Attacks);
-							GameMetricLogger.Increment(GameMetricOptions.AttackTime);
 						}
 					}
 					else if (area.enemiesInAttackRange.Count > 0) {
 						this.targetEnemy = area.enemiesInAttackRange[0];
 					}
-
-					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
 				}
 			}
 			else if (this.targetAIEnemy != null) {
@@ -328,16 +322,13 @@ namespace MultiPlayer {
 								AttackAI(this.targetAIEnemy.gameObject, 1f);
 							}
 
-							GameMetricLogger.Increment(GameMetricOptions.Attacks);
-							GameMetricLogger.Increment(GameMetricOptions.AttackTime);
-						}
+																				}
 					}
 					else if (area.otherEnemies.Count > 0) {
 						this.targetAIEnemy = area.otherEnemies[0];
 					}
 
-					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
-				}
+									}
 			}
 		}
 
@@ -479,8 +470,7 @@ namespace MultiPlayer {
 				this.attackCooldownCounter = attackCounter;
 
 				if (victimUnit.currentHealth <= 0) {
-					GameMetricLogger.Increment(GameMetricOptions.Kills);
-				}
+									}
 			}
 		}
 
@@ -509,8 +499,7 @@ namespace MultiPlayer {
 		public void CmdUpdateStatus(bool targetEnemyIsGone, Color recoveryColor) {
 			if (this.currentHealth <= 0) {
 				if (this.gameObject != null) {
-					GameMetricLogger.Increment(GameMetricOptions.Death);
-
+					
 					RpcUnitDestroy(this.gameObject);
 				}
 			}
@@ -637,7 +626,7 @@ namespace MultiPlayer {
 		public void RpcSetTarget(GameObject obj, Vector3 target) {
 			//Server tells all clients to run the following codes.
 			GameUnit unit = obj.GetComponent<GameUnit>();
-			NavMeshAgent agent = obj.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = obj.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				if (unit.oldTargetPosition != target) {
 					agent.SetDestination(target);

@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections;
 using Extension;
-using Analytics;
+
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -95,7 +95,7 @@ namespace MultiPlayer {
 
 		public delegate void UpdateProperties(NewChanges changes);
 		public UpdateProperties updateProperties;
-		public NavMeshAgent agent;
+		public UnityEngine.AI.NavMeshAgent agent;
 		public GameObject selectionRing;
 		public Camera minimapCamera;
 		public Vector3 viewportPosition;
@@ -141,7 +141,7 @@ namespace MultiPlayer {
 					Debug.LogError("Cannot find mesh filter and/or mesh renderer for unit's selection ring.");
 				}
 			}
-			this.agent = this.GetComponent<NavMeshAgent>();
+			this.agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (this.agent == null) {
 				Debug.LogError("Cannot obtain nav mesh agent from game unit.");
 			}
@@ -272,12 +272,6 @@ namespace MultiPlayer {
 		}
 
 		public void OnGUI() {
-			if (GameMetricLogger.instance != null) {
-				if (GameMetricLogger.instance.isShownToScreen) {
-					return;
-				}
-			}
-
 			if (this.minimapCamera != null) {
 				GUIStyle style = new GUIStyle();
 				style.normal.textColor = Color.black;
@@ -356,15 +350,13 @@ namespace MultiPlayer {
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
 
-				GameMetricLogger.Increment(GameMetricOptions.Attacks);
-			}
+							}
 			else if (this.attackCooldownCounter > 0f) {
 				NewChanges changes = this.CurrentProperty();
 				changes.isAttackCooldownEnabled = true;
 				this.NewProperty(changes);
 
-				GameMetricLogger.Increment(GameMetricOptions.AttackTime);
-			}
+							}
 		}
 
 		private void HandleRecovering() {
@@ -386,16 +378,14 @@ namespace MultiPlayer {
 
 			if (this.properties.currentHealth <= 0 && !this.isDead) {
 				this.isDead = true;
-				GameMetricLogger.Increment(GameMetricOptions.Death);
-				CmdDestroy(this.gameObject);
+								CmdDestroy(this.gameObject);
 				return true;
 			}
 			if (this.properties.isAttackCooldownEnabled) {
 				if (this.attackCooldownCounter > 0) {
 					this.attackCooldownCounter -= Time.deltaTime;
 
-					GameMetricLogger.Increment(GameMetricOptions.BattleEngagementTime);
-				}
+									}
 				else {
 					NewChanges changes = this.CurrentProperty();
 					changes.isAttackCooldownEnabled = false;
@@ -426,8 +416,7 @@ namespace MultiPlayer {
 		}
 
 		private void LogKill() {
-			GameMetricLogger.Increment(GameMetricOptions.Kills);
-		}
+					}
 
 		//----------------------------  COMMANDS and CLIENTRPCS  ----------------------------
 

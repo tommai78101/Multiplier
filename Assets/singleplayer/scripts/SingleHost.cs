@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using SinglePlayer;
 using MultiPlayer;
 using SinglePlayer.UI;
-using Analytics;
+
 
 public class SingleHost : NetworkManager {
 	public CanvasGroup attributePanelGroup;
@@ -61,11 +61,8 @@ public class SingleHost : NetworkManager {
 		}
 		//Note(Thompson): Player is always index 1.
 		//Note(Thompson): Obtain the A.I. level difficulty.
-		GameMetricLogger.instance.levelDifficulty = fixes[0].value;
-		//Note(Thompson): Check if the Player dropdown value is 5. If not, and is above 0, return difficulty equation used. Else, return a full range of custom equations used.
-		GameMetricLogger.SetDifficultyEquation(ConvertCustomToEquations(fixes[1].value, fixes[1].options[fixes[1].value].text)); 
-		GameMetricLogger.SetPlayerName("Player");
-
+				//Note(Thompson): Check if the Player dropdown value is 5. If not, and is above 0, return difficulty equation used. Else, return a full range of custom equations used.
+				
 
 		if (this.attributePanelGroup != null) {
 			this.attributePanelGroup.alpha = 0f;
@@ -131,10 +128,7 @@ public class SingleHost : NetworkManager {
 			Taskbar.Instance.ShowTaskbar(true);
 		}
 
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
-		GameMetricLogger.EnableLoggerHotkey();
-	}
+							}
 
 	public void ResetAttributePanelUI() {
 		if (this.pauseMenuGroup != null) {

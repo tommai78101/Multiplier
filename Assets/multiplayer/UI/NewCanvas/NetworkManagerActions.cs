@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using Common;
 using MultiPlayer;
-using Analytics;
+
 
 public class NetworkManagerActions : MonoBehaviour {
 	public NetworkManager networkManager;
@@ -172,18 +172,14 @@ public class NetworkManagerActions : MonoBehaviour {
 
 		string name = this.playerNameField.text;
 		if (name.Length > 0) {
-			GameMetricLogger.instance.playerName = name;
 		}
 		else {
-			GameMetricLogger.instance.playerName = "Player";
 		}
 
 		if (Taskbar.Instance != null) {
 			Taskbar.Instance.ShowTaskbar(true);
 		}
 
-		GameMetricLogger.instance.difficultyEquations = this.difficultyDropdown.options[this.difficultyDropdown.value].text;
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 	}
 
 	public void StopLANHost() {
@@ -215,16 +211,12 @@ public class NetworkManagerActions : MonoBehaviour {
 		if (Taskbar.Instance != null) {
 			Taskbar.Instance.ShowTaskbar(false);
 		}
-
-		GameMetricLogger.DisableLoggerHotkey();
-		//GameMetricLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
 	}
 
 	//NOTE(Thompson): This is equivalent to SetClientReady().
 	public void SetLANHostReady() {
 		this.LANHost.SetActive(false);
 
-		GameMetricLogger.EnableLoggerHotkey();
 
 		PostRenderer renderer = Camera.main.GetComponent<PostRenderer>();
 		if (renderer != null) {
@@ -250,8 +242,9 @@ public class NetworkManagerActions : MonoBehaviour {
 
 
 
-	public void StartMatchMaker() {
-	}
+	//public void StartMatchMaker() {
+	//	return;
+	//}
 
 
 
@@ -274,7 +267,6 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANHost.SetActive(false);
 		this.LANClientNotConnected.SetActive(true);
 
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 	}
 
 	public void TurnOffLANClientMenu() {
@@ -290,7 +282,6 @@ public class NetworkManagerActions : MonoBehaviour {
 		//	enableEditorObj.TurnOffCanvasGroup();
 		//}
 
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 	}
 
 	public void StartLANClient(InputField inputField) {
@@ -340,8 +331,6 @@ public class NetworkManagerActions : MonoBehaviour {
 			enableEditorObj.TurnOnCanvasGroup();
 		}
 
-		GameMetricLogger.DisableLoggerHotkey();
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 	}
 
 	public void SetClientReady() {
@@ -361,7 +350,6 @@ public class NetworkManagerActions : MonoBehaviour {
 				this.LANClientReady.SetActive(false);
 				this.LANClientNotReady.SetActive(false);
 
-				GameMetricLogger.EnableLoggerHotkey();
 
 				NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 				foreach (NewSpawner spawn in spawners) {
@@ -370,7 +358,6 @@ public class NetworkManagerActions : MonoBehaviour {
 					}
 				}
 
-				GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 			}
 			else {
 				this.LANClientReady.SetActive(false);
@@ -400,23 +387,12 @@ public class NetworkManagerActions : MonoBehaviour {
 			this.LANClientNotReady.SetActive(false);
 
 			string name = this.playerNameField.text;
-			if (name.Length > 0) {
-				GameMetricLogger.instance.playerName = name;
-			}
-			else {
-				GameMetricLogger.instance.playerName = "Player";
-			}
-			GameMetricLogger.instance.difficultyEquations = this.difficultyDropdown.options[this.difficultyDropdown.value].text;
-			GameMetricLogger.EnableLoggerHotkey();
-
 			NewSpawner[] spawners = GameObject.FindObjectsOfType<NewSpawner>();
 			foreach (NewSpawner spawn in spawners) {
 				if (spawn != null && spawn.hasAuthority) {
 					NewSpawner.Instance.CmdSetReadyFlag(ClientScene.ready && !NetworkServer.active);
 				}
 			}
-
-			GameMetricLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
 		}
 
 		Canvas canvas = GameObject.FindObjectOfType<Canvas>();
@@ -426,15 +402,15 @@ public class NetworkManagerActions : MonoBehaviour {
 		}
 	}
 
-/***
- *    ███████╗███╗   ██╗██████╗      ██████╗  █████╗ ███╗   ███╗███████╗
- *    ██╔════╝████╗  ██║██╔══██╗    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
- *    █████╗  ██╔██╗ ██║██║  ██║    ██║  ███╗███████║██╔████╔██║█████╗  
- *    ██╔══╝  ██║╚██╗██║██║  ██║    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
- *    ███████╗██║ ╚████║██████╔╝    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
- *    ╚══════╝╚═╝  ╚═══╝╚═════╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
- *                                                                      
- */
+	/***
+	 *    ███████╗███╗   ██╗██████╗      ██████╗  █████╗ ███╗   ███╗███████╗
+	 *    ██╔════╝████╗  ██║██╔══██╗    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝
+	 *    █████╗  ██╔██╗ ██║██║  ██║    ██║  ███╗███████║██╔████╔██║█████╗  
+	 *    ██╔══╝  ██║╚██╗██║██║  ██║    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  
+	 *    ███████╗██║ ╚████║██████╔╝    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗
+	 *    ╚══════╝╚═╝  ╚═══╝╚═════╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝
+	 *                                                                      
+	 */
 
 	public void SetEndGameSession() {
 		//if (!(this.endGameMenu.activeSelf || this.endGameMenu.activeInHierarchy)) {
@@ -449,23 +425,21 @@ public class NetworkManagerActions : MonoBehaviour {
 		this.LANHost.SetActive(false);
 		this.unitAttributeEditor.SetActive(false);
 
-		GameMetricLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
-		GameMetricLogger.ShowPrintLog();
 	}
 
 	public void EndGameSessionAction() {
 		SceneManager.LoadScene("new_multiplayer");
 	}
 
-/***
- *    ██████╗ ██████╗ ██╗██╗   ██╗ █████╗ ████████╗███████╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
- *    ██╔══██╗██╔══██╗██║██║   ██║██╔══██╗╚══██╔══╝██╔════╝    ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║
- *    ██████╔╝██████╔╝██║██║   ██║███████║   ██║   █████╗      █████╗  ██║   ██║██╔██╗ ██║██║        ██║   ██║██║   ██║██╔██╗ ██║
- *    ██╔═══╝ ██╔══██╗██║╚██╗ ██╔╝██╔══██║   ██║   ██╔══╝      ██╔══╝  ██║   ██║██║╚██╗██║██║        ██║   ██║██║   ██║██║╚██╗██║
- *    ██║     ██║  ██║██║ ╚████╔╝ ██║  ██║   ██║   ███████╗    ██║     ╚██████╔╝██║ ╚████║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
- *    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
- *                                                                                                                               
- */
+	/***
+	 *    ██████╗ ██████╗ ██╗██╗   ██╗ █████╗ ████████╗███████╗    ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗
+	 *    ██╔══██╗██╔══██╗██║██║   ██║██╔══██╗╚══██╔══╝██╔════╝    ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║
+	 *    ██████╔╝██████╔╝██║██║   ██║███████║   ██║   █████╗      █████╗  ██║   ██║██╔██╗ ██║██║        ██║   ██║██║   ██║██╔██╗ ██║
+	 *    ██╔═══╝ ██╔══██╗██║╚██╗ ██╔╝██╔══██║   ██║   ██╔══╝      ██╔══╝  ██║   ██║██║╚██╗██║██║        ██║   ██║██║   ██║██║╚██╗██║
+	 *    ██║     ██║  ██║██║ ╚████╔╝ ██║  ██║   ██║   ███████╗    ██║     ╚██████╔╝██║ ╚████║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║
+	 *    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+	 *                                                                                                                               
+	 */
 
 	private void PreInitialization() {
 		string equation = "";
@@ -533,7 +507,6 @@ public class NetworkManagerActions : MonoBehaviour {
 					}
 				}
 			}
-			GameMetricLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 		}
 	}
 }

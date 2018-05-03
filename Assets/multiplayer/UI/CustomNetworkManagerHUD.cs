@@ -147,7 +147,7 @@ namespace UnityEngine.Networking {
 					if (manager.matchInfo == null) {
 						if (manager.matches == null) {
 							if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Create Internet Match")) {
-								manager.matchMaker.CreateMatch(manager.matchName, manager.matchSize, true, "", manager.OnMatchCreate);
+								manager.matchMaker.CreateMatch(manager.matchName, manager.matchSize, true, "", "127.0.0.1", "127.0.0.2", 0, 0, manager.OnMatchCreate);
 							}
 							ypos += spacing;
 
@@ -158,7 +158,7 @@ namespace UnityEngine.Networking {
 							ypos += 10;
 
 							if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Find Internet Match")) {
-								manager.matchMaker.ListMatches(0, 20, "", manager.OnMatchList);
+								manager.matchMaker.ListMatches(0, 20, "", false, 0, 0, manager.OnMatchList);
 							}
 							ypos += spacing;
 						}
@@ -167,7 +167,7 @@ namespace UnityEngine.Networking {
 								if (GUI.Button(new Rect(xpos, ypos, 200, 20), "Join Match:" + match.name)) {
 									manager.matchName = match.name;
 									manager.matchSize = (uint)match.currentSize;
-									manager.matchMaker.JoinMatch(match.networkId, "", manager.OnMatchJoined);
+									manager.matchMaker.JoinMatch(match.networkId, "", "127.0.0.1", "127.0.0.2", 0, 0, manager.OnMatchJoined);
 								}
 								ypos += spacing;
 							}

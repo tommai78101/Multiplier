@@ -6,7 +6,7 @@ using Common;
 using Extension;
 using MultiPlayer;
 using Simulation;
-using Analytics;
+
 
 namespace SinglePlayer {
 	public enum State {
@@ -38,7 +38,7 @@ namespace SinglePlayer {
 
 		private float splitCounter;
 		private float mergeCounter;
-		private NavMeshAgent agent;
+		private UnityEngine.AI.NavMeshAgent agent;
 		private Rect minimapCameraRect;
 		private Vector3 healthViewportPosition;
 		private Color takeDamageColor = Color.red;
@@ -99,7 +99,7 @@ namespace SinglePlayer {
 					Debug.LogError("Cannot find Attack Range component for the AI unit.");
 				}
 			}
-			this.agent = this.GetComponent<NavMeshAgent>();
+			this.agent = this.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (this.agent != null) {
 				this.agent.stoppingDistance = 1.5f;
 				if (!initialStateFlag) {
@@ -200,7 +200,6 @@ namespace SinglePlayer {
 							this.agent.ResetPath();
 						}
 						//EnumTeam index value is constant: Player = 0, Computer = 1
-						SimulationMetricsLogger.Increment(GameMetricOptions.Splits, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					}
 					break;
 				case State.Scout:
@@ -226,7 +225,6 @@ namespace SinglePlayer {
 					else {
 						this.currentState = State.Idle;
 						//EnumTeam index value is constant: Player = 0, Computer = 1
-						SimulationMetricsLogger.Increment(GameMetricOptions.Merges, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					}
 					break;
 				case State.Attack:
@@ -243,8 +241,6 @@ namespace SinglePlayer {
 										this.targetEnemy = aiUnit;
 										aiUnit.TakeDamage(this.attackFactor);
 										//EnumTeam index value is constant: Player = 0, Computer = 1
-										SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
-										SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 										break;
 									}
 									if (playerUnit != null && playerUnit.teamFaction != this.teamFaction) {
@@ -252,8 +248,6 @@ namespace SinglePlayer {
 										this.targetEnemy = playerUnit;
 										playerUnit.CmdTakeDamage(playerUnit.gameObject, playerUnit.currentHealth - 1);
 										//EnumTeam index value is constant: Player = 0, Computer = 1
-										SimulationMetricsLogger.Increment(GameMetricOptions.Attacks, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
-										SimulationMetricsLogger.Increment(GameMetricOptions.AttackTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 										break;
 									}
 								}
@@ -261,7 +255,6 @@ namespace SinglePlayer {
 						}
 					}
 					//EnumTeam index value is constant: Player = 0, Computer = 1
-					SimulationMetricsLogger.Increment(GameMetricOptions.BattleEngagementTime, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
 					break;
 			}
 
@@ -275,18 +268,6 @@ namespace SinglePlayer {
 		}
 
 		public void OnGUI() {
-			if (SimulationMetricsLogger.instance != null) {
-				if (SimulationMetricsLogger.instance.isShownToScreen) {
-					return;
-				}
-			}
-
-			if (GameMetricLogger.instance != null) {
-				if (GameMetricLogger.instance.isShownToScreen) {
-					return;
-				}
-			}
-
 			GUIStyle style = new GUIStyle();
 			style.normal.textColor = Color.black;
 			style.alignment = TextAnchor.MiddleCenter;
@@ -372,8 +353,6 @@ namespace SinglePlayer {
 			if (this.currentHealth <= 0) {
 				MonoBehaviour.Destroy(this.gameObject);
 				//EnumTeam index value is constant: Player = 0, Computer = 1
-				SimulationMetricsLogger.Increment(GameMetricOptions.Death, (this.teamFaction == EnumTeam.Player) ? 0 : 1);
-				SimulationMetricsLogger.Increment(GameMetricOptions.Kills, (this.teamFaction != EnumTeam.Player) ? 0 : 1);
 			}
 		}
 

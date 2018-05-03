@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using SinglePlayer;
-using Analytics;
+
 
 public class SingleAIPlayer : MonoBehaviour {
 	public AIManager aiManager;

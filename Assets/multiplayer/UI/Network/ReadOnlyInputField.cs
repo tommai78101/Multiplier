@@ -37,7 +37,7 @@ public class ReadOnlyInputField : InputField {
 	private bool CombinationPressed(Event processEvent) {
 		EventModifiers modifiers = processEvent.modifiers;
 		RuntimePlatform platform = Application.platform;
-		bool isMac = (platform == RuntimePlatform.OSXEditor || platform == RuntimePlatform.OSXPlayer || platform == RuntimePlatform.OSXWebPlayer);
+		bool isMac = (platform == RuntimePlatform.OSXEditor || platform == RuntimePlatform.OSXPlayer);
 		bool ctrlIsPressed = isMac ? (modifiers & EventModifiers.Command) != 0 : (modifiers & EventModifiers.Control) != 0;
 
 		switch (processEvent.keyCode) {

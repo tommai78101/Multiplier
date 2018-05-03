@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using Analytics;
+
 
 public class Leaderboard : MonoBehaviour {
 	public int index;
@@ -15,7 +15,6 @@ public class Leaderboard : MonoBehaviour {
 	public Text battleTime;
 	public Text wins;
 	public Text losses;
-	public SimulationMetricsLogger metricsLogger;
 
 	public void Start() {
 		if (leaderboardName == null) {
@@ -28,16 +27,6 @@ public class Leaderboard : MonoBehaviour {
 	}
 
 	public void Update() {
-		TeamMetric metrics = this.metricsLogger.teamMetrics[this.index];
-		this.splits.text = metrics.numberOfSplits.ToString();
-		this.merges.text = metrics.numberOfMerges.ToString();
-		this.kills.text = metrics.numberOfKills.ToString();
-		this.deaths.text = metrics.numberOfDeaths.ToString();
-		this.attacks.text = metrics.numberOfAttacks.ToString();
-		this.attackTime.text = metrics.totalAttackTime.ToString();
-		this.battleTime.text = metrics.totalBattleEngagementTime.ToString();
-		this.wins.text = metrics.winCount.ToString();
-		this.losses.text = metrics.lossCount.ToString();
 	}
 
 	public void Reset() {

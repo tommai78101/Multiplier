@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using Common;
-using Analytics;
+
 
 namespace MultiPlayer {
 	public struct NewUnitStruct {
@@ -266,7 +266,7 @@ namespace MultiPlayer {
 			if (!changes.isInitialized) {
 				changes.isInitialized = false;
 				changes.teamColor = color;
-				changes.teamFactionID = (int)(Random.value * 100f); //This is never to be changed.
+				changes.teamFactionID = (int) (Random.value * 100f); //This is never to be changed.
 			}
 			b.NewProperty(changes);
 			NetworkServer.SpawnWithClientAuthority(b.gameObject, spawnerID.clientAuthorityOwner);
@@ -426,7 +426,6 @@ namespace MultiPlayer {
 			if (spawners.Length > 0) {
 				for (int i = 0; i < spawners.Length; i++) {
 					spawners[i].isGameStart = false;
-					GameMetricLogger.ShowPrintLog();
 				}
 			}
 		}
@@ -587,7 +586,6 @@ namespace MultiPlayer {
 						this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.Remove(splitGroup);
 
-						GameMetricLogger.Increment(GameMetricOptions.Splits);
 					}
 					else {
 						splitGroup.Update();
@@ -615,7 +613,6 @@ namespace MultiPlayer {
 						}
 						this.mergeList.RemoveAt(i);
 
-						GameMetricLogger.Increment(GameMetricOptions.Merges);
 					}
 					else {
 						mergeGroup.Update();
@@ -660,8 +657,6 @@ namespace MultiPlayer {
 						//CmdUpdateUnitProperty(splitGroup.split.gameObject, changes);
 						//this.unitList.Add(new NewUnitStruct(splitGroup.split.gameObject));
 						this.splitList.Remove(splitGroup);
-
-						//GameMetricLogger.Increment(GameMetricOptions.Splits);
 					}
 					else {
 						splitGroup.Update();
@@ -686,8 +681,6 @@ namespace MultiPlayer {
 							//CmdDestroy(temp.unit);
 						}
 						this.mergeList.RemoveAt(i);
-
-						//GameMetricLogger.Increment(GameMetricOptions.Merges);
 					}
 					else {
 						mergeGroup.Update();

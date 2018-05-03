@@ -2,7 +2,7 @@
 using UnityEngine.Networking;
 using System;
 using System.Collections.Generic;
-using Analytics;
+
 
 namespace MultiPlayer {
 	[Serializable]
@@ -70,14 +70,14 @@ namespace MultiPlayer {
 		}
 
 		public void Resume() {
-			NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = this.ownerUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.Resume();
 			}
 			if (this.mergingUnit != null) {
 				//Meaning that this merging unit is still merging.
 				//If null, it means this is already destroyed, therefore no need to reference it anymore.
-				agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+				agent = this.mergingUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 				if (agent != null) {
 					agent.Resume();
 				}
@@ -101,12 +101,12 @@ namespace MultiPlayer {
 		}
 
 		public void Stop() {
-			NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = this.ownerUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.Stop();
 				agent.ResetPath();
 			}
-			agent = this.mergingUnit.GetComponent<NavMeshAgent>();
+			agent = this.mergingUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.Stop();
 				agent.ResetPath();
@@ -263,8 +263,7 @@ namespace MultiPlayer {
 							FinishMergeGroup(group);
 							this.removeList.Add(group);
 
-							GameMetricLogger.Increment(GameMetricOptions.Merges);
-						}
+													}
 					}
 					else {
 						group.Update(this.scalingValue);
@@ -307,7 +306,7 @@ namespace MultiPlayer {
 			group.ownerUnit.maxHealth = Mathf.FloorToInt(this.unitAttributes.healthPrefabList[level]);
 			group.ownerUnit.attackPower = this.unitAttributes.attackPrefabList[level];
 
-			NavMeshAgent agent = group.ownerUnit.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = group.ownerUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.speed = this.unitAttributes.speedPrefabList[level];
 			}
@@ -384,7 +383,7 @@ namespace MultiPlayer {
 							unit.currentHealth += unit.maxHealth / 4;
 						}
 
-						NavMeshAgent agent = ownerObject.GetComponent<NavMeshAgent>();
+						UnityEngine.AI.NavMeshAgent agent = ownerObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 						if (agent != null) {
 							if (unit.unitAttributes.speedPrefabList[unit.level] != 0f) {
 								agent.speed = unit.unitAttributes.speedPrefabList[unit.level];
@@ -424,9 +423,9 @@ namespace MultiPlayer {
 				ownerUnit.isMerging = mergingUnit.isMerging = true;
 				if (ownerUnit.unitAttributes != null) {
 					float mergeSpeedFactor = ownerUnit.unitAttributes.mergePrefabList[ownerUnit.level];
-					NavMeshAgent ownerAgent = ownerObject.GetComponent<NavMeshAgent>();
+					UnityEngine.AI.NavMeshAgent ownerAgent = ownerObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 					ownerAgent.Stop();
-					NavMeshAgent mergingAgent = mergingObject.GetComponent<NavMeshAgent>();
+					UnityEngine.AI.NavMeshAgent mergingAgent = mergingObject.GetComponent<UnityEngine.AI.NavMeshAgent>();
 					mergingAgent.Stop();
 
 					if (manager != null) {

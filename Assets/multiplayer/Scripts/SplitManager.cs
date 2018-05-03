@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Common;
 using SinglePlayer;
-using Analytics;
+
 
 namespace MultiPlayer {
 	[System.Serializable]
@@ -27,12 +27,12 @@ namespace MultiPlayer {
 			this.rotationVector = Quaternion.Euler(0f, angle, 0f) * (Vector3.one * range.radius);
 			this.rotationVector.y = 0f;
 
-			NavMeshAgent agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent agent = this.ownerUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.ResetPath();
 				agent.Stop();
 			}
-			agent = this.splitUnit.GetComponent<NavMeshAgent>();
+			agent = this.splitUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			if (agent != null) {
 				agent.ResetPath();
 				agent.Stop();
@@ -67,10 +67,10 @@ namespace MultiPlayer {
 		}
 
 		public void Stop() {
-			NavMeshAgent agent = null;
+			UnityEngine.AI.NavMeshAgent agent = null;
 			if (this.ownerUnit != null) {
 				this.ownerUnit.isSplitting = false;
-				agent = this.ownerUnit.GetComponent<NavMeshAgent>();
+				agent = this.ownerUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 				if (agent != null) {
 					agent.Resume();
 				}
@@ -78,7 +78,7 @@ namespace MultiPlayer {
 
 			if (this.splitUnit != null) {
 				this.splitUnit.isSplitting = false;
-				agent = this.splitUnit.GetComponent<NavMeshAgent>();
+				agent = this.splitUnit.GetComponent<UnityEngine.AI.NavMeshAgent>();
 				if (agent != null) {
 					agent.Resume();
 				}
@@ -237,8 +237,7 @@ namespace MultiPlayer {
 						}
 						this.removeList.Add(group);
 
-						GameMetricLogger.Increment(GameMetricOptions.Splits);
-					}
+											}
 					else {
 						//Some weird C# language design...
 						group.Update();
@@ -342,9 +341,9 @@ namespace MultiPlayer {
 				}
 			}
 
-			NavMeshAgent originalAgent = obj.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent originalAgent = obj.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			originalAgent.ResetPath();
-			NavMeshAgent copyAgent = split.GetComponent<NavMeshAgent>();
+			UnityEngine.AI.NavMeshAgent copyAgent = split.GetComponent<UnityEngine.AI.NavMeshAgent>();
 			copyAgent.ResetPath();
 
 			GameObject[] splitManagerGroup = GameObject.FindGameObjectsWithTag("SplitManager");

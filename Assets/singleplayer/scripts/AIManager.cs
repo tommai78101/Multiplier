@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Common;
 using Extension;
-using Analytics;
+
 
 namespace SinglePlayer {
 	public enum Difficulty {
@@ -163,13 +163,6 @@ namespace SinglePlayer {
 		}
 
 		public void Update() {
-			if (this.unitCount <= 0 && !this.startAIFlag && this.isSingleAIPlayer && this.hasLostTheGame) {
-				if (!GameMetricLogger.instance.isShownToScreen) {
-					GameMetricLogger.ShowPrintLog();
-				}
-				return;
-			}
-
 			if (this.splitGroupList.Count > 0) {
 				for (int i = 0; i < this.splitGroupList.Count; i++) {
 					SplitGroup splitGroup = this.splitGroupList[i];

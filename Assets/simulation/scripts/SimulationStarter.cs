@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections.Generic;
 using SinglePlayer;
-using Analytics;
+
 
 namespace Simulation {
 	public class SimulationStarter : MonoBehaviour {
@@ -93,17 +93,12 @@ namespace Simulation {
 		public void StartSimulation() {
 			this.gameMatchStart = true;
 			this.sessionNumber = 1;
-			SimulationMetricsLogger.ResetLogger();
-			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.StartGameMetrics);
-			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
 		}
 
 		public void StopSimulation() {
 			this.gameMatchStart = false;
 			this.ClearSimulation();
 			this.InitializeSimulation();
-			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.StopGameMetrics);
-			SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
 		}
 
 		public void ContinueSimulation() {
@@ -116,12 +111,6 @@ namespace Simulation {
 
 		public void PauseSimulation() {
 			this.gamePaused = !this.gamePaused;
-			if (this.gamePaused) {
-				SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsOver);
-			}
-			else {
-				SimulationMetricsLogger.SetGameLogger(GameLoggerOptions.GameIsPlaying);
-			}
 		}
 
 		public void FixedUpdate() {
@@ -167,9 +156,6 @@ namespace Simulation {
 			if (this.yellowTeamUnits.transform.childCount <= 0 || this.blueTeamUnits.transform.childCount <= 0) {
 				this.yellowTeamAI.Deactivate();
 				this.blueTeamAI.Deactivate();
-
-				SimulationMetricsLogger.Increment(GameMetricOptions.Wins, (this.yellowTeamUnits.transform.childCount > 0) ? 0 : 1);
-				SimulationMetricsLogger.Increment(GameMetricOptions.Losses, (this.yellowTeamUnits.transform.childCount <= 0) ? 0 : 1);
 
 				ContinueSimulation();
 			}

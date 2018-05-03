@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using SinglePlayer;
-using Analytics;
+
 
 namespace MultiPlayer {
 	public class SelectionManager : NetworkBehaviour {
@@ -80,8 +80,7 @@ namespace MultiPlayer {
 			}
 			if (this.allObjects.Count <= 0) {
 				if (!this.isDead) {
-					GameMetricLogger.ShowPrintLog();
-					AIManager.Instance.startAIFlag = false;
+										AIManager.Instance.startAIFlag = false;
 					this.isDead = true;
 				}
 				return;

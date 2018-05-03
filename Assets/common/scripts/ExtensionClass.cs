@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace Extension {
 	public static class ExtensionClass {
-		public static bool ReachedDestination(this NavMeshAgent agent) {
+		public static bool ReachedDestination(this UnityEngine.AI.NavMeshAgent agent) {
 			if (!agent.pathPending) {
 				if (agent.stoppingDistance > 0f) {
 					if (agent.remainingDistance <= agent.stoppingDistance) {
